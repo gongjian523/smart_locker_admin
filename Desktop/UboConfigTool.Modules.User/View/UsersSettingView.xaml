@@ -1,0 +1,177 @@
+﻿<UserControl x:Class="UboConfigTool.Modules.User.View.UsersSettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d"
+             xmlns:converter="clr-namespace:UboConfigTool.Controls.Converters;assembly=UboConfigTool.Controls"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converter:BooleanToVisibilityConverter IsReverse="True" x:Key="BooleanToVisibilityConverterReverse"/>
+        <ControlTemplate x:Key="userDetailControl">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Grid.Column="0" Source="/UboConfigTool.Controls;component/Resources/Images/user-sys.png" Visibility="{Binding IsSysAdmin, Converter={StaticResource BooleanToVisibilityConverter}}" Panel.ZIndex="1" Width="64" Height="64" Stretch="UniformToFill"/>
+                <Image Grid.Column="0" Source="/UboConfigTool.Controls;component/Resources/Images/user-log.png" Visibility="{Binding IsSysAdmin, Converter={StaticResource BooleanToVisibilityConverterReverse}}" Panel.ZIndex="1" Width="64" Height="64" Stretch="UniformToFill"/>
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="用户:" Width="40"  Style="{DynamicResource uboDefaultTextBlock}" FontSize="14"/>
+                        <TextBlock Text="{Binding AssociatedUser.Name}" Style="{DynamicResource uboDefaultTextBlock}" FontSize="14"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="身份:" Width="40"  Style="{DynamicResource uboDefaultTextBlock}" FontSize="14"/>
+                        <TextBlock Text="{Binding UserRoleStr}" Style="{DynamicResource uboDefaultTextBlock}" FontSize="14"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </ControlTemplate>
+
+        <DataTemplate x:Key="UserItemControl">
+            <Grid x:Name="controlRoot">
+                <Controls:Tile  x:Name="dataVMRoot" Background="Transparent"  Height="130" Width="220" Margin="10">
+                    <Grid   Width="220" Margin="-1" >
+                        <Border x:Name="normalRoot" Height="100" BorderBrush="LightGray" BorderThickness="1" Visibility="Visible">
+                            <ContentControl Template="{StaticResource userDetailControl}"/>
+                        </Border>
+                        <Border x:Name="mouseOnRoot" Height="130" BorderBrush="{DynamicResource AccentBaseColorBrush}" BorderThickness=".5" Visibility="Collapsed" Panel.ZIndex="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="auto"/>
+                                    <RowDefinition Height="30"/>
+                                </Grid.RowDefinitions>
+                                <ContentControl  Panel.ZIndex="1" Grid.Row="0" Template="{StaticResource userDetailControl}"/>
+                                <Rectangle  Panel.ZIndex="1" Grid.Row="1" Margin="20,0,20,0" Opacity="0.4" Height="1" Fill="LightGray"/>
+                                <Grid Panel.ZIndex="1" Grid.Row="2" Width="120" HorizontalAlignment="Stretch">
+                                    <Button  Width="12" Height="12"  VerticalAlignment="Center" HorizontalAlignment="Left"  Tag="/UboConfigTool.Controls;component/Resources/Images/btn-delete.png"  
+                                 Style="{DynamicResource PngImageButtonStyle}" Command="{Binding DeleteUserCommand}"  ToolTip="删除用户" BorderBrush="Transparent"/>
+                                    <Button  Width="12" Height="12"  VerticalAlignment="Center" Command="{Binding EditUserCommand}" HorizontalAlignment="Right"  Tag="/UboConfigTool.Controls;component/Resources/Images/btn-edit-common.png"  
+                                 Style="{DynamicResource PngImageButtonStyle}" ToolTip="编辑用户信息" BorderBrush="Transparent"/>
+                                </Grid>
+                                <Rectangle Panel.ZIndex="0" Fill="LightGray" Opacity="0.05" Grid.Row="0" Grid.RowSpan="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                    <Rectangle.Effect>
+                                        <DropShadowEffect BlurRadius="15"
+								  ShadowDepth="5"
+								  Opacity="0.75" />
+                                    </Rectangle.Effect>
+                                </Rectangle>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <Controls:Tile.Triggers>
+                        <EventTrigger RoutedEvent="Mouse.MouseEnter" SourceName="dataVMRoot">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                       Storyboard.TargetName="mouseOnRoot">
+                                        <DiscreteObjectKeyFrame KeyTime="0">
+                                            <DiscreteObjectKeyFrame.Value>
+                                                <Visibility>Visible</Visibility>
+                                            </DiscreteObjectKeyFrame.Value>
+                                        </DiscreteObjectKeyFrame>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                       Storyboard.TargetName="normalRoot">
+                                        <DiscreteObjectKeyFrame KeyTime="0">
+                                            <DiscreteObjectKeyFrame.Value>
+                                                <Visibility>Hidden</Visibility>
+                                            </DiscreteObjectKeyFrame.Value>
+                                        </DiscreteObjectKeyFrame>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Mouse.MouseLeave" SourceName="dataVMRoot">
+                            <BeginStoryboard>
+                                <Storyboard>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                       Storyboard.TargetName="mouseOnRoot">
+                                        <DiscreteObjectKeyFrame KeyTime="0">
+                                            <DiscreteObjectKeyFrame.Value>
+                                                <Visibility>Hidden</Visibility>
+                                            </DiscreteObjectKeyFrame.Value>
+                                        </DiscreteObjectKeyFrame>
+                                    </ObjectAnimationUsingKeyFrames>
+                                    <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)"
+                                                                       Storyboard.TargetName="normalRoot">
+                                        <DiscreteObjectKeyFrame KeyTime="0">
+                                            <DiscreteObjectKeyFrame.Value>
+                                                <Visibility>Visible</Visibility>
+                                            </DiscreteObjectKeyFrame.Value>
+                                        </DiscreteObjectKeyFrame>
+                                    </ObjectAnimationUsingKeyFrames>
+                                </Storyboard>
+                            </BeginStoryboard>
+                        </EventTrigger>
+                    </Controls:Tile.Triggers>
+                </Controls:Tile>
+                <Controls:Tile  x:Name="addUBORoot" Background="Transparent" Command="{Binding AddUserCommand}" Visibility="Collapsed" Height="100" Width="220" BorderBrush="LightGray" BorderThickness="1" Margin="10">
+                    <Grid  Height="100" Width="220" Margin="-1">
+                        <Image Source="/UboConfigTool.Controls;component/Resources/Images/bnt-ubo-add.png" HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="1" Width="64" Height="64" Stretch="UniformToFill"/>
+                    </Grid>
+                </Controls:Tile>
+            </Grid>
+            <DataTemplate.Triggers>
+                <DataTrigger Binding="{Binding Path=VMType}">
+                    <DataTrigger.Value>
+                        <sys:String>NormalViewModel</sys:String>
+                    </DataTrigger.Value>
+                    <DataTrigger.Setters>
+                        <Setter Property="Visibility" TargetName="dataVMRoot" Value="Visible"/>
+                        <Setter Property="Visibility" TargetName="addUBORoot" Value="Collapsed"/>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=VMType}">
+                    <DataTrigger.Value>
+                        <sys:String>AddViewModel</sys:String>
+                    </DataTrigger.Value>
+                    <DataTrigger.Setters>
+                        <Setter Property="Visibility" TargetName="dataVMRoot" Value="Collapsed"/>
+                        <Setter Property="Visibility" TargetName="addUBORoot" Value="Visible"/>
+                    </DataTrigger.Setters>
+                </DataTrigger>
+            </DataTemplate.Triggers>
+        </DataTemplate>
+
+        <DataTemplate x:Key="UserGroupItemControl">
+            <Grid Background="White" Margin="0,0,0,20" >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="1"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="20,0,0,0">
+                    <Image Source="/UboConfigTool.Controls;component/Resources/Images/usb-list-group.png" Width="20" Height="20" Stretch="UniformToFill"/>
+                    <TextBlock Margin="10,0,0,0" Text="{Binding  GroupName}" TextAlignment="Center" Style="{DynamicResource uboDefaultTextBlock}" FontSize="16"/>
+                </StackPanel>
+                <Rectangle Height="1" Grid.Row="1" Margin="20,0,20,0" Fill="LightGray" Opacity="0.5" HorizontalAlignment="Stretch"/>
+                <ItemsControl Grid.Row="2" Margin="20,10,20,20" ItemTemplate="{StaticResource UserItemControl}" MinHeight="150" ItemsSource="{Binding Users}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+            </Grid>
+        </DataTemplate>
+
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Stretch">
+        <ScrollViewer Margin="0,20,0,0" Grid.Row="1" Background="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" >
+            <ItemsControl x:Name="uboGroupList" ItemTemplate="{StaticResource UserGroupItemControl}" ItemsSource="{Binding UserGroups}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </ScrollViewer>
+
+    </Grid>
+</UserControl>

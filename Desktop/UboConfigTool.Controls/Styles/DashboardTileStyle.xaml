@@ -1,0 +1,59 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+                    xmlns:converters="clr-namespace:UboConfigTool.Controls.Converters">
+    <Style x:Key="DashboardTile" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+        <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
+        <Setter Property="MinHeight" Value="140" />
+        <Setter Property="MinWidth" Value="280" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Margin" Value="0,0,10,0" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Background="Transparent">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="12"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border x:Name="PART_Header" Panel.ZIndex="0" Margin="20,0,0,0" Width="80" HorizontalAlignment="Left"
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="0"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                        </Border>
+                        <Border x:Name="PART_Body" Panel.ZIndex="0" Grid.Row="1"
+                                Background="{TemplateBinding Background}" 
+                                BorderThickness="0" HorizontalAlignment="Stretch"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                            <ContentPresenter x:Name="contentArea" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Panel.ZIndex="1" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Grid.RowSpan="2" Margin="30,5,0,0">
+                            <Image Height="12" Width="12" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image.Source>
+                                    <BitmapImage UriSource="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Image.Source>
+                            </Image>
+                            <TextBlock Margin="10,0,0,0" Text="{Binding Path=Uid, RelativeSource={RelativeSource TemplatedParent}}" Foreground="White" FontFamily="{DynamicResource DefaultFont}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Self}, Path=IsMouseOver, Mode=OneWay}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <Setter TargetName="contentArea" Property="Opacity" Value="0.6" />
+                            <Setter Property="Cursor" Value="Hand" />
+                        </MultiDataTrigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value=".55" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

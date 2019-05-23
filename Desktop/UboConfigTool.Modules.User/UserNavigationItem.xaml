@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="UboConfigTool.Modules.User.UserNavigationItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UboConfigTool.Modules.User"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <!--<RadioButton x:Name="UserButton"
+                              Background="Transparent"
+                             Tag="/UboConfigTool.Controls;component/Resources/Images/rule.png"
+                             Click="UserButton_Click"
+                             Style="{DynamicResource MainNavButtonStyle}"
+                             ToolTip="用户管理"/>-->
+
+        <RadioButton x:Name="SettingButton" Background="Transparent" Click="UserButton_Click"
+                             Tag="/UboConfigTool.Controls;component/Resources/Images/setting.png"
+                             Style="{DynamicResource MainNavButtonStyle}"
+                             ToolTip="设置"/>
+    </Grid>
+</UserControl>

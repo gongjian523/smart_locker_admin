@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+      <Fragment>
+        <DirectoryRef Id="INSTALLFOLDER">
+          <Component Id="MAHAPPS.METRO.DLL" DiskId="1" Guid="0F9B6863-49BF-4898-8107-7BBDB8D58F03">
+            <File Id="MAHAPPS.METRO.DLL_1" Name="MahApps.Metro.dll" Source="..\UboConfigTool\bin\Release\MahApps.Metro.dll" />
+          </Component>
+          <Component Id="MAHAPPS.METRO.XML" DiskId="1" Guid="6C29036B-4C36-444F-B558-2B64FBA7DC0D">
+            <File Id="MAHAPPS.METRO.XML_1" Name="MahApps.Metro.xml" Source="..\UboConfigTool\bin\Release\MahApps.Metro.xml" />
+          </Component>
+          <Component Id="MICROSOFT.PRACTICES.PRISM.DLL" DiskId="1" Guid="846E248B-DD52-4EE3-8C80-00B2D74584A0">
+            <File Id="MICROSOFT.PRACTICES.PRISM.DLL_1" Name="Microsoft.Practices.Prism.dll" Source="..\UboConfigTool\bin\Release\Microsoft.Practices.Prism.dll" />
+          </Component>
+          <Component Id="MICROSOFT.PRACTICES.PRISM.INTERACTIVITY.DLL" DiskId="1" Guid="2AD59485-8E49-4DB1-AB4A-1165C74A231D">
+            <File Id="MICROSOFT.PRACTICES.PRISM.INTERACTIVITY.DLL_1" Name="Microsoft.Practices.Prism.Interactivity.dll" Source="..\UboConfigTool\bin\Release\Microsoft.Practices.Prism.Interactivity.dll" />
+          </Component>
+          <Component Id="MICROSOFT.PRACTICES.PRISM.MEFEXTENSIONS.DLL" DiskId="1" Guid="C8DA0DFF-2DDC-4D78-9B43-C3DAFCE9A4BE">
+            <File Id="MICROSOFT.PRACTICES.PRISM.MEFEXTENSIONS.DLL_1" Name="Microsoft.Practices.Prism.MefExtensions.dll" Source="..\UboConfigTool\bin\Release\Microsoft.Practices.Prism.MefExtensions.dll" />
+          </Component>
+          <Component Id="MICROSOFT.PRACTICES.SERVICELOCATION.DLL" DiskId="1" Guid="EF493104-CA1D-4C4E-8166-F46063B96F56">
+            <File Id="MICROSOFT.PRACTICES.SERVICELOCATION.DLL_1" Name="Microsoft.Practices.ServiceLocation.dll" Source="..\UboConfigTool\bin\Release\Microsoft.Practices.ServiceLocation.dll" />
+          </Component>
+          <Component Id="RESTSHARP.DLL" DiskId="1" Guid="BC0C08C9-D75D-4347-A757-9908F8617148">
+            <File Id="RESTSHARP.DLL_1" Name="RestSharp.dll" Source="..\UboConfigTool\bin\Release\RestSharp.dll" />
+          </Component>
+          <Component Id="RESTSHARP.XML" DiskId="1" Guid="269097AD-D43D-49E4-B077-92FBC4A717AC">
+            <File Id="RESTSHARP.XML_1" Name="RestSharp.xml" Source="..\UboConfigTool\bin\Release\RestSharp.xml" />
+          </Component>
+          <Component Id="SYSTEM.WINDOWS.INTERACTIVITY.DLL" DiskId="1" Guid="9F3CC815-C164-48BB-A932-7DFB2334A609">
+            <File Id="SYSTEM.WINDOWS.INTERACTIVITY.DLL_1" Name="System.Windows.Interactivity.dll" Source="..\UboConfigTool\bin\Release\System.Windows.Interactivity.dll" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.CONTROLS.DLL" DiskId="1" Guid="AB788DD7-EC6C-4961-B5B6-F541716AF3DF">
+            <File Id="UBOCONFIGTOOL.CONTROLS.DLL_1" Name="UboConfigTool.Controls.dll" Source="..\UboConfigTool\bin\Release\UboConfigTool.Controls.dll" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.EXE" DiskId="1" Guid="7E8EA2EB-51F1-4521-AA5C-6162EBC7A199">
+            <File Id="UBOCONFIGTOOL.EXE_1" Name="UboConfigTool.exe" Source="..\UboConfigTool\bin\Release\UboConfigTool.exe" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.EXE.CONFIG" DiskId="1" Guid="23FD772B-370F-43A3-8EBD-99202D0F0A8C">
+            <File Id="UBOCONFIGTOOL.EXE.CONFIG_1" Name="UboConfigTool.exe.config" Source="..\UboConfigTool\bin\Release\UboConfigTool.exe.config" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.EXE.MANIFEST" DiskId="1" Guid="2B1BBC39-CB78-4C32-AC95-CF35888BF59E">
+            <File Id="UBOCONFIGTOOL.EXE.MANIFEST_1" Name="UboConfigTool.exe.manifest" Source="..\UboConfigTool\bin\Release\UboConfigTool.exe.manifest" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.INFRASTRUCTURE.DLL" DiskId="1" Guid="BA2D9894-CCD9-4AAF-BE3F-E847C254D483">
+            <File Id="UBOCONFIGTOOL.INFRASTRUCTURE.DLL_1" Name="UboConfigTool.Infrastructure.dll" Source="..\UboConfigTool\bin\Release\UboConfigTool.Infrastructure.dll" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.MODULES.LOGGING.DLL" DiskId="1" Guid="E28C1403-A3CC-49FE-BF23-9E17F4912A3D">
+            <File Id="UBOCONFIGTOOL.MODULES.LOGGING.DLL_1" Name="UboConfigTool.Modules.Logging.dll" Source="..\UboConfigTool\bin\Release\UboConfigTool.Modules.Logging.dll" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.MODULES.RULE.DLL" DiskId="1" Guid="FC4CEF8C-7C32-4E1D-A6C3-F8D90D0BED76">
+            <File Id="UBOCONFIGTOOL.MODULES.RULE.DLL_1" Name="UboConfigTool.Modules.Rule.dll" Source="..\UboConfigTool\bin\Release\UboConfigTool.Modules.Rule.dll" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.MODULES.UBO.DLL" DiskId="1" Guid="582A4AB3-D95E-4AEE-BE77-8888D6F89EEB">
+            <File Id="UBOCONFIGTOOL.MODULES.UBO.DLL_1" Name="UboConfigTool.Modules.UBO.dll" Source="..\UboConfigTool\bin\Release\UboConfigTool.Modules.UBO.dll" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.MODULES.USB.DLL" DiskId="1" Guid="B4B3DAFD-342F-41EB-AE95-163E52AE932A">
+            <File Id="UBOCONFIGTOOL.MODULES.USB.DLL_1" Name="UboConfigTool.Modules.USB.dll" Source="..\UboConfigTool\bin\Release\UboConfigTool.Modules.USB.dll" />
+          </Component>
+          <Component Id="UBOCONFIGTOOL.MODULES.USER.DLL" DiskId="1" Guid="F69475B8-4A70-47B0-B0AE-A6782D66ACA7">
+            <File Id="UBOCONFIGTOOL.MODULES.USER.DLL_1" Name="UboConfigTool.Modules.User.dll" Source="..\UboConfigTool\bin\Release\UboConfigTool.Modules.User.dll" />
+          </Component>
+        </DirectoryRef>
+      </Fragment>
+  
+      <Fragment>
+        <ComponentGroup Id="UBOConfigToolComponentGrp">
+          <ComponentRef Id="MAHAPPS.METRO.DLL"/>
+          <ComponentRef Id="MAHAPPS.METRO.XML" />
+          <ComponentRef Id="MICROSOFT.PRACTICES.PRISM.DLL"/>
+          <ComponentRef Id="MICROSOFT.PRACTICES.PRISM.INTERACTIVITY.DLL" />
+          <ComponentRef Id="MICROSOFT.PRACTICES.PRISM.MEFEXTENSIONS.DLL"/>
+          <ComponentRef Id="MICROSOFT.PRACTICES.SERVICELOCATION.DLL" />
+          <ComponentRef Id="RESTSHARP.DLL"/>
+          <ComponentRef Id="RESTSHARP.XML"/>
+          <ComponentRef Id="SYSTEM.WINDOWS.INTERACTIVITY.DLL"/>
+          <ComponentRef Id="UBOCONFIGTOOL.CONTROLS.DLL"/>
+          <ComponentRef Id="UBOCONFIGTOOL.EXE"/>
+          <ComponentRef Id="UBOCONFIGTOOL.EXE.CONFIG"/>
+          <ComponentRef Id="UBOCONFIGTOOL.EXE.MANIFEST" />
+          <ComponentRef Id="UBOCONFIGTOOL.INFRASTRUCTURE.DLL"/>
+          <ComponentRef Id="UBOCONFIGTOOL.MODULES.LOGGING.DLL"/>
+          <ComponentRef Id="UBOCONFIGTOOL.MODULES.RULE.DLL" />
+          <ComponentRef Id="UBOCONFIGTOOL.MODULES.UBO.DLL" />
+          <ComponentRef Id="UBOCONFIGTOOL.MODULES.USB.DLL"/>
+          <ComponentRef Id="UBOCONFIGTOOL.MODULES.USER.DLL" />
+        </ComponentGroup>
+      </Fragment>
+      
+</Wix>

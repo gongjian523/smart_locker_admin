@@ -1,0 +1,98 @@
+﻿<UserControl x:Class="UboConfigTool.View.NewUserWizard_Overall"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             d:DesignHeight="500" d:DesignWidth="700">
+    <Grid>
+        <Grid.Resources>
+            <DataTemplate x:Key="uboListItem">
+                <TextBlock Margin="10,10,10,0" Style="{StaticResource uboDefaultTextBlock}" Text="{Binding}" FontSize="14"/>
+            </DataTemplate>
+            <DataTemplate x:Key="usbListItem">
+                <TextBlock Margin="10,10,10,0" Style="{StaticResource uboDefaultTextBlock}" Text="{Binding}" FontSize="14"/>
+            </DataTemplate>
+            <DataTemplate x:Key="ruleListItem">
+                <TextBlock Margin="0,10,10,0" Style="{StaticResource uboDefaultTextBlock}" Text="{Binding}" FontSize="12"/>
+            </DataTemplate>
+            <ItemsPanelTemplate x:Key="PanelTemplate">
+                <WrapPanel ItemWidth="70" Width="220" 
+					   ItemHeight="24"
+					   Orientation="Horizontal"
+					   IsItemsHost="True" />
+            </ItemsPanelTemplate>
+        </Grid.Resources>
+        <StackPanel x:Name="finishRoot" Orientation="Vertical">
+            <TextBlock FontSize="24" HorizontalAlignment="Center" Style="{DynamicResource uboDefaultTextBlock}">信息总览</TextBlock>
+            <Grid Width="620" Margin="0,30,0,0" Height="300">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="20"/>
+                    <ColumnDefinition Width="2*"/>
+                </Grid.ColumnDefinitions>
+                <Border BorderBrush="Gray" BorderThickness="0.5"  Background="White" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Height="30" Margin="0,-15,0,0" Width="90" Background="#FF373737">
+                            <TextBlock FontSize="16" Panel.ZIndex="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource uboDefaultTextBlock}" Text="UBO"/>
+                        </Border>
+                        <ItemsControl x:Name="ubosControl" Grid.Row="1" Margin="0,0,0,20" ItemTemplate="{StaticResource uboListItem}" ItemsSource="{Binding UBOs}"/>
+                    </Grid>
+                </Border>
+                <Border BorderBrush="Gray" Grid.Column="2" BorderThickness="0.5"  Background="White" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Height="30" Margin="0,-15,0,0" Width="90" Background="#FF373737">
+                            <TextBlock FontSize="16" Panel.ZIndex="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource uboDefaultTextBlock}" Text="规则"/>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <TextBlock Margin="10,0,0,0" VerticalAlignment="Top" Style="{StaticResource uboDefaultTextBlock}" Text="黑名单:" HorizontalAlignment="Left"/>
+                            <Rectangle Height="1" VerticalAlignment="Bottom" Margin="10,0,10,0" Opacity="0.5" Fill="Gray"/>
+                        </Grid>
+                        <ItemsControl Grid.Row="2" x:Name="blackRulesControl" Margin="10,0,10,20" ItemsPanel="{StaticResource PanelTemplate}" ItemTemplate="{StaticResource ruleListItem}" ItemsSource="{Binding BlackRuleList}"/>
+                        <Grid Grid.Row="3">
+                            <TextBlock Margin="10,0,0,0" VerticalAlignment="Top" Style="{StaticResource uboDefaultTextBlock}" Text="白名单:" HorizontalAlignment="Left"/>
+                            <Rectangle Height="1" VerticalAlignment="Bottom" Margin="10,0,10,0" Opacity="0.5" Fill="Gray"/>
+                        </Grid>
+                        <ItemsControl Grid.Row="4" x:Name="whiteRulesControl" Margin="10,0,10,20" ItemsPanel="{StaticResource PanelTemplate}" ItemTemplate="{StaticResource ruleListItem}" ItemsSource="{Binding WhiteRuleList}"/>
+                    </Grid>
+                </Border>
+                <Border BorderBrush="Gray" Grid.Column="4" BorderThickness="0.5"  Background="White" >
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="15"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Border Height="30" Margin="0,-15,0,0" Width="90" Background="#FF373737">
+                            <TextBlock FontSize="16" Panel.ZIndex="1" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" Style="{StaticResource uboDefaultTextBlock}" Text="USB"/>
+                        </Border>
+                        <ItemsControl x:Name="usbsControl" Grid.Row="1" Margin="0,0,0,20" ItemTemplate="{StaticResource usbListItem}" ItemsSource="{Binding USBs}"/>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Button x:Name="btnRunRule" Width="180" Margin="0,20,0,0" FontSize="14" Height="40" Click="btnRunRule_Click" Style="{DynamicResource uboAccentedSquareButtonStyle}" Content="启动规则" />
+        </StackPanel>
+        <Grid x:Name="ruleRunningRoot" Visibility="Collapsed">
+            <TextBlock FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0" Style="{DynamicResource uboDefaultTextBlock}">规则启动中...</TextBlock>
+            <Controls:MetroProgressBar VerticalAlignment="Center"
+                                       Margin="100,0,100,0" BorderBrush="Gray" BorderThickness="0.5" 
+                                       Foreground="{DynamicResource AccentColorBrush}"
+                                       Maximum="100" Height="24"
+                                       Minimum="0"
+                                       Value="50" />
+        </Grid>
+    </Grid>
+</UserControl>

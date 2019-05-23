@@ -1,0 +1,67 @@
+﻿<UserControl  x:Class="UboConfigTool.Modules.User.View.LoginView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:animation="clr-namespace:UboConfigTool.Controls.Animation;assembly=UboConfigTool.Controls"
+             mc:Ignorable="d" 
+             xmlns:helper ="clr-namespace:UboConfigTool.Modules.User.View"
+             d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Background>
+        <ImageBrush ImageSource="/UboConfigTool.Modules.User;component/Resources/loginBk.jpeg" Stretch="Fill"/>
+    </UserControl.Background>
+    <UserControl.Resources>
+        <Storyboard x:Key="AnimationIn">
+            <animation:PennerDoubleAnimation Duration="0:0:1" 
+                                             From="0" Equation="ExpoEaseOut"
+                                             To="600"
+                                             Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.X)" />
+            <animation:PennerDoubleAnimation Duration="0:0:1" 
+                                             From="600" Equation="ExpoEaseOut"
+                                             To="0" 
+                                             Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.X)" />
+        </Storyboard>
+        <Storyboard x:Key="AnimationOut">
+            <animation:PennerDoubleAnimation Duration="0:0:1" 
+                                             From="0" Equation="ExpoEaseIn"
+                                             To="700" Storyboard.TargetName="loginRoot"
+                                             Storyboard.TargetProperty="(RenderTransform).(TranslateTransform.X)" />
+        </Storyboard>
+    </UserControl.Resources>
+    <Grid x:Name="loginRoot" HorizontalAlignment="Center" VerticalAlignment="Center"  Width="300" Height="380"  Background="White">
+        <Grid.Triggers>
+            <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                <BeginStoryboard Storyboard="{StaticResource AnimationIn}"/>
+            </EventTrigger>
+        </Grid.Triggers>
+        <Grid.RenderTransform>
+            <TranslateTransform />
+        </Grid.RenderTransform>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Image x:Name="figurePic" Grid.Row="1" Grid.Column="1" Source="/UboConfigTool.Modules.User;component/Resources/img-head.png" Width="72" Height="72" Stretch="UniformToFill">
+            <Image.RenderTransform>
+                <TranslateTransform />
+            </Image.RenderTransform>
+        </Image>
+        <Label Grid.Row="2" Grid.Column="1" HorizontalAlignment="Center" Content="登 录" Foreground="#FF0F42DE" FontSize="20" />
+        <StackPanel Grid.Row="3" Grid.Column="1" HorizontalAlignment="Center">
+            <TextBox Width="180" Height="32" Padding="0,4,0,0"  Margin="0,36,0,0" Text="{Binding UserName}" Controls:TextBoxHelper.Watermark="输入用户名" FontSize="12" VerticalAlignment="Center"></TextBox>
+            <PasswordBox x:Name="userPsw" Width="180" Height="32" Padding="0,4,0,0" Margin="0,20,0,0" helper:PasswordBoxBindingHelper.BindedPassword=
+                      "{Binding Path=Password, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" PasswordChanged="userPsw_PasswordChanged"  Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" FontSize="12" Controls:TextBoxHelper.Watermark="输入密码" VerticalAlignment="Center"></PasswordBox>
+        </StackPanel>
+        <Button x:Name="btnLogin" Grid.Column="1" Grid.Row="4" Command="{Binding UserLoginCommand}" Content="登录" FontWeight="Thin" Style="{DynamicResource uboAccentedSquareButtonStyle}" FontSize="14" Width="180" Height="32">
+        </Button>
+    </Grid>
+</UserControl>

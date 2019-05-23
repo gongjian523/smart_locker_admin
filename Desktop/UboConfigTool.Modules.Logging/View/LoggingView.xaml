@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="UboConfigTool.Modules.Logging.LoggingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:UboConfigTool.Modules.Logging"
+             xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+             xmlns:converter="clr-namespace:UboConfigTool.Controls.Converters;assembly=UboConfigTool.Controls"
+             xmlns:logConverter="clr-namespace:UboConfigTool.Modules.Logging.Converter"
+             mc:Ignorable="d"  
+             d:DesignHeight="700" d:DesignWidth="1024" BorderThickness="0">
+    <UserControl.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <logConverter:LogLevelTypeStringConverter x:Key="LogLevelTypeStringConverter"/>
+        <logConverter:CurrentLogViewTypeConverter x:Key="CurrentLogViewTypeConverter"/>
+
+        <Geometry x:Key="filterPath">M3,2H21V2H21V4H20.92L14,10.92V22.91L10,18.91V10.91L3.09,4H3V2Z</Geometry>
+
+        <Style x:Key="ImageButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="{DynamicResource AccentColorBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="LayoutRoot" Background="Transparent" RenderTransformOrigin="0.5,0.5">
+                            <Grid.RenderTransform>
+                                <TransformGroup>
+                                    <ScaleTransform/>
+                                    <SkewTransform/>
+                                    <RotateTransform/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </Grid.RenderTransform>
+                            <Viewbox>
+                                <Grid x:Name="backgroundGrid" Width="28" Height="28" Visibility="Visible">
+                                    <Path x:Name="path" Data="{TemplateBinding Content}"
+										Stretch="Uniform" Fill="{TemplateBinding Foreground}" Stroke="{TemplateBinding Foreground}" Width="24" Height="24" StrokeThickness="0.1"/>
+                                </Grid>
+                            </Viewbox>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True"/>
+                            <Trigger Property="IsDefaulted" Value="True"/>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="RenderTransform" TargetName="LayoutRoot">
+                                    <Setter.Value>
+                                        <TransformGroup>
+                                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                            <SkewTransform/>
+                                            <RotateTransform/>
+                                            <TranslateTransform/>
+                                        </TransformGroup>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" TargetName="LayoutRoot" Value="0.7"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Fill" Value="#8B8B8B" TargetName="path"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
+    </UserControl.Resources>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20,0,20,20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="48"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="40"/>
+        </Grid.RowDefinitions>
+        <Rectangle Panel.ZIndex="0" Grid.Row="0" Margin="-24,0,-24,0" HorizontalAlignment="Stretch" Fill="White"/>
+        <Controls:MetroProgressBar HorizontalAlignment="Stretch" Margin="0, 10, 0, 0" Panel.ZIndex="2" Visibility="{Binding InDataLoading, Converter={StaticResource BooleanToVisibilityConverter}}" VerticalAlignment="Bottom" IsIndeterminate="True" Value="100" Foreground="{DynamicResource AccentColorBrush}"/>
+        <TextBox  x:Name="searchTextBox" Panel.ZIndex="1" Margin="0,5,0,0" Grid.Row="0" HorizontalAlignment="Left" Width="200" Height="24"
+                         Style="{DynamicResource SearchMetroTextBox}"
+                         Controls:TextBoxHelper.ButtonCommand="{Binding DeviceLogKeywordSearchCommand, Mode=OneWay}"
+                         Controls:TextBoxHelper.ButtonCommandParameter="{Binding ElementName=searchTextBox, Path=Text}" 
+                         Controls:TextBoxHelper.Watermark="请输入关键字" >
+            <TextBox.InputBindings>
+                <KeyBinding Key="Return"
+                                    Command="{Binding DeviceLogKeywordSearchCommand, Mode=OneWay}"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}, Path=Text, Mode=OneWay}" />
+            </TextBox.InputBindings>
+        </TextBox>
+        <StackPanel Panel.ZIndex="1" Orientation="Horizontal" Grid.Row="0"  HorizontalAlignment="Center" >
+            <RadioButton x:Name="radDevLog" Content="设备日志" Style="{StaticResource TabRadioButton}" IsChecked="{Binding CurrentLogViewType,Converter={StaticResource CurrentLogViewTypeConverter},Mode=TwoWay}" GroupName="loggingGroup"/>
+            <RadioButton x:Name="radSysLog" Margin="40,0,0,0"  Style="{StaticResource TabRadioButton}"   GroupName="loggingGroup" Content="系统日志"/>
+        </StackPanel>
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Panel.ZIndex="1" Margin="0,10,20,0" HorizontalAlignment="Right" >
+            <Button Height="20" Width="20" Content="{StaticResource filterPath}" Foreground="{DynamicResource ThemeOrangeColorBrush}" Command="{Binding FlyoutCommand}" Style="{StaticResource  ImageButtonStyle}"/>
+            <TextBlock Text="筛选条件" VerticalAlignment="Center" />
+        </StackPanel>
+        <Border x:Name="datagridHeader" Grid.Row="1" Margin="0,16,0,0" Visibility="{Binding ElementName=radDevLog, Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"
+                Height="32" Background="{DynamicResource ThemeBlackColorBrush}" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="时间" Foreground="White" Margin="8,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="UBO设备名" Foreground="White" Margin="8,0,0,0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="UBO群组" Foreground="White" Margin="8,0,0,0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="日志内容" Foreground="White" Margin="8,0,0,0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="级别" Foreground="White" Margin="8,0,0,0" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+        <DataGrid x:Name="devLogDataGrid" AllowDrop="False"  HeadersVisibility="None"
+                  Grid.Row="2" ItemsSource="{Binding DeviceLogs}"
+                  Visibility="{Binding ElementName=radDevLog, Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"
+                  AutoGenerateColumns="False" EnableRowVirtualization="True"
+                  SelectionUnit="FullRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="时间" IsReadOnly="True"  Binding="{Binding datetime}" Width="150" />
+                <DataGridTextColumn Header="UBO设备名" IsReadOnly="True" Binding="{Binding ubo}" Width="150"/>
+                <DataGridTextColumn Header="UBO群组" IsReadOnly="True"  Binding="{Binding ubo_group}"  Width="150"/>
+                <DataGridTextColumn Header="日志内容" IsReadOnly="True"  Binding="{Binding msg}" Width="300"/>
+                <DataGridTextColumn Header="级别" Binding="{Binding level}"  IsReadOnly="True"  Width="100"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Border x:Name="datagridHeaderForSysLog" Grid.Row="1" Visibility="{Binding ElementName=radSysLog, Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"
+                Margin="0,16,0,0" Height="32" Background="{DynamicResource ThemeBlackColorBrush}" HorizontalAlignment="Stretch">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="100"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="300"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="时间" Foreground="White" Margin="8,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="用户" Foreground="White" Margin="8,0,0,0" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="模块" Foreground="White" Margin="8,0,0,0" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="IP地址" Foreground="White" Margin="8,0,0,0" Grid.Column="3" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <TextBlock Text="信息" Foreground="White" Margin="8,0,0,0" Grid.Column="4" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </Grid>
+        </Border>
+        <DataGrid x:Name="sysLogDataGrid" ItemsSource="{Binding SystemLogs}"
+                  Grid.Row="2" Visibility="{Binding ElementName=radSysLog, Path=IsChecked,Converter={StaticResource BooleanToVisibilityConverter}}"
+                  AutoGenerateColumns="False"
+                  AllowDrop="False"  HeadersVisibility="None"
+                  SelectionUnit="FullRow">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="时间"  IsReadOnly="True" Binding="{Binding datetime}" Width="100"/>
+                <DataGridTextColumn Header="用户" IsReadOnly="True" Binding="{Binding user}" Width="100"/>
+                <DataGridTextColumn Header="模块" IsReadOnly="True" Binding="{Binding module}" Width="150"/>
+                <DataGridTextColumn Header="IP地址" IsReadOnly="True" Binding="{Binding ip}" Width="150"/>
+                <DataGridTextColumn Header="信息" IsReadOnly="True" Binding="{Binding msg}"  Width="300"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Border Grid.Row="3" Margin="-1,0,-1,0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0.3" CornerRadius="2,2,2,2" BorderBrush="Gray" Background="White">
+            <StackPanel Orientation="Horizontal"  HorizontalAlignment="Right">
+                <Button x:Name="prePageBtn" Grid.Column="1" Margin="20,0,0,0" Background="#FF373737" Foreground="White" Content="上一页" Command="{Binding PrePageCommand}" Height="24" Width="100"/>
+                <StackPanel Orientation="Horizontal" Margin="20,0,0,0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Center">
+                    <TextBlock VerticalAlignment="Center">第</TextBlock>
+                    <TextBox Margin="8,0,0,0" x:Name="currentPage" Text="{Binding CurrentPageIndex,UpdateSourceTrigger=PropertyChanged}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="24" Width="60">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="TextChanged">
+                                <i:InvokeCommandAction Command="{Binding CurrentPageChangedCommand}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </TextBox>
+                    <TextBlock Margin="8,0,0,0" Width="60" VerticalAlignment="Center" Text="{Binding TotalPageNumber,StringFormat={}/{0}}"/>
+                </StackPanel>
+                <Button x:Name="nextPageBtn" Grid.Column="2" Command="{Binding NextPageCommand}"  Style="{DynamicResource uboAccentedSquareButtonStyle}" Margin="20,0,20,0" Content="下一页" Height="24" Width="100"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Loaded">
+            <i:InvokeCommandAction Command="{Binding Path=LogDataInitializedCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+</UserControl>
