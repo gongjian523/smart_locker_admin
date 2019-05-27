@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Include>
-  <?define ProductName = "UboConfigTool" ?>
-  <?define ProductVersion = "1.0.0.0" ?>
-  <?define UpgradeCode = "{02C6A6DF-8BBE-41C0-952F-58652EA706AB}" ?>
-</Include>
-

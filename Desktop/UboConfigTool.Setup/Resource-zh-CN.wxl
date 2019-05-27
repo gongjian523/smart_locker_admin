@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<WixLocalization Culture="zh-CN" xmlns="http://schemas.microsoft.com/wix/2006/localization">
-  <String Id="msierrXmlConfigFailedOpen">配置文件打开失败</String>
-  <String Id="msierrXmlConfigFailedRead">配置文件读取失败</String>
-  <String Id="msierrXmlConfigFailedSave">配置文件保存失败</String>
-  <String Id="msierrXmlConfigFailedSelect">配置文件选择失败</String>
-</WixLocalization>
