@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style x:Key="ExpandImageStyle" TargetType="{x:Type Image}">
+        <Setter Property="LayoutTransform">
+            <Setter.Value>
+                <ScaleTransform/>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Button.MouseEnter">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX" To="2" Duration="0:0:0.25"/>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleY" To="2" Duration="0:0:0.25"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Button.MouseLeave">
+                <EventTrigger.Actions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleX" To="1" Duration="0:0:0.25"/>
+                            <DoubleAnimation Storyboard.TargetProperty="LayoutTransform.ScaleY" To="1" Duration="0:0:0.25"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger.Actions>
+            </EventTrigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="ThemButtonStyle"  TargetType="{x:Type Button}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Background" Value="{DynamicResource ThemeGreenColorBrush}"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Background="{TemplateBinding Background}"  BorderThickness="0" >
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{DynamicResource MouseOverThemeGreenColorBrush}"/>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <Style x:Key="IconButtonStyle"  TargetType="{x:Type Button}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Height" Value="16"/>
+        <Setter Property="Width" Value="16"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="Template" >
+            <Setter.Value>
+                <ControlTemplate>
+                    <Rectangle x:Name="bkRectagnle"  >
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{Binding Path=IconCanvas, RelativeSource={RelativeSource TemplatedParent}}" Stretch="Fill" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <ControlTemplate.Triggers>
+                        <Trigger  Property="IsMouseOver" Value="True">
+                            <Setter TargetName="bkRectagnle" Property="Fill" Value="{DynamicResource MouseOverThemeGreenColorBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="bkRectagnle" Property="Fill" Value="{DynamicResource IconBtnUnselectedColorBrush}"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="WithPngButtonStyle"  TargetType="{x:Type Button}">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Background" Value="transparent"/>
+        <Setter Property="Template" >
+            <Setter.Value>
+                <ControlTemplate>
+                    <Grid>
+                        <Image x:Name="NormalPic" Source="{Binding Path=NormalPic, RelativeSource={RelativeSource TemplatedParent}}"/>
+                        <Image x:Name="MouseOnPic" Source="{Binding Path=MouseOnPic, RelativeSource={RelativeSource TemplatedParent}}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger  Property="IsMouseOver" Value="True">
+                            <Setter TargetName="NormalPic" Property="Visibility" Value="Collapsed"/>
+                            <Setter TargetName="MouseOnPic" Property="Visibility" Value="Visible"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="False">
+                            <Setter TargetName="NormalPic" Property="Visibility" Value="Visible"/>
+                            <Setter TargetName="MouseOnPic" Property="Visibility" Value="Collapsed"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+    <Style x:Key="ThemTextBoxStyle" TargetType="{x:Type TextBox}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type TextBox}">
+                    <Border x:Name="bg" BorderThickness="2" CornerRadius =" 4">
+                        <ScrollViewer x:Name="PART_ContentHost" />
+                        <!--<ScrollViewer x:Name="PART_ContentHost" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>-->
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="TextBox.IsMouseOver" Value="True">
+                            <Setter Property="BorderBrush" TargetName="bg"  Value="{DynamicResource MouseOverThemeGreenColorBrush}" />
+                        </Trigger>
+                        <Trigger Property="TextBox.IsMouseOver" Value="False">
+                            <Setter Property="BorderBrush"  TargetName="bg" Value="{DynamicResource ThemeGreenColorBrush}" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>
