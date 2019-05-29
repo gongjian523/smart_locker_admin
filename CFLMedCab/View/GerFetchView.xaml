@@ -6,7 +6,21 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Label Background="AliceBlue"/>
+    <Grid Background="AliceBlue">
+        <Grid Margin="10,10,10,321" Background="White">
+            <Label Content="业务类型" Margin="10,10,701,89" FontSize="9"/>
+            <Label Name="lType" Content="一般领用" Margin="10,35,701,59" FontSize="14"/>
+            <Label Content="操作人" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" FontSize="9"/>
+            <Label Content="操作日期" HorizontalAlignment="Left" Margin="150,65,0,0" VerticalAlignment="Top" FontSize="9"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="156,86,0,0" VerticalAlignment="Top"/>
+        </Grid>
+        <Grid Margin="10,146,10,123" Background="White">
+
+
+        </Grid>
+        <Label Content="是否结束此次操作" HorizontalAlignment="Left" Margin="334,345,0,0" VerticalAlignment="Top"/>
+        <Button Content="是" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="236,383,0,0" VerticalAlignment="Top" Width="114"/>
+        <Button Content="否" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" HorizontalAlignment="Left" Margin="422,383,0,0" VerticalAlignment="Top" Width="114" Height="32"/>
     </Grid>
 </UserControl>

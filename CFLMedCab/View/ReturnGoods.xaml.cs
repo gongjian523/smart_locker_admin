@@ -16,14 +16,13 @@ using System.Windows.Shapes;
 namespace CFLMedCab.View
 {
     /// <summary>
-    /// GerFetchView.xaml 的交互逻辑
+    /// ReturnGoods.xaml 的交互逻辑
     /// </summary>
-    public partial class GerFetchView : UserControl
+    public partial class ReturnGoods : UserControl
     {
-        public GerFetchView(string type)
+        public ReturnGoods()
         {
             InitializeComponent();
-            lType.Content = type;
         }
     }
 }

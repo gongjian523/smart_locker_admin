@@ -119,6 +119,9 @@
     <Compile Include="View\Replenishment.xaml.cs">
       <DependentUpon>Replenishment.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ReturnGoods.xaml.cs">
+      <DependentUpon>ReturnGoods.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Stock.xaml.cs">
       <DependentUpon>Stock.xaml</DependentUpon>
     </Compile>
@@ -184,6 +187,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Replenishment.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReturnGoods.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

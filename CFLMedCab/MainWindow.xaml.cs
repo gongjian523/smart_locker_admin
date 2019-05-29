@@ -24,7 +24,6 @@ namespace CFLMedCab
     public partial class MainWindow : MetroWindow
     {
         private DispatcherTimer ShowTimer;
-        private GerFetchView gerFetchView = new GerFetchView();
 
         public MainWindow()
         {
@@ -49,20 +48,16 @@ namespace CFLMedCab
             this.tbTimeText.Text = DateTime.Now.ToString("HH:mm");
         }
 
-        private void EnterGerFetch(object sender, RoutedEventArgs e)
-        {
-            ContentFrame.Navigate(gerFetchView);
-        }
-        
         /// <summary>
-        /// 库存查询
+        /// 一般领用
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RadioButton_Checked_1(object sender, RoutedEventArgs e)
+        private void EnterGerFetch(object sender, RoutedEventArgs e)
         {
-            Stock stock = new Stock();
-            ContentFrame.Navigate(stock);
+            string log = (string)((RadioButton)sender).Content;
+            GerFetchView gerFetchView = new GerFetchView(log);
+            ContentFrame.Navigate(gerFetchView);
         }
 
         /// <summary>
@@ -70,7 +65,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        private void OperationCollarUse(object sender, RoutedEventArgs e)
         {
             OperationCollarUse operationCollarUse = new OperationCollarUse();
             ContentFrame.Navigate(operationCollarUse);
@@ -81,10 +76,43 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void RadioButton_Checked_2(object sender, RoutedEventArgs e)
+        private void Replenishment(object sender, RoutedEventArgs e)
         {
             Replenishment replenishment = new Replenishment();
             ContentFrame.Navigate(replenishment);
+        }
+
+        /// <summary>
+        /// 补货入库
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReturnGoods(object sender, RoutedEventArgs e)
+        {
+            ReturnGoods returnGoods = new ReturnGoods();
+            ContentFrame.Navigate(returnGoods);
+        }
+
+        /// <summary>
+        /// 库存盘点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Inventory(object sender, RoutedEventArgs e)
+        {
+            Inventory inventory = new Inventory();
+            ContentFrame.Navigate(inventory);
+        }
+
+        /// <summary>
+        /// 库存查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Stock(object sender, RoutedEventArgs e)
+        {
+            Stock stock = new Stock();
+            ContentFrame.Navigate(stock);
         }
     }
 }
