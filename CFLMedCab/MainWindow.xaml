@@ -24,16 +24,30 @@
             <Grid>
             </Grid>
             <Grid Grid.Column="1" x:Name="UserView">
+                <TextBlock Height="Auto"
+                    Margin="514,12,196,10"
+                    x:Name="tbDateText"
+                    Foreground="Black"
+                    FontWeight="Bold"
+                    FontFamily="Arial"
+                    FontSize="15" />
+                <TextBlock Height="Auto"
+                    Margin="641,12,100,10"
+                    x:Name="tbTimeText"
+                    Foreground="Black"
+                    FontWeight="Bold"
+                    FontFamily="Calibri"
+                    FontSize="15" />
             </Grid>
             <Grid Grid.Row="1" x:Name="NavBar" Background="{StaticResource NavBgGreyBrush}">
                 <Grid VerticalAlignment="Top" >
                     <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,14,0,0" VerticalAlignment="Top" Foreground="White" Content="一般领用"   Click="EnterGerFetch"  IsChecked="True"/>
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,64,0,0" VerticalAlignment="Top"  Foreground="White" Content="手术领用" />
+                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,64,0,0" VerticalAlignment="Top"  Foreground="White" Content="手术领用" Checked="RadioButton_Checked" />
                     <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,114,0,0" VerticalAlignment="Top"  Foreground="White" Content="领用退回" />
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,164,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" />
+                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,164,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" Checked="RadioButton_Checked_2" />
                     <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,214,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" />
                     <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,264,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" />
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" />
+                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Checked="RadioButton_Checked_1" />
                 </Grid>
             </Grid>
             <Grid Grid.Row="1" Grid.Column="1" x:Name="ContentView">

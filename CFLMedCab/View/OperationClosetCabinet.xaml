@@ -1,0 +1,23 @@
+﻿<UserControl x:Class="CFLMedCab.View.OperationClosetCabinet"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CFLMedCab.View"
+             mc:Ignorable="d" d:DesignWidth="800" Height="644.499">
+    <Grid Background="AliceBlue">
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="115" Width="800" Background="White"></TextBlock>
+        <Label Content="业务类型" Margin="10,10,726,156.468" FontSize="9"/>
+        <Label Content="手术领用" Margin="19,37,699,129.468" Foreground="#619CF8" FontWeight="Bold" RenderTransformOrigin="0.446,0.174"/>
+        <Label Content="操作人" Margin="19,64,717,483" FontSize="9"/>
+        <Label Content="手术单号" Margin="119,64,617,483" FontSize="9"/>
+        <Label Content="手术时间" Margin="246,64,490,547" FontSize="9"/>
+        <TextBlock HorizontalAlignment="Left" Margin="0,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="311" Width="800" Background="White"><InlineUIContainer/></TextBlock>
+        <TextBlock HorizontalAlignment="Left" Margin="19,137,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="757" Background="#FD854E"/>
+        <Label Content="本柜待领用商品" Margin="34,290,617,326" RenderTransformOrigin="1.085,1.261"  Foreground="#619CF8" FontWeight="Bold"/>
+        <Label Content="本次操作明细" Margin="30,189,688,424" Foreground="#619CF8" FontWeight="Bold"/>
+        <Label Content="是否结束本次操作？" HorizontalAlignment="Left" Margin="310,446,0,0" VerticalAlignment="Top"/>
+        <Button Content="是" HorizontalAlignment="Left" Margin="261,493,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="否" HorizontalAlignment="Left" Margin="391,493,0,0" VerticalAlignment="Top" Width="75"/>
+    </Grid>
+</UserControl>

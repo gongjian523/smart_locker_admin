@@ -18,6 +18,10 @@
     <Color x:Key="MouseOverThemeGreenColor">#16A085</Color>
     <SolidColorBrush x:Key="MouseOverThemeGreenColorBrush" Color ="#16A085"/>
 
+    <!--灰色-->
+    <Color x:Key="MouseEnabledThemeGreenColor">#E1E1E1</Color>
+    <SolidColorBrush x:Key="MouseEnabledThemeGreenColorBrush" Color ="#E1E1E1"/>
+
     <Color x:Key="IconBtnUnselectedColor">#ECF0F1</Color>
     <SolidColorBrush x:Key="IconBtnUnselectedColorBrush" Color ="#ECF0F1"/>
 
@@ -31,6 +35,7 @@
     <!--ACCENT COLORS-->
     <Color x:Key="HighlightColor">#16A085</Color>
 
+    <Color x:Key="HighlightColor2">#E1E1E1</Color>
     <!--80%-->
     <Color x:Key="AccentColor">#CC1ABC9C</Color>
     <!--60%-->
