@@ -10,25 +10,28 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.Inventory
 {
     /// <summary>
-    /// OperationCollarUse.xaml 的交互逻辑
+    /// InventoryPlan.xaml 的交互逻辑
     /// </summary>
-    public partial class OperationCollarUse : UserControl
+    public partial class InventoryPlan : Window
     {
-        public OperationCollarUse()
+        public InventoryPlan()
         {
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// 保存事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Save(object sender, RoutedEventArgs e)
         {
-            OperationCollarUsed operationCollarUsed = new OperationCollarUsed(tbOddNumbers.Text);
-            ContentFrame.Navigate(operationCollarUsed);
+            this.Close();
         }
     }
 }

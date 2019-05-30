@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.SurgeryCollarUse
 {
     /// <summary>
-    /// OperationCollarUsed.xaml 的交互逻辑
+    /// SurgeryNumQuery.xaml 的交互逻辑
     /// </summary>
-    public partial class OperationCollarUsed : UserControl
+    public partial class SurgeryNumQuery : UserControl
     {
-        public OperationCollarUsed(string num=null)
+        public SurgeryNumQuery(string num = null)
         {
             InitializeComponent();
             if (num != null)
@@ -28,7 +28,7 @@ namespace CFLMedCab.View
                 lNum.Content = num;
             }
         }
-        
+
         /// <summary>
         /// 手术耗材详情
         /// </summary>
@@ -36,19 +36,21 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            OperationDetails operationDetails = new OperationDetails();
-            ContentFrame.Navigate(operationDetails);
+            ConsumablesDetails consumablesDetails=new ConsumablesDetails(lNum.Content.ToString());
+            ContentFrame.Navigate(consumablesDetails);
         }
-        
+
         /// <summary>
-        /// 本次领用情况
+        /// 确认领用（开柜）
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            OperationClosetCabinet operationClosetCabinet = new OperationClosetCabinet();
-            ContentFrame.Navigate(operationClosetCabinet);
+            OpenCabinet openCabinet = new OpenCabinet();
+            openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            openCabinet.Owner = Application.Current.MainWindow;
+            openCabinet.ShowDialog();
         }
     }
 }

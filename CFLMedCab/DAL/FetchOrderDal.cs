@@ -10,6 +10,9 @@ namespace CFLMedCab.DAL
 {
     public class FetchOrderDal
     {
+        /// <summary>
+        /// 数据库没有表时创建
+        /// </summary>
         public void CreateTable_FetchOrder()
         {
             string commandText = @"CREATE TABLE if not exists fetch_order ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -22,6 +25,11 @@ namespace CFLMedCab.DAL
             return;
         }
 
+        /// <summary>
+        /// 新增领用单
+        /// </summary>
+        /// <param name="fetchOrder"></param>
+        /// <returns></returns>
         public int InsertNewFetchOrder(FetchOrder fetchOrder)
         {
             string commandText = string.Format(@"INSERT INTO fetch_order (create_time, operator_id, type, status, business_order_id) VALUES 

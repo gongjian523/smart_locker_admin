@@ -13,21 +13,21 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.SurgeryCollarUse
 {
     /// <summary>
-    /// GerFetchView.xaml 的交互逻辑
+    /// NoSurgeryNumClose.xaml 的交互逻辑
     /// </summary>
-    public partial class GerFetchView : UserControl
+    public partial class NoSurgeryNumClose : UserControl
     {
-        public GerFetchView(string type)
+        public NoSurgeryNumClose(string OddNumbers = null)
         {
             InitializeComponent();
-            lType.Content = type;
+            lName.Content = OddNumbers;
         }
 
         /// <summary>
-        /// 关柜
+        /// 确认关柜
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -37,6 +37,19 @@ namespace CFLMedCab.View
             closetCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             closetCabinet.Owner = Application.Current.MainWindow;
             closetCabinet.ShowDialog();
+        }
+
+        /// <summary>
+        /// 不关柜
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            OpenCabinet openCabinet = new OpenCabinet();
+            openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            openCabinet.Owner = Application.Current.MainWindow;
+            openCabinet.ShowDialog();
         }
     }
 }

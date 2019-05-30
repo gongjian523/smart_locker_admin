@@ -13,29 +13,29 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.Inventory
 {
     /// <summary>
-    /// OperationClosetCabinet.xaml 的交互逻辑
+    /// InventoryConfirm.xaml 的交互逻辑
     /// </summary>
-    public partial class OperationClosetCabinet : UserControl
+    public partial class InventoryConfirm : UserControl
     {
-        public OperationClosetCabinet()
+        public InventoryConfirm()
         {
             InitializeComponent();
         }
 
         /// <summary>
-        /// 结束本次领用
+        /// 新增实际库存商品
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ClosetCabinet closetCabinet = new ClosetCabinet();
-            closetCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            closetCabinet.Owner = Application.Current.MainWindow;
-            closetCabinet.ShowDialog();
+            AddSingleProduct addSingleProduct = new AddSingleProduct();
+            addSingleProduct.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            addSingleProduct.Owner = Application.Current.MainWindow;
+            addSingleProduct.ShowDialog();
         }
     }
 }

@@ -13,27 +13,29 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.SurgeryCollarUse
 {
     /// <summary>
-    /// OperationDetails.xaml 的交互逻辑
+    /// ConsumablesDetails.xaml 的交互逻辑
     /// </summary>
-    public partial class OperationDetails : UserControl
+    public partial class ConsumablesDetails : UserControl
     {
-        public OperationDetails()
+        public ConsumablesDetails(string surgeryNum)
         {
             InitializeComponent();
+            SurgeryNum.Content = surgeryNum;
         }
-        
+
         /// <summary>
-        /// 返回领用界面
+        /// 返回领用页面
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Return(object sender, RoutedEventArgs e)
         {
-            OperationCollarUsed operationCollarUsed = new OperationCollarUsed();
-            ContentFrame.Navigate(operationCollarUsed);
+            SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(SurgeryNum.Content.ToString());
+            ContentFrame.Navigate(surgeryNumQuery);
+
         }
     }
 }

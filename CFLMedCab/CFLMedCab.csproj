@@ -96,29 +96,29 @@
     <Compile Include="View\GerFetchView.xaml.cs">
       <DependentUpon>GerFetchView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory.xaml.cs">
+    <Compile Include="View\Inventory\AddSingleProduct.xaml.cs">
+      <DependentUpon>AddSingleProduct.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Inventory\IntelligenceInventory.xaml.cs">
+      <DependentUpon>IntelligenceInventory.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Inventory\Inventory.xaml.cs">
       <DependentUpon>Inventory.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\InventoryConfirm.xaml.cs">
+    <Compile Include="View\Inventory\InventoryConfirm.xaml.cs">
       <DependentUpon>InventoryConfirm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\InventoryPlan.xaml.cs">
+    <Compile Include="View\Inventory\InventoryPlan.xaml.cs">
       <DependentUpon>InventoryPlan.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\InventoryPlanAdministration.xaml.cs">
-      <DependentUpon>InventoryPlanAdministration.xaml</DependentUpon>
+    <Compile Include="View\OpenCabinet.xaml.cs">
+      <DependentUpon>OpenCabinet.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OperationClosetCabinet.xaml.cs">
-      <DependentUpon>OperationClosetCabinet.xaml</DependentUpon>
+    <Compile Include="View\SurgeryCollarUse\ConsumablesDetails.xaml.cs">
+      <DependentUpon>ConsumablesDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OperationCollarUse.xaml.cs">
-      <DependentUpon>OperationCollarUse.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\OperationCollarUsed.xaml.cs">
-      <DependentUpon>OperationCollarUsed.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\OperationDetails.xaml.cs">
-      <DependentUpon>OperationDetails.xaml</DependentUpon>
+    <Compile Include="View\SurgeryCollarUse\NoSurgeryNumClose.xaml.cs">
+      <DependentUpon>NoSurgeryNumClose.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Replenishment.xaml.cs">
       <DependentUpon>Replenishment.xaml</DependentUpon>
@@ -128,6 +128,15 @@
     </Compile>
     <Compile Include="View\Stock.xaml.cs">
       <DependentUpon>Stock.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SurgeryCollarUse\SurgeryNumClose.xaml.cs">
+      <DependentUpon>SurgeryNumClose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SurgeryCollarUse\SurgeryNumQuery.xaml.cs">
+      <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SurgeryCollarUse\SurgeryQuery.xaml.cs">
+      <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Themes\AccentColors.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -158,35 +167,35 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory.xaml">
+    <Page Include="View\Inventory\AddSingleProduct.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\InventoryConfirm.xaml">
+    <Page Include="View\Inventory\IntelligenceInventory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\InventoryPlan.xaml">
+    <Page Include="View\Inventory\Inventory.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\InventoryPlanAdministration.xaml">
+    <Page Include="View\Inventory\InventoryConfirm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OperationClosetCabinet.xaml">
+    <Page Include="View\Inventory\InventoryPlan.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OperationCollarUse.xaml">
+    <Page Include="View\OpenCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OperationCollarUsed.xaml">
+    <Page Include="View\SurgeryCollarUse\ConsumablesDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OperationDetails.xaml">
+    <Page Include="View\SurgeryCollarUse\NoSurgeryNumClose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -199,6 +208,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Stock.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SurgeryCollarUse\SurgeryNumClose.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SurgeryCollarUse\SurgeryNumQuery.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SurgeryCollarUse\SurgeryQuery.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

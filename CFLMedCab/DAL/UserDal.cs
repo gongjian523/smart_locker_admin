@@ -10,6 +10,9 @@ namespace CFLMedCab.DAL
 {
     public class UserDal
     {
+        /// <summary>
+        /// 数据库没有表时创建
+        /// </summary>
         public void CreateTable_User()
         {
             string commandText = @"CREATE TABLE if not exists fetch_order ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
@@ -20,7 +23,12 @@ namespace CFLMedCab.DAL
             return;
         }
 
-        public int InsertNewFetchOrder(User user)
+        /// <summary>
+        /// 新增用户数据
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public int InsertNewUser(User user)
         {
             string commandText = string.Format(@"INSERT INTO user (name, role, vein_id) VALUES 
                                                 ('{0}', {1}, '{2}')",

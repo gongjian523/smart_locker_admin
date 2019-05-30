@@ -10,44 +10,41 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.SurgeryCollarUse
 {
     /// <summary>
-    /// ClosetCabinet.xaml 的交互逻辑
+    /// Query.xaml 的交互逻辑
     /// </summary>
-    public partial class ClosetCabinet : Window
+    public partial class SurgeryQuery : UserControl
     {
-        private DispatcherTimer ShowTimer;
-        public ClosetCabinet()
+        public SurgeryQuery()
         {
             InitializeComponent();
         }
 
         /// <summary>
-        /// 页面加载完事件
+        /// 手术单号查询
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void window_contentRendered(object sender, EventArgs e)
+        private void Query(object sender, RoutedEventArgs e)
         {
-            ShowTimer = new DispatcherTimer();
-            ShowTimer.Interval = TimeSpan.FromSeconds(3);//设置定时间隔为
-            ShowTimer.Tick += new EventHandler(Time); ;//注册定时中断事件
-            ShowTimer.Start();//定时器开启
+            SurgeryNumQuery surgeryNumQuery=new SurgeryNumQuery(tbOddNumbers.Text);
+            ContentFrame.Navigate(surgeryNumQuery);
         }
 
         /// <summary>
-        /// 三秒之后显示提示消息
+        /// 暂无手术单号
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void Time(object sender, EventArgs e)
+        private void NoNum(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            NoSurgeryNumClose noSurgeryNumClose = new NoSurgeryNumClose(); 
+            ContentFrame.Navigate(noSurgeryNumClose);
         }
-
     }
 }

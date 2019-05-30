@@ -5,10 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CFLMedCab.View"
         mc:Ignorable="d"
-        Title="ClosetCabinet" Height="280" Width="450" WindowStyle="None">
+        Title="ClosetCabinet" Height="280" Width="450" WindowStyle="None" ContentRendered="window_contentRendered">
     <Grid>
-        <Label Content="柜门已关" Name="lTips" HorizontalAlignment="Left" Margin="186,153,0,0" VerticalAlignment="Top"/>
-        <Label Content="欢迎您继续使用乘法云链耗材管理系统" Name="tips" Visibility="Hidden" HorizontalAlignment="Left" Margin="114,183,0,0" VerticalAlignment="Top"/>
-
+        <Label Content="本次操作完成" Name="lTips" HorizontalAlignment="Left" Margin="186,153,0,0" VerticalAlignment="Top"/>
+        <Label Content="欢迎您继续使用乘法云链耗材管理系统" Name="tips" HorizontalAlignment="Left" Margin="114,183,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

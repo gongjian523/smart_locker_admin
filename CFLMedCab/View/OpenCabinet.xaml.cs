@@ -16,16 +16,15 @@ using System.Windows.Threading;
 namespace CFLMedCab.View
 {
     /// <summary>
-    /// ClosetCabinet.xaml 的交互逻辑
+    /// OpenCabinet.xaml 的交互逻辑
     /// </summary>
-    public partial class ClosetCabinet : Window
+    public partial class OpenCabinet : Window
     {
         private DispatcherTimer ShowTimer;
-        public ClosetCabinet()
+        public OpenCabinet()
         {
             InitializeComponent();
         }
-
         /// <summary>
         /// 页面加载完事件
         /// </summary>
@@ -34,7 +33,7 @@ namespace CFLMedCab.View
         private void window_contentRendered(object sender, EventArgs e)
         {
             ShowTimer = new DispatcherTimer();
-            ShowTimer.Interval = TimeSpan.FromSeconds(3);//设置定时间隔为
+            ShowTimer.Interval = TimeSpan.FromSeconds(3);//设置定时间隔
             ShowTimer.Tick += new EventHandler(Time); ;//注册定时中断事件
             ShowTimer.Start();//定时器开启
         }
@@ -48,6 +47,5 @@ namespace CFLMedCab.View
         {
             this.Close();
         }
-
     }
 }

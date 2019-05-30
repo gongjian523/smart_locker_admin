@@ -48,10 +48,7 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void StockSnapshot(object sender, RoutedEventArgs e)
         {
-            InventoryPlan inventoryPlan = new InventoryPlan();
-            inventoryPlan.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            inventoryPlan.Owner = Application.Current.MainWindow;
-            inventoryPlan.ShowDialog();
+            
         }
 
         /// <summary>

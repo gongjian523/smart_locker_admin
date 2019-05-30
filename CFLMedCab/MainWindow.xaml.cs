@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using CFLMedCab.View;
+using CFLMedCab.View.Inventory;
+using CFLMedCab.View.SurgeryCollarUse;
 using MahApps.Metro.Controls;
 
 namespace CFLMedCab
@@ -67,8 +69,8 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void OperationCollarUse(object sender, RoutedEventArgs e)
         {
-            OperationCollarUse operationCollarUse = new OperationCollarUse();
-            ContentFrame.Navigate(operationCollarUse);
+            SurgeryQuery surgeryQuery = new SurgeryQuery(); 
+            ContentFrame.Navigate(surgeryQuery);
         }
 
         /// <summary>

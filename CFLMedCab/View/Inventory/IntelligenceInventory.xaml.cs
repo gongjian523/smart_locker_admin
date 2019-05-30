@@ -12,21 +12,16 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.Inventory
 {
     /// <summary>
-    /// InventoryPlan.xaml 的交互逻辑
+    /// IntelligenceInventory.xaml 的交互逻辑
     /// </summary>
-    public partial class InventoryPlan : Window
+    public partial class IntelligenceInventory : Window
     {
-        public InventoryPlan()
+        public IntelligenceInventory()
         {
             InitializeComponent();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
         }
     }
 }

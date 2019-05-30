@@ -13,21 +13,20 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.SurgeryCollarUse
 {
     /// <summary>
-    /// GerFetchView.xaml 的交互逻辑
+    /// SurgeryNumClose.xaml 的交互逻辑
     /// </summary>
-    public partial class GerFetchView : UserControl
+    public partial class SurgeryNumClose : UserControl
     {
-        public GerFetchView(string type)
+        public SurgeryNumClose()
         {
             InitializeComponent();
-            lType.Content = type;
         }
 
         /// <summary>
-        /// 关柜
+        /// 结束本次领用
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
