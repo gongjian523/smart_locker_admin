@@ -83,7 +83,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 补货入库
+        /// 退货出库
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
