@@ -48,7 +48,7 @@ namespace CFLMedCab.Infrastructure.SqliteHelper
             return;
         }
 
-        private bool ExecuteNonQuery(string sql)
+        public bool ExecuteNonQuery(string sql)
         {
             SQLiteConnection _sqlConn = SQLConnection;
 
@@ -68,7 +68,7 @@ namespace CFLMedCab.Infrastructure.SqliteHelper
             return ret;
         }
 
-        private object ExecuteScalar(string sql)
+        public object ExecuteScalar(string sql)
         {
             SQLiteConnection _sqlConn = SQLConnection;
 
@@ -90,7 +90,7 @@ namespace CFLMedCab.Infrastructure.SqliteHelper
         }
 
 
-        private IDataReader ExecuteReader(string sql)
+        public IDataReader ExecuteReader(string sql)
         {
             SQLiteConnection _sqlConn = SQLConnection;
 
