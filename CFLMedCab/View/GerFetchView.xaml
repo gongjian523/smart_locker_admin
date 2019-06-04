@@ -3,9 +3,27 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
+        <DataTemplate x:Key="fetchOrder" >
+            <Grid x:Name="itmeGrid" Height="36">
+                <TextBlock Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" 
+                               Text="{Binding name}" FontSize="16"/>
+                <TextBlock Margin="100,0,0,0" VerticalAlignment="Center"  HorizontalAlignment="Stretch" 
+                               Text="{Binding goods_id}" FontSize="16"/>
+                <TextBlock Margin="150,0,0,0" VerticalAlignment="Center"  HorizontalAlignment="Stretch" 
+                               Text="{Binding fetch_type}" FontSize="16"/>
+                <TextBlock Margin="200,0,0,0" VerticalAlignment="Center"  HorizontalAlignment="Stretch" 
+                               Text="{Binding number}" FontSize="16"/>
+                <TextBlock Margin="250,0,0,0" VerticalAlignment="Center"  HorizontalAlignment="Stretch" 
+                               Text="{Binding remarks}" FontSize="16"/>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
     <Grid Background="AliceBlue">
         <Grid Margin="10,10,10,321" Background="White">
             <Label Content="业务类型" Margin="10,10,701,89" FontSize="9"/>
@@ -13,11 +31,12 @@
             <Label Content="操作人" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" FontSize="9"/>
             <Label Content="操作日期" HorizontalAlignment="Left" Margin="150,65,0,0" VerticalAlignment="Top" FontSize="9"/>
             <Label Content="Label" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top"/>
-            <Label Content="Label" HorizontalAlignment="Left" Margin="156,86,0,0" VerticalAlignment="Top"/>
+            <Label Content="Label" Name="lDate" HorizontalAlignment="Left" Margin="156,86,0,0" VerticalAlignment="Top"/>
         </Grid>
         <Grid Margin="10,146,10,123" Background="White">
-
-
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <ItemsControl ItemTemplate="{StaticResource fetchOrder}" ItemsSource="{Binding FetchOrderList, UpdateSourceTrigger=PropertyChanged}" Height="143"/>
+            </ScrollViewer>
         </Grid>
         <Label Content="是否结束此次操作" HorizontalAlignment="Left" Margin="334,345,0,0" VerticalAlignment="Top"/>
         <Button Content="是" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="236,383,0,0" VerticalAlignment="Top" Width="114" Click="Button_Click"/>

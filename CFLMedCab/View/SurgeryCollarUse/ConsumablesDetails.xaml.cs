@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,10 +21,12 @@ namespace CFLMedCab.View.SurgeryCollarUse
     /// </summary>
     public partial class ConsumablesDetails : UserControl
     {
-        public ConsumablesDetails(string surgeryNum)
+        private SurgeryOrder surgeryOrder;
+        public ConsumablesDetails(SurgeryOrder model)
         {
             InitializeComponent();
-            SurgeryNum.Content = surgeryNum;
+            surgeryOrder = model;
+            SurgeryNum.Content = surgeryOrder.id;
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace CFLMedCab.View.SurgeryCollarUse
         /// <param name="e"></param>
         private void Return(object sender, RoutedEventArgs e)
         {
-            SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(SurgeryNum.Content.ToString());
+            SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(surgeryOrder);
             ContentFrame.Navigate(surgeryNumQuery);
 
         }

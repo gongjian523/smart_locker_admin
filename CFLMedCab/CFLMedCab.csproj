@@ -85,9 +85,29 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
+    <Compile Include="DAL\GoodsChageOrderDal.cs" />
+    <Compile Include="DAL\GoodsChageOrderdtlDal.cs" />
+    <Compile Include="DAL\GoodsDal.cs" />
+    <Compile Include="DAL\InventoryPlanDal.cs" />
+    <Compile Include="DAL\PickingOrderDal.cs" />
+    <Compile Include="DAL\PickingSubOrderDal.cs" />
+    <Compile Include="DAL\PickingSubOrderdtlDal.cs" />
+    <Compile Include="DAL\SurgeryOrderDal.cs" />
+    <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
+    <Compile Include="Model\Enum\CollarType.cs" />
     <Compile Include="Model\FetchOrder.cs" />
+    <Compile Include="Model\Goods.cs" />
+    <Compile Include="Model\GoodsChageOrder.cs" />
+    <Compile Include="Model\GoodsChageOrderdtl.cs" />
+    <Compile Include="Model\InventoryPlan.cs" />
+    <Compile Include="Model\PickingOrder.cs" />
+    <Compile Include="Model\PickingSubOrder.cs" />
+    <Compile Include="Model\PickingSubOrderdtl.cs" />
+    <Compile Include="Model\SurgeryOrder.cs" />
+    <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="View\ClosetCabinet.xaml.cs">
       <DependentUpon>ClosetCabinet.xaml</DependentUpon>
