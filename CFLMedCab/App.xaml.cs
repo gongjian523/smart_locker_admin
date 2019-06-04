@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.DAL;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +14,19 @@ namespace CFLMedCab
     /// </summary>
     public partial class App : Application
     {
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            base.OnStartup(e);
+            SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
+            surgeryOrderDal.CreateTable_SurgeryOrder();
+            SurgeryOrderdtlDal surgeryOrderdtlDal = new SurgeryOrderdtlDal();
+            surgeryOrderdtlDal.CreateTable_SurgeryOrderdtl();
+            FetchOrderDal fetchOrderDal = new FetchOrderDal();
+            fetchOrderDal.CreateTable_FetchOrder();
+            GoodsDal goodsDal = new GoodsDal();
+            goodsDal.CreateTable_Goods();
+            InventoryPlanDal inventoryPlanDal = new InventoryPlanDal();
+            inventoryPlanDal.CreateTable_InventoryPlan();
+        }
     }
 }

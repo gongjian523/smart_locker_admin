@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.DAL;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,20 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class InventoryPlan : Window
     {
+        InventoryPlanDal inventoryPlanDal = new InventoryPlanDal();
         public InventoryPlan()
         {
             InitializeComponent();
+            listView.DataContext = inventoryPlanDal.GetAllInventoryPlan().DefaultView;
+            //使用ItemsSource的形式
+            //listBox1.ItemsSource = GetDataTable().DefaultView;
+            listView.SelectedIndex = 0;
+        }
+
+        private object GetDataTable()
+        {
+            inventoryPlanDal.GetAllInventoryPlan();
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -8,7 +8,16 @@
         Title="InventoryPlan" Height="350" Width="600" WindowStyle="None">
     <Grid  Background="White">
         <Label Content="盘点计划" HorizontalAlignment="Left" Margin="38,24,0,0" VerticalAlignment="Top"/>
-        
+
+        <ListView Height="152" Margin="123,0,138,121" VerticalAlignment="Bottom" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Width="331">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="编号" DisplayMemberBinding="{Binding Path=id}"  Width="100" />
+                    <GridViewColumn Header="盘点时间" DisplayMemberBinding="{Binding Path=inventory_time}" Width="100"/>
+                    <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Path=status}" Width="100"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
         <Button Content="保存" HorizontalAlignment="Left" Margin="152,275,0,0" VerticalAlignment="Top" Width="75" Click="Save"/>
         <Button Content="取消 " HorizontalAlignment="Left" Margin="326,275,0,0" VerticalAlignment="Top" Width="75"/>
         <Button Content="新增计划 " HorizontalAlignment="Left" Margin="446,228,0,0" VerticalAlignment="Top" Width="75"/>

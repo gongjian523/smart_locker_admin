@@ -1,5 +1,8 @@
-﻿using System;
+﻿using CFLMedCab.DAL;
+using CFLMedCab.Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,12 +23,40 @@ namespace CFLMedCab.View.SurgeryCollarUse
     /// </summary>
     public partial class SurgeryNumQuery : UserControl
     {
-        public SurgeryNumQuery(string num = null)
+        private SurgeryOrder surgeryOrder;
+        private SurgeryOrderdtlDal surgeryOrderdtlDal = new SurgeryOrderdtlDal();
+        public SurgeryNumQuery(SurgeryOrder model)
         {
             InitializeComponent();
-            if (num != null)
+            DataContext = this;
+            data(model.id);
+            if (model != null)
             {
-                lNum.Content = num;
+                surgeryOrder = model;
+                lNum.Content = surgeryOrder.id;
+            }
+        }
+
+        private ObservableCollection<SurgeryOrderdtl> _surgeryOrderdtlList = new ObservableCollection<SurgeryOrderdtl>();
+        public ObservableCollection<SurgeryOrderdtl> SurgeryOrderdtlList
+        {
+            get
+            {
+                return _surgeryOrderdtlList;
+            }
+            set
+            {
+                _surgeryOrderdtlList = value;
+            }
+        }
+
+        public void data (int surgeryOrderId)
+        {
+            SurgeryOrderdtlList.Clear();
+            List<SurgeryOrderdtl> surgeryOrderdtls= surgeryOrderdtlDal.GetAllSurgeryOrderdtl(surgeryOrderId);
+            if (surgeryOrderdtls.Count > 0)
+            {
+                surgeryOrderdtls.ForEach(log => SurgeryOrderdtlList.Add(log));
             }
         }
 
@@ -36,7 +67,7 @@ namespace CFLMedCab.View.SurgeryCollarUse
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ConsumablesDetails consumablesDetails=new ConsumablesDetails(lNum.Content.ToString());
+            ConsumablesDetails consumablesDetails=new ConsumablesDetails(surgeryOrder);
             ContentFrame.Navigate(consumablesDetails);
         }
 
