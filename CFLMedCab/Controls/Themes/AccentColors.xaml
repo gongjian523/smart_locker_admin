@@ -11,6 +11,8 @@
     <Color x:Key="NavBgBlueColor">#619CF8</Color>
     <SolidColorBrush x:Key="NavBgBlueBrush" Color ="{StaticResource NavBgBlueColor}" />
 
+    <Color x:Key="LoginBkColor">#FFFFFF</Color>
+    <SolidColorBrush x:Key="LoginBkBrush" Color ="{StaticResource LoginBkColor}" />
 
     <Color x:Key="ThemeGreenColor">#1ABC9C</Color>
     <SolidColorBrush x:Key="ThemeGreenColorBrush" Color ="#1ABC9C"/>

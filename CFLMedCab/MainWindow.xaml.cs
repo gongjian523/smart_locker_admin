@@ -17,6 +17,10 @@ using CFLMedCab.View;
 using CFLMedCab.View.Inventory;
 using CFLMedCab.View.SurgeryCollarUse;
 using MahApps.Metro.Controls;
+using CFLMedCab.Infrastructure.VeinHelper;
+using System.IO.Ports;
+using System.Timers;
+
 
 namespace CFLMedCab
 {
@@ -26,17 +30,116 @@ namespace CFLMedCab
     public partial class MainWindow : MetroWindow
     {
         private DispatcherTimer ShowTimer;
+        private VeinHelper vein;
+
+        private Timer loginTimer;
+
+
+        private int _loginStatus;
+        public int LoginStatus
+        {
+            set{
+                _loginStatus = value;
+            }
+            get{
+                return _loginStatus;
+            }
+        }
+
+        private String  _loginString;
+        public String LoginString
+        {
+            set{
+                _loginString = value;
+            }
+            get{
+                return _loginString;
+            }
+        }
+
+        private String _loginString2;
+        public String LoginString2
+        {
+            set
+            {
+                _loginString2 = value;
+            }
+            get
+            {
+                return _loginString2;
+            }
+        }
+
 
         public MainWindow()
         {
             InitializeComponent();
+
+            DataContext = this;
+
             ShowTime();
-            ShowTimer = new System.Windows.Threading.DispatcherTimer();
+            ShowTimer = new DispatcherTimer();
             ShowTimer.Tick += new EventHandler(ShowCurTimer);//起个Timer一直获取当前时间
             ShowTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
             ShowTimer.Start();
+
+            vein = new VeinHelper("COM9", 9600);
+            vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
+
+            vein.ChekVein();
+
+            loginTimer = new Timer(3000);
+            loginTimer.AutoReset = false;
+            loginTimer.Enabled = true;
+            loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
+
         }
-        public void ShowCurTimer(object sender, EventArgs e)
+
+        private void onLoginTimerUp(object sender, ElapsedEventArgs e)
+        {
+            LoginInfo.Visibility = Visibility.Hidden;
+            if (_loginStatus == 1)
+            {
+                LoginBk.Visibility = Visibility.Hidden;
+                FrameView.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                vein.ChekVein();
+            }
+        }
+
+        private void onReceivedDataVein(object sender, SerialDataReceivedEventArgs e)
+        {
+            int id = vein.GetVeinId();
+
+            if (id > 0)
+            {
+                vein.Close();
+
+                _loginStatus = 1;
+                _loginString = "登录成功";
+                _loginString2 = "欢迎您登录";
+
+                loginTimer.Start();
+
+                LoginInfo.Visibility = Visibility.Visible;
+            }
+            else if(id == 0)
+            {
+                _loginStatus = 0;
+                _loginString = "登录失败";
+                _loginString2 = "请再次进行验证";
+
+                loginTimer.Start();
+                LoginInfo.Visibility = Visibility.Visible;
+            }
+            else 
+                vein.ChekVein();
+               
+        }
+
+        private void ShowCurTimer(object sender, EventArgs e)
         {
             ShowTime();
         }

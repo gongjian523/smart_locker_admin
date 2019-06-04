@@ -5,14 +5,48 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CFLMedCab"
+        xmlns:cvt="clr-namespace:CFLMedCab.Converter"
         mc:Ignorable="d"
-        Title="MainWindow"         
+        Title="MainWindow"  
         Height="540"
         MinHeight="540" 
         Width="960"
+        MinWidth ="960"
+        WindowStyle="None">
+    <Control.Resources>
+        <cvt:LoginInfoFGBrushConverter x:Key="LoginInfoFGBrushConverter"/>
+        <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
+    </Control.Resources>
+    <Grid  Height="540"
+        MinHeight="540" 
+        Width="960"
         MinWidth ="960">
-    <Grid>
-        <Grid x:Name="FrameView" >
+        <Grid x:Name="LoginBk" Visibility="Hidden">
+            <Image Height="Auto" Width="Auto" >
+                <Image.Source>
+                    <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/login.png" />
+                </Image.Source>
+            </Image>
+            <StackPanel>
+                <TextBlock HorizontalAlignment="Center" Margin="0,230,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="28" 
+                       Foreground="#FFFFFF" Text="欢迎使用乘法云链耗材管理系统"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,31,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="23" 
+                       Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
+            </StackPanel>
+        </Grid>
+        <Grid x:Name="LoginInfo" Width="355" Height="260" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
+            <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
+                <StackPanel>
+                    <Image  Width="194" Height="110" HorizontalAlignment="Center" Margin="0,48,0,0" 
+                            Source="{Binding LoginStatus, Converter={StaticResource LoginStatusImgResConverter}}"/>
+                    <TextBlock HorizontalAlignment="Center" Margin="0,23,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="17" 
+                               Foreground="{Binding LoginStatus, Converter= {StaticResource LoginInfoFGBrushConverter}}" Text= "{Binding LoginString }"/>
+                    <TextBlock HorizontalAlignment="Center" Margin="0,17,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="18" 
+                               Foreground="#333333" Text="{Binding LoginString2}"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Grid x:Name="FrameView" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height ="43"/>
                 <RowDefinition Height="*"/>
