@@ -37,27 +37,23 @@
         <Grid x:Name="LoginInfo" Width="355" Height="260" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
             <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
                 <StackPanel>
-                    <Image  Width="194" Height="110" HorizontalAlignment="Center" Margin="0,48,0,0" 
+                    <Image  Width="194" Height="110" HorizontalAlignment="Center" Margin="0,39,0,0" 
                             Source="{Binding LoginStatus, Converter={StaticResource LoginStatusImgResConverter}}"/>
-                    <TextBlock HorizontalAlignment="Center" Margin="0,23,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="17" 
+                    <TextBlock HorizontalAlignment="Center" Margin="0,17,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="17" 
                                Foreground="{Binding LoginStatus, Converter= {StaticResource LoginInfoFGBrushConverter}}" Text= "{Binding LoginString }"/>
                     <TextBlock HorizontalAlignment="Center" Margin="0,17,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="18" 
                                Foreground="#333333" Text="{Binding LoginString2}"/>
                 </StackPanel>
             </Border>
         </Grid>
+        
         <Grid x:Name="FrameView" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height ="43"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="120"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
             <Grid>
-            </Grid>
-            <Grid Grid.Column="1" x:Name="UserView">
+                <Grid Width="101" Height="20"  Margin="11,13,849,10" Background="Red"/>
                 <TextBlock Height="Auto"
                     Margin="514,12,196,10"
                     x:Name="tbDateText"
@@ -72,21 +68,44 @@
                     FontWeight="Bold"
                     FontFamily="Calibri"
                     FontSize="15" />
+
             </Grid>
-            <Grid Grid.Row="1" x:Name="NavBar" Background="{StaticResource NavBgGreyBrush}">
-                <Grid VerticalAlignment="Top">
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,14,0,0" VerticalAlignment="Top" Foreground="White" Content="一般领用"  Click="EnterGerFetch"  IsChecked="True"/>
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,64,0,0" VerticalAlignment="Top"  Foreground="White" Content="手术领用" Click="OperationCollarUse" />
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,114,0,0" VerticalAlignment="Top"  Foreground="White" Content="领用退回" Click="EnterGerFetch"/>
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,164,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" Click="Replenishment" />
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,214,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" Click="ReturnGoods" />
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,264,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" Click="Inventory"/>
-                    <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="Stock" />
+            <Grid Grid.Row="1" Background="Gray" Panel.ZIndex="1">
+                <Border Margin="25,25,25,25"  Background="#FFFFFF" CornerRadius="3,3,3,3">
+
+                    <WrapPanel Orientation="Horizontal" >
+                        <Button Width="200" Height="50" Margin="5,5,5,5"/>
+                        <Button Width="200" Height="50" Margin="5,5,5,5"/>
+                        <Button Width="200" Height="50"/>
+                        <Button Width="200" Height="50"/>
+                        <Button Width="200" Height="50"/>
+                        <Button Width="200" Height="50"/>
+                    </WrapPanel>
+
+                </Border>
+            </Grid>
+            <Grid Grid.Row="1" Panel.ZIndex="0" Visibility="Hidden">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid x:Name="NavBar" Background="{StaticResource NavBgGreyBrush}">
+                    <Grid VerticalAlignment="Top">
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,14,0,0" VerticalAlignment="Top" Foreground="White" Content="一般领用"  Click="EnterGerFetch"  IsChecked="True"/>
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,64,0,0" VerticalAlignment="Top"  Foreground="White" Content="手术领用" Click="OperationCollarUse" />
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,114,0,0" VerticalAlignment="Top"  Foreground="White" Content="领用退回" Click="EnterGerFetch"/>
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,164,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" Click="Replenishment" />
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,214,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" Click="ReturnGoods" />
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,264,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" Click="Inventory"/>
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="Stock" />
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Grid Grid.Row="1" Grid.Column="1" x:Name="ContentView">
-                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-            </Grid>
+                <Grid Grid.Column="1"  x:Name="ContentView">
+                    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
+                </Grid>
+
+        </Grid>
+
         </Grid>
     </Grid>
 </Controls:MetroWindow>

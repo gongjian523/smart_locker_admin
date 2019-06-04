@@ -59,7 +59,7 @@ namespace CFLMedCab.DAL
             {
                 FetchOrder entity = new FetchOrder();
                 entity.id = Convert.ToInt32(data["Id"].ToString());
-                entity.create_time = Convert.ToDateTime(data["create_time"]);
+                //entity.create_time = Convert.ToDateTime(data["create_time"]);
                 entity.operator_id = Convert.ToInt32(data["operator_id"]);
                 entity.type = Convert.ToInt32(data["type"]);
                 entity.status = Convert.ToInt32(data["status"]);
