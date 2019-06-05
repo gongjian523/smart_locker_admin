@@ -102,7 +102,8 @@
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Model\Enum\CollarType.cs" />    <Compile Include="Model\FetchOrder.cs" />
+    <Compile Include="Model\Enum\CollarType.cs" />
+    <Compile Include="Model\FetchOrder.cs" />
     <Compile Include="Model\Goods.cs" />
     <Compile Include="Model\GoodsChageOrder.cs" />
     <Compile Include="Model\GoodsChageOrderdtl.cs" />
@@ -123,8 +124,8 @@
     <Compile Include="View\Inventory\AddSingleProduct.xaml.cs">
       <DependentUpon>AddSingleProduct.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\IntelligenceInventory.xaml.cs">
-      <DependentUpon>IntelligenceInventory.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InvPopDialog.xaml.cs">
+      <DependentUpon>InvPopDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Inventory\Inventory.xaml.cs">
       <DependentUpon>Inventory.xaml</DependentUpon>
@@ -195,7 +196,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\IntelligenceInventory.xaml">
+    <Page Include="View\Inventory\InvPopDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -287,6 +288,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\loginS.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\btn-GerFetch.png" />
+    <Resource Include="Resources\Images\btn-Inv.png" />
+    <Resource Include="Resources\Images\btn-InvQuery.png" />
+    <Resource Include="Resources\Images\btn-Picking.png" />
+    <Resource Include="Resources\Images\btn-Replenish.png" />
+    <Resource Include="Resources\Images\btn-Return.png" />
+    <Resource Include="Resources\Images\btn-SurFetch.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Images\logo.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.110.0\build\net451\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net451\System.Data.SQLite.Core.targets')" />

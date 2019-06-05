@@ -15,11 +15,11 @@ using System.Windows.Shapes;
 namespace CFLMedCab.View.Inventory
 {
     /// <summary>
-    /// IntelligenceInventory.xaml 的交互逻辑
+    /// InvPopDialog.xaml 的交互逻辑
     /// </summary>
-    public partial class IntelligenceInventory : Window
+    public partial class InvPopDialog : Window
     {
-        public IntelligenceInventory()
+        public InvPopDialog()
         {
             InitializeComponent();
         }

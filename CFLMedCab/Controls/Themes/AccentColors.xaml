@@ -14,6 +14,13 @@
     <Color x:Key="LoginBkColor">#FFFFFF</Color>
     <SolidColorBrush x:Key="LoginBkBrush" Color ="{StaticResource LoginBkColor}" />
 
+    <Color x:Key="ContentBkColor">#F4F4F4</Color>
+    <SolidColorBrush x:Key="ContentBkBrush" Color ="{StaticResource ContentBkColor}" />
+
+    <Color x:Key="RadioTabBlueColor">#457EFF</Color>
+    <SolidColorBrush x:Key="RadioTabBlueBrush" Color ="{StaticResource RadioTabBlueColor}" />
+
+
     <Color x:Key="ThemeGreenColor">#1ABC9C</Color>
     <SolidColorBrush x:Key="ThemeGreenColorBrush" Color ="#1ABC9C"/>
 

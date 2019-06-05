@@ -1,13 +1,12 @@
-﻿<Window x:Class="CFLMedCab.View.Inventory.IntelligenceInventory"
+﻿<Window x:Class="CFLMedCab.View.Inventory.InvPopDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CFLMedCab.View"
         mc:Ignorable="d"
-        Title="IntelligenceInventory" Height="250" Width="300" WindowStyle="None">
-    <Grid>
-        <Label Content="智能柜盘点中..." HorizontalAlignment="Left" Margin="100,144,0,0" VerticalAlignment="Top"/>
-
+        Title="InvPopDialog"  Width="960"   Height="540" AllowsTransparency="True" WindowStyle="None">
+    <Grid Background="#000000" Opacity="0.1">
+         <Label Content="智能柜盘点中..." HorizontalAlignment="Left" Margin="100,144,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>

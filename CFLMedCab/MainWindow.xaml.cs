@@ -162,7 +162,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterGerFetch(object sender, RoutedEventArgs e)
+        private void EnterGerFetch_Click(object sender, RoutedEventArgs e)
         {
             string log = (string)((RadioButton)sender).Content;
             GerFetchView gerFetchView = new GerFetchView(log);
@@ -207,8 +207,11 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Inventory(object sender, RoutedEventArgs e)
+        private void EnterInv_Click(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+            BtnEntetInv.IsChecked = true;
+
             Inventory inventory = new Inventory();
             ContentFrame.Navigate(inventory);
         }
