@@ -6,20 +6,54 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="AliceBlue">
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="131" Width="780" Background="White"><InlineUIContainer>
-            </InlineUIContainer></TextBlock>
-        <Label Content="手动盘点" HorizontalAlignment="Left" Margin="173,33,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
-        <Label Content="自动盘点" HorizontalAlignment="Left" Margin="554,33,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
-        <Button Content="盘点" HorizontalAlignment="Left" Margin="164,83,0,0" VerticalAlignment="Top" Width="75" Click="IntelligenceInventory"/>
-        <Label Content="下一次自动盘点时间：" HorizontalAlignment="Left" Margin="490,55,0,0" VerticalAlignment="Top"/>
-        <Button Content="盘点计划设置" Width="75" Margin="554,83,171,340" Click="InventoryPlanSetUp"/>
-        <GridSplitter HorizontalAlignment="Left" Height="100" Margin="392,21,0,0" VerticalAlignment="Top" Width="5"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,150,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="282" Width="780" Background="White"/>
-        <Button Content="待确认" HorizontalAlignment="Left" Margin="40,165,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Content="已确认" HorizontalAlignment="Left" Margin="140,165,0,0" VerticalAlignment="Top" Width="75"/>
-        <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-        </Grid>
+    <Grid Background="{StaticResource ContentBkBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="149"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border Background="#29A8EF" Margin="20,20,10,0" CornerRadius="2,2,2,2">
+            <Grid>
+                <Label HorizontalAlignment="Center" Margin="0,34,0,0" FontSize="19" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
+                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,75,0,0" BorderThickness="0"  Width="113"  Height="32"  
+                        Background="#FFFFFF"  Foreground="#29A8EF" FontSize="14" Content="盘点"  Click="InvPopDialog" />
+            </Grid>
+        </Border>
+        <Border Grid.Column="1" Background="#27CDCB" Margin="10,20,20,0" CornerRadius="2,2,2,2">
+            <Grid>
+                <Label HorizontalAlignment="Center" Margin="0,24,0,0" FontSize="19" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
+                <Label HorizontalAlignment="Center" Margin="0,55,0,0" FontSize="13" FontWeight="Regular" Foreground="#FFFFFF" Content="下一次自动盘点时间："   />
+                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,75,0,0" BorderThickness="0"  Width="113"  Height="32"  
+                        Background="#FFFFFF"  Foreground="#27CDCB" FontSize="14" Content="盘点计划设置"  Click="InventoryPlanSetUp" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="20,20,20,20" CornerRadius="2,2,2,2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid>
+                    <StackPanel Orientation="Horizontal" Margin="20,5,20,0">
+                        <RadioButton Style="{StaticResource TabButton}"  Width="70"  Content="待确认"  FontSize="16"  IsChecked="True"/>
+                        <RadioButton Style="{StaticResource TabButton}"  Width="70"  Content="已确认"  FontSize="16"/>
+                        <RadioButton Style="{StaticResource TabButton}"  Width="70"  Content="全部"  FontSize="16"/>
+                    </StackPanel>
+                    <Label Margin="20,49,20,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="1"/>
+                </Grid>
+                <Grid Grid.Row="1" x:Name="ContentView">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="79*"/>
+                        <ColumnDefinition Width="301*"/>
+                    </Grid.ColumnDefinitions>
+                    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Grid.ColumnSpan="2"/>
+                </Grid>
+            </Grid>
+        </Border>
+
     </Grid>
 </UserControl>

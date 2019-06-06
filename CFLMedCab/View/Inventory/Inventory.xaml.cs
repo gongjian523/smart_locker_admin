@@ -30,12 +30,12 @@ namespace CFLMedCab.View.Inventory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void IntelligenceInventory(object sender, RoutedEventArgs e)
+        private void InvPopDialog(object sender, RoutedEventArgs e)
         {
-            IntelligenceInventory intelligenceInventory = new IntelligenceInventory();
-            intelligenceInventory.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            intelligenceInventory.Owner = Application.Current.MainWindow;
-            intelligenceInventory.ShowDialog();
+            InvPopDialog invPopDialog = new InvPopDialog();
+            invPopDialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            invPopDialog.Owner = Application.Current.MainWindow;
+            invPopDialog.ShowDialog();
         }
 
         /// <summary>

@@ -31,6 +31,35 @@
         </Setter>
     </Style>
 
+    <!--首页导航按钮样式-->
+    <Style x:Key="HPNavButton" TargetType="Button">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid Width="157" Height="158">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="115"/>
+                            <RowDefinition Height="43"/>
+                        </Grid.RowDefinitions>
+                        <Border Background="{TemplateBinding Background}" CornerRadius="5,5,5,5">
+                            <Image Width="94" Height="65" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Image.Source>
+                                    <BitmapImage UriSource="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Image.Source>
+                            </Image>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Label VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20" FontWeight="Regular" Foreground="#333333"  Content="{TemplateBinding Content}"/>
+                        </Grid>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <!--<Style x:Key="MainNavButton" TargetType="RadioButton">
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
@@ -111,7 +140,42 @@
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <!--Tab按钮样式-->
+    <Style x:Key="TabButton" TargetType="RadioButton">
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="RadioButton">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="3"/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="ContentLabel" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"   
+                               Foreground="#333333" FontSize="{TemplateBinding RadioButton.FontSize}" 
+                               Content="{TemplateBinding RadioButton.Content}" />
+                        <Label x:Name="BottomBar"  Grid.Row="1"  Background="{DynamicResource RadioTabBlueBrush}" Visibility="Hidden"
+                               Width="{TemplateBinding RadioButton.Width}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ContentLabel" Property="Foreground" Value="{DynamicResource RadioTabBlueBrush}" />
+                            <Setter TargetName="BottomBar" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="ContentLabel" Property="Foreground" Value="{DynamicResource RadioTabBlueBrush}"/>
+                            <Setter TargetName="BottomBar" Property="Visibility" Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
     <!--圆型按钮样式-->
     <Style x:Key="CircularNavButton" TargetType="RadioButton">
         <Setter Property="FontSize" Value="14"/>
