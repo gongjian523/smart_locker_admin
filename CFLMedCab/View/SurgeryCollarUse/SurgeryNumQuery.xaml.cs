@@ -28,37 +28,17 @@ namespace CFLMedCab.View.SurgeryCollarUse
         public SurgeryNumQuery(SurgeryOrder model)
         {
             InitializeComponent();
-            DataContext = this;
-            data(model.id);
+            listView.DataContext = surgeryOrderdtlDal.GetAllSurgeryOrderdtl(model.id).DefaultView;
+            //使用ItemsSource的形式
+            //listBox1.ItemsSource = GetDataTable().DefaultView;
+            listView.SelectedIndex = 0;
             if (model != null)
             {
                 surgeryOrder = model;
                 lNum.Content = surgeryOrder.id;
             }
         }
-
-        private ObservableCollection<SurgeryOrderdtl> _surgeryOrderdtlList = new ObservableCollection<SurgeryOrderdtl>();
-        public ObservableCollection<SurgeryOrderdtl> SurgeryOrderdtlList
-        {
-            get
-            {
-                return _surgeryOrderdtlList;
-            }
-            set
-            {
-                _surgeryOrderdtlList = value;
-            }
-        }
-
-        public void data (int surgeryOrderId)
-        {
-            SurgeryOrderdtlList.Clear();
-            List<SurgeryOrderdtl> surgeryOrderdtls= surgeryOrderdtlDal.GetAllSurgeryOrderdtl(surgeryOrderId);
-            if (surgeryOrderdtls.Count > 0)
-            {
-                surgeryOrderdtls.ForEach(log => SurgeryOrderdtlList.Add(log));
-            }
-        }
+        
 
         /// <summary>
         /// 手术耗材详情

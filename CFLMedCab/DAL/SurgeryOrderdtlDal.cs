@@ -55,33 +55,83 @@ namespace CFLMedCab.DAL
             return LastInsertRowId();
         }
 
+
         /// <summary>
-        /// 根据手术编号查询手术单详情
+        /// 根据手术编号查询待领取详情
         /// </summary>
         /// <param name="id">手术编号</param>
         /// <returns></returns>
-        public List<SurgeryOrderdtl> GetAllSurgeryOrderdtl(int id)
+        public DataTable GetAllTakeCollect(int id)
         {
-            string commandText1= string.Format(@"SELECT * FROM surgery_orderdtl");
-            IDataReader data1 = SqliteHelper.Instance.ExecuteReader(commandText1);
-            
-            List<SurgeryOrderdtl> dataList = new List<SurgeryOrderdtl>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT * FROM surgery_orderdtl WHERE surgery_order_id = {0}", id));
+            DataTable dataTable = new DataTable("Table_New");
+            dataTable.Columns.Add("id", Type.GetType("System.String"));
+            dataTable.Columns.Add("goods_code", Type.GetType("System.String"));
+            dataTable.Columns.Add("name", Type.GetType("System.String"));
+            dataTable.Columns.Add("code", Type.GetType("System.String"));
+            dataTable.Columns.Add("batch_number", Type.GetType("System.String"));
+            dataTable.Columns.Add("birth_date", Type.GetType("System.String"));
+            dataTable.Columns.Add("expiry_date", Type.GetType("System.String"));
+            dataTable.Columns.Add("fetch_type", Type.GetType("System.String"));
+            dataTable.Columns.Add("remarks", Type.GetType("System.String"));
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.id,b.goods_code,b.name,b.code,b.batch_number,b.birth_date,b.expiry_date,
+                                                                                 a.fetch_type,b.remarks FROM surgery_orderdtl a LEFT JOIN goods b on a.goods_id=b.id 
+                                                                                 WHERE surgery_order_id = {0}", id));
             if (data == null)
-                return dataList;
+                return dataTable;
             while (data.Read())
             {
-                SurgeryOrderdtl entity = new SurgeryOrderdtl();
-                entity.id = Convert.ToInt32(data["Id"].ToString());
-                entity.fetch_type = Convert.ToInt32(data["fetch_type"]);
-                entity.name = data["name"].ToString();
-                entity.number = Convert.ToInt32(data["number"]);
-                entity.remarks = data["remarks"].ToString();
-                entity.surgery_order_id = Convert.ToInt32(data["surgery_order_id"]);
-                entity.goods_id = Convert.ToInt32(data["goods_id"]);
-                dataList.Add(entity);
+                DataRow entity = dataTable.NewRow();
+                entity[0] = data["Id"];
+                entity[1] = data["goods_code"];
+                entity[2] = data["name"];
+                entity[3] = data["code"];
+                entity[4] = data["batch_number"];
+                entity[5] = data["birth_date"];
+                entity[6] = data["expiry_date"];
+                entity[5] = data["fetch_type"];
+                entity[6] = data["remarks"];
+                dataTable.Rows.Add(entity);
             }
-            return dataList;
+            return dataTable;
+        }
+
+        /// <summary>
+        /// 根据手术编号查询本次操作详情
+        /// </summary>
+        /// <param name="id">手术编号</param>
+        /// <returns></returns>
+        public DataTable GetAllSurgeryOrderdtl(int id)
+        {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("id", Type.GetType("System.String"));
+            dataTable.Columns.Add("goods_code", Type.GetType("System.String"));
+            dataTable.Columns.Add("name", Type.GetType("System.String"));
+            dataTable.Columns.Add("code", Type.GetType("System.String"));
+            dataTable.Columns.Add("batch_number", Type.GetType("System.String"));
+            dataTable.Columns.Add("birth_date", Type.GetType("System.String"));
+            dataTable.Columns.Add("expiry_date", Type.GetType("System.String"));
+            dataTable.Columns.Add("fetch_type", Type.GetType("System.String"));
+            dataTable.Columns.Add("remarks", Type.GetType("System.String"));
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.id,b.goods_code,b.name,b.code,b.batch_number,b.birth_date,b.expiry_date,
+                                                                                 a.fetch_type,b.remarks FROM surgery_orderdtl a LEFT JOIN goods b on a.goods_id=b.id 
+                                                                                 WHERE surgery_order_id = {0}", id));
+            if (data == null)
+                return dataTable;
+            while (data.Read())
+            {
+                DataRow entity = dataTable.NewRow();
+                entity[0] = data["Id"];
+                entity[1] = data["goods_code"];
+                entity[2] = data["name"];
+                entity[3] = data["code"];
+                entity[4] = data["batch_number"];
+                entity[5] = data["birth_date"];
+                entity[6] = data["expiry_date"];
+                entity[5] = data["fetch_type"];
+                entity[6] = data["remarks"];
+                dataTable.Rows.Add(entity);
+            }
+            return dataTable;
         }
 
         private int LastInsertRowId()

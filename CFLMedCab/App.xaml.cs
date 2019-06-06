@@ -27,6 +27,12 @@ namespace CFLMedCab
             goodsDal.CreateTable_Goods();
             InventoryPlanDal inventoryPlanDal = new InventoryPlanDal();
             inventoryPlanDal.CreateTable_InventoryPlan();
+            PickingOrderDal pickingOrderDal = new PickingOrderDal();
+            pickingOrderDal.CreateTable_PickingOrder();
+            PickingSubOrderDal pickingSubOrderDal = new PickingSubOrderDal();
+            pickingSubOrderDal.CreateTable_PickingSubOrder();
+            PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
+            pickingSubOrderdtlDal.CreateTable_PickingSubOrderdtl();
         }
     }
 }

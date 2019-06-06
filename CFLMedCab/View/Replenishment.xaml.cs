@@ -1,5 +1,8 @@
-﻿using System;
+﻿using CFLMedCab.DAL;
+using CFLMedCab.Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +23,17 @@ namespace CFLMedCab.View
     /// </summary>
     public partial class Replenishment : UserControl
     {
+        PickingOrderDal pickingOrderDal = new PickingOrderDal();
+        PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
         public Replenishment()
         {
             InitializeComponent();
+            listView.DataContext = pickingOrderDal.GetAllPickingOrder();
+        }
+        
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //mb.Visibility = Visibility.Hidden;
         }
     }
 }

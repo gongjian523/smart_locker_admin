@@ -86,12 +86,12 @@ namespace CFLMedCab
             vein = new VeinHelper("COM9", 9600);
             vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
 
-            vein.ChekVein();
+            //vein.ChekVein();
 
-            loginTimer = new Timer(3000);
-            loginTimer.AutoReset = false;
-            loginTimer.Enabled = true;
-            loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
+            //loginTimer = new Timer(3000);
+            //loginTimer.AutoReset = false;
+            //loginTimer.Enabled = true;
+            //loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
 
         }
 

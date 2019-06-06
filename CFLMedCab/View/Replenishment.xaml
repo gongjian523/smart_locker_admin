@@ -7,13 +7,32 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid  Background="AliceBlue">
-        <Label Content="待完成上架工单" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="14"/>
-        <TextBlock HorizontalAlignment="Left" Margin="24,43,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="209" Width="753" Background="White"/>
-        <Label Content="工单编号：" HorizontalAlignment="Left" Margin="41,54,0,0" VerticalAlignment="Top" RenderTransformOrigin="2.591,-3.76"/>
-        <Label Content="本柜待上架商品数量：" HorizontalAlignment="Left" Margin="196,54,0,0" VerticalAlignment="Top"/>
-        <Label Content="派发时间" HorizontalAlignment="Left" Margin="602,54,0,0" VerticalAlignment="Top"/>
-        <Button Content="暂无手术单号" HorizontalAlignment="Left" Margin="546,212,0,0" VerticalAlignment="Top" Width="75"/>
-        <Button Content="查询" HorizontalAlignment="Left" Margin="659,212,0,0" VerticalAlignment="Top" Width="75"/>
-
+        <ListBox  Margin="21,50,19,0" x:Name="listView" ItemsSource="{Binding}" VerticalAlignment="Top" Height="302" MinWidth="753">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid>
+                        <Label Content="{Binding id}" HorizontalAlignment="Left" Margin="18,20,0,20" VerticalAlignment="Top" RenderTransformOrigin="2.591,-3.76" FontSize="14"/>
+                        <Label Content="{Binding id}" HorizontalAlignment="Left" Margin="148,20,0,20" VerticalAlignment="Top" FontSize="14"/>
+                        <Label Content="{Binding create_time}" HorizontalAlignment="Left" Margin="571,20,0,20" VerticalAlignment="Top" FontSize="14"/>
+                        <ListView Margin="18,0,18,54" VerticalAlignment="Bottom" ItemsSource="{Binding pickings}" HorizontalAlignment="Center" MinWidth="756" MinHeight="162">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="108"/>
+                                    <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}" Width="108"/>
+                                    <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}" Width="108"/>
+                                    <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}" Width="108"/>
+                                    <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date}" Width="108"/>
+                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="108"/>
+                                    <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="108"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <Button Content="收起" HorizontalAlignment="Left" Margin="494,230,54,10" VerticalAlignment="Top" Width="113" Height="32" FontSize="15"/>
+                        <Button Content="确认" HorizontalAlignment="Left" Margin="638,230,24,10" VerticalAlignment="Top" Width="113" Height="32" FontSize="15"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Label Content="待完成上架工单" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top" FontSize="16" />
     </Grid>
 </UserControl>

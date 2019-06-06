@@ -2,6 +2,7 @@
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace CFLMedCab.DAL
 {
     public class PickingOrderDal
     {
+        PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
         /// <summary>
         /// 数据库没有表时创建
         /// </summary>
@@ -40,6 +42,29 @@ namespace CFLMedCab.DAL
 
 
             return LastInsertRowId();
+        }
+
+        /// <summary>
+        /// 获取所有工单
+        /// </summary>
+        /// <returns></returns>
+        public List<PickingOrderView> GetAllPickingOrder()
+        {
+            List<PickingOrderView> pickingOrders = new List<PickingOrderView>();
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT id,principal_id,create_time FROM picking_order"));
+            if (data == null)
+                return pickingOrders;
+            while (data.Read())
+            {
+                PickingOrderView pickingOrder = new PickingOrderView();
+                pickingOrder.id = Convert.ToInt32(data["id"]);
+                pickingOrder.principal_id = Convert.ToInt32(data["principal_id"]);
+                pickingOrder.create_time = Convert.ToDateTime(data["create_time"]);
+                pickingOrder.pickings= pickingSubOrderdtlDal.GetPickingSubOrderdtl();
+                pickingOrders.Add(pickingOrder);
+            }
+            
+            return pickingOrders;
         }
 
         private int LastInsertRowId()

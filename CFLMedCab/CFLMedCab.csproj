@@ -96,20 +96,29 @@
     <Compile Include="DAL\PickingOrderDal.cs" />
     <Compile Include="DAL\PickingSubOrderDal.cs" />
     <Compile Include="DAL\PickingSubOrderdtlDal.cs" />
+    <Compile Include="DAL\ReplenishOrderDal.cs" />
+    <Compile Include="DAL\ReplenishSubOrderDal.cs" />
+    <Compile Include="DAL\ReplenishSubOrderdtlDal.cs" />
     <Compile Include="DAL\SurgeryOrderDal.cs" />
     <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Model\Enum\CollarType.cs" />    <Compile Include="Model\FetchOrder.cs" />
+    <Compile Include="Model\ReplenishOrderView.cs" />
+    <Compile Include="Model\ReplenishSubOrder.cs" />
+    <Compile Include="Model\Enum\CollarType.cs" />
+    <Compile Include="Model\FetchOrder.cs" />
     <Compile Include="Model\Goods.cs" />
     <Compile Include="Model\GoodsChageOrder.cs" />
     <Compile Include="Model\GoodsChageOrderdtl.cs" />
     <Compile Include="Model\InventoryPlan.cs" />
     <Compile Include="Model\PickingOrder.cs" />
+    <Compile Include="Model\PickingOrderView.cs" />
     <Compile Include="Model\PickingSubOrder.cs" />
     <Compile Include="Model\PickingSubOrderdtl.cs" />
+    <Compile Include="Model\ReplenishOrder.cs" />
+    <Compile Include="Model\ReplenishSubOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\User.cs" />

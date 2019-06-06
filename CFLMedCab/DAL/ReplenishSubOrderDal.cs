@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DAL
 {
-    public class PickingSubOrderDal
+    public class ReplenishSubOrderDal
     {
         /// <summary>
         /// 数据库没有表时创建
         /// </summary>
-        public void CreateTable_PickingSubOrder()
+        public void CreateTable_ReplenishSubOrder()
         {
-            string commandText = @"CREATE TABLE if not exists picking_sub_order ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
+            string commandText = @"CREATE TABLE if not exists replenish_sub_order ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
                                                                    'picking_order_id' INTEGER,
                                                                    'create_time' not null default (datetime('localtime')),
                                                                    'end_time' not null default (datetime('localtime')),
@@ -27,15 +27,15 @@ namespace CFLMedCab.DAL
         }
 
         /// <summary>
-        /// 新增拣货单
+        /// 新增上架单
         /// </summary>
         /// <param name="pickingOrder"></param>
         /// <returns></returns>
-        public int InsertNewPickingSubOrder(PickingSubOrder pickingSubOrder)
+        public int InsertNewPickingSubOrder(ReplenishSubOrder replenishSubOrder)
         {
-            string commandText = string.Format(@"INSERT INTO picking_sub_order (picking_order_id, create_time, end_time, position,status,Inspection_order_id) VALUES 
+            string commandText = string.Format(@"INSERT INTO replenish_sub_order (picking_order_id, create_time, end_time, position,status,Inspection_order_id) VALUES 
                                                 ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')",
-                                                pickingSubOrder.picking_order_id, pickingSubOrder.create_time, pickingSubOrder.end_time, pickingSubOrder.position, pickingSubOrder.status, pickingSubOrder.Inspection_order_id);
+                                                replenishSubOrder.replenish_order_id, replenishSubOrder.create_time, replenishSubOrder.end_time, replenishSubOrder.position, replenishSubOrder.status, replenishSubOrder.Inspection_order_id);
 
             if (!SqliteHelper.Instance.ExecuteNonQuery(commandText))
                 return 0;
