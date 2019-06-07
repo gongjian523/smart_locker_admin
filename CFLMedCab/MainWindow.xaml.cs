@@ -34,6 +34,7 @@ namespace CFLMedCab
 
         private Timer loginTimer;
 
+        private Inventory inventory = new Inventory();
 
         private int _loginStatus;
         public int LoginStatus
@@ -98,6 +99,8 @@ namespace CFLMedCab
             _loginString2 = "欢迎您登录";
 
         }
+
+
 
         private void onLoginTimerUp(object sender, ElapsedEventArgs e)
         {
@@ -167,6 +170,7 @@ namespace CFLMedCab
             string log = (string)((RadioButton)sender).Content;
             GerFetchView gerFetchView = new GerFetchView(log);
             ContentFrame.Navigate(gerFetchView);
+
         }
 
         /// <summary>
@@ -212,8 +216,15 @@ namespace CFLMedCab
             HomePageView.Visibility = Visibility.Hidden;
             BtnEntetInv.IsChecked = true;
 
-            Inventory inventory = new Inventory();
             ContentFrame.Navigate(inventory);
+
+            inventory.MaskShowEvent += new Inventory.MaskShowHandler(onInventoryMaskShowEvent);
+
+        }
+
+        private void onInventoryMaskShowEvent(object sender, System.EventArgs e)
+        {
+            MaskView.Visibility = Visibility.Visible;
         }
 
         /// <summary>
