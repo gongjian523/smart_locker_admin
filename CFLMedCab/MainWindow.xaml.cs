@@ -123,18 +123,25 @@ namespace CFLMedCab
             //    vein.ChekVein();
             //}
 
+
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                PopFrame.Visibility = Visibility.Visible;
 
-                LoginInfo loginInfo = new LoginInfo(new LoginStatus {
+                LoginInfo loginInfo = new LoginInfo(new LoginStatus
+                {
                     LoginState = 0,
                     LoginString = "登录成功",
                     LoginString2 = "欢迎您登录"
                 });
-                PopFrame.Navigate(loginInfo);
+
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
 
                 loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
+
+                PopFrame.Navigate(loginInfo);
+
             }));
         }
 
@@ -164,7 +171,7 @@ namespace CFLMedCab
                 _loginString = "登录成功";
                 _loginString2 = "欢迎您登录";
 
-                loginTimer.Start();
+
 
                 //LoginInfo.Visibility = Visibility.Visible;
             }
@@ -174,7 +181,7 @@ namespace CFLMedCab
                 _loginString = "登录失败";
                 _loginString2 = "请再次进行验证";
 
-                loginTimer.Start();
+
                 //LoginInfo.Visibility = Visibility.Visible;
             }
             else 
