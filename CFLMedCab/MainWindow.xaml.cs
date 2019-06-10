@@ -21,6 +21,8 @@ using CFLMedCab.Infrastructure.VeinHelper;
 using System.IO.Ports;
 using System.Timers;
 using System.Media;
+using CFLMedCab.View.Login;
+using CFLMedCab.Model;
 
 namespace CFLMedCab
 {
@@ -35,7 +37,9 @@ namespace CFLMedCab
         private Timer loginTimer;
 
         private SoundPlayer media;
+
         private Inventory inventory = new Inventory();
+        //private LoginStatus loginStatus = new LoginStatus();
 
 
         private int _loginStatus;
@@ -91,34 +95,62 @@ namespace CFLMedCab
 
             //vein.ChekVein();
 
-            //loginTimer = new Timer(3000);
-            //loginTimer.AutoReset = false;
-            //loginTimer.Enabled = true;
-            //loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
+            loginTimer = new Timer(3000);
+            loginTimer.AutoReset = false;
+            loginTimer.Enabled = true;
+            loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
 
             _loginStatus = 1;
             _loginString = "登录成功";
             _loginString2 = "欢迎您登录";
 
-            media = new SoundPlayer("C:\\Open-GerFetch.wav"); 
-            media.Play();
+            //media = new SoundPlayer("C:\\Open-GerFetch.wav"); 
+            //media.Play();
         }
 
 
 
         private void onLoginTimerUp(object sender, ElapsedEventArgs e)
         {
-            LoginInfo.Visibility = Visibility.Hidden;
-            if (_loginStatus == 1)
+            //LoginInfo.Visibility = Visibility.Hidden;
+            //if (_loginStatus == 1)
+            //{
+            //    LoginBk.Visibility = Visibility.Hidden;
+            //    FrameView.Visibility = Visibility.Visible;
+            //}
+            //else
+            //{
+            //    vein.ChekVein();
+            //}
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                LoginBk.Visibility = Visibility.Hidden;
-                FrameView.Visibility = Visibility.Visible;
-            }
-            else
-            {
-                vein.ChekVein();
-            }
+                PopFrame.Visibility = Visibility.Visible;
+
+                LoginInfo loginInfo = new LoginInfo(new LoginStatus {
+                    LoginState = 0,
+                    LoginString = "登录成功",
+                    LoginString2 = "欢迎您登录"
+                });
+                PopFrame.Navigate(loginInfo);
+
+                loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
+            }));
         }
+
+
+        private void onLoginInfoHidenEvent(object sender, System.EventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;
+
+                //if (loginStatus.LoginState == 1)
+                LoginBkView.Visibility = Visibility.Hidden;
+            }));
+        }
+
 
         private void onReceivedDataVein(object sender, SerialDataReceivedEventArgs e)
         {
@@ -134,7 +166,7 @@ namespace CFLMedCab
 
                 loginTimer.Start();
 
-                LoginInfo.Visibility = Visibility.Visible;
+                //LoginInfo.Visibility = Visibility.Visible;
             }
             else if(id == 0)
             {
@@ -143,7 +175,7 @@ namespace CFLMedCab
                 _loginString2 = "请再次进行验证";
 
                 loginTimer.Start();
-                LoginInfo.Visibility = Visibility.Visible;
+                //LoginInfo.Visibility = Visibility.Visible;
             }
             else 
                 vein.ChekVein();
@@ -228,8 +260,10 @@ namespace CFLMedCab
 
         private void onInventoryMaskShowEvent(object sender, System.EventArgs e)
         {
-            MaskView.Visibility = Visibility.Visible;
+            //MaskView.Visibility = Visibility.Visible;
         }
+
+
 
         /// <summary>
         /// 库存查询

@@ -22,8 +22,9 @@
         MinHeight="540" 
         Width="960"
         MinWidth ="960">
-        <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"/>
-        <Grid x:Name="LoginBk"  Panel.Visibility="Hidden">
+        <Frame x:Name="PopFrame" Panel.ZIndex="4" Visibility="Hidden"/>
+        <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
+        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" >
             <Image Height="Auto" Width="Auto" >
                 <Image.Source>
                     <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/login.png" />
@@ -36,7 +37,7 @@
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
             </StackPanel>
         </Grid>
-        <Grid x:Name="LoginInfo" Width="355" Height="260" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
+        <!--<Grid x:Name="LoginInfo" Width="355" Height="260" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
             <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
                 <StackPanel>
                     <Image  Width="194" Height="110" HorizontalAlignment="Center" Margin="0,39,0,0" 
@@ -47,7 +48,7 @@
                                Foreground="#333333" Text="{Binding LoginString2}"/>
                 </StackPanel>
             </Border>
-        </Grid>
+        </Grid>-->
         
         <Grid x:Name="FrameView" Visibility="Visible">
             <Grid.RowDefinitions>
@@ -86,9 +87,6 @@
                         <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#3174FF"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="EnterInv_Click"/>
                     </WrapPanel>
-                    
-                    
-
                 </Border>
             </Grid>
             <Grid Grid.Row="1" Panel.ZIndex="0" >
@@ -113,6 +111,9 @@
 
         </Grid>
 
+        </Grid>
+        <Grid x:Name="FullView">
+            <Frame x:Name="FullFrame"/>
         </Grid>
     </Grid>
 </Controls:MetroWindow>

@@ -105,6 +105,7 @@
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Model\LoginStatus.cs" />
     <Compile Include="Model\ReplenishOrderView.cs" />
     <Compile Include="Model\ReplenishSubOrder.cs" />
     <Compile Include="Model\Enum\CollarType.cs" />
@@ -143,6 +144,9 @@
     </Compile>
     <Compile Include="View\Inventory\InventoryPlan.xaml.cs">
       <DependentUpon>InventoryPlan.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Login\LoginInfo.xaml.cs">
+      <DependentUpon>LoginInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OpenCabinet.xaml.cs">
       <DependentUpon>OpenCabinet.xaml</DependentUpon>
@@ -226,6 +230,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Login\LoginInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\OpenCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -299,9 +307,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\Login\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Images\login.png" />
   </ItemGroup>
