@@ -177,7 +177,7 @@
 
 
     <Style x:Key="RoundButton" TargetType="Button">
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -185,24 +185,23 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid >
-                        <Border x:Name="RightBorder" Grid.Column="1" CornerRadius="15" Height="{TemplateBinding Button.Height}" Width="{TemplateBinding Button.Width}">
+                        <Border x:Name="RightBorder" CornerRadius="15" Height="{TemplateBinding Button.Height}" Width="{TemplateBinding Button.Width}" Background="{TemplateBinding Button.Background}" >
                             <!--<Label x:Name="RightLabel" FontSize="{TemplateBinding Button.FontSize}" Content="{TemplateBinding Button.Content}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" 
                                    Background="{TemplateBinding Button.Background}" Foreground="{TemplateBinding Button.Foreground}"></Label>-->
 
-                            <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  
-                                   ></Label>
+                            <ContentPresenter Content="{TemplateBinding Button.Content}"   HorizontalAlignment="Center" VerticalAlignment="Center" />
                         </Border>
                     </Grid>
-                    <ControlTemplate.Triggers>
+                    <!--<ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="RightBorder" Property="Background" Value="{DynamicResource NavBgBlueBrush}" />
                             <Setter TargetName="RightLabel" Property="Foreground" Value="White" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter TargetName="RightBorder" Property="Background" Value="{DynamicResource NavBgBlueBrush}"/>
+                            --><!--<Setter TargetName="RightBorder" Property="Background" Value="{DynamicResource NavBgBlueBrush}"/>--><!--
                             <Setter TargetName="RightLabel" Property="Foreground" Value="White" />
                         </Trigger>
-                    </ControlTemplate.Triggers>
+                    </ControlTemplate.Triggers>-->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
