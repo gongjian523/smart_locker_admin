@@ -20,10 +20,17 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class Inventory : UserControl
     {
+
+
+        public delegate void MaskShowHandler(object sender, System.EventArgs e);
+        public event MaskShowHandler MaskShowEvent;
+
         public Inventory()
         {
             InitializeComponent();
         }
+
+        
 
         /// <summary>
         /// 盘点
@@ -36,6 +43,7 @@ namespace CFLMedCab.View.Inventory
             invPopDialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
             invPopDialog.Owner = Application.Current.MainWindow;
             invPopDialog.ShowDialog();
+            MaskShowEvent(this, null);
         }
 
         /// <summary>

@@ -20,7 +20,7 @@ using MahApps.Metro.Controls;
 using CFLMedCab.Infrastructure.VeinHelper;
 using System.IO.Ports;
 using System.Timers;
-
+using System.Media;
 
 namespace CFLMedCab
 {
@@ -33,6 +33,9 @@ namespace CFLMedCab
         private VeinHelper vein;
 
         private Timer loginTimer;
+
+        private SoundPlayer media;
+        private Inventory inventory = new Inventory();
 
 
         private int _loginStatus;
@@ -97,7 +100,11 @@ namespace CFLMedCab
             _loginString = "登录成功";
             _loginString2 = "欢迎您登录";
 
+            media = new SoundPlayer("C:\\Open-GerFetch.wav"); 
+            media.Play();
         }
+
+
 
         private void onLoginTimerUp(object sender, ElapsedEventArgs e)
         {
@@ -167,6 +174,7 @@ namespace CFLMedCab
             string log = (string)((RadioButton)sender).Content;
             GerFetchView gerFetchView = new GerFetchView(log);
             ContentFrame.Navigate(gerFetchView);
+
         }
 
         /// <summary>
@@ -212,8 +220,15 @@ namespace CFLMedCab
             HomePageView.Visibility = Visibility.Hidden;
             BtnEntetInv.IsChecked = true;
 
-            Inventory inventory = new Inventory();
             ContentFrame.Navigate(inventory);
+
+            inventory.MaskShowEvent += new Inventory.MaskShowHandler(onInventoryMaskShowEvent);
+
+        }
+
+        private void onInventoryMaskShowEvent(object sender, System.EventArgs e)
+        {
+            MaskView.Visibility = Visibility.Visible;
         }
 
         /// <summary>
