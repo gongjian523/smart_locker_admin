@@ -57,10 +57,10 @@ namespace CFLMedCab.DAL
         /// 查询待拣货
         /// </summary>
         /// <returns></returns>
-        public List<PickingSubOrderdtl> GetPickingSubOrderdtl()
+        public List<PickingSubOrderdtl> GetPickingSubOrderdtl(int id)
         {
             List<PickingSubOrderdtl> pickingSubOrderdtls = new List<PickingSubOrderdtl>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT * FROM picking_sub_orderdtl where status=0"));
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT * FROM picking_sub_orderdtl where  picking_order_id ={0}, status=0", id));
             if (data == null)
                 return pickingSubOrderdtls;
             while (data.Read())

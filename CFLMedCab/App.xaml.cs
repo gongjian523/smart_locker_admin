@@ -33,6 +33,12 @@ namespace CFLMedCab
             pickingSubOrderDal.CreateTable_PickingSubOrder();
             PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
             pickingSubOrderdtlDal.CreateTable_PickingSubOrderdtl();
+            ReplenishOrderDal replenishOrderDal = new ReplenishOrderDal();
+            replenishOrderDal.CreateTable_ReplenishOrder();
+            ReplenishSubOrderDal replenishSubOrderDal = new ReplenishSubOrderDal();
+            replenishSubOrderDal.CreateTable_ReplenishSubOrder();
+            ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
+            replenishSubOrderdtlDal.CreateTable_ReplenishSubOrderdtl();
         }
     }
 }

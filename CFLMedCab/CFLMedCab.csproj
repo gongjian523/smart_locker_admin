@@ -147,6 +147,12 @@
     <Compile Include="View\OpenCabinet.xaml.cs">
       <DependentUpon>OpenCabinet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\ReturnGoodsClose.xaml.cs">
+      <DependentUpon>ReturnGoodsClose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReturnGoodsConfirm.xaml.cs">
+      <DependentUpon>ReturnGoodsConfirm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SurgeryCollarUse\ConsumablesDetails.xaml.cs">
       <DependentUpon>ConsumablesDetails.xaml</DependentUpon>
     </Compile>
@@ -221,6 +227,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\OpenCabinet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReturnGoodsClose.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReturnGoodsConfirm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

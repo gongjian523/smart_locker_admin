@@ -16,7 +16,7 @@ namespace CFLMedCab.DAL
         public void CreateTable_ReplenishSubOrder()
         {
             string commandText = @"CREATE TABLE if not exists replenish_sub_order ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                                                   'picking_order_id' INTEGER,
+                                                                   'replenish_order_id' INTEGER,
                                                                    'create_time' not null default (datetime('localtime')),
                                                                    'end_time' not null default (datetime('localtime')),
                                                                    'position' VARCHAR(50),
@@ -33,7 +33,7 @@ namespace CFLMedCab.DAL
         /// <returns></returns>
         public int InsertNewPickingSubOrder(ReplenishSubOrder replenishSubOrder)
         {
-            string commandText = string.Format(@"INSERT INTO replenish_sub_order (picking_order_id, create_time, end_time, position,status,Inspection_order_id) VALUES 
+            string commandText = string.Format(@"INSERT INTO replenish_sub_order (replenish_order_id, create_time, end_time, position,status,Inspection_order_id) VALUES 
                                                 ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')",
                                                 replenishSubOrder.replenish_order_id, replenishSubOrder.create_time, replenishSubOrder.end_time, replenishSubOrder.position, replenishSubOrder.status, replenishSubOrder.Inspection_order_id);
 

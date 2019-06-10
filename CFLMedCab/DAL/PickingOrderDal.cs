@@ -45,13 +45,13 @@ namespace CFLMedCab.DAL
         }
 
         /// <summary>
-        /// 获取所有工单
+        /// 获取所有拣货工单
         /// </summary>
         /// <returns></returns>
         public List<PickingOrderView> GetAllPickingOrder()
         {
             List<PickingOrderView> pickingOrders = new List<PickingOrderView>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT id,principal_id,create_time FROM picking_order"));
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.id,a.principal_id,a.create_time,b.id bid FROM picking_order  a left join picking_sub_order b on a.id=b.picking_order_id"));
             if (data == null)
                 return pickingOrders;
             while (data.Read())
@@ -60,7 +60,8 @@ namespace CFLMedCab.DAL
                 pickingOrder.id = Convert.ToInt32(data["id"]);
                 pickingOrder.principal_id = Convert.ToInt32(data["principal_id"]);
                 pickingOrder.create_time = Convert.ToDateTime(data["create_time"]);
-                pickingOrder.pickings= pickingSubOrderdtlDal.GetPickingSubOrderdtl();
+                if(data["bid"].ToString()!=null&& data["bid"].ToString()!="")
+                    pickingOrder.pickings= pickingSubOrderdtlDal.GetPickingSubOrderdtl(Convert.ToInt32(data["bid"]));
                 pickingOrders.Add(pickingOrder);
             }
             
