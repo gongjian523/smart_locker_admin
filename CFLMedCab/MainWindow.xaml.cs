@@ -337,6 +337,16 @@ namespace CFLMedCab
             }
         }
 
-
+        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Normal;
+            this.WindowStyle = WindowStyle.None;
+            this.ResizeMode = ResizeMode.NoResize;
+            this.Topmost = true;
+            this.Top = 0;
+            this.Left = 0;
+            this.Width = SystemParameters.PrimaryScreenWidth;
+            this.Height = SystemParameters.PrimaryScreenHeight;
+        }
     }
 }
