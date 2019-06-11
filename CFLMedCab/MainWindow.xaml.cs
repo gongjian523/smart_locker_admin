@@ -75,7 +75,7 @@ namespace CFLMedCab
             //        LoginBkView.Visibility = Visibility.Hidden;
             //}));
 
-            //media = new SoundPlayer("C:\\Open-GerFetch.wav"); 
+            //media = new SoundPlayer(@"../../Resources/Medias/Open-GerFetch.wav");
             //media.Play();
 
             ConsoleManager.Show();

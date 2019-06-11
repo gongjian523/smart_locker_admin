@@ -58,6 +58,8 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void ConditionQuery(object sender, RoutedEventArgs e)
         {
+            gChoice1.Visibility = Visibility.Hidden;
+            gChoice.Visibility = Visibility.Visible;
             gQuery.Visibility = Visibility.Visible;
             Content.Margin = new Thickness(10,196,0,0);
         }
@@ -69,6 +71,8 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void EffectivePeriod(object sender, RoutedEventArgs e)
         {
+            gChoice1.Visibility = Visibility.Hidden;
+            gChoice.Visibility = Visibility.Visible;
             Tips.Visibility = Visibility.Hidden;
             rbQuery.Visibility = Visibility.Hidden;
             gQuery.Visibility = Visibility.Visible;
@@ -76,6 +80,17 @@ namespace CFLMedCab.View
             single1.Visibility = Visibility.Visible;
             single2.Visibility = Visibility.Visible;
             single3.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 库存查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StockQuery(object sender, RoutedEventArgs e)
+        {
+            gChoice.Visibility = Visibility.Hidden;
+            gChoice1.Visibility = Visibility.Visible;
         }
     }
 }

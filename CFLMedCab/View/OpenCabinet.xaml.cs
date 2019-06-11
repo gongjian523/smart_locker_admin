@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -20,6 +21,7 @@ namespace CFLMedCab.View
     /// </summary>
     public partial class OpenCabinet : Window
     {
+        private SoundPlayer media;
         private DispatcherTimer ShowTimer;
         public OpenCabinet()
         {
@@ -32,6 +34,8 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void window_contentRendered(object sender, EventArgs e)
         {
+            media = new SoundPlayer(@"../../Resources/Medias/Open-GerFetch.wav");
+            media.Play();
             ShowTimer = new DispatcherTimer();
             ShowTimer.Interval = TimeSpan.FromSeconds(3);//设置定时间隔
             ShowTimer.Tick += new EventHandler(Time); ;//注册定时中断事件

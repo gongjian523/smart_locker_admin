@@ -51,7 +51,7 @@ namespace CFLMedCab.DAL
         public List<PickingOrder> GetAllPickingOrder()
         {
             List<PickingOrder> pickingOrders = new List<PickingOrder>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT id,principal_id,create_time FROM picking_order and status=0"));
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT id,principal_id,create_time FROM picking_order where status=0"));
             if (data == null)
                 return pickingOrders;
             while (data.Read())
