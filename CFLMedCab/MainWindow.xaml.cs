@@ -25,6 +25,8 @@ using CFLMedCab.View.Login;
 using CFLMedCab.Model;
 using GDotnet.Reader.Api.Protocol.Gx;
 using GDotnet.Reader.Api.DAL;
+using CFLMedCab.View.ReplenishmentOrder;
+using CFLMedCab.View.ReturnGoodsOrder;
 
 namespace CFLMedCab
 {
