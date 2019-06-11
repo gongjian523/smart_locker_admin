@@ -13,14 +13,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.ReplenishmentOrder
 {
     /// <summary>
-    /// ReturnGoodsConfirm.xaml 的交互逻辑
+    /// ReplenishOpenCabinet.xaml 的交互逻辑
     /// </summary>
-    public partial class ReturnGoodsConfirm : UserControl
+    public partial class ReplenishOpenCabinet : UserControl
     {
-        public ReturnGoodsConfirm()
+        public ReplenishOpenCabinet()
         {
             InitializeComponent();
         }

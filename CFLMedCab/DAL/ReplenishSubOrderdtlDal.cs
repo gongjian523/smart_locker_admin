@@ -57,10 +57,10 @@ namespace CFLMedCab.DAL
         /// 查询待拣货
         /// </summary>
         /// <returns></returns>
-        public List<ReplenishSubOrderdtl> GetPickingSubOrderdtl(int id)
+        public List<ReplenishSubOrderdtl> GetReplenishSubOrderdtl(int id)
         {
             List<ReplenishSubOrderdtl> replenishSubOrderdtls = new List<ReplenishSubOrderdtl>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT * FROM replenish_sub_orderdtl where replenish_sub_orderid={0} and status=0",id));
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.* FROM replenish_sub_orderdtl a left join replenish_sub_order b on a.replenish_sub_orderid=b.id where b.replenish_order_id={0} and a.status=0", id));
             if (data == null)
                 return replenishSubOrderdtls;
             while (data.Read())

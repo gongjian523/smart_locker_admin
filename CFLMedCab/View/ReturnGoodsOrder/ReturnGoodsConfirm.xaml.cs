@@ -2,7 +2,6 @@
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,48 +14,45 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
-namespace CFLMedCab.View.SurgeryCollarUse
+namespace CFLMedCab.View.ReturnGoodsOrder
 {
     /// <summary>
-    /// SurgeryNumQuery.xaml 的交互逻辑
+    /// ReturnGoodsConfirm.xaml 的交互逻辑
     /// </summary>
-    public partial class SurgeryNumQuery : UserControl
+    public partial class ReturnGoodsConfirm : UserControl
     {
-        private SurgeryOrder surgeryOrder;
-        private SurgeryOrderdtlDal surgeryOrderdtlDal = new SurgeryOrderdtlDal();
-        public SurgeryNumQuery(SurgeryOrder model)
+        PickingOrder entity = new PickingOrder();
+        PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
+        public ReturnGoodsConfirm(PickingOrder model)
         {
             InitializeComponent();
-            listView.DataContext = surgeryOrderdtlDal.GetAllSurgeryOrderdtl(model.id);
-            //使用ItemsSource的形式
-            //listBox1.ItemsSource = GetDataTable().DefaultView;
-            listView.SelectedIndex = 0;
-            if (model != null)
-            {
-                surgeryOrder = model;
-                lNum.Content = surgeryOrder.id;
-            }
+            //操作人
+            principal.Content = model.principal_id;
+            //工单号
+            workOrderNum.Content = model.id;
+            listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
+            entity = model;
         }
-        
 
         /// <summary>
-        /// 手术耗材详情
+        /// 返回工单列表
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ConsumablesDetails consumablesDetails=new ConsumablesDetails(surgeryOrder);
-            ContentFrame.Navigate(consumablesDetails);
+            ReturnGoods returnGoods = new ReturnGoods();
+            ContentFrame.Navigate(returnGoods);
         }
 
         /// <summary>
-        /// 确认领用（开柜）
+        /// 确认开柜
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void Confirm_Click(object sender, RoutedEventArgs e)
         {
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;

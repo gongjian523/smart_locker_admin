@@ -21,6 +21,8 @@ using CFLMedCab.Infrastructure.VeinHelper;
 using System.IO.Ports;
 using System.Timers;
 using System.Media;
+using CFLMedCab.View.ReplenishmentOrder;
+using CFLMedCab.View.ReturnGoodsOrder;
 
 namespace CFLMedCab
 {
@@ -100,7 +102,7 @@ namespace CFLMedCab
             _loginString = "登录成功";
             _loginString2 = "欢迎您登录";
 
-            media = new SoundPlayer("C:\\Open-GerFetch.wav"); 
+            media = new SoundPlayer("C:\\Open-GerFetch.wav");
             media.Play();
         }
 

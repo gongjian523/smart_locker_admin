@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CFLMedCab.DAL;
+using CFLMedCab.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,16 +15,23 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.ReturnGoodsOrder
 {
     /// <summary>
     /// ReturnGoodsClose.xaml 的交互逻辑
     /// </summary>
     public partial class ReturnGoodsClose : UserControl
     {
-        public ReturnGoodsClose()
+        PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
+        public ReturnGoodsClose(PickingOrder model)
         {
             InitializeComponent();
+            //操作人
+            principal.Content = model.principal_id;
+            //工单号
+            workOrderNum.Content = model.id;
+            lDate.Content= DateTime.Now.ToString("yyyy年MM月dd日");
+            listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
         }
     }
 }

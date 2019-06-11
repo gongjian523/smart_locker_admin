@@ -7,7 +7,7 @@
              xmlns:local="clr-namespace:CFLMedCab.View.SurgeryCollarUse"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <UserControl.Resources>
+    <!--<UserControl.Resources>
         <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
         <DataTemplate x:Key="surgeryOrderdtl" >
             <Grid x:Name="itmeGrid" Height="36">
@@ -23,7 +23,7 @@
                                Text="{Binding remarks}" FontSize="16"/>
             </Grid>
         </DataTemplate>
-    </UserControl.Resources>
+    </UserControl.Resources>-->
     <Grid Background="AliceBlue">
         <Grid Margin="22,22,20,277" Background="White" >
             <Label Content="手术单号" HorizontalAlignment="Left" Margin="17,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
@@ -32,26 +32,20 @@
             <Label Content="手术时间" Foreground="#666666" HorizontalAlignment="Left" Margin="118,82,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="9"/>
             <Button Content="手术耗材详情" HorizontalAlignment="Left" Margin="640,102,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
         </Grid>
-        <Grid Margin="22,200,20,29" >
+        <Grid Margin="22,200,20,29"  Background="White">
             <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                 <ItemsControl ItemTemplate="{StaticResource surgeryOrderdtl}" ItemsSource="{Binding SurgeryOrderdtlList, UpdateSourceTrigger=PropertyChanged}" Height="143"/>
             </ScrollViewer>-->
 
-            <ListView Height="152" Margin="10,0,10,59" VerticalAlignment="Bottom" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Width="auto">
+            <ListView Height="110" Margin="10,0,10,59" VerticalAlignment="Bottom" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Width="auto">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="auto" />
-                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="auto"/>
-                        <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="auto"/>
-                        <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="auto" />
-                        <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date}" Width="auto"/>
-                        <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expiry_date}" Width="auto"/>
-                        <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding Path=fetch_type}"  Width="auto" />
-                        <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=remarks}" Width="auto"/>
-                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=status}" Width="auto"/>
-                        <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=id}"  Width="auto" />
-                        <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=inventory_time}" Width="auto"/>
-                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=status}" Width="auto"/>
+                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}" Width="auto"/>
+                        <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="auto" />
+                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="auto"/>
+                        <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding batch_number}"  Width="auto" />
+                        <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding birth_date}" Width="auto"/>
+                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="auto"/>
 
                     </GridView>
                 </ListView.View>
@@ -59,7 +53,7 @@
             <Button Content="确认" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="326,181,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="-682,0,682,0"/>
+            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
         </Grid>
     </Grid>
 </UserControl>

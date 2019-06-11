@@ -17,8 +17,19 @@ namespace CFLMedCab.DAL
         public void CreateTable_SurgeryOrder()
         {
             string commandText = @"CREATE TABLE if not exists surgery_order('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                                                            'surgery_dateiime'  not null default (datetime('localtime')));";
+                                                                            'surgery_dateiime'  not null default (datetime('localtime')),
+                                                                             'number' INTEGER);";
             SqliteHelper.Instance.ExecuteNonQuery(commandText);
+            return;
+        }
+
+        /// <summary>
+        /// 删表
+        /// </summary>
+        public void dropTable()
+        {
+            string sql = "DROP TABLE surgery_order";
+            SqliteHelper.Instance.ExecuteNonQuery(sql);
             return;
         }
 
@@ -29,7 +40,7 @@ namespace CFLMedCab.DAL
         /// <returns></returns>
         public int InsertNewSurgeryOrder(SurgeryOrder surgeryOrder)
         {
-            string commandText = string.Format(@"INSERT INTO surgery_order (id, surgery_dateiime) VALUES 
+            string commandText = string.Format(@"INSERT INTO surgery_order (surgery_dateiime,number) VALUES 
                                                 ('{0}', '{1}')",
                                                 surgeryOrder.id, surgeryOrder.surgery_dateiime);
 
@@ -55,7 +66,7 @@ namespace CFLMedCab.DAL
                 SurgeryOrder entity = new SurgeryOrder();
                 entity.id= Convert.ToInt32(data["Id"].ToString());
                 entity.surgery_dateiime= Convert.ToDateTime(data["surgery_dateiime"].ToString());
-
+                entity.number = Convert.ToInt32(data["number"].ToString());
                 dataList.Add(entity);
             }
             if(dataList.Count>0)
