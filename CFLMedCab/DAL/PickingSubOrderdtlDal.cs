@@ -60,7 +60,7 @@ namespace CFLMedCab.DAL
         public List<PickingSubOrderdtl> GetPickingSubOrderdtl(int id)
         {
             List<PickingSubOrderdtl> pickingSubOrderdtls = new List<PickingSubOrderdtl>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT * FROM picking_sub_orderdtl where  picking_order_id ={0}, status=0", id));
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.* FROM picking_sub_orderdtl a left join picking_sub_order b on a.related_order_id=b.id where  b.picking_order_id ={0} and a.status=0", id));
             if (data == null)
                 return pickingSubOrderdtls;
             while (data.Read())

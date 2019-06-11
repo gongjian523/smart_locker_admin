@@ -78,8 +78,7 @@ namespace CFLMedCab.View
             fetchOrder.business_order_id = 2;
             fetchOrder.create_time = DateTime.Now;
             fetchOrderDal.InsertNewFetchOrder(fetchOrder);
-            List<FetchOrder> fetchOrders = fetchOrderDal.GetAllFetchOrder(user, type);
-            fetchOrders.ForEach(log => FetchOrderList.Add(log));
+            listView.DataContext = fetchOrderDal.GetAllFetchOrder(user, type);
         }
     }
 

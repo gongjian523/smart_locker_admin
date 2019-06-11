@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="CFLMedCab.View.ReturnGoodsConfirm"
+﻿<UserControl x:Class="CFLMedCab.View.ReplenishmentOrder.ReplenishmentConfirm"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,17 +7,17 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="AliceBlue">
-        <Grid Margin="10,10,10,321" Background="White">
-            <Label Content="业务类型" Margin="10,10,701,89" FontSize="9"/>
-            <Label Name="lType" Content="Lable" Margin="10,35,701,59" FontSize="14"/>
-            <Label Content="操作人" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" FontSize="9"/>
-            <Label Content="Label" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top"/>
-            <Label Content="上架工单号" HorizontalAlignment="Left" Margin="158,65,0,0" VerticalAlignment="Top"  FontSize="9"/>
-            <Label Content="Label" HorizontalAlignment="Left" Margin="173,80,0,0" VerticalAlignment="Top"/>
+        <Grid Margin="10,46,10,284" Background="White" Height="120">
+            <Label Content="业务类型" Margin="10,10,701,87" FontSize="9"/>
+            <Label Name="lType" Content="补货入库" Margin="10,38,701,56" FontSize="14"/>
+            <Label Content="操作人" HorizontalAlignment="Left" Margin="13,69,0,0" VerticalAlignment="Top" FontSize="9"/>
+            <Label Content="Label" Name="principal" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" Height="25"/>
+            <Label Content="上架工单号" HorizontalAlignment="Left" Margin="173,69,0,0" VerticalAlignment="Top"  FontSize="9"/>
+            <Label Content="Label" Name="workOrderNum" HorizontalAlignment="Left" Margin="173,95,0,0" VerticalAlignment="Top" Height="25"/>
         </Grid>
-        <Grid Margin="10,146,10,105" Background="White">
-
-            <ListView Margin="10,0,10,22" VerticalAlignment="Bottom" ItemsSource="{Binding pickings}" HorizontalAlignment="Center" MinWidth="756" MinHeight="100">
+        <Grid Margin="10,182,10,63" Background="White">
+            <Label Content="本柜待上架商品" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="29"/>
+            <ListView Margin="10,0,10,51" VerticalAlignment="Bottom" Name="listView" ItemsSource="{Binding}" HorizontalAlignment="Center" MinWidth="756" MinHeight="100">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="70"/>
@@ -35,10 +35,10 @@
                 </ListView.View>
             </ListView>
         </Grid>
-       <Label Content="本柜待上架商品" HorizontalAlignment="Left" Margin="22,172,0,0" VerticalAlignment="Top"/>
-
-        <!--<Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
-        </Grid>-->
+        <Button BorderBrush="AliceBlue"  Content="返回>>" Foreground="#619CF8" FontSize="15" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Tag="{Binding}" HorizontalAlignment="Left" Margin="320,400,320,10" VerticalAlignment="Top"  Click="Confirm_Click"/>
+        <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
+            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,0"/>
+        </Grid>
     </Grid>
 </UserControl>

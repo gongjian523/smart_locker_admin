@@ -7,18 +7,57 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="AliceBlue">
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Height="115" Width="800" Background="White"></TextBlock>
-        <Label Content="业务类型" Margin="10,10,726,156.468" FontSize="9"/>
-        <Label Content="手术领用" Margin="19,37,699,129.468" Foreground="#619CF8" FontWeight="Bold" RenderTransformOrigin="0.446,0.174"/>
-        <Label Content="操作人" Margin="19,64,717,483" FontSize="9"/>
-        <Label Content="手术单号" Margin="119,64,617,483" FontSize="9"/>
-        <Label Content="手术时间" Margin="246,64,490,547" FontSize="9"/>
-        <TextBlock HorizontalAlignment="Left" Margin="0,126,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="311" Width="800" Background="White"><InlineUIContainer/></TextBlock>
-        <TextBlock HorizontalAlignment="Left" Margin="19,137,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="757" Background="#FD854E"/>
-        <Label Content="本柜待领用商品" Margin="34,290,617,326" RenderTransformOrigin="1.085,1.261"  Foreground="#619CF8" FontWeight="Bold"/>
-        <Label Content="本次操作明细" Margin="30,189,688,424" Foreground="#619CF8" FontWeight="Bold"/>
-        <Label Content="是否结束本次操作？" HorizontalAlignment="Left" Margin="310,446,0,0" VerticalAlignment="Top"/>
-        <Button Content="是" HorizontalAlignment="Left" Margin="261,493,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        <Button Content="否" HorizontalAlignment="Left" Margin="391,493,0,0" VerticalAlignment="Top" Width="75"/>
+        <Grid HorizontalAlignment="Left" VerticalAlignment="Top" Height="115" Width="800" Background="White">
+            <Label Content="业务类型" HorizontalAlignment="Left" Margin="14,10,0,0" VerticalAlignment="Top"/>
+            <Label Content="手术领用" HorizontalAlignment="Left" Margin="14,35,0,0" VerticalAlignment="Top"/>
+            <Label Content="操作人" HorizontalAlignment="Left" Margin="14,65,0,0" VerticalAlignment="Top"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="20,90,0,0" VerticalAlignment="Top"/>
+            <Label Content="手术单号" HorizontalAlignment="Left" Margin="163,65,0,0" VerticalAlignment="Top"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="163,90,0,0" VerticalAlignment="Top"/>
+            <Label Content="操作日期" HorizontalAlignment="Left" Margin="339,65,0,0" VerticalAlignment="Top"/>
+            <Label Content="Label" HorizontalAlignment="Left" Margin="357,90,0,0" VerticalAlignment="Top"/>
+
+        </Grid>
+        <Grid HorizontalAlignment="Left" Margin="0,120,0,0" VerticalAlignment="Top" Height="328" Width="800" Background="White">
+            <TextBlock HorizontalAlignment="Left" Margin="23,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="25" Width="757" Background="#FD854E"/>
+            <Label Content="本柜待领用商品" HorizontalAlignment="Left" Margin="23,40,0,0" VerticalAlignment="Top"/>
+            <ListView Height="67" Margin="164,0,330,198" VerticalAlignment="Bottom" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Width="auto">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="auto"/>
+                        <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=code}" Width="auto"/>
+                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=status}" Width="auto"/>
+                        <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding Path=id}"  Width="auto" />
+                        <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding Path=inventory_time}" Width="auto"/>
+                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=status}" Width="auto"/>
+
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Label Content="本次操作明细" HorizontalAlignment="Left" Margin="35,131,0,0" VerticalAlignment="Top"/>
+            <ListView Height="72" Margin="75,0,131,95" VerticalAlignment="Bottom" ItemsSource="{Binding}" Name="listView1" HorizontalAlignment="Center" Width="auto">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="auto" />
+                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="auto"/>
+                        <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="auto"/>
+                        <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="auto" />
+                        <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date}" Width="auto"/>
+                        <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expiry_date}" Width="auto"/>
+                        <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding Path=fetch_type}"  Width="auto" />
+                        <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=remarks}" Width="auto"/>
+                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=status}" Width="auto"/>
+                        <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=id}"  Width="auto" />
+                        <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=inventory_time}" Width="auto"/>
+                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=status}" Width="auto"/>
+
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+        <Label Content="是否结束本次操作？" HorizontalAlignment="Left" Margin="300,370,0,0" VerticalAlignment="Top"/>
+        <Button Content="是" HorizontalAlignment="Left" Margin="246,410,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+        <Button Content="否" HorizontalAlignment="Left" Margin="395,410,0,0" VerticalAlignment="Top" Width="75"/>
     </Grid>
 </UserControl>

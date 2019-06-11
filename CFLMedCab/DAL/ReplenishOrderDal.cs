@@ -48,21 +48,18 @@ namespace CFLMedCab.DAL
         /// 获取所有上架单
         /// </summary>
         /// <returns></returns>
-        public List<ReplenishOrderView> GetAllReplenishOrder()
+        public List<ReplenishOrder> GetAllReplenishOrder()
         {
-            List<ReplenishOrderView> replenishOrderView = new List<ReplenishOrderView>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.id,a.principal_id,a.create_time,b.id bid FROM replenish_order a left join replenish_sub_order b on a.id=b.replenish_order_id"));
+            List<ReplenishOrder> replenishOrderView = new List<ReplenishOrder>();
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT id,principal_id,create_time FROM replenish_order"));
             if (data == null)
                 return replenishOrderView;
             while (data.Read())
             {
-                ReplenishOrderView replenishSubOrderdtl = new ReplenishOrderView();
+                ReplenishOrder replenishSubOrderdtl = new ReplenishOrder();
                 replenishSubOrderdtl.id = Convert.ToInt32(data["id"]);
                 replenishSubOrderdtl.principal_id = Convert.ToInt32(data["principal_id"]);
                 replenishSubOrderdtl.create_time = Convert.ToDateTime(data["create_time"]);
-                object hh = data["bid"].ToString();
-                if (data["bid"].ToString()!=null&& data["bid"].ToString() != "")
-                    replenishSubOrderdtl.replenishSubOrderdtls = replenishSubOrderdtlDal.GetPickingSubOrderdtl(Convert.ToInt32(data["bid"]));
                 replenishOrderView.Add(replenishSubOrderdtl);
             }
 

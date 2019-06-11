@@ -17,12 +17,19 @@ namespace CFLMedCab.DAL
         public void CreateTable_SurgeryOrderdtl()
         {
             string commandText = @"CREATE TABLE if not exists surgery_orderdtl ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
-                                                                   'surgery_order_id'  BIGINT,
+                                                                   'goods_id' BIGINT,
                                                                    'name' VARCHAR(50),
-                                                                   'goods_id' INTEGER,
+                                                                   'goods_code' VARCHAR(50), 
+                                                                   'code' VARCHAR(50),
+                                                                   'batch_number' VARCHAR(50),
+                                                                   'birth_date' not null default (datetime('localtime')),
+                                                                   'expire_date' not null default (datetime('localtime')),
+                                                                   'valid_period' INTEGER,
+                                                                   'position' VARCHAR(50),
                                                                    'fetch_type' INTEGER,
-                                                                   'number' INTEGER,
-                                                                   'remarks' VARCHAR(200));";
+                                                                   'remarks' VARCHAR(200),
+                                                                   'status' INTEGER,
+                                                                   'related_order_id' BIGINT);";
             SqliteHelper.Instance.ExecuteNonQuery(commandText);
             return;
         }
@@ -44,9 +51,10 @@ namespace CFLMedCab.DAL
         /// <returns></returns>
         public int InsertNewSurgeryOrderdtl(SurgeryOrderdtl surgeryOrderDtl)
         {
-            string commandText = string.Format(@"INSERT INTO surgery_orderdtl (surgery_order_id,name,goods_id,fetch_type,number,remarks) VALUES 
-                                                ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}')",
-                                                 surgeryOrderDtl.surgery_order_id, surgeryOrderDtl.name,surgeryOrderDtl.goods_id, surgeryOrderDtl.fetch_type, surgeryOrderDtl.number, surgeryOrderDtl.remarks);
+            string commandText = string.Format(@"INSERT INTO surgery_orderdtl ((goods_id, name, goods_code, code,batch_number,birth_date,expire_date,valid_period,position,fetch_type,remarks,status,related_order_id) VALUES 
+                                                ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')",
+                                               surgeryOrderDtl.goods_id, surgeryOrderDtl.name, surgeryOrderDtl.goods_code, surgeryOrderDtl.code, surgeryOrderDtl.batch_number, surgeryOrderDtl.birth_date, surgeryOrderDtl.expire_date,
+                                               surgeryOrderDtl.valid_period, surgeryOrderDtl.position, surgeryOrderDtl.fetch_type, surgeryOrderDtl.remarks, surgeryOrderDtl.status, surgeryOrderDtl.related_order_id);
 
             if (!SqliteHelper.Instance.ExecuteNonQuery(commandText))
                 return 0;
@@ -61,38 +69,26 @@ namespace CFLMedCab.DAL
         /// </summary>
         /// <param name="id">手术编号</param>
         /// <returns></returns>
-        public DataTable GetAllTakeCollect(int id)
+        public List<SurgeryOrderdtl> GetAllTakeCollect(int id)
         {
-            DataTable dataTable = new DataTable("Table_New");
-            dataTable.Columns.Add("id", Type.GetType("System.String"));
-            dataTable.Columns.Add("goods_code", Type.GetType("System.String"));
-            dataTable.Columns.Add("name", Type.GetType("System.String"));
-            dataTable.Columns.Add("code", Type.GetType("System.String"));
-            dataTable.Columns.Add("batch_number", Type.GetType("System.String"));
-            dataTable.Columns.Add("birth_date", Type.GetType("System.String"));
-            dataTable.Columns.Add("expiry_date", Type.GetType("System.String"));
-            dataTable.Columns.Add("fetch_type", Type.GetType("System.String"));
-            dataTable.Columns.Add("remarks", Type.GetType("System.String"));
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.id,b.goods_code,b.name,b.code,b.batch_number,b.birth_date,b.expiry_date,
-                                                                                 a.fetch_type,b.remarks FROM surgery_orderdtl a LEFT JOIN goods b on a.goods_id=b.id 
-                                                                                 WHERE surgery_order_id = {0}", id));
+            List<SurgeryOrderdtl> surgeryOrderdtls = new List<SurgeryOrderdtl>();
+            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT * FROM surgery_orderdtl WHERE related_order_id = {0}", id));
             if (data == null)
-                return dataTable;
+                return surgeryOrderdtls;
             while (data.Read())
             {
-                DataRow entity = dataTable.NewRow();
-                entity[0] = data["Id"];
-                entity[1] = data["goods_code"];
-                entity[2] = data["name"];
-                entity[3] = data["code"];
-                entity[4] = data["batch_number"];
-                entity[5] = data["birth_date"];
-                entity[6] = data["expiry_date"];
-                entity[5] = data["fetch_type"];
-                entity[6] = data["remarks"];
-                dataTable.Rows.Add(entity);
+                SurgeryOrderdtl surgeryOrderdtl = new SurgeryOrderdtl();
+                surgeryOrderdtl.id = Convert.ToInt32(data["id"]);
+                surgeryOrderdtl.goods_code = data["goods_code"].ToString();
+                surgeryOrderdtl.name = data["name"].ToString();
+                surgeryOrderdtl.code = data["code"].ToString();
+                surgeryOrderdtl.position = data["position"].ToString();
+                surgeryOrderdtl.expire_date = Convert.ToDateTime(data["expire_date"]);
+                surgeryOrderdtl.fetch_type = Convert.ToInt32(data["fetch_type"]);
+                surgeryOrderdtl.remarks = data["remarks"].ToString();
+                surgeryOrderdtls.Add(surgeryOrderdtl);
             }
-            return dataTable;
+            return surgeryOrderdtls;
         }
 
         /// <summary>

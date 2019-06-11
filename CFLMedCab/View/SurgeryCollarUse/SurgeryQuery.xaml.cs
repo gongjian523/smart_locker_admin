@@ -45,20 +45,21 @@ namespace CFLMedCab.View.SurgeryCollarUse
             }
             else
             {
-                surgeryOrder.id = Convert.ToInt32(tbOddNumbers.Text);
-                surgeryOrder.surgery_dateiime = DateTime.Now;
-                int num = surgeryOrderDal.InsertNewSurgeryOrder(surgeryOrder);
-                if (num > 0)
-                {
-                    SurgeryOrderdtl surgeryOrderdtl = new SurgeryOrderdtl();
-                    surgeryOrderdtl.surgery_order_id = surgeryOrder.id;
-                    surgeryOrderdtl.name = "测试数据";
-                    surgeryOrderdtl.number = 22;
-                    surgeryOrderdtl.remarks = "暂无";
-                    surgeryOrderdtlDal.InsertNewSurgeryOrderdtl(surgeryOrderdtl);
-                    SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(surgeryOrder);
-                    ContentFrame.Navigate(surgeryNumQuery);
-                }
+                if (MessageBoxResult.Cancel == MessageBox.Show(Application.Current.MainWindow, "确认删除此联系人？", "警告", MessageBoxButton.OKCancel))
+                    return;
+                //surgeryOrder.id = Convert.ToInt32(tbOddNumbers.Text);
+                //surgeryOrder.surgery_dateiime = DateTime.Now;
+                //int num = surgeryOrderDal.InsertNewSurgeryOrder(surgeryOrder);
+                //if (num > 0)
+                //{
+                //    SurgeryOrderdtl surgeryOrderdtl = new SurgeryOrderdtl();
+                //    surgeryOrderdtl.related_order_id = surgeryOrder.id;
+                //    surgeryOrderdtl.name = "测试数据";
+                //    surgeryOrderdtl.remarks = "暂无";
+                //    surgeryOrderdtlDal.InsertNewSurgeryOrderdtl(surgeryOrderdtl);
+                //    SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(surgeryOrder);
+                //    ContentFrame.Navigate(surgeryNumQuery);
+                //}
             }
         }
 

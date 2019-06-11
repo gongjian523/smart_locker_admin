@@ -1,5 +1,4 @@
-﻿using CFLMedCab.DAL;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,18 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.ReturnGoodsOrder
 {
     /// <summary>
-    /// ReturnGoods.xaml 的交互逻辑
+    /// ReturnGoodsOpenCabinet.xaml 的交互逻辑
     /// </summary>
-    public partial class ReturnGoods : UserControl
+    public partial class ReturnGoodsOpenCabinet : UserControl
     {
-        PickingOrderDal pickingOrderDal = new PickingOrderDal();
-        public ReturnGoods()
+        public ReturnGoodsOpenCabinet()
         {
             InitializeComponent();
-            listView.DataContext = pickingOrderDal.GetAllPickingOrder();
         }
     }
 }
