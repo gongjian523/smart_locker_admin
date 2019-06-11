@@ -106,6 +106,9 @@
     <Compile Include="DAL\SurgeryOrderDal.cs" />
     <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
+    <Compile Include="Infrastructure\LockerHelper\LockerHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
