@@ -24,7 +24,7 @@
         MinWidth ="960">
         <Frame x:Name="PopFrame" Panel.ZIndex="4" Visibility="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
-        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" >
+        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Hidden">
             <Image Height="Auto" Width="Auto" >
                 <Image.Source>
                     <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/login.png" />
@@ -37,19 +37,6 @@
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
             </StackPanel>
         </Grid>
-        <!--<Grid x:Name="LoginInfo" Width="355" Height="260" VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="Hidden">
-            <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
-                <StackPanel>
-                    <Image  Width="194" Height="110" HorizontalAlignment="Center" Margin="0,39,0,0" 
-                            Source="{Binding LoginStatus, Converter={StaticResource LoginStatusImgResConverter}}"/>
-                    <TextBlock HorizontalAlignment="Center" Margin="0,17,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="17" 
-                               Foreground="{Binding LoginStatus, Converter= {StaticResource LoginInfoFGBrushConverter}}" Text= "{Binding LoginString }"/>
-                    <TextBlock HorizontalAlignment="Center" Margin="0,17,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="18" 
-                               Foreground="#333333" Text="{Binding LoginString2}"/>
-                </StackPanel>
-            </Border>
-        </Grid>-->
-        
         <Grid x:Name="FrameView" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height ="43"/>

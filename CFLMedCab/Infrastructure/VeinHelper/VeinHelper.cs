@@ -18,6 +18,7 @@ namespace CFLMedCab.Infrastructure.VeinHelper
 
         public void ChekVein()
         {
+            return;
             Console.WriteLine("checkVein");
             if (!IsOpen)
                 Open();

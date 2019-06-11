@@ -57,12 +57,13 @@ namespace CFLMedCab
 
             vein = new VeinHelper("COM9", 9600);
             vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
+            Console.WriteLine("onStart");
             vein.ChekVein();
 
-            loginTimer = new Timer(20000);
-            loginTimer.AutoReset = false;
-            loginTimer.Enabled = true;
-            loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
+            //loginTimer = new Timer(20000);
+            //loginTimer.AutoReset = false;
+            //loginTimer.Enabled = true;
+            //loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
 
             //App.Current.Dispatcher.Invoke((Action)(() =>
             //{
@@ -92,9 +93,8 @@ namespace CFLMedCab
             //{
             //    vein.ChekVein();
             //}
-
+            Console.WriteLine("onLoginTimerUp");
             vein.ChekVein();
-            Console.WriteLine("checkVein");
         }
 
 
@@ -111,7 +111,8 @@ namespace CFLMedCab
 
             if (e.LoginState == 0)
             {
-                Console.WriteLine("checkVein");
+                Console.WriteLine("onLoginInfoHidenEvent");
+                vein.Close();
                 vein.ChekVein();
             }
         }
@@ -146,8 +147,10 @@ namespace CFLMedCab
             }
             else
             {
-                Console.WriteLine("checkVein");
+                Console.WriteLine("onReceivedDataVein");
+                vein.Close();
                 vein.ChekVein();
+
             }
 
         }
