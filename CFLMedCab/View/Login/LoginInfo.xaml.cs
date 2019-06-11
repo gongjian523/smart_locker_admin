@@ -22,17 +22,19 @@ namespace CFLMedCab.View.Login
     /// </summary>
     public partial class LoginInfo : UserControl
     {
-        public delegate void LoginInfoHidenHandler(object sender, System.EventArgs e);
+        public delegate void LoginInfoHidenHandler(object sender, LoginStatus e);
         public event LoginInfoHidenHandler LoginInfoHidenEvent;
 
         private Timer loginTimer;
+
+        private LoginStatus loginSta;
 
 
         public LoginInfo(LoginStatus login)
         {
             InitializeComponent();
             DataContext = login;
-
+            loginSta = login;
 
             loginTimer = new Timer(3000);
             loginTimer.AutoReset = false;
@@ -44,7 +46,7 @@ namespace CFLMedCab.View.Login
         {
             //App.Current.Dispatcher.Invoke((Action)(() =>
             //{
-                LoginInfoHidenEvent(this, null);
+                LoginInfoHidenEvent(this, loginSta);
             //}));
         }
     }
