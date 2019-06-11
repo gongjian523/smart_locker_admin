@@ -166,9 +166,9 @@ namespace CFLMedCab
         private void ShowTime()
         {
             //获得年月日
-            this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日");
+            this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
             //获得时分秒
-            this.tbTimeText.Text = DateTime.Now.ToString("HH:mm");
+           // this.tbTimeText.Text = DateTime.Now.ToString("HH:mm:ss");
         }
 
         /// <summary>
@@ -341,8 +341,10 @@ namespace CFLMedCab
         {
             this.WindowState = WindowState.Normal;
             this.WindowStyle = WindowStyle.None;
-            this.ResizeMode = ResizeMode.NoResize;
+            this.ResizeMode = ResizeMode.CanResize;
+#if !DEBUG
             this.Topmost = true;
+#endif
             this.Top = 0;
             this.Left = 0;
             this.Width = SystemParameters.PrimaryScreenWidth;

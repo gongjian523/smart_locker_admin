@@ -17,8 +17,8 @@
     <Grid>
         <Frame x:Name="PopFrame" Panel.ZIndex="4" Visibility="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
-        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Hidden">
-            <Image Height="Auto" Width="Auto" >
+        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Hidden" >
+            <Image Height="Auto" Width="Auto" HorizontalAlignment="Left" Margin="0">
                 <Image.Source>
                     <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/login.png" />
                 </Image.Source>
@@ -36,29 +36,21 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid>
-                <Image Width="101" Height="20"  Margin="11,13,849,10" >
+                <Image Width="101" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0" >
                     <Image.Source>
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" />
                     </Image.Source>
                 </Image>
                 <TextBlock Height="Auto"
-                    Margin="514,12,196,10"
+                    Margin="0,0,20,0"
                     x:Name="tbDateText"
                     Foreground="Black"
                     FontWeight="Bold"
                     FontFamily="Arial"
-                    FontSize="15" />
-                <TextBlock Height="Auto"
-                    Margin="641,12,100,10"
-                    x:Name="tbTimeText"
-                    Foreground="Black"
-                    FontWeight="Bold"
-                    FontFamily="Calibri"
-                    FontSize="15" />
-
+                    FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Center" />
             </Grid>
             <Grid x:Name="HomePageView" Grid.Row="1" Background="{StaticResource ContentBkBrush}" Panel.ZIndex="1">
-                <Border Margin="25,25,25,25"  Background="#FFFFFF" CornerRadius="3,3,3,3">
+                <Border Margin="20"  Background="#FFFFFF" CornerRadius="3,3,3,3" Padding="10">
                     <WrapPanel Orientation="Horizontal" >
                         <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#7291FD"  Content="一般领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="EnterInv_Click"/>
