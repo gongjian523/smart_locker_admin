@@ -47,6 +47,9 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="GReaderApi">
+      <HintPath>..\packages\GReaderApi.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -85,6 +88,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ConsoleManager.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
@@ -105,6 +109,8 @@
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Model\LoginStatus.cs" />
+    <Compile Include="Model\ReplenishOrderView.cs" />
     <Compile Include="Model\ReplenishSubOrder.cs" />
     <Compile Include="Model\Enum\CollarType.cs" />
     <Compile Include="Model\FetchOrder.cs" />
@@ -141,6 +147,9 @@
     </Compile>
     <Compile Include="View\Inventory\InventoryPlan.xaml.cs">
       <DependentUpon>InventoryPlan.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Login\LoginInfo.xaml.cs">
+      <DependentUpon>LoginInfo.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OpenCabinet.xaml.cs">
       <DependentUpon>OpenCabinet.xaml</DependentUpon>
@@ -236,6 +245,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\Login\LoginInfo.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\OpenCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -325,9 +338,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\Login\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Resources\Images\login.png" />
   </ItemGroup>
