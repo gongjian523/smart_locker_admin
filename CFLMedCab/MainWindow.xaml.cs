@@ -86,7 +86,7 @@ namespace CFLMedCab
             {
                 name = "aaa",
                 role = 1,
-                vein_id = "111ssss"
+                vein_id = "111sfadfasd"
             });
             user.GetList();
 
