@@ -57,5 +57,6 @@ namespace CFLMedCab.Infrastructure.LockHelper
             else
                 return 0;
         }
+
     }
 }
