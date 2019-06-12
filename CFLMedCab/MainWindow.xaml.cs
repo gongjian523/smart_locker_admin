@@ -27,6 +27,8 @@ using GDotnet.Reader.Api.Protocol.Gx;
 using GDotnet.Reader.Api.DAL;
 using CFLMedCab.View.ReplenishmentOrder;
 using CFLMedCab.View.ReturnGoodsOrder;
+using CFLMedCab.DAL;
+using SqlSugar;
 
 namespace CFLMedCab
 {
@@ -78,6 +80,15 @@ namespace CFLMedCab
 
             //media = new SoundPlayer(@"../../Resources/Medias/Open-GerFetch.wav");
             //media.Play();
+
+            var user = new UserDal();
+            user.Insert(new User
+            {
+                name = "aaa",
+                role = 1,
+                vein_id = "111ssss"
+            });
+            user.GetList();
 
             ConsoleManager.Show();
         }
