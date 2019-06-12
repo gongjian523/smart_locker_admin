@@ -25,19 +25,40 @@
         </DataTemplate>
     </UserControl.Resources>-->
     <Grid Background="AliceBlue">
-        <Grid Margin="22,22,20,277" Background="White" >
-            <Label Content="手术单号" HorizontalAlignment="Left" Margin="17,10,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
-            <Label Content="Label" Name="lNum" HorizontalAlignment="Left" Margin="17,38,0,0" VerticalAlignment="Top" FontSize="18" Foreground="#619CF8"/>
-            <Label Content="使用状态" Foreground="#666666" HorizontalAlignment="Left" Margin="17,82,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="9"/>
-            <Label Content="手术时间" Foreground="#666666" HorizontalAlignment="Left" Margin="118,82,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="9"/>
-            <Button Content="手术耗材详情" HorizontalAlignment="Left" Margin="640,102,0,0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
-        </Grid>
-        <Grid Margin="22,200,20,29"  Background="White">
-            <!--<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-                <ItemsControl ItemTemplate="{StaticResource surgeryOrderdtl}" ItemsSource="{Binding SurgeryOrderdtlList, UpdateSourceTrigger=PropertyChanged}" Height="143"/>
-            </ScrollViewer>-->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"></RowDefinition>
+            <RowDefinition Height="3*"></RowDefinition>
+        </Grid.RowDefinitions>
 
-            <ListView Height="110" Margin="10,0,10,59" VerticalAlignment="Bottom" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Width="auto">
+        <StackPanel Background="White" Grid.Row="0" Margin="20,20,20,10" >
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                    <RowDefinition></RowDefinition>
+                </Grid.RowDefinitions>
+
+                <Label Content="手术单号" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+                <Label Content="Label" Grid.Column="0" Grid.Row="1" Name="lNum" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="18" Foreground="#619CF8"/>
+                <Label  Grid.Column="0" Grid.Row="2" Content="使用状态" Foreground="#666666" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                <Label  Grid.Column="1" Grid.Row="2" Content="手术时间" Foreground="#666666" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                <Button Grid.Column="2" Grid.Row="2" Content="手术耗材详情" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Width="75" Click="Button_Click"/>
+            </Grid>
+        </StackPanel>
+        <StackPanel Background="White"  Grid.Row="1" Margin="20,10,20,20">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="48"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="48" ></RowDefinition>
+                </Grid.RowDefinitions>
+                <Label Content="手术单号" Grid.Row="0"/>
+                <ListView Height="110" Margin="0"  Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}" Width="auto"/>
@@ -50,10 +71,12 @@
                     </GridView>
                 </ListView.View>
             </ListView>
-            <Button Content="确认" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="326,181,0,0" VerticalAlignment="Top" Click="Button_Click_1"/>
+                <Button Content="确认"  Grid.Row="2" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Click="Button_Click_1"/>
         </Grid>
-        <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
-        </Grid>
+            <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
+                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
+            </Grid>
+        </StackPanel>
+        
     </Grid>
 </UserControl>
