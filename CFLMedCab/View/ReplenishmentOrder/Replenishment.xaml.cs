@@ -51,7 +51,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         private void InitData()
         {
             ReplenishOrderViewList.Clear();
-            List<ReplenishOrder> replenishOrders= replenishOrderDal.GetAllReplenishOrder();
+            List<ReplenishOrder> replenishOrders= replenishOrderDal.GetList();
             replenishOrders.ForEach(replenishOrder => ReplenishOrderViewList.Add(replenishOrder));
         }
         

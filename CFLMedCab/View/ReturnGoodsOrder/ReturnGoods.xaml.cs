@@ -51,8 +51,8 @@ namespace CFLMedCab.View.ReturnGoodsOrder
         private void InitData()
         {
             PickingOrderList.Clear();
-            List<PickingOrder> pickingOrders = pickingOrderDal.GetAllPickingOrder();
-            pickingOrders.ForEach(pickingOrder => PickingOrderList.Add(pickingOrder));
+            //List<PickingOrder> pickingOrders = pickingOrderDal.GetAllPickingOrder();
+            //pickingOrders.ForEach(pickingOrder => PickingOrderList.Add(pickingOrder));
         }
 
         /// <summary>

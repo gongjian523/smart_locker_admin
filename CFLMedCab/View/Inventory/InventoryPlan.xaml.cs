@@ -24,7 +24,7 @@ namespace CFLMedCab.View.Inventory
         public InventoryPlan()
         {
             InitializeComponent();
-            listView.DataContext = inventoryPlanDal.GetAllInventoryPlan().DefaultView;
+            //listView.DataContext = inventoryPlanDal.GetAllInventoryPlan().DefaultView;
             //使用ItemsSource的形式
             //listBox1.ItemsSource = GetDataTable().DefaultView;
             listView.SelectedIndex = 0;
@@ -32,7 +32,7 @@ namespace CFLMedCab.View.Inventory
 
         private object GetDataTable()
         {
-            inventoryPlanDal.GetAllInventoryPlan();
+            //inventoryPlanDal.GetAllInventoryPlan();
             throw new NotImplementedException();
         }
 

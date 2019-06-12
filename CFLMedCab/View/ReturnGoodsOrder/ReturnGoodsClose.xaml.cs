@@ -31,7 +31,7 @@ namespace CFLMedCab.View.ReturnGoodsOrder
             //工单号
             workOrderNum.Content = model.id;
             lDate.Content= DateTime.Now.ToString("yyyy年MM月dd日");
-            listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
+            //listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
         }
     }
 }

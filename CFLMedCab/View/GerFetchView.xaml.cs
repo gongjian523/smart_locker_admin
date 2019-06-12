@@ -70,15 +70,15 @@ namespace CFLMedCab.View
 
         public void data(int user, int type)
         {
-            FetchOrderList.Clear();
-            FetchOrder fetchOrder = new FetchOrder();
-            fetchOrder.type = 1;
-            fetchOrder.status = 2;
-            fetchOrder.operator_id = 0;
-            fetchOrder.business_order_id = 2;
-            fetchOrder.create_time = DateTime.Now;
-            fetchOrderDal.InsertNewFetchOrder(fetchOrder);
-            listView.DataContext = fetchOrderDal.GetAllFetchOrder(user, type);
+            //FetchOrderList.Clear();
+            //FetchOrder fetchOrder = new FetchOrder();
+            //fetchOrder.type = 1;
+            //fetchOrder.status = 2;
+            //fetchOrder.operator_id = 0;
+            //fetchOrder.business_order_id = 2;
+            //fetchOrder.create_time = DateTime.Now;
+            //fetchOrderDal.InsertNewFetchOrder(fetchOrder);
+            //listView.DataContext = fetchOrderDal.GetAllFetchOrder(user, type);
         }
     }
 

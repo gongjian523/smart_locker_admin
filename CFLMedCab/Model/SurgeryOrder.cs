@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,12 +14,14 @@ namespace CFLMedCab.Model
     {
         /// <summary>
         /// 手术单编号
-        /// </summary>
+        /// </summary> 
+        [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
         /// <summary>
         /// 手术时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime surgery_dateiime { get; set; }
 
     }
