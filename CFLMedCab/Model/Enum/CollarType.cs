@@ -12,26 +12,26 @@ namespace CFLMedCab.Model.Enum
         /// <summary>
         /// 一般领用
         /// </summary>
-        commonly=1,
+        commonly=0,
 
         /// <summary>
         /// 手术领用
         /// </summary>
-        surgery=2,
+        surgery=1,
 
         /// <summary>
         /// 领用回退
         /// </summary>
-        regression=3,
+        regression=2,
 
         /// <summary>
         /// 退货出库
         /// </summary>
-        returngoods=4,
+        returngoods=3,
 
         /// <summary>
         /// 补货入库
         /// </summary>
-        replenishment=5
+        replenishment=4
     }
 }

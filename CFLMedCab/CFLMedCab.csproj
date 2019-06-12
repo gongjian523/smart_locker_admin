@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\linq2db.SQLite.2.7.2\build\linq2db.SQLite.props" Condition="Exists('..\packages\linq2db.SQLite.2.7.2\build\linq2db.SQLite.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -78,9 +79,15 @@
     <Reference Include="GReaderApi">
       <HintPath>Lib\GReaderApi.dll</HintPath>
     </Reference>
+    <Reference Include="linq2db, Version=2.7.2.0, Culture=neutral, PublicKeyToken=e41013125f9e410a, processorArchitecture=MSIL">
+      <HintPath>..\packages\linq2db.2.7.2\lib\net45\linq2db.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SqlSugar, Version=5.0.0.7, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\sqlSugar.5.0.0.7\lib\SqlSugar.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -91,8 +98,8 @@
     <Reference Include="System.Data.SQLite.EF6, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.EF6.1.0.110.0\lib\net451\System.Data.SQLite.EF6.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data.SQLite.Linq, Version=1.0.110.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.110.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Linq.1.0.111.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -124,6 +131,7 @@
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderdtlDal.cs" />
     <Compile Include="DAL\GoodsDal.cs" />
+    <Compile Include="DAL\InventoryOrderdalDal.cs" />
     <Compile Include="DAL\InventoryPlanDal.cs" />
     <Compile Include="DAL\PickingOrderDal.cs" />
     <Compile Include="DAL\PickingSubOrderDal.cs" />
@@ -137,9 +145,12 @@
     <Compile Include="Infrastructure\LockerHelper\LockerHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Infrastructure\test.cs" />
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Model\InventoryOrder.cs" />
+    <Compile Include="Model\InventoryOrderdal.cs" />
     <Compile Include="Model\LoginStatus.cs" />
     <Compile Include="Model\ReplenishSubOrder.cs" />
     <Compile Include="Model\Enum\CollarType.cs" />
@@ -154,7 +165,7 @@
     <Compile Include="Model\ReplenishOrder.cs" />
     <Compile Include="Model\ReplenishSubOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrder.cs" />
-    <Compile Include="Model\SurgeryOrderdtl.cs" />
+    <Compile Include="Model\FetchOrderdtl.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="View\ClosetCabinet.xaml.cs">
       <DependentUpon>ClosetCabinet.xaml</DependentUpon>
@@ -359,6 +370,21 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="CFLMedCab_TemporaryKey.pfx" />
+    <None Include="LinqToDB.Templates\DataAnnotations.ttinclude" />
+    <None Include="LinqToDB.Templates\DataModel.ttinclude" />
+    <None Include="LinqToDB.Templates\EditableObject.ttinclude" />
+    <None Include="LinqToDB.Templates\Humanizer.ttinclude" />
+    <None Include="LinqToDB.Templates\LinqToDB.SQLite.Tools.ttinclude" />
+    <None Include="LinqToDB.Templates\LinqToDB.SQLite.ttinclude" />
+    <None Include="LinqToDB.Templates\LinqToDB.Tools.ttinclude" />
+    <None Include="LinqToDB.Templates\LinqToDB.ttinclude" />
+    <None Include="LinqToDB.Templates\MultipleFiles.ttinclude" />
+    <None Include="LinqToDB.Templates\NotifyDataErrorInfo.ttinclude" />
+    <None Include="LinqToDB.Templates\NotifyPropertyChanged.ttinclude" />
+    <None Include="LinqToDB.Templates\ObsoleteAttributes.ttinclude" />
+    <None Include="LinqToDB.Templates\PluralizationService.ttinclude" />
+    <None Include="LinqToDB.Templates\T4Model.ttinclude" />
+    <None Include="LinqToDB.Templates\Validation.ttinclude" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -403,6 +429,7 @@
     <Resource Include="Resources\Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="LinqToDB.Templates\CopyMe.SQLite.tt.txt" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -412,6 +439,7 @@
       <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.110.0\build\net451\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.110.0\build\net451\System.Data.SQLite.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\linq2db.SQLite.2.7.2\build\linq2db.SQLite.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\linq2db.SQLite.2.7.2\build\linq2db.SQLite.props'))" />
   </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

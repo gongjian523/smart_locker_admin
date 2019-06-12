@@ -49,7 +49,7 @@ namespace CFLMedCab.DAL
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public int InsertNewSurgeryOrderdtl(SurgeryOrderdtl surgeryOrderDtl)
+        public int InsertNewSurgeryOrderdtl(FetchOrderdtl surgeryOrderDtl)
         {
             string commandText = string.Format(@"INSERT INTO surgery_orderdtl ((goods_id, name, goods_code, code,batch_number,birth_date,expire_date,valid_period,position,fetch_type,remarks,status,related_order_id) VALUES 
                                                 ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')",
@@ -69,15 +69,15 @@ namespace CFLMedCab.DAL
         /// </summary>
         /// <param name="id">手术编号</param>
         /// <returns></returns>
-        public List<SurgeryOrderdtl> GetAllTakeCollect(int id)
+        public List<FetchOrderdtl> GetAllTakeCollect(int id)
         {
-            List<SurgeryOrderdtl> surgeryOrderdtls = new List<SurgeryOrderdtl>();
+            List<FetchOrderdtl> surgeryOrderdtls = new List<FetchOrderdtl>();
             IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT * FROM surgery_orderdtl WHERE related_order_id = {0}", id));
             if (data == null)
                 return surgeryOrderdtls;
             while (data.Read())
             {
-                SurgeryOrderdtl surgeryOrderdtl = new SurgeryOrderdtl();
+                FetchOrderdtl surgeryOrderdtl = new FetchOrderdtl();
                 surgeryOrderdtl.id = Convert.ToInt32(data["id"]);
                 surgeryOrderdtl.goods_code = data["goods_code"].ToString();
                 surgeryOrderdtl.name = data["name"].ToString();

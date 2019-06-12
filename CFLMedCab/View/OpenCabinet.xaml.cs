@@ -34,7 +34,9 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void window_contentRendered(object sender, EventArgs e)
         {
-            media = new SoundPlayer(@"../../Resources/Medias/Open-GerFetch.wav");
+            string path = Environment.CurrentDirectory + @"\Resources\Medias\Open-GerFetch.wav";
+            path = path.Replace(@"\bin\Debug", "");
+            media = new SoundPlayer (path);
             media.Play();
             ShowTimer = new DispatcherTimer();
             ShowTimer.Interval = TimeSpan.FromSeconds(3);//设置定时间隔
