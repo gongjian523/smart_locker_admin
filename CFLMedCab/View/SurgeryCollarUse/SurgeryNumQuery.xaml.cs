@@ -25,6 +25,11 @@ namespace CFLMedCab.View.SurgeryCollarUse
     {
         private SurgeryOrder surgeryOrder;
         private SurgeryOrderdtlDal surgeryOrderdtlDal = new SurgeryOrderdtlDal();
+        public SurgeryNumQuery()
+        {
+            InitializeComponent();
+        }
+
         public SurgeryNumQuery(SurgeryOrder model)
         {
             InitializeComponent();
@@ -38,7 +43,7 @@ namespace CFLMedCab.View.SurgeryCollarUse
                 lNum.Content = surgeryOrder.id;
             }
         }
-        
+
 
         /// <summary>
         /// 手术耗材详情

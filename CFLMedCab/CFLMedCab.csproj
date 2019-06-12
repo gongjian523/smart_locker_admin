@@ -63,7 +63,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
@@ -146,6 +146,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Infrastructure\test.cs" />
+    <Compile Include="Infrastructure\RfidHelper\RfidHelper.cs" />
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -370,21 +371,6 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="CFLMedCab_TemporaryKey.pfx" />
-    <None Include="LinqToDB.Templates\DataAnnotations.ttinclude" />
-    <None Include="LinqToDB.Templates\DataModel.ttinclude" />
-    <None Include="LinqToDB.Templates\EditableObject.ttinclude" />
-    <None Include="LinqToDB.Templates\Humanizer.ttinclude" />
-    <None Include="LinqToDB.Templates\LinqToDB.SQLite.Tools.ttinclude" />
-    <None Include="LinqToDB.Templates\LinqToDB.SQLite.ttinclude" />
-    <None Include="LinqToDB.Templates\LinqToDB.Tools.ttinclude" />
-    <None Include="LinqToDB.Templates\LinqToDB.ttinclude" />
-    <None Include="LinqToDB.Templates\MultipleFiles.ttinclude" />
-    <None Include="LinqToDB.Templates\NotifyDataErrorInfo.ttinclude" />
-    <None Include="LinqToDB.Templates\NotifyPropertyChanged.ttinclude" />
-    <None Include="LinqToDB.Templates\ObsoleteAttributes.ttinclude" />
-    <None Include="LinqToDB.Templates\PluralizationService.ttinclude" />
-    <None Include="LinqToDB.Templates\T4Model.ttinclude" />
-    <None Include="LinqToDB.Templates\Validation.ttinclude" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

@@ -37,6 +37,7 @@ namespace CFLMedCab
     {
         private DispatcherTimer ShowTimer;
         private VeinHelper vein;
+        private SerialPort com;
 
         private Timer loginTimer;
 
@@ -190,7 +191,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void OperationCollarUse(object sender, RoutedEventArgs e)
         {
-            SurgeryQuery surgeryQuery = new SurgeryQuery(); 
+            SurgeryNumQuery surgeryQuery = new SurgeryNumQuery(); 
             ContentFrame.Navigate(surgeryQuery);
         }
 
@@ -349,6 +350,43 @@ namespace CFLMedCab
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
             this.Height = SystemParameters.PrimaryScreenHeight;
+        }
+
+
+        public  void testLock()
+        {
+            com = new SerialPort();
+            com.BaudRate = 115200;
+            com.PortName = "COM2"; //主柜锁串口
+            //com.PortName = "COM5";   //副柜锁串口
+            com.DataBits = 8;
+            com.Open();
+
+            Byte[] TxData = { 0xA1 };
+            com.Write(TxData, 0, 1);
+
+            com.DataReceived += new SerialDataReceivedEventHandler(OnDataReceivedLock);
+            Console.ReadKey();
+        }
+
+        public  void OnDataReceivedLock(object sender, SerialDataReceivedEventArgs e)
+        {
+            Console.WriteLine("aaa");
+            //nsole.WriteLine(com.ReadExisting()[0]);
+
+            Byte[] receivedData = new Byte[4];
+            com.Read(receivedData, 0, 4);
+
+            string strRcv = null;
+
+            for (int i = 0; i < 4; i++) //窗体显示
+            {
+
+                strRcv += receivedData[i].ToString("X2");  //16进制显示
+            }
+
+            Console.WriteLine(strRcv);
+
         }
     }
 }
