@@ -32,7 +32,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             principal.Content = model.principal_id;
             //工单号
             workOrderNum.Content = model.id;
-            listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
+            //listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
             entity = model;
         }
         

@@ -33,7 +33,7 @@ namespace CFLMedCab.View.SurgeryCollarUse
         public SurgeryNumQuery(SurgeryOrder model)
         {
             InitializeComponent();
-            listView.DataContext = surgeryOrderdtlDal.GetAllSurgeryOrderdtl(model.id);
+           // listView.DataContext = surgeryOrderdtlDal.GetList();
             //使用ItemsSource的形式
             //listBox1.ItemsSource = GetDataTable().DefaultView;
             listView.SelectedIndex = 0;

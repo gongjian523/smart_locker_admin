@@ -32,7 +32,7 @@ namespace CFLMedCab.View.ReturnGoodsOrder
             principal.Content = model.principal_id;
             //工单号
             workOrderNum.Content = model.id;
-            listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
+            //listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
             entity = model;
         }
 
