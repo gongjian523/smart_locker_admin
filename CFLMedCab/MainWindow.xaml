@@ -7,20 +7,17 @@
         xmlns:local="clr-namespace:CFLMedCab"
         xmlns:cvt="clr-namespace:CFLMedCab.Converter"
         mc:Ignorable="d"
-        Title="MainWindow"  
-        Height="540"
-        MinHeight="540" 
-        Width="960"
+        Title="MainWindow"
+        MinHeight="540"
         MinWidth ="960"
         WindowStyle="None"
-        AllowsTransparency="True">
+        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize">
     <Control.Resources>
         <cvt:LoginInfoFGBrushConverter x:Key="LoginInfoFGBrushConverter"/>
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
     </Control.Resources>
-    <Grid  Height="540"
-        MinHeight="540" 
-        Width="960"
+    <Grid
+        MinHeight="540"
         MinWidth ="960">
         <Frame x:Name="PopFrame" Panel.ZIndex="4" Visibility="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
@@ -45,7 +42,7 @@
             <Grid>
                 <Image Width="101" Height="20"  Margin="11,13,849,10" >
                     <Image.Source>
-                        <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" />
+                        <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" FrameworkElement.FlowDirection="RightToLeft" />
                     </Image.Source>
                 </Image>
                 <TextBlock Height="Auto"
