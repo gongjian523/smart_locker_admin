@@ -21,7 +21,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 姓名
         /// </summary>
-        [SugarColumn(IsNullable = true, ColumnDataType = "Nvarchar(255)")]
+        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(255)")]
         public string name { get; set; }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 指静脉数值图像
         /// </summary>
-        [SugarColumn(IsNullable = true, ColumnDataType = "Varchar(255)")]
+        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(255)")]
         public string vein_id { get; set; }
     }
 }
