@@ -126,7 +126,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid >
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="32" Width="113" Background="#619CF8">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="48" Width="113" Background="#619CF8" CornerRadius="2,2,2,2">
                             <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="White"></Label>
                         </Border>
                     </Grid>
