@@ -16,6 +16,11 @@ namespace CFLMedCab.Infrastructure.RfidHelper
 	{
 
 		/// <summary>
+		/// 保持子线程阻塞主线程
+		/// </summary>
+		private static List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
+
+		/// <summary>
 		/// 创建串口连接
 		/// </summary>
 		/// <param name="comInfo">串口和波特率信息：如COM1:115200</param>
@@ -51,10 +56,8 @@ namespace CFLMedCab.Infrastructure.RfidHelper
 		{
 			/// mutex互斥锁，用于人为阻塞当前线程
 			//Mutex cuurentMutex = new Mutex(false);
-			List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
 			ManualResetEvent manualResetEvent = new ManualResetEvent(false);
 			manualEvents.Add(manualResetEvent);
-
 
 			DelegateGetMsg delegateGetMsg = new DelegateGetMsg(com, clientConn, manualResetEvent);
 
@@ -70,8 +73,6 @@ namespace CFLMedCab.Infrastructure.RfidHelper
 
 			//4个天线读卡, 读取EPC数据区以及TID数据区
 			SendSynBaseInventoryEpcMsg(clientConn, out isGetSuccess);
-
-			WaitHandle.WaitAll(manualEvents.ToArray());
 
 			//返回收集结果
 			return delegateGetMsg.GetDelegateMsg();
@@ -169,6 +170,7 @@ namespace CFLMedCab.Infrastructure.RfidHelper
 		/// </summary>
 		public static Hashtable GetEpcData(out bool isGetSuccess)
 		{
+		
 			isGetSuccess = true;
 
 			string com1 = "COM1";
@@ -195,6 +197,8 @@ namespace CFLMedCab.Infrastructure.RfidHelper
 			{
 				isGetSuccess = false;
 			}
+
+			WaitHandle.WaitAll(manualEvents.ToArray());
 
 			return currentEpcDataHt;
 
