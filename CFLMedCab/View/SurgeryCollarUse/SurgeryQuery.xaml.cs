@@ -34,10 +34,19 @@ namespace CFLMedCab.View.SurgeryCollarUse
         /// <param name="e"></param>
         private void Query(object sender, RoutedEventArgs e)
         {
+
+            var value = tbOddNumbers.Text;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                MessageBox.Show("手术单号不可以为空！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+
             SurgeryOrder surgeryOrder = new SurgeryOrder();
             SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
             SurgeryOrderdtlDal surgeryOrderdtlDal = new SurgeryOrderdtlDal();
-            SurgeryOrder model = surgeryOrderDal.GetSurgeryOrderById(Convert.ToInt32(tbOddNumbers.Text));
+            SurgeryOrder model = surgeryOrderDal.GetSurgeryOrderById(Convert.ToInt32(value));
             if (model!=null)
             {
                 SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(model);

@@ -6,14 +6,20 @@
              xmlns:local="clr-namespace:CFLMedCab.View.SurgeryCollarUse"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Background="AliceBlue">
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="430" Width="780" Background="White"/>
-        <Label Content="请输入手术单号或扫描手术单二维码" HorizontalAlignment="Left" Margin="43,53,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="17"/>
-        <TextBox HorizontalAlignment="Left" Name="tbOddNumbers" Height="91" Margin="52,90,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="680"/>
-        <Button Content="暂无手术单号" HorizontalAlignment="Left" Margin="454,206,0,0" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" VerticalAlignment="Top" Width="113" Height="32" Click="NoNum"/>
-        <Button Content="查询" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="619,206,0,0" VerticalAlignment="Top" Click="Query"/>
-        <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-        </Grid>
+    <Grid Background="AliceBlue" >
+        <StackPanel Background="White" Margin="40"  Name="myGrid" >
+        </StackPanel>
+        <StackPanel Background="White" Margin="20" >
+            <Label Content="请输入手术单号或扫描手术单二维码" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="17"/>
+            <TextBox x:Name="tbOddNumbers" Height="91" Margin="20,20" TextWrapping="Wrap" Text="" VerticalAlignment="Stretch" HorizontalAlignment="Left" Width="{Binding Path=ActualWidth,ElementName=myGrid}" />
+
+            <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+                <Button Content="暂无手术单号" HorizontalAlignment="Left" Margin="0,0,4,0" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" VerticalAlignment="Top" Width="113" Height="32" Click="NoNum"/>
+                <Button Content="查询" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="20,0,4,0" VerticalAlignment="Top" Click="Query"/>
+            </StackPanel>
+            <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
+                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
+            </Grid>
+        </StackPanel>
     </Grid>
 </UserControl>

@@ -166,9 +166,9 @@ namespace CFLMedCab
         private void ShowTime()
         {
             //获得年月日
-            this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日");
+            this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
             //获得时分秒
-            this.tbTimeText.Text = DateTime.Now.ToString("HH:mm");
+           // this.tbTimeText.Text = DateTime.Now.ToString("HH:mm:ss");
         }
 
         /// <summary>
