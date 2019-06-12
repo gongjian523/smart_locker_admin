@@ -145,8 +145,8 @@
     <Compile Include="Infrastructure\LockerHelper\LockerHelper.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Infrastructure\test.cs" />
     <Compile Include="Infrastructure\RfidHelper\RfidHelper.cs" />
+    <Compile Include="Infrastructure\test.cs" />
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
