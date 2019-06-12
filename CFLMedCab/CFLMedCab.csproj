@@ -62,7 +62,7 @@
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
@@ -137,6 +137,7 @@
     <Compile Include="Infrastructure\LockerHelper\LockerHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Infrastructure\RfidHelper\RfidHelper.cs" />
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
