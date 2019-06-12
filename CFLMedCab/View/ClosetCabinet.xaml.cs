@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,7 +47,19 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         public void Time(object sender, EventArgs e)
         {
+
             this.Close();
+        }
+
+        public void StockChange(List<Goods> goods,int type)
+        {
+            if (goods.Count > 0)
+            {
+                foreach(Goods item in goods)
+                {
+                    GoodsChageOrder goodsChageOrder = new GoodsChageOrder();
+                }
+            }
         }
 
     }

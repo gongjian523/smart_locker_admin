@@ -66,7 +66,6 @@ namespace CFLMedCab.DAL
                 SurgeryOrder entity = new SurgeryOrder();
                 entity.id= Convert.ToInt32(data["Id"].ToString());
                 entity.surgery_dateiime= Convert.ToDateTime(data["surgery_dateiime"].ToString());
-                entity.number = Convert.ToInt32(data["number"].ToString());
                 dataList.Add(entity);
             }
             if(dataList.Count>0)

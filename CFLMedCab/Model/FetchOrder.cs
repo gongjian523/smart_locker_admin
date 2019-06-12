@@ -37,5 +37,15 @@ namespace CFLMedCab.Model
         /// 业务单号
         /// </summary>
         public int business_order_id { get; set; }
+
+        /// <summary>
+        /// 清台单编号
+        /// </summary>
+        public int clear_platform_id { get; set; }
+
+        /// <summary>
+        /// 是否清台
+        /// </summary>
+        public int is_clearplatform { get; set; }
     }
 }

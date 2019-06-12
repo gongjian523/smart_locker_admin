@@ -6,15 +6,17 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Model
 {
-    /// <summary>
-    /// 手术单详情
-    /// </summary>
-    public class SurgeryOrderdtl
+    public class InventoryOrderdal
     {
         /// <summary>
-        /// 编号
+        /// 盘点详情单号
         /// </summary>
         public int id { get; set; }
+
+        /// <summary>
+        /// 盘点单编号
+        /// </summary>
+        public int inventory_order_id { get; set; }
 
         /// <summary>
         /// 商品编号
@@ -72,13 +74,23 @@ namespace CFLMedCab.Model
         public string remarks { get; set; }
 
         /// <summary>
-        /// 上架状态 状态：0  待上架；1 已上架。
+        /// 1。类型：账面存在；盘点新增。2。如该商品RFID读卡器感应到，则为账面存在。3。如为手动新增则为盘点新增默认为待上架，对所属工单进行操作的库存变化单中有该商品，且操作非异常，确认后状态变为已上架
         /// </summary>
-        public int status { get; set; }
+        public int goods_type { get; set; }
 
         /// <summary>
-        /// 关联操作单据
+        /// 账面库存
         /// </summary>
-        public int related_order_id { get; set; }
+        public int book_inventory { get; set; }
+
+        /// <summary>
+        /// 实际库存
+        /// </summary>
+        public int actual_inventory { get; set; }
+
+        /// <summary>
+        /// 差异数量
+        /// </summary>
+        public int num_differences { get; set; }
     }
 }

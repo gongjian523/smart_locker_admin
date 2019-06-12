@@ -21,9 +21,5 @@ namespace CFLMedCab.Model
         /// </summary>
         public DateTime surgery_dateiime { get; set; }
 
-        /// <summary>
-        /// 需要领用的数量
-        /// </summary>
-        public int number { get; set; }
     }
 }

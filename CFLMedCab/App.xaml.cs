@@ -39,6 +39,8 @@ namespace CFLMedCab
             replenishSubOrderDal.CreateTable_ReplenishSubOrder();
             ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
             replenishSubOrderdtlDal.CreateTable_ReplenishSubOrderdtl();
+            InventoryOrderdalDal inventoryOrderdalDal = new InventoryOrderdalDal();
+            inventoryOrderdalDal.create();
         }
     }
 }
