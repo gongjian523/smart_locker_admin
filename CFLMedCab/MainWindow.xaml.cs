@@ -339,14 +339,16 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.WindowState = System.Windows.WindowState.Normal;
-            this.WindowStyle = System.Windows.WindowStyle.None;
-            this.ResizeMode = System.Windows.ResizeMode.NoResize;
-            this.Topmost = true;
+            this.WindowState = WindowState.Normal;
+            this.WindowStyle = WindowStyle.None;
+            this.ResizeMode = ResizeMode.CanResize;
+#if !DEBUG
+            this.Topmost = true; 
+#endif
             this.Left = 0.0;
             this.Top = 0.0;
-            this.Width = System.Windows.SystemParameters.PrimaryScreenWidth;
-            this.Height = System.Windows.SystemParameters.PrimaryScreenHeight;
+            this.Width = SystemParameters.PrimaryScreenWidth;
+            this.Height = SystemParameters.PrimaryScreenHeight;
         }
     }
 }

@@ -11,14 +11,12 @@
         MinHeight="540"
         MinWidth ="960"
         WindowStyle="None"
-        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize">
+        AllowsTransparency="True" Loaded="MetroWindow_Loaded" >
     <Control.Resources>
         <cvt:LoginInfoFGBrushConverter x:Key="LoginInfoFGBrushConverter"/>
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
     </Control.Resources>
-    <Grid
-        MinHeight="540"
-        MinWidth ="960">
+    <Grid>
         <Frame x:Name="PopFrame" Panel.ZIndex="4" Visibility="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
         <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Hidden" >
@@ -40,13 +38,13 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid>
-                <Image Width="101" Height="20"  Margin="11,13,849,10" >
+                <Image Width="101" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0" >
                     <Image.Source>
-                        <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" FrameworkElement.FlowDirection="RightToLeft" />
+                        <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" />
                     </Image.Source>
                 </Image>
                 <TextBlock Height="Auto"
-                    Margin="514,12,196,10"
+                    Margin="0,0,20,0"
                     x:Name="tbDateText"
                     Foreground="Black"
                     FontWeight="Bold"
