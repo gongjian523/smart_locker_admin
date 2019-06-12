@@ -52,31 +52,34 @@
         </StackPanel>
         <StackPanel Background="White"  Grid.Row="1" Margin="20,10,20,20">
             <Grid Margin="20">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="48"></RowDefinition>
-                    <RowDefinition Height="auto"></RowDefinition>
-                    <RowDefinition Height="48" ></RowDefinition>
+                <Grid.RowDefinitions >
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height = "Auto"></RowDefinition>
+                    <RowDefinition Height = "Auto"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Label Content="手术单号" Grid.Row="0"/>
-                <ListView Height="110" Margin="0"  Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}" Width="auto"/>
-                        <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="auto" />
-                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="auto"/>
-                        <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding batch_number}"  Width="auto" />
-                        <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding birth_date}" Width="auto"/>
-                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="auto"/>
-
-                    </GridView>
-                </ListView.View>
-            </ListView>
-                <Button Content="确认"  Grid.Row="2" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Click="Button_Click_1"/>
-        </Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Label Content="手术单号" Margin="10,10,10,10"/>
+                <ListView  Margin="10" Grid.Row="1" Grid.ColumnSpan="3"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="300"/>
+                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"   Width="300" />
+                            <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}"  Width="300"/>
+                            <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding batch_number}"  Width="300" />
+                            <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding birth_date}"  Width="300"/>
+                            <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}"  Width="300"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+                <Button Content="确认"  Grid.Row="2" Grid.ColumnSpan="3" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="Button_Click_1"/>
+            </Grid>
             <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
                 <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
             </Grid>
         </StackPanel>
-        
     </Grid>
 </UserControl>
