@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,16 +12,19 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 盘点单号
         /// </summary>
+        [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
         /// <summary>
         /// 盘点类型:：0  自动盘点；1 手动盘点
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int type { get; set; }
 
         /// <summary>
         /// 盘点时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime create_time { get; set; }
 
         /// <summary>
@@ -41,6 +45,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 盘点单状态：0  待确认；1  已确认。
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int status { get; set; }
     }
 }

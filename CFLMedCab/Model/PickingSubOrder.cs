@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SqlSugar;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,11 +15,13 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 拣货单号
         /// </summary>
+        [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
         /// <summary>
         /// 拣货工单号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int picking_order_id { get; set; }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 状态 状态：0 待拣货；2 部分拣货；1 已拣货。
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int status { get; set; }
 
         /// <summary>
