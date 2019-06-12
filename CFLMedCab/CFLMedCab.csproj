@@ -134,6 +134,7 @@
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderdtlDal.cs" />
     <Compile Include="DAL\GoodsDal.cs" />
+    <Compile Include="DAL\InventoryOrderDal.cs" />
     <Compile Include="DAL\InventoryOrderdalDal.cs" />
     <Compile Include="DAL\InventoryPlanDal.cs" />
     <Compile Include="DAL\PickingOrderDal.cs" />
@@ -149,7 +150,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Infrastructure\RfidHelper\RfidHelper.cs" />
-    <Compile Include="Infrastructure\test.cs" />
     <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>

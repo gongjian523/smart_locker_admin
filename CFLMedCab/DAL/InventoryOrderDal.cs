@@ -1,5 +1,4 @@
 ﻿using CFLMedCab.DAL.DbHelper;
-using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -9,8 +8,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DAL
 {
-   public class InventoryOrderdalDal : SqlSugarContext<InventoryOrderdal>
+    public class InventoryOrderDal: SqlSugarContext<InventoryOrder>
     {
-      
     }
 }
