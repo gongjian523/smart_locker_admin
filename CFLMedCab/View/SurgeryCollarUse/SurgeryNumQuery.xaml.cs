@@ -63,10 +63,10 @@ namespace CFLMedCab.View.SurgeryCollarUse
         /// <param name="e"></param>
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            OpenCabinet openCabinet = new OpenCabinet();
-            openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            openCabinet.Owner = Application.Current.MainWindow;
-            openCabinet.ShowDialog();
+            //OpenCabinet openCabinet = new OpenCabinet();
+            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //openCabinet.Owner = Application.Current.MainWindow;
+            //openCabinet.ShowDialog();
         }
     }
 }

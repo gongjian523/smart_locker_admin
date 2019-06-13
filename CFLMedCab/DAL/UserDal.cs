@@ -50,5 +50,10 @@ namespace CFLMedCab.DAL
         //{
         //  Db.CodeFirst.InitTables(typeof(User));//Create CodeFirstTable1 
         //}
+
+        public User GetUserByVeinId(int veinId)
+        {
+            return Db.Queryable<User>().Where(user => user.vein_id == veinId).First();
+        }
     }
 }

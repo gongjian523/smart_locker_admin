@@ -125,10 +125,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BLL\FetchOrderBll.cs" />    <Compile Include="ConsoleManager.cs" />
+    <Compile Include="BLL\FetchOrderBll.cs" />
+    <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\UserBll.cs" />
+    <Compile Include="ConsoleManager.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
+    <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarContext.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
@@ -170,8 +174,8 @@
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\FetchOrderdtl.cs" />
     <Compile Include="Model\User.cs" />
-    <Compile Include="View\ClosetCabinet.xaml.cs">
-      <DependentUpon>ClosetCabinet.xaml</DependentUpon>
+    <Compile Include="View\CloseCabinet.xaml.cs">
+      <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\DbHelper\SqliteHelper.cs" />
     <Compile Include="View\GerFetchView.xaml.cs">
@@ -204,8 +208,8 @@
     <Compile Include="View\ReplenishmentOrder\ReplenishmentClose.xaml.cs">
       <DependentUpon>ReplenishmentClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\ReplenishmentConfirm.xaml.cs">
-      <DependentUpon>ReplenishmentConfirm.xaml</DependentUpon>
+    <Compile Include="View\ReplenishmentOrder\ReplenishmentDetail.xaml.cs">
+      <DependentUpon>ReplenishmentDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ReturnGoodsOrder\ReturnGoodsClose.xaml.cs">
       <DependentUpon>ReturnGoodsClose.xaml</DependentUpon>
@@ -213,8 +217,8 @@
     <Compile Include="View\ReturnGoodsOrder\ReturnGoodsConfirm.xaml.cs">
       <DependentUpon>ReturnGoodsConfirm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\ReplenishOpenCabinet.xaml.cs">
-      <DependentUpon>ReplenishOpenCabinet.xaml</DependentUpon>
+    <Compile Include="View\ReplenishmentOrder\ReplenishmentDetailOpen.xaml.cs">
+      <DependentUpon>ReplenishmentDetailOpen.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SurgeryCollarUse\ConsumablesDetails.xaml.cs">
       <DependentUpon>ConsumablesDetails.xaml</DependentUpon>
@@ -261,7 +265,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ClosetCabinet.xaml">
+    <Page Include="View\CloseCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -305,7 +309,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\ReplenishmentConfirm.xaml">
+    <Page Include="View\ReplenishmentOrder\ReplenishmentDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -317,7 +321,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\ReplenishOpenCabinet.xaml">
+    <Page Include="View\ReplenishmentOrder\ReplenishmentDetailOpen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -417,6 +421,7 @@
     <Resource Include="Resources\Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\OpenDoor.png" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup />

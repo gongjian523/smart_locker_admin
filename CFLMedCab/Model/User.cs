@@ -33,7 +33,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 指静脉数值图像
         /// </summary>
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(255)")]
-        public string vein_id { get; set; }
+        [SugarColumn(IsNullable = true)]
+        public int vein_id { get; set; }
     }
 }

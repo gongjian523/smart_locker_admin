@@ -50,4 +50,23 @@ namespace CFLMedCab.Model
         /// </summary>
         public int Inspection_order_id { get; set; }
     }
+
+
+    public class ReplenishSubShortOrder
+    {
+        /// <summary>
+        /// 上架单号
+        /// </summary>
+        public int id { get; set; }
+
+        /// <summary>
+        /// 派发时间
+        /// </summary>
+        public DateTime create_time { get; set; }
+
+        /// <summary>
+        /// 带上架数据
+        /// </summary>
+        public int unDoneNum { get; set; }
+    }
 }

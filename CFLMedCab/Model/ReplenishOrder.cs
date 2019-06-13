@@ -40,4 +40,5 @@ namespace CFLMedCab.Model
         /// </summary>
         public DateTime end_time { get; set; }
     }
+
 }

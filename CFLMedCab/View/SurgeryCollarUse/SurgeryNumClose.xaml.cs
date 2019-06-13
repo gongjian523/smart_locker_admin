@@ -32,10 +32,10 @@ namespace CFLMedCab.View.SurgeryCollarUse
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ClosetCabinet closetCabinet = new ClosetCabinet();
-            closetCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            closetCabinet.Owner = Application.Current.MainWindow;
-            closetCabinet.ShowDialog();
+            //CloseCabinet CloseCabinet = new CloseCabinet();
+            //CloseCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //CloseCabinet.Owner = Application.Current.MainWindow;
+            //CloseCabinet.ShowDialog();
         }
     }
 }

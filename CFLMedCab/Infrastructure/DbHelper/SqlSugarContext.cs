@@ -18,8 +18,6 @@ namespace CFLMedCab.Infrastructure.DbHelper
         private static string ConnectionString = string.Format("Version=3;uri=file:{0}", dbFilename);
         //public static string ConnectionString = @"DataSource=" + GetCurrentProjectPath + @"CFLMedCab1.db";
 
-
-
         public SqlSugarContext()
         {
             Db = new SqlSugarClient(new ConnectionConfig()

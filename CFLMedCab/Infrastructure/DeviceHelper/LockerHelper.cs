@@ -229,7 +229,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				if (receivedData[1] != 0x81)
 					isOpen = 0;
 
-				if ((receivedData[0] & 0x01) == 0x01)
+				if ((receivedData[2] & 0x01) == 0x01)
 					isOpen = 1;
 				else
 					isOpen = 0;
