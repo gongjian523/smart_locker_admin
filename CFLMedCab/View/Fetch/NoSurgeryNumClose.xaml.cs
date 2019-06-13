@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View.SurgeryCollarUse
+namespace CFLMedCab.View.Fetch
 {
     /// <summary>
     /// NoSurgeryNumClose.xaml 的交互逻辑

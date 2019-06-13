@@ -15,7 +15,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using CFLMedCab.View;
 using CFLMedCab.View.Inventory;
-using CFLMedCab.View.SurgeryCollarUse;
 using MahApps.Metro.Controls;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using System.IO.Ports;
@@ -32,6 +31,7 @@ using SqlSugar;
 using CFLMedCab.BLL;
 using CFLMedCab.Infrastructure;
 using System.Speech.Synthesis;
+using CFLMedCab.View.Fetch;
 
 namespace CFLMedCab
 {
@@ -212,14 +212,14 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 一般领用
+        /// 一般领用/领用退回
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EnterGerFetch_Click(object sender, RoutedEventArgs e)
         {
             string log = (string)((RadioButton)sender).Content;
-            GerFetchView gerFetchView = new GerFetchView(log);
+            GerFetchView gerFetchView = new GerFetchView(log,0);
             ContentFrame.Navigate(gerFetchView);
         }
 
@@ -230,7 +230,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void OperationCollarUse(object sender, RoutedEventArgs e)
         {
-            SurgeryNumQuery surgeryQuery = new SurgeryNumQuery(); 
+            SurgeryQuery surgeryQuery = new SurgeryQuery(); 
             ContentFrame.Navigate(surgeryQuery);
         }
 

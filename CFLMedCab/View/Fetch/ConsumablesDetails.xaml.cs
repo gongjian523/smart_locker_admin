@@ -1,4 +1,6 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +16,22 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View.SurgeryCollarUse
+namespace CFLMedCab.View.Fetch
 {
     /// <summary>
     /// ConsumablesDetails.xaml 的交互逻辑
     /// </summary>
     public partial class ConsumablesDetails : UserControl
     {
-        private SurgeryOrder surgeryOrder;
-        public ConsumablesDetails(SurgeryOrder model)
+        private FetchOrder fetchOrder;
+        private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
+        private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
+        public ConsumablesDetails(FetchOrder model)
         {
             InitializeComponent();
-            surgeryOrder = model;
-            SurgeryNum.Content = surgeryOrder.id;
+            fetchOrder = model;
+            SurgeryNum.Content = model.business_order_id;
+            listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(model.id);
         }
 
         /// <summary>
@@ -36,8 +41,8 @@ namespace CFLMedCab.View.SurgeryCollarUse
         /// <param name="e"></param>
         private void Return(object sender, RoutedEventArgs e)
         {
-            SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(surgeryOrder);
-            ContentFrame.Navigate(surgeryNumQuery);
+            //SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(fetchOrder.id);
+            //ContentFrame.Navigate(surgeryNumQuery);
 
         }
     }

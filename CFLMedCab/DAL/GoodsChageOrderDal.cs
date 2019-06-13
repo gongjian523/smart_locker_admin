@@ -11,6 +11,16 @@ namespace CFLMedCab.DAL
 {
     public class GoodsChageOrderDal : SqlSugarContext<GoodsChageOrder>
     {
+        /// <summary>
+        /// 根据主键id修改状态
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        public int UpdateOrderStatus(int id, int status)
+        {
+            return Db.Updateable<GoodsChageOrder>(it => new GoodsChageOrder() { status =status}).Where(it => it.id==id).ExecuteCommand();
+        }
         ///// <summary>
         ///// 数据库没有表时创建
         ///// </summary>
@@ -42,7 +52,7 @@ namespace CFLMedCab.DAL
 
         //    return LastInsertRowId();
         //}
-        
+
         //private int LastInsertRowId()
         //{
         //    return Convert.ToInt16(SqliteHelper.Instance.ExecuteScalar("SELECT last_insert_rowid();"));

@@ -1,5 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\linq2db.SQLite.2.7.2\build\linq2db.SQLite.props" Condition="Exists('..\packages\linq2db.SQLite.2.7.2\build\linq2db.SQLite.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -127,13 +126,19 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BLL\FetchOrderBll.cs" />
+    <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\SurgeryOrderdtlBll.cs" />
     <Compile Include="BLL\UserBll.cs" />
+    <Compile Include="BLL\FetchOrderdtlBll.cs" />
+    <Compile Include="BLL\GoodsChageOrderdtlBll.cs" />
+    <Compile Include="BLL\SurgeryOrderBll.cs" />
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
+    <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarContext.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
@@ -174,11 +179,21 @@
     <Compile Include="Model\ReplenishSubOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\FetchOrderdtl.cs" />
+    <Compile Include="Model\FetchOrderdtlView.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="View\CloseCabinet.xaml.cs">
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\DbHelper\SqliteHelper.cs" />
+    <Compile Include="View\Fetch\SurgeryNumOpen.xaml.cs">
+      <DependentUpon>SurgeryNumOpen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Fetch\SurgeryNumQuery.xaml.cs">
+      <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ReturnFetchView.xaml.cs">
+      <DependentUpon>ReturnFetchView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\GerFetchView.xaml.cs">
       <DependentUpon>GerFetchView.xaml</DependentUpon>
     </Compile>
@@ -239,9 +254,6 @@
     <Compile Include="View\Fetch\SurgeryNumClose.xaml.cs">
       <DependentUpon>SurgeryNumClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Fetch\SurgeryNumQuery.xaml.cs">
-      <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\Fetch\SurgeryQuery.xaml.cs">
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
@@ -269,6 +281,14 @@
     <Page Include="View\CloseCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Fetch\SurgeryNumOpen.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReturnFetchView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\GerFetchView.xaml">
       <SubType>Designer</SubType>

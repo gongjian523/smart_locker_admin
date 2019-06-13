@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.DAL;
 using CFLMedCab.Model;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.BLL
 {
-    public class GoodsChangeOrderBll
+    public class SurgeryOrderBll
     {
-        GoodsChageOrderDal goodsChageOrderDal = new GoodsChageOrderDal();
+        private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
 
-        public int Add(GoodsChageOrder model)
+        public SurgeryOrder GetById(int id)
         {
-            return goodsChageOrderDal.Insert(model);
+            return surgeryOrderDal.CurrentDb.GetById(id);
         }
     }
 }
