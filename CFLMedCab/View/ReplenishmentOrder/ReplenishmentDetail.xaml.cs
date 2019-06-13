@@ -28,7 +28,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         //ReplenishOrder entity = new ReplenishOrder();
         //public ReplenishmentDetail(ReplenishOrder model)
 
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, LoginStatus e);
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubShortOrder e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         ReplenishSubShortOrder entity = new ReplenishSubShortOrder();

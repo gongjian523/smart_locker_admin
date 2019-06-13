@@ -31,6 +31,7 @@ using CFLMedCab.DAL;
 using SqlSugar;
 using CFLMedCab.BLL;
 using CFLMedCab.Infrastructure;
+using System.Speech.Synthesis;
 
 namespace CFLMedCab
 {
@@ -92,7 +93,7 @@ namespace CFLMedCab
             //});
             //user.GetList();
 
-            ConsoleManager.Hide();
+            ConsoleManager.Show();
         }
 
 
@@ -328,5 +329,19 @@ namespace CFLMedCab
 
 
 
-    }
+
+		private void TestLocker(object sender, ElapsedEventArgs e)
+		{
+			Console.ReadKey();
+			LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+			delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(TestLockerEvent);
+		}
+
+		private void TestLockerEvent(object sender, bool isClose)
+		{
+			Console.WriteLine("返回开锁状态{0}", isClose);
+			System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose); 
+		}
+
+	}
 }
