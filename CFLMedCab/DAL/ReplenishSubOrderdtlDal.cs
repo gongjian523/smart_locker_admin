@@ -59,24 +59,26 @@ namespace CFLMedCab.DAL
         /// <returns></returns>
         public List<ReplenishSubOrderdtl> GetReplenishSubOrderdtl(int id)
         {
-            List<ReplenishSubOrderdtl> replenishSubOrderdtls = new List<ReplenishSubOrderdtl>();
-            IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.* FROM replenish_sub_orderdtl a left join replenish_sub_order b on a.replenish_sub_orderid=b.id where b.replenish_order_id={0} and a.status=0", id));
-            if (data == null)
-                return replenishSubOrderdtls;
-            while (data.Read())
-            {
-                ReplenishSubOrderdtl replenishSubOrderdtl = new ReplenishSubOrderdtl();
-                replenishSubOrderdtl.id = Convert.ToInt32(data["id"]);
-                replenishSubOrderdtl.goods_code = data["goods_code"].ToString();
-                replenishSubOrderdtl.name = data["name"].ToString();
-                replenishSubOrderdtl.code = data["code"].ToString();
-                replenishSubOrderdtl.position = data["position"].ToString();
-                replenishSubOrderdtl.expire_date = Convert.ToDateTime(data["expire_date"]);
-                replenishSubOrderdtl.fetch_type = Convert.ToInt32(data["fetch_type"]);
-                replenishSubOrderdtl.remarks = data["remarks"].ToString();
-                replenishSubOrderdtls.Add(replenishSubOrderdtl);
-            }
-            return replenishSubOrderdtls;
+            return Db.Queryable<ReplenishSubOrderdtl>().Where(item => item.replenish_sub_orderid == id || item.status == 0).ToList();
+            //List<ReplenishSubOrderdtl> replenishSubOrderdtls = new List<ReplenishSubOrderdtl>();
+            //IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.* FROM replenish_sub_orderdtl a left join replenish_sub_order b on a.replenish_sub_orderid=b.id where b.replenish_order_id={0} and a.status=0", id));
+            //if (data == null)
+            //    return replenishSubOrderdtls;
+            //while (data.Read())
+            //{
+            //    ReplenishSubOrderdtl replenishSubOrderdtl = new ReplenishSubOrderdtl();
+            //    replenishSubOrderdtl.id = Convert.ToInt32(data["id"]);
+            //    replenishSubOrderdtl.goods_code = data["goods_code"].ToString();
+            //    replenishSubOrderdtl.name = data["name"].ToString();
+            //    replenishSubOrderdtl.code = data["code"].ToString();
+            //    replenishSubOrderdtl.position = data["position"].ToString();
+            //    replenishSubOrderdtl.expire_date = Convert.ToDateTime(data["expire_date"]);
+            //    replenishSubOrderdtl.fetch_type = Convert.ToInt32(data["fetch_type"]);
+            //    replenishSubOrderdtl.remarks = data["remarks"].ToString();
+            //    replenishSubOrderdtls.Add(replenishSubOrderdtl);
+            //}
+            //return replenishSubOrderdtls;
+
         }
 
         //private int LastInsertRowId()

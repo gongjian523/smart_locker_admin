@@ -23,6 +23,12 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class Replenishment : UserControl
     {
+        public delegate void EnterReplenishmentDetailHandler(object sender, ReplenishSubShortOrder e);
+        public event EnterReplenishmentDetailHandler EnterReplenishmentDetailEvent;
+
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubShortOrder e);
+        public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
+
         ReplenishOrderDal replenishOrderDal = new ReplenishOrderDal();
         public Replenishment()
         {
@@ -71,10 +77,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetailOpen_Click(object sender, RoutedEventArgs e)
         {
-            //OpenCabinet openCabinet = new OpenCabinet();
-            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //openCabinet.Owner = Application.Current.MainWindow;
-            //openCabinet.ShowDialog();
+            ReplenishSubShortOrder replenishOrder = (ReplenishSubShortOrder)((Button)sender).Tag;
+            EnterReplenishmentDetailOpenEvent(this, replenishOrder);
         }
 
         /// <summary>
@@ -84,14 +88,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
-            //ReplenishOrder replenishOrder= (ReplenishOrder)((Button)sender).Tag;
-            //ReplenishmentDetail ReplenishmentDetail = new ReplenishmentDetail(replenishOrder);
-            //ContentFrame.Navigate(ReplenishmentDetail);
-
             ReplenishSubShortOrder replenishOrder= (ReplenishSubShortOrder)((Button)sender).Tag;
-            ReplenishmentDetail ReplenishmentDetail = new ReplenishmentDetail(replenishOrder);
-            ContentFrame.Navigate(ReplenishmentDetail);
-
+            EnterReplenishmentDetailEvent(this, replenishOrder);
         }
     }
 }

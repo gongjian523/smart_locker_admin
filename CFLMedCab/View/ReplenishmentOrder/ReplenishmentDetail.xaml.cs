@@ -28,6 +28,9 @@ namespace CFLMedCab.View.ReplenishmentOrder
         //ReplenishOrder entity = new ReplenishOrder();
         //public ReplenishmentDetail(ReplenishOrder model)
 
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, LoginStatus e);
+        public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
+
         ReplenishSubShortOrder entity = new ReplenishSubShortOrder();
         public ReplenishmentDetail(ReplenishSubShortOrder model)
         {
@@ -37,7 +40,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             //principal.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             workOrderNum.Content = model.id;
-            //listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
+            listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
             entity = model;
         }
         
@@ -46,18 +49,15 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void Backwords_Click(object sender, RoutedEventArgs e)
         {
-            Replenishment replenishment = new Replenishment();
-            ContentFrame.Navigate(replenishment);
+
         }
 
-        private void Confirm_Click(object sender, RoutedEventArgs e)
+        private void EnterDetialOpen_Click(object sender, RoutedEventArgs e)
         {
-            //OpenCabinet openCabinet = new OpenCabinet();
-            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //openCabinet.Owner = Application.Current.MainWindow;
-            //openCabinet.ShowDialog();
+            ReplenishSubShortOrder replenishOrder = (ReplenishSubShortOrder)((Button)sender).Tag;
+            EnterReplenishmentDetailOpenEvent(this, replenishOrder);
         }
     }
 }

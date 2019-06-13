@@ -9,9 +9,9 @@
     <Grid Height="260" Width="355">
         <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
             <StackPanel>
-                <Image Width="194" Height="126" HorizontalAlignment="Center" Margin="0,45,0,0" >
+                <Image Width="184" Height="120" HorizontalAlignment="Center" Margin="0,35,0,0" >
                     <Image.Source>
-                        <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png" />
+                        <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/CloseDoor.png" />
                     </Image.Source>
                 </Image>
             </StackPanel>
