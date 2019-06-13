@@ -125,8 +125,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="BLL\FetchOrderBll.cs" />
-    <Compile Include="ConsoleManager.cs" />
+    <Compile Include="BLL\FetchOrderBll.cs" />    <Compile Include="ConsoleManager.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
@@ -147,7 +146,7 @@
     <Compile Include="DAL\SurgeryOrderDal.cs" />
     <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
-    <Compile Include="Infrastructure\CollectHelper\CollectHelper.cs" />
+    <Compile Include="Infrastructure\ToolHelper\CollectHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
