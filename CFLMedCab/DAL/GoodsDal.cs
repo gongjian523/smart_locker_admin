@@ -11,6 +11,10 @@ namespace CFLMedCab.DAL
 {
     public class GoodsDal : SqlSugarContext<Goods>
     {
+        public Goods GetGoodsById(int id)
+        {
+            return CurrentDb.GetById(id);
+        }
         ///// <summary>
         ///// 数据库没有表时创建
         ///// </summary>

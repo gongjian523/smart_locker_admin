@@ -184,14 +184,14 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 一般领用
+        /// 一般领用/领用退回
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EnterGerFetch_Click(object sender, RoutedEventArgs e)
         {
             string log = (string)((RadioButton)sender).Content;
-            GerFetchView gerFetchView = new GerFetchView(log);
+            GerFetchView gerFetchView = new GerFetchView(log,0);
             ContentFrame.Navigate(gerFetchView);
         }
 

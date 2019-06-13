@@ -9,9 +9,21 @@
     <Grid Background="AliceBlue">
         <Button Content="返回>" HorizontalAlignment="Left" Margin="32,10,0,0" VerticalAlignment="Top" Foreground="#619CF8" Click="Return"/>
         <TextBlock HorizontalAlignment="Left" Margin="22,53,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="133" Width="758" Background="White"/>
-        <TextBlock HorizontalAlignment="Left" Margin="22,202,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Height="238" Width="758" Background="White"><InlineUIContainer>
-            </InlineUIContainer></TextBlock>
-        <Label Content="手术单耗材明细" Margin="44,202,663,222"/>
+        <Grid HorizontalAlignment="Left" Margin="22,202,0,0"  VerticalAlignment="Top" Height="238" Width="758" Background="White">
+
+            <Label Content="手术单耗材明细" Margin="44,202,663,222"/>
+            <ListView  Margin="10"   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="300"/>
+                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding code}"   Width="300" />
+                            <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}"  Width="300"/>
+                            <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding wait_collar}"  Width="300" />
+                            <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding already_led}"  Width="300"/>
+                            <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}"  Width="300"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView></Grid>
         <Label Content="手术单号" HorizontalAlignment="Left" Margin="44,62,0,0" VerticalAlignment="Top"/>
         <Label Content="Label" Name="SurgeryNum" HorizontalAlignment="Left" Margin="50,87,0,0" VerticalAlignment="Top"/>
         <Label Content="使用状态" HorizontalAlignment="Left" Margin="44,121,0,0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="9"/>

@@ -1,4 +1,5 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -23,25 +24,17 @@ namespace CFLMedCab.View.SurgeryCollarUse
     /// </summary>
     public partial class SurgeryNumQuery : UserControl
     {
-        private SurgeryOrder surgeryOrder;
+        private FetchOrder fetchOrder;
+        private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
         private SurgeryOrderdtlDal surgeryOrderdtlDal = new SurgeryOrderdtlDal();
-        public SurgeryNumQuery()
+        private FetchOrderDal fetchOrderDal = new FetchOrderDal();
+        private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
+        public SurgeryNumQuery(int id)
         {
             InitializeComponent();
-        }
-
-        public SurgeryNumQuery(SurgeryOrder model)
-        {
-            InitializeComponent();
-           // listView.DataContext = surgeryOrderdtlDal.GetList();
-            //使用ItemsSource的形式
-            //listBox1.ItemsSource = GetDataTable().DefaultView;
-            listView.SelectedIndex = 0;
-            if (model != null)
-            {
-                surgeryOrder = model;
-                lNum.Content = surgeryOrder.id;
-            }
+            fetchOrder = fetchOrderDal.CurrentDb.GetById(id);
+            lNum.Content = fetchOrder.business_order_id;
+            listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(id);
         }
 
 
@@ -52,7 +45,7 @@ namespace CFLMedCab.View.SurgeryCollarUse
         /// <param name="e"></param>
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            ConsumablesDetails consumablesDetails=new ConsumablesDetails(surgeryOrder);
+            ConsumablesDetails consumablesDetails = new ConsumablesDetails(fetchOrder);
             ContentFrame.Navigate(consumablesDetails);
         }
 

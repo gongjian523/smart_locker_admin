@@ -10,6 +10,15 @@ namespace CFLMedCab.DAL
 {
     public class GoodsChageOrderdtlDal:SqlSugarContext<GoodsChageOrderdtl>
     {
+        /// <summary>
+        /// 批量新增库存变化详情
+        /// </summary>
+        /// <param name="goodsChageOrderdtls"></param>
+        /// <returns></returns>
+        public bool AddGoodsChageOrderdtl(List<GoodsChageOrderdtl> goodsChageOrderdtls)
+        {
+            return CurrentDb.InsertRange(goodsChageOrderdtls);
+        }
         ///// <summary>
         ///// 数据库没有表时创建
         ///// </summary>

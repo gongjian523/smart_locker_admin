@@ -126,10 +126,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BLL\FetchOrderBll.cs" />
+    <Compile Include="BLL\FetchOrderdtlBll.cs" />
+    <Compile Include="BLL\GoodsChageOrderdtlDll.cs" />
+    <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\SurgeryOrderBll.cs" />
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
+    <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarContext.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
@@ -170,6 +175,7 @@
     <Compile Include="Model\ReplenishSubOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\FetchOrderdtl.cs" />
+    <Compile Include="Model\FetchOrderdtlView.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="View\ClosetCabinet.xaml.cs">
       <DependentUpon>ClosetCabinet.xaml</DependentUpon>

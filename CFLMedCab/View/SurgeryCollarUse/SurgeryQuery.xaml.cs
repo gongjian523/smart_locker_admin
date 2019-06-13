@@ -26,7 +26,7 @@ namespace CFLMedCab.View.SurgeryCollarUse
         {
             InitializeComponent();
         }
-
+        private FetchOrderDal fetchOrderDal = new FetchOrderDal();
         /// <summary>
         /// 手术单号查询
         /// </summary>
@@ -43,34 +43,18 @@ namespace CFLMedCab.View.SurgeryCollarUse
             }
             SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery();
             ContentFrame.Navigate(surgeryNumQuery);
-
-            //SurgeryOrder surgeryOrder = new SurgeryOrder();
-            //SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
-            //SurgeryOrderdtlDal surgeryOrderdtlDal = new SurgeryOrderdtlDal();
-            //SurgeryOrder model = surgeryOrderDal.GetSurgeryOrderById(Convert.ToInt32(value));
-            //if (model!=null)
-            //{
-            //    SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(model);
-            //    ContentFrame.Navigate(surgeryNumQuery);
-            //}
-            //else
-            //{
-            //    if (MessageBoxResult.Cancel == MessageBox.Show(Application.Current.MainWindow, "确认删除此联系人？", "警告", MessageBoxButton.OKCancel))
-            //        return;
-            //    //surgeryOrder.id = Convert.ToInt32(tbOddNumbers.Text);
-            //    //surgeryOrder.surgery_dateiime = DateTime.Now;
-            //    //int num = surgeryOrderDal.InsertNewSurgeryOrder(surgeryOrder);
-            //    //if (num > 0)
-            //    //{
-            //    //    SurgeryOrderdtl surgeryOrderdtl = new SurgeryOrderdtl();
-            //    //    surgeryOrderdtl.related_order_id = surgeryOrder.id;
-            //    //    surgeryOrderdtl.name = "测试数据";
-            //    //    surgeryOrderdtl.remarks = "暂无";
-            //    //    surgeryOrderdtlDal.InsertNewSurgeryOrderdtl(surgeryOrderdtl);
-            //    //    SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(surgeryOrder);
-            //    //    ContentFrame.Navigate(surgeryNumQuery);
-            //    //}
-            //}
+            //根据领用单查找手术单
+            int surgeryId = fetchOrderDal.CurrentDb.GetById(Convert.ToInt32(value)).business_order_id;
+            if (surgeryId >0)
+            {
+                SurgeryNumQuery numQuery = new SurgeryNumQuery(surgeryId);
+                ContentFrame.Navigate(numQuery);
+            }
+            else
+            {
+                MessageBox.Show("手术单号不存在！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
         }
 
         /// <summary>

@@ -50,10 +50,10 @@
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="300"/>
-                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"   Width="300" />
+                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding code}"   Width="300" />
                             <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}"  Width="300"/>
-                            <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding batch_number}"  Width="300" />
-                            <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding birth_date}"  Width="300"/>
+                            <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding wait_collar}"  Width="300" />
+                            <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding already_led}"  Width="300"/>
                             <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}"  Width="300"/>
                         </GridView>
                     </ListView.View>

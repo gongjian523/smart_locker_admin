@@ -54,11 +54,6 @@ namespace CFLMedCab.Model
         public DateTime expiry_date { get; set; }
 
         /// <summary>
-        /// 领用属性
-        /// </summary>
-        public int fetch_type { get; set; }
-
-        /// <summary>
         /// 货位
         /// </summary>
         public string position { get; set; }

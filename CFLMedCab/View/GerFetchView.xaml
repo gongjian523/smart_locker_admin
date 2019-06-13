@@ -13,7 +13,7 @@
             <Label Name="lType" Content="Lable" Margin="10,35,701,59" FontSize="14"/>
             <Label Content="操作人" HorizontalAlignment="Left" Margin="10,65,0,0" VerticalAlignment="Top" FontSize="9"/>
             <Label Content="操作日期" HorizontalAlignment="Left" Margin="150,65,0,0" VerticalAlignment="Top" FontSize="9"/>
-            <Label Content="Label" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top"/>
+            <Label Content="Label" Name="Operator" HorizontalAlignment="Left" Margin="10,86,0,0" VerticalAlignment="Top"/>
             <Label Content="Label" Name="lDate" HorizontalAlignment="Left" Margin="156,86,0,0" VerticalAlignment="Top"/>
         </Grid>
         <Grid Margin="10,146,10,123" Background="White">

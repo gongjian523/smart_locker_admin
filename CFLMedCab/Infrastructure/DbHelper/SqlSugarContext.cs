@@ -72,9 +72,9 @@ namespace CFLMedCab.Infrastructure.DbHelper
             return CurrentDb.Update(obj);
         }
 
-        public virtual bool Insert(T obj)
+        public virtual int Insert(T obj)
         {
-            return CurrentDb.Insert(obj);
+            return CurrentDb.InsertReturnIdentity(obj);
         }
 
         public static string GetCurrentProjectPath
@@ -85,5 +85,9 @@ namespace CFLMedCab.Infrastructure.DbHelper
             }
         }
 
+        public virtual List<T> SqlQuery(string sql, params SugarParameter[] parameters)
+        {
+            return Db.Ado.SqlQuery<T>(sql, parameters);
+        }
     }
 }
