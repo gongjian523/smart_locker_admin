@@ -104,7 +104,7 @@ namespace CFLMedCab
             //if (_loginStatus == 1)
             //{
             //    LoginBk.Visibility = Visibility.Hidden;
-            //    FrameView.Visibility = Visibility.Visible;
+            //    NaviView.Visibility = Visibility.Visible;
             //}
             //else
             //{
@@ -239,10 +239,28 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Replenishment(object sender, RoutedEventArgs e)
+        private void EnterReplenishment_Click(object sender, RoutedEventArgs e)
         {
             Replenishment replenishment = new Replenishment();
+            replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
+            replenishment.EnterReplenishmentDetailOpenEvent += new Replenishment.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
+
             ContentFrame.Navigate(replenishment);
+
+        }
+
+        private void onEnterReplenishmentDetail(object sender, ReplenishSubShortOrder e)
+        {
+            ReplenishmentDetail replenishmentDetail = new ReplenishmentDetail(e);
+            ContentFrame.Navigate(replenishmentDetail);
+        }
+
+        private void onEnterReplenishmentDetailOpen(object sender, ReplenishSubShortOrder e)
+        {
+            NaviView.Visibility = Visibility.Hidden;
+
+            ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
+            FullFrame.Navigate(replenishmentDetailOpen);
         }
 
         /// <summary>
@@ -289,93 +307,9 @@ namespace CFLMedCab
         }
 
 
-        public static void testRFID()
-        {
-            GClient clientConn = new GClient();
-            eConnectionAttemptEventStatusType status;
-            //COM1  主柜rfid串口
-            //COM4  副柜rfid串口  
-            if (clientConn.OpenSerial("COM4:115200", 3000, out status))
-            //if (clientConn.OpenTcp("192.168.1.168:8160", 3000, out status))
-            {
-                // 订阅标签上报事件
-                clientConn.OnEncapedTagEpcLog += new delegateEncapedTagEpcLog(OnEncapedTagEpcLog);
-                clientConn.OnEncapedTagEpcOver += new delegateEncapedTagEpcOver(OnEncapedTagEpcOver);
 
-                // 停止指令，空闲态
-                MsgBaseStop msgBaseStop = new MsgBaseStop();
-                clientConn.SendSynMsg(msgBaseStop);
-                if (0 == msgBaseStop.RtCode)
-                {
-                    Console.WriteLine("Stop successful.");
-                }
-                else { Console.WriteLine("Stop error."); }
 
-                // 功率配置, 将4个天线功率都设置为30dBm.
-                MsgBaseSetPower msgBaseSetPower = new MsgBaseSetPower();
-                msgBaseSetPower.DicPower = new Dictionary<byte, byte>()
-                {
-                    {1, 30},
-                    {2, 30},
-                    {3, 30},
-                    {4, 30}
-                };
-                clientConn.SendSynMsg(msgBaseSetPower);
-                if (0 == msgBaseSetPower.RtCode)
-                {
-                    Console.WriteLine("Power configuration successful.");
-                }
-                else { Console.WriteLine("Power configuration error."); }
-                Console.WriteLine("Enter any character to start reading the tag.");
-                Console.ReadKey();
 
-                // 4个天线读卡, 读取EPC数据区以及TID数据区
-                MsgBaseInventoryEpc msgBaseInventoryEpc = new MsgBaseInventoryEpc();
-                msgBaseInventoryEpc.AntennaEnable = (uint)(eAntennaNo._1 | eAntennaNo._2 | eAntennaNo._3 | eAntennaNo._4);
-                msgBaseInventoryEpc.InventoryMode = (byte)eInventoryMode.Inventory;
-                msgBaseInventoryEpc.ReadTid = new ParamEpcReadTid();                // tid参数
-                msgBaseInventoryEpc.ReadTid.Mode = (byte)eParamTidMode.Auto;
-                msgBaseInventoryEpc.ReadTid.Len = 6;
-                clientConn.SendSynMsg(msgBaseInventoryEpc);
-                if (0 == msgBaseInventoryEpc.RtCode)
-                {
-                    Console.WriteLine("Inventory epc successful.");
-                }
-                else { Console.WriteLine("Inventory epc error."); }
-                Console.ReadKey();
-
-                // 停止读卡，空闲态
-                clientConn.SendSynMsg(msgBaseStop);
-                if (0 == msgBaseStop.RtCode)
-                {
-                    Console.WriteLine("Stop successful.");
-                }
-                else { Console.WriteLine("Stop error."); }
-            }
-            else
-            {
-                Console.WriteLine("Connect failure.");
-            }
-            Console.ReadKey();
-        }
-
-        public static void OnEncapedTagEpcLog(EncapedLogBaseEpcInfo msg)
-        {
-            // 回调内部如有阻塞，会影响API正常使用
-            // 标签回调数量较多，请将标签数据先缓存起来再作业务处理
-            if (null != msg && 0 == msg.logBaseEpcInfo.Result)
-            {
-                Console.WriteLine(msg.logBaseEpcInfo.ToString());
-            }
-        }
-
-        public static void OnEncapedTagEpcOver(EncapedLogBaseEpcOver msg)
-        {
-            if (null != msg)
-            {
-                Console.WriteLine("Epc log over.");
-            }
-        }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -392,41 +326,9 @@ namespace CFLMedCab
         }
 
 
-        public  void testLock()
-        {
-            com = new SerialPort();
-            com.BaudRate = 115200;
-            com.PortName = "COM2"; //主柜锁串口
-            //com.PortName = "COM5";   //副柜锁串口
-            com.DataBits = 8;
-            com.Open();
 
-            Byte[] TxData = { 0xA1 };
-            com.Write(TxData, 0, 1);
 
-            com.DataReceived += new SerialDataReceivedEventHandler(OnDataReceivedLock);
-            Console.ReadKey();
-        }
 
-        public  void OnDataReceivedLock(object sender, SerialDataReceivedEventArgs e)
-        {
-            Console.WriteLine("aaa");
-            //nsole.WriteLine(com.ReadExisting()[0]);
-
-            Byte[] receivedData = new Byte[4];
-            com.Read(receivedData, 0, 4);
-
-            string strRcv = null;
-
-            for (int i = 0; i < 4; i++) //窗体显示
-            {
-
-                strRcv += receivedData[i].ToString("X2");  //16进制显示
-            }
-
-            Console.WriteLine(strRcv);
-
-        }
 
 		private void TestLocker(object sender, ElapsedEventArgs e)
 		{

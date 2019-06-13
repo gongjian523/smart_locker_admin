@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace CFLMedCab.Model
 {
     /// <summary>
-    /// 拣货单详情
+    /// 上架单详情
     /// </summary>
     public class ReplenishSubOrderdtl
     {
@@ -19,7 +19,7 @@ namespace CFLMedCab.Model
         public int id { get; set; }
 
         /// <summary>
-        /// 拣货单编号
+        /// 上架单编号
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public int replenish_sub_orderid { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class ReplenishmentDetailOpen : UserControl
     {
-        public ReplenishmentDetailOpen()
+        public ReplenishmentDetailOpen(ReplenishSubShortOrder model)
         {
             InitializeComponent();
         }

@@ -444,6 +444,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\Images\OpenDoor.png" />
+    <Resource Include="Resources\Images\CloseDoor.png" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup />
