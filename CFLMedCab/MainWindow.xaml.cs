@@ -212,14 +212,13 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 一般领用/领用退回
+        /// 一般领用
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EnterGerFetch_Click(object sender, RoutedEventArgs e)
         {
-            string log = (string)((RadioButton)sender).Content;
-            GerFetchView gerFetchView = new GerFetchView(log,0);
+            GerFetchView gerFetchView = new GerFetchView();
             ContentFrame.Navigate(gerFetchView);
         }
 
@@ -232,6 +231,17 @@ namespace CFLMedCab
         {
             SurgeryQuery surgeryQuery = new SurgeryQuery(); 
             ContentFrame.Navigate(surgeryQuery);
+        }
+
+        /// <summary>
+        /// 领用退回
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ReturnFetch_Click(object sender, RoutedEventArgs e)
+        {
+            ReturnFetchView returnFetchView = new ReturnFetchView();
+            ContentFrame.Navigate(returnFetchView);
         }
 
         /// <summary>
@@ -383,9 +393,7 @@ namespace CFLMedCab
             this.WindowState = WindowState.Normal;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.CanResize;
-#if !DEBUG
             this.Topmost = true; 
-#endif
             this.Left = 0.0;
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
@@ -409,6 +417,5 @@ namespace CFLMedCab
 			Console.WriteLine("返回开锁状态{0}", isClose);
 			System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose); 
 		}
-
-	}
+    }
 }

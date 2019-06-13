@@ -1,4 +1,6 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +25,8 @@ namespace CFLMedCab.View
         public CloseCabinet()
         {
             InitializeComponent();
-
+            bool isGetSuccess;
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, RfidHelper.GetEpcData(out isGetSuccess));//读取机柜内当前的商品编码
             timer = new Timer(3000);
             timer.AutoReset = false;
             timer.Enabled = true;
