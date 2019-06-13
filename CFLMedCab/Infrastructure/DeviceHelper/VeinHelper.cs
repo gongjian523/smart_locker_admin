@@ -19,7 +19,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         public void ChekVein()
         {
-
+			return;
             Console.WriteLine("checkVein");
             if (!IsOpen)
                 Open();
