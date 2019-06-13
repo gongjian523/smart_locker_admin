@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace CFLMedCab.Infrastructure.LockHelper
+namespace CFLMedCab.Infrastructure.DeviceHelper
 {
     class LockHelper
 	{

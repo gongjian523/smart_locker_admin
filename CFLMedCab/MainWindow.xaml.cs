@@ -17,7 +17,7 @@ using CFLMedCab.View;
 using CFLMedCab.View.Inventory;
 using CFLMedCab.View.SurgeryCollarUse;
 using MahApps.Metro.Controls;
-using CFLMedCab.Infrastructure.VeinHelper;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using System.IO.Ports;
 using System.Timers;
 using System.Media;

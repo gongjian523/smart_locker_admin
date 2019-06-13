@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CFLMedCab.Infrastructure.VeinHelper
+namespace CFLMedCab.Infrastructure.DeviceHelper
 {
-    public class VeinHelper:SerialPort
+    public class VeinHelper : SerialPort
     {
         public VeinHelper(string portName, int baudRate)
         {

@@ -10,7 +10,7 @@ using System.Windows;
 /// <summary>
 /// rfid工具类
 /// </summary>
-namespace CFLMedCab.Infrastructure.RfidHelper
+namespace CFLMedCab.Infrastructure.DeviceHelper
 {
 	public class RfidHelper
 	{
