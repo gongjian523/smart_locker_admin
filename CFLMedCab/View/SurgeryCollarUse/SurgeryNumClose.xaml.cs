@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Model;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,9 +24,36 @@ namespace CFLMedCab.View.SurgeryCollarUse
     /// </summary>
     public partial class SurgeryNumClose : UserControl
     {
-        public SurgeryNumClose()
+        FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
+        SurgeryOrderBll surgeryOrderBll = new SurgeryOrderBll();
+        public SurgeryNumClose(int id)
         {
             InitializeComponent();
+            FetchOrder fetchOrder = fetchOrderBll.GetById(id);
+            SurgeryOrder surgeryOrder = surgeryOrderBll.GetById(fetchOrder.business_order_id);
+            lNum.Content = surgeryOrder.id;
+            time.Content = surgeryOrder.surgery_dateiime;
+            Operator.Content= ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(id);
+        }
+        private int exceptional;
+        private List<GoodsChageOrderdtl> goodsChageOrderdtls;
+
+        /// <summary>
+        /// 根据关门数据组合展示数据
+        /// </summary>
+        /// <param name="inHashtable">入库数据</param>
+        /// <param name="outHashtable">出库 数据</param>
+        /// <param name="type">领用类型</param>
+        public void data(Hashtable inHashtable, Hashtable outHashtable, int type)
+        {
+            goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, type, ref exceptional);
+            foreach (GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 3, type, ref exceptional))
+            {
+                goodsChageOrderdtls.Add(item);
+            }
+            listView.DataContext = goodsChageOrderdtls.OrderBy(t => t.expire_date).OrderBy(t => t.exceptional);
         }
 
         /// <summary>

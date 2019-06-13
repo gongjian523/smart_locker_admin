@@ -230,7 +230,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void OperationCollarUse(object sender, RoutedEventArgs e)
         {
-            SurgeryNumQuery surgeryQuery = new SurgeryNumQuery(); 
+            SurgeryQuery surgeryQuery = new SurgeryQuery(); 
             ContentFrame.Navigate(surgeryQuery);
         }
 

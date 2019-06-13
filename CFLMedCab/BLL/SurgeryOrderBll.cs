@@ -12,6 +12,10 @@ namespace CFLMedCab.BLL
     public class SurgeryOrderBll
     {
         private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
-   
+
+        public SurgeryOrder GetById(int id)
+        {
+            return surgeryOrderDal.CurrentDb.GetById(id);
+        }
     }
 }

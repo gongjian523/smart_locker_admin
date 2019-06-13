@@ -1,9 +1,7 @@
 ﻿using CFLMedCab.BLL;
-using CFLMedCab.DAL;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,15 +18,15 @@ using System.Windows.Shapes;
 namespace CFLMedCab.View.SurgeryCollarUse
 {
     /// <summary>
-    /// SurgeryNumQuery.xaml 的交互逻辑
+    /// SurgeryNumOpen.xaml 的交互逻辑
     /// </summary>
-    public partial class SurgeryNumQuery : UserControl
+    public partial class SurgeryNumOpen : UserControl
     {
         private FetchOrder fetchOrder;
         private SurgeryOrderBll surgeryOrderBll = new SurgeryOrderBll();
-        private FetchOrderBll fetchOrderBll = new FetchOrderBll(); 
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
         private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
-        public SurgeryNumQuery(int id)
+        public SurgeryNumOpen(int id)
         {
             InitializeComponent();
             fetchOrder = fetchOrderBll.GetById(id);
@@ -36,27 +34,6 @@ namespace CFLMedCab.View.SurgeryCollarUse
             lNum.Content = surgeryOrder.id;
             time.Content = surgeryOrder.surgery_dateiime;
             listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(id);
-        }
-
-
-        /// <summary>
-        /// 手术耗材详情
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            ConsumablesDetails consumablesDetails = new ConsumablesDetails(fetchOrder);
-            ContentFrame.Navigate(consumablesDetails);
-        }
-
-        /// <summary>
-        /// 确认领用（开柜）
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
         }
     }
 }

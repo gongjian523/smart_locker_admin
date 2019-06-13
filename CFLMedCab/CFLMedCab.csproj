@@ -127,11 +127,12 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BLL\FetchOrderBll.cs" />
+    <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\SurgeryOrderdtlBll.cs" />
     <Compile Include="BLL\UserBll.cs" />
     <Compile Include="BLL\FetchOrderdtlBll.cs" />
-    <Compile Include="BLL\GoodsChageOrderdtlDll.cs" />
-    <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\GoodsChageOrderdtlBll.cs" />
     <Compile Include="BLL\SurgeryOrderBll.cs" />
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
@@ -185,6 +186,9 @@
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\DbHelper\SqliteHelper.cs" />
+    <Compile Include="View\ReturnFetchView.xaml.cs">
+      <DependentUpon>ReturnFetchView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\GerFetchView.xaml.cs">
       <DependentUpon>GerFetchView.xaml</DependentUpon>
     </Compile>
@@ -245,6 +249,9 @@
     <Compile Include="View\SurgeryCollarUse\SurgeryNumClose.xaml.cs">
       <DependentUpon>SurgeryNumClose.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\SurgeryCollarUse\SurgeryNumOpen.xaml.cs">
+      <DependentUpon>SurgeryNumOpen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SurgeryCollarUse\SurgeryNumQuery.xaml.cs">
       <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
     </Compile>
@@ -275,6 +282,10 @@
     <Page Include="View\CloseCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ReturnFetchView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\GerFetchView.xaml">
       <SubType>Designer</SubType>
@@ -353,6 +364,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SurgeryCollarUse\SurgeryNumClose.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SurgeryCollarUse\SurgeryNumOpen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

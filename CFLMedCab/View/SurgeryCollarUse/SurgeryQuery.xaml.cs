@@ -41,8 +41,6 @@ namespace CFLMedCab.View.SurgeryCollarUse
                 MessageBox.Show("手术单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
-            SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery();
-            ContentFrame.Navigate(surgeryNumQuery);
             //根据领用单查找手术单
             int surgeryId = fetchOrderDal.CurrentDb.GetById(Convert.ToInt32(value)).business_order_id;
             if (surgeryId >0)

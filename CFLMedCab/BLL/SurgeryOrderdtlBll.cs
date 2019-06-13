@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.BLL
 {
-    public class GoodsChageOrderdtlDll
+    public class SurgeryOrderdtlBll
     {
-
     }
 }
