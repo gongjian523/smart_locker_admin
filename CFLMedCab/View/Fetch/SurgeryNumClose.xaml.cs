@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections;
@@ -46,10 +47,16 @@ namespace CFLMedCab.View.Fetch
         /// <param name="inHashtable">入库数据</param>
         /// <param name="outHashtable">出库 数据</param>
         /// <param name="type">领用类型</param>
-        public void data(Hashtable inHashtable, Hashtable outHashtable, int type)
+        public void data()
         {
-            goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, type, ref exceptional);
-            foreach (GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 3, type, ref exceptional))
+            bool isGetSuccess;
+            Hashtable befroe = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            Hashtable after = RfidHelper.GetEpcData(out isGetSuccess);
+            HashSet<string> inHashtable;
+            HashSet<string> outHashtable;
+            CollectHelper.CompareCollect(befroe, after, out inHashtable, out outHashtable);
+            goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, 0, "操作与业务类型冲突", ref exceptional);
+            foreach (GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(outHashtable, 0, 0, "操作与业务类型冲突", ref exceptional))
             {
                 goodsChageOrderdtls.Add(item);
             }

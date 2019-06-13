@@ -191,10 +191,10 @@
     <Compile Include="View\Fetch\SurgeryNumQuery.xaml.cs">
       <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReturnFetchView.xaml.cs">
+    <Compile Include="View\Fetch\ReturnFetchView.xaml.cs">
       <DependentUpon>ReturnFetchView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\GerFetchView.xaml.cs">
+    <Compile Include="View\Fetch\GerFetchView.xaml.cs">
       <DependentUpon>GerFetchView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Inventory\AddSingleProduct.xaml.cs">
@@ -286,11 +286,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReturnFetchView.xaml">
+    <Page Include="View\Fetch\ReturnFetchView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\GerFetchView.xaml">
+    <Page Include="View\Fetch\GerFetchView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

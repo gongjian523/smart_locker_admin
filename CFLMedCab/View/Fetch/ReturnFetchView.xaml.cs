@@ -1,6 +1,8 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections;
@@ -19,7 +21,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.Fetch
 {
     /// <summary>
     /// GerFetchView.xaml 的交互逻辑
@@ -32,17 +34,14 @@ namespace CFLMedCab.View
         private UserBll userBll = new UserBll();
         private GoodsChangeOrderBll goodsChangeOrderBll = new GoodsChangeOrderBll();
         private GoodsChageOrderdtlBll goodsChageOrderdtlBll = new GoodsChageOrderdtlBll(); 
-        public ReturnFetchView(string type,int Id)
+        public ReturnFetchView()
         {
             InitializeComponent();
-            lType.Content = type;
             lDate.Content = DateTime.Now;
-            userId = Id;
             Operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name; 
         }
 
         private int userId;
-        private int pagetype;
         private List<GoodsChageOrderdtl> goodsChageOrderdtls;
         private int exceptional;
         /// <summary>
@@ -56,7 +55,7 @@ namespace CFLMedCab.View
             GoodsChageOrder goodsChageOrder = new GoodsChageOrder();
             goodsChageOrder.create_time = DateTime.Now;
             goodsChageOrder.operator_id = userId;
-            goodsChageOrder.type = pagetype;
+            goodsChageOrder.type = 3;
             int goodsChageOrderId= goodsChangeOrderBll.Add(goodsChageOrder);
             //添加库存变化详情
             foreach(GoodsChageOrderdtl item in goodsChageOrderdtls)
@@ -75,7 +74,7 @@ namespace CFLMedCab.View
                 fetchOrder.status = 0;
             else
                 fetchOrder.status = 1;
-            fetchOrder.type = pagetype;
+            fetchOrder.type = 3;
             fetchOrder.operator_id = userId;
             //添加领用单
             int fetchOrderId= fetchOrderBll.Add(fetchOrder);
@@ -90,14 +89,30 @@ namespace CFLMedCab.View
         /// <param name="inHashtable">入库数据</param>
         /// <param name="outHashtable">出库 数据</param>
         /// <param name="type">领用类型</param>
-        public void data(Hashtable inHashtable, Hashtable outHashtable, int type)
+        public void data()
         {
-            goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, type,ref exceptional);
-            foreach(GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 3, type, ref exceptional))
+
+            bool isGetSuccess;
+            Hashtable befroe = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            Hashtable after = RfidHelper.GetEpcData(out isGetSuccess);
+            HashSet<string> inHashtable;
+            HashSet<string> outHashtable;
+            CollectHelper.CompareCollect(befroe, after, out inHashtable, out outHashtable);
+            goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, 0, "操作与业务类型冲突", ref exceptional);
+            foreach (GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(outHashtable, 0, 0, "操作与业务类型冲突", ref exceptional))
             {
                 goodsChageOrderdtls.Add(item);
             }
-            listView.DataContext = goodsChageOrderdtls.OrderBy(t=>t.expire_date).OrderBy(t=>t.exceptional);
+            foreach(GoodsChageOrderdtl item in goodsChageOrderdtls)
+            {
+                FetchOrderdtl model= fetchOrderdtlBll.GetFetchOrderdtl(item.goods_code);
+                if (model == null)
+                {
+                    item.exceptional = 1;
+                    item.explain = "未查到领用记录";
+                }
+            }
+            listView.DataContext = goodsChageOrderdtls.OrderBy(t => t.expire_date).OrderBy(t => t.exceptional);
         }
     }
 

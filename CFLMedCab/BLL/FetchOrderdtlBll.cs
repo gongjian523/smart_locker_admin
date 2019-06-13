@@ -26,6 +26,16 @@ namespace CFLMedCab.BLL
         }
 
         /// <summary>
+        /// 通过商品编号查询商品
+        /// </summary>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public FetchOrderdtl GetFetchOrderdtl(string code)
+        {
+            return fetchOrderdtlDal.Db.Queryable<FetchOrderdtl>().Where(t => t.goods_code == code).First();
+        }
+
+        /// <summary>
         /// 根据库存变化数据添加领用详情表
         /// </summary>
         /// <param name="goodsChageOrderdtls"></param>
@@ -57,18 +67,18 @@ namespace CFLMedCab.BLL
 
 
         /// <summary>
-        /// 库存变化明显表
+        /// 领用库存变化明显表
         /// </summary>
         /// <param name="hashtable">变化数据</param>
         /// <param name="dataType">机构数据类型 出库/入库</param>
         /// <param name="pageType">页面操作类型 出库/入库</param>
         /// <returns></returns>
-        public List<GoodsChageOrderdtl> newGoodsChageOrderdtls(Hashtable hashtable, int dataType, int pageType, ref int exceptional)
+        public List<GoodsChageOrderdtl> newGoodsChageOrderdtls(HashSet<string> hashtable, int dataType, int pageType,string explain, ref int exceptional)
         {
             List<GoodsChageOrderdtl> goodsChageOrderdtlsList = new List<GoodsChageOrderdtl>();
-            foreach (int item in hashtable)
+            foreach (string item in hashtable)
             {
-                Goods goods = goodsDal.GetGoodsById(item);
+                Goods goods = goodsDal.GetGoodsById(Convert.ToInt32(item));
                 if (goods != null)
                 {
                     GoodsChageOrderdtl goodsChageOrderdtl = new GoodsChageOrderdtl();
@@ -80,7 +90,7 @@ namespace CFLMedCab.BLL
                     goodsChageOrderdtl.goods_code = goods.goods_code;
                     goodsChageOrderdtl.goods_id = goods.id;
                     goodsChageOrderdtl.name = goods.name;
-                    goodsChageOrderdtl.operate_type = 0;
+                    goodsChageOrderdtl.operate_type = dataType;
                     goodsChageOrderdtl.position = goods.position;
                     goodsChageOrderdtl.remarks = goods.remarks;
                     goodsChageOrderdtl.valid_period = goods.valid_period;
@@ -88,7 +98,7 @@ namespace CFLMedCab.BLL
                     {
                         exceptional++;
                         goodsChageOrderdtl.exceptional = 1;
-                        goodsChageOrderdtl.explain = "操作与业务类型冲突";
+                        goodsChageOrderdtl.explain = explain;
                     }
                     else
                         goodsChageOrderdtl.exceptional = 0;
