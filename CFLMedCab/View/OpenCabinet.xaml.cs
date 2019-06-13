@@ -30,8 +30,12 @@ namespace CFLMedCab.View
         public OpenCabinet()
         {
             InitializeComponent();
-        }
 
+            timer = new Timer(3000);
+            timer.AutoReset = false;
+            timer.Enabled = true;
+            timer.Elapsed += new ElapsedEventHandler(onHidePopOpen);
+        }
 
         /// <summary>
         /// 三秒之后显示提示消息
@@ -40,7 +44,10 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         public void onHidePopOpen(object sender, EventArgs e)
         {
-            HidePopOpenEvent(this, null);
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                HidePopOpenEvent(this, null);
+            }));
         }
     }
 }

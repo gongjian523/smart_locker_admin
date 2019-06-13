@@ -32,6 +32,7 @@ using CFLMedCab.BLL;
 using CFLMedCab.Infrastructure;
 using System.Speech.Synthesis;
 using CFLMedCab.View.Fetch;
+using System.Collections;
 
 namespace CFLMedCab
 {
@@ -92,6 +93,11 @@ namespace CFLMedCab
             //    vein_id = "111sfadfasd"
             //});
             //user.GetList();
+
+            //bool isGetSuccess;
+
+            //Hashtable cur =  RfidHelper.GetEpcData(out isGetSuccess);
+            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, cur);//读取机柜内当前的商品编码
 
             ConsoleManager.Show();
         }
@@ -271,12 +277,19 @@ namespace CFLMedCab
         private void onEnterReplenishmentDetailOpen(object sender, ReplenishSubShortOrder e)
         {
             NaviView.Visibility = Visibility.Hidden;
-
+            
             ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
             FullFrame.Navigate(replenishmentDetailOpen);
 
+            MaskView.Visibility = Visibility.Visible;
+            PopFrame.Visibility = Visibility.Visible;
+            OpenCabinet openCabinet = new OpenCabinet();
+            openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+            PopFrame.Navigate(openCabinet);
+
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentLockerEvent);            
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentLockerEvent); 
+                       
         }
 
         /// <summary>
@@ -306,13 +319,18 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterPopClose(object sender, RoutedEventArgs e)
         {
-            PopFrame.Visibility = Visibility.Visible;
-            MaskView.Visibility = Visibility.Visible;
+            CloseCabinet closeCabinet = new CloseCabinet();
+            closeCabinet.HidePopCloseEvent += new CloseCabinet.HidePopCloseHandler(onHidePopClose);
 
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(closeCabinet);
+            }));
 
         }
-
-
 
         /// <summary>
         /// 关门提示框关闭
@@ -328,6 +346,21 @@ namespace CFLMedCab
 
             vein.Close();
             vein.ChekVein();
+        }
+
+
+        /// <summary>
+        /// 开门提示框关闭
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onHidePopOpen(object sender, RoutedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;
+            }));
         }
 
         /// <summary>

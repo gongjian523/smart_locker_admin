@@ -197,7 +197,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
-			WaitHandle.WaitAll(manualEvents.ToArray());
+           
+
+            WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
 
 			return currentEpcDataHt;

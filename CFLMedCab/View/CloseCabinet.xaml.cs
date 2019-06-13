@@ -37,7 +37,10 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         public void onHidePopClose(object sender, EventArgs e)
         {
-            HidePopCloseEvent(this, null);
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                HidePopCloseEvent(this, null);
+            }));
         }
     }
 }

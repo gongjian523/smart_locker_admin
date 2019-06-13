@@ -1,11 +1,14 @@
 ﻿using CFLMedCab.DAL;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,6 +39,12 @@ namespace CFLMedCab.View.ReplenishmentOrder
             DataContext = this;
 
             InitData();
+
+            //Timer loginTimer = new Timer(2000);
+            //loginTimer.AutoReset = false;
+            //loginTimer.Enabled = true;
+            //loginTimer.Elapsed += new ElapsedEventHandler(TestGetEpcData);   
+
         }
 
         //private ObservableCollection<ReplenishOrder> _replenishOrderView = new ObservableCollection<ReplenishOrder>();
@@ -90,6 +99,13 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             ReplenishSubShortOrder replenishOrder= (ReplenishSubShortOrder)((Button)sender).Tag;
             EnterReplenishmentDetailEvent(this, replenishOrder);
+        }
+
+        public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
+        {
+          
+             RfidHelper.GetEpcData(out bool isGetSuccess);
+           
         }
     }
 }
