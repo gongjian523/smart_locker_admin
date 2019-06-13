@@ -3,16 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Threading;
+
 
 namespace CFLMedCab.View
 {
@@ -21,23 +15,19 @@ namespace CFLMedCab.View
     /// </summary>
     public partial class CloseCabinet : UserControl
     {
-        private DispatcherTimer ShowTimer;
+        private Timer timer;
+
+        public delegate void HidePopCloseHandler(object sender, RoutedEventArgs e);
+        public event HidePopCloseHandler HidePopCloseEvent;
+
         public CloseCabinet()
         {
             InitializeComponent();
-        }
 
-        /// <summary>
-        /// 页面加载完事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void window_contentRendered(object sender, EventArgs e)
-        {
-            ShowTimer = new DispatcherTimer();
-            ShowTimer.Interval = TimeSpan.FromSeconds(3);//设置定时间隔为
-            ShowTimer.Tick += new EventHandler(Time); ;//注册定时中断事件
-            ShowTimer.Start();//定时器开启
+            timer = new Timer(3000);
+            timer.AutoReset = false;
+            timer.Enabled = true;
+            timer.Elapsed += new ElapsedEventHandler(onHidePopClose);
         }
 
         /// <summary>
@@ -45,22 +35,9 @@ namespace CFLMedCab.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        public void Time(object sender, EventArgs e)
+        public void onHidePopClose(object sender, EventArgs e)
         {
-
-            //this.Close();
+            HidePopCloseEvent(this, null);
         }
-
-        public void StockChange(List<Goods> goods,int type)
-        {
-            if (goods.Count > 0)
-            {
-                foreach(Goods item in goods)
-                {
-                    GoodsChageOrder goodsChageOrder = new GoodsChageOrder();
-                }
-            }
-        }
-
     }
 }

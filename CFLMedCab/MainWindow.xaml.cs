@@ -235,11 +235,11 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 补货入库
+        /// 进入上架单列表页
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterReplenishment_Click(object sender, RoutedEventArgs e)
+        private void onEnterReplenishment(object sender, RoutedEventArgs e)
         {
             Replenishment replenishment = new Replenishment();
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
@@ -249,18 +249,85 @@ namespace CFLMedCab
 
         }
 
+        /// <summary>
+        /// 进入上架单详情页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onEnterReplenishmentDetail(object sender, ReplenishSubShortOrder e)
         {
             ReplenishmentDetail replenishmentDetail = new ReplenishmentDetail(e);
+            replenishmentDetail.EnterReplenishmentDetailOpenEvent += new ReplenishmentDetail.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
+            replenishmentDetail.EnterReplenishmentEvent += new ReplenishmentDetail.EnterReplenishmentHandler(onEnterReplenishment);
+
             ContentFrame.Navigate(replenishmentDetail);
         }
 
+        /// <summary>
+        /// 进入上架单详情页-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onEnterReplenishmentDetailOpen(object sender, ReplenishSubShortOrder e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
             ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
             FullFrame.Navigate(replenishmentDetailOpen);
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentLockerEvent);            
+        }
+
+        /// <summary>
+        /// 关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReplenishmentLockerEvent(object sender, bool isClose)
+        {
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
+            ReplenishmentClose replenishmentClose = new ReplenishmentClose(new ReplenishOrder());
+            replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
+            replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
+
+            FullFrame.Navigate(replenishmentClose);         
+        }
+
+
+        /// <summary>
+        /// 弹出关门提示框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterPopClose(object sender, RoutedEventArgs e)
+        {
+            PopFrame.Visibility = Visibility.Visible;
+            MaskView.Visibility = Visibility.Visible;
+
+
+        }
+
+
+
+        /// <summary>
+        /// 关门提示框关闭
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onHidePopClose(object sender, RoutedEventArgs e)
+        {
+            PopFrame.Visibility = Visibility.Hidden;
+            MaskView.Visibility = Visibility.Hidden;
+
+            LoginBkView.Visibility = Visibility.Visible;
+
+            vein.Close();
+            vein.ChekVein();
         }
 
         /// <summary>

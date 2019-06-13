@@ -28,8 +28,13 @@ namespace CFLMedCab.View.ReplenishmentOrder
         //ReplenishOrder entity = new ReplenishOrder();
         //public ReplenishmentDetail(ReplenishOrder model)
 
+        //进入补货单详情开门状态页面
         public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubShortOrder e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
+
+        //进入补货单列表页面
+        public delegate void EnterReplenishmentHandler(object sender, RoutedEventArgs e);
+        public event EnterReplenishmentHandler EnterReplenishmentEvent;
 
         ReplenishSubShortOrder entity = new ReplenishSubShortOrder();
         public ReplenishmentDetail(ReplenishSubShortOrder model)
@@ -51,7 +56,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void Backwords_Click(object sender, RoutedEventArgs e)
         {
-
+            EnterReplenishmentEvent(this, null);
         }
 
         private void EnterDetialOpen_Click(object sender, RoutedEventArgs e)

@@ -203,46 +203,46 @@
     <Compile Include="View\OpenCabinet.xaml.cs">
       <DependentUpon>OpenCabinet.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReturnGoodsOrder\ReturnGoodsOpenCabinet.xaml.cs">
+    <Compile Include="View\Return\ReturnGoodsOpenCabinet.xaml.cs">
       <DependentUpon>ReturnGoodsOpenCabinet.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\ReplenishmentClose.xaml.cs">
+    <Compile Include="View\Replenishment\ReplenishmentClose.xaml.cs">
       <DependentUpon>ReplenishmentClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\ReplenishmentDetail.xaml.cs">
+    <Compile Include="View\Replenishment\ReplenishmentDetail.xaml.cs">
       <DependentUpon>ReplenishmentDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReturnGoodsOrder\ReturnGoodsClose.xaml.cs">
+    <Compile Include="View\Return\ReturnGoodsClose.xaml.cs">
       <DependentUpon>ReturnGoodsClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReturnGoodsOrder\ReturnGoodsConfirm.xaml.cs">
+    <Compile Include="View\Return\ReturnGoodsConfirm.xaml.cs">
       <DependentUpon>ReturnGoodsConfirm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\ReplenishmentDetailOpen.xaml.cs">
+    <Compile Include="View\Replenishment\ReplenishmentDetailOpen.xaml.cs">
       <DependentUpon>ReplenishmentDetailOpen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SurgeryCollarUse\ConsumablesDetails.xaml.cs">
+    <Compile Include="View\Fetch\ConsumablesDetails.xaml.cs">
       <DependentUpon>ConsumablesDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SurgeryCollarUse\NoSurgeryNumClose.xaml.cs">
+    <Compile Include="View\Fetch\NoSurgeryNumClose.xaml.cs">
       <DependentUpon>NoSurgeryNumClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\Replenishment.xaml.cs">
+    <Compile Include="View\Replenishment\Replenishment.xaml.cs">
       <DependentUpon>Replenishment.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReturnGoodsOrder\ReturnGoods.xaml.cs">
+    <Compile Include="View\Return\ReturnGoods.xaml.cs">
       <DependentUpon>ReturnGoods.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Stock.xaml.cs">
       <DependentUpon>Stock.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SurgeryCollarUse\SurgeryNumClose.xaml.cs">
+    <Compile Include="View\Fetch\SurgeryNumClose.xaml.cs">
       <DependentUpon>SurgeryNumClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SurgeryCollarUse\SurgeryNumQuery.xaml.cs">
+    <Compile Include="View\Fetch\SurgeryNumQuery.xaml.cs">
       <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SurgeryCollarUse\SurgeryQuery.xaml.cs">
+    <Compile Include="View\Fetch\SurgeryQuery.xaml.cs">
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Themes\AccentColors.xaml">
@@ -302,43 +302,43 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReturnGoodsOrder\ReturnGoodsOpenCabinet.xaml">
+    <Page Include="View\Return\ReturnGoodsOpenCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\ReplenishmentClose.xaml">
+    <Page Include="View\Replenishment\ReplenishmentClose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\ReplenishmentDetail.xaml">
+    <Page Include="View\Replenishment\ReplenishmentDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReturnGoodsOrder\ReturnGoodsClose.xaml">
+    <Page Include="View\Return\ReturnGoodsClose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReturnGoodsOrder\ReturnGoodsConfirm.xaml">
+    <Page Include="View\Return\ReturnGoodsConfirm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\ReplenishmentDetailOpen.xaml">
+    <Page Include="View\Replenishment\ReplenishmentDetailOpen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SurgeryCollarUse\ConsumablesDetails.xaml">
+    <Page Include="View\Fetch\ConsumablesDetails.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SurgeryCollarUse\NoSurgeryNumClose.xaml">
+    <Page Include="View\Fetch\NoSurgeryNumClose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\Replenishment.xaml">
+    <Page Include="View\Replenishment\Replenishment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReturnGoodsOrder\ReturnGoods.xaml">
+    <Page Include="View\Return\ReturnGoods.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -346,15 +346,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SurgeryCollarUse\SurgeryNumClose.xaml">
+    <Page Include="View\Fetch\SurgeryNumClose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SurgeryCollarUse\SurgeryNumQuery.xaml">
+    <Page Include="View\Fetch\SurgeryNumQuery.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\SurgeryCollarUse\SurgeryQuery.xaml">
+    <Page Include="View\Fetch\SurgeryQuery.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
