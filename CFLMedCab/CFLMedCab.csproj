@@ -129,7 +129,7 @@
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
-    <Compile Include="DAL\DbHelper\SqlSugarContext.cs" />
+    <Compile Include="Infrastructure\DbHelper\SqlSugarContext.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderdtlDal.cs" />
@@ -146,11 +146,10 @@
     <Compile Include="DAL\SurgeryOrderDal.cs" />
     <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
-    <Compile Include="Infrastructure\LockerHelper\LockerHelper.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Infrastructure\RfidHelper\RfidHelper.cs" />
-    <Compile Include="Infrastructure\VeinHelper\VeinHelper.cs">
+    <Compile Include="Infrastructure\CollectHelper\CollectHelper.cs" />
+    <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
+    <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
+    <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Model\InventoryOrder.cs" />
@@ -174,7 +173,7 @@
     <Compile Include="View\ClosetCabinet.xaml.cs">
       <DependentUpon>ClosetCabinet.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Infrastructure\SqliteHelper\SqliteHelper.cs" />
+    <Compile Include="Infrastructure\DbHelper\SqliteHelper.cs" />
     <Compile Include="View\GerFetchView.xaml.cs">
       <DependentUpon>GerFetchView.xaml</DependentUpon>
     </Compile>

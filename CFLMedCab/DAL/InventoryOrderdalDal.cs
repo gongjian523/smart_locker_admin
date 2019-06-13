@@ -1,4 +1,4 @@
-﻿using CFLMedCab.DAL.DbHelper;
+﻿using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;

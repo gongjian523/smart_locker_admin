@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CFLMedCab.DAL.DbHelper
+namespace CFLMedCab.Infrastructure.DbHelper
 {
     public class SqlSugarContext<T> where T : class, new()
     {

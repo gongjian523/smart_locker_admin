@@ -1,5 +1,4 @@
-﻿using CFLMedCab.DAL.DbHelper;
-using CFLMedCab.Infrastructure.SqliteHelper;
+﻿using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;

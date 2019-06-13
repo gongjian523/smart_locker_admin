@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CFLMedCab.Infrastructure.SqliteHelper
+namespace CFLMedCab.Infrastructure.DbHelper
 {
     class SqliteHelper
     {
