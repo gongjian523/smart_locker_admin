@@ -417,7 +417,6 @@
     <Resource Include="Resources\Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="LinqToDB.Templates\CopyMe.SQLite.tt.txt" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup />
