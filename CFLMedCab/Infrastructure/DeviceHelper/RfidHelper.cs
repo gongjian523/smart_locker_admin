@@ -55,7 +55,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		private static HashSet<string> DealComData(GClient clientConn, string com, out bool isGetSuccess)
 		{
 			/// mutex互斥锁，用于人为阻塞当前线程
-			//Mutex cuurentMutex = new Mutex(false);
 			ManualResetEvent manualResetEvent = new ManualResetEvent(false);
 			manualEvents.Add(manualResetEvent);
 
@@ -199,6 +198,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 
 			WaitHandle.WaitAll(manualEvents.ToArray());
+			manualEvents.Clear();
 
 			return currentEpcDataHt;
 

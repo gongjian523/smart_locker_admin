@@ -54,10 +54,10 @@ namespace CFLMedCab.View.ReturnGoodsOrder
         /// <param name="e"></param>
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
-            OpenCabinet openCabinet = new OpenCabinet();
-            openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            openCabinet.Owner = Application.Current.MainWindow;
-            openCabinet.ShowDialog();
+            //OpenCabinet openCabinet = new OpenCabinet();
+            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //openCabinet.Owner = Application.Current.MainWindow;
+            //openCabinet.ShowDialog();
         }
     }
 }

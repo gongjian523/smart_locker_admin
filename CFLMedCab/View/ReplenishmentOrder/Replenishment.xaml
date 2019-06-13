@@ -14,7 +14,7 @@
                 <Label Content="工单编号：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
                 <Label Margin="80,10,579,179" Content="{Binding id}"/>
                 <Label Content="本柜拣货商品数量：" HorizontalAlignment="Left" Margin="186,10,0,0" VerticalAlignment="Top"/>
-                <Label Margin="309,10,334,179" Content="{Binding id}"/>
+                <Label Margin="309,10,334,179" Content="{Binding unDoneNum}"/>
                 <Label Content="派发时间：" HorizontalAlignment="Left" Margin="553,10,0,0" VerticalAlignment="Top"/>
                 <Label Margin="623,10,0,179" Content="{Binding create_time}"/>
                 <!--<ListView Margin="10,0,10,72" VerticalAlignment="Bottom" ItemsSource="{Binding replenishSubOrderdtls}" HorizontalAlignment="Center" MinWidth="756" MinHeight="100">
@@ -30,8 +30,8 @@
                         </GridView>
                     </ListView.View>
                 </ListView>-->
-                <Button Content="查看详情" Name="Retract"  BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" Tag="{Binding}" HorizontalAlignment="Left" Margin="500,50,0,0" VerticalAlignment="Top" Width="114" RenderTransformOrigin="0.51,-0.507" Click="Retract_Click"/>
-                <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Tag="{Binding}" HorizontalAlignment="Left" Margin="620,50,0,0" VerticalAlignment="Top"  Click="Confirm_Click"/>
+                <Button Content="查看详情" Name="Retract"  BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" Tag="{Binding}" HorizontalAlignment="Left" Margin="500,50,0,0" VerticalAlignment="Top" Width="114" RenderTransformOrigin="0.51,-0.507" Click="EnterDetail_Click"/>
+                <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Tag="{Binding}" HorizontalAlignment="Left" Margin="620,50,0,0" VerticalAlignment="Top"  Click="EnterDetailOpen_Click"/>
             </Grid>
         </DataTemplate>
     </UserControl.Resources>

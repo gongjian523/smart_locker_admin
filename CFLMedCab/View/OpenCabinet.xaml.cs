@@ -19,7 +19,7 @@ namespace CFLMedCab.View
     /// <summary>
     /// OpenCabinet.xaml 的交互逻辑
     /// </summary>
-    public partial class OpenCabinet : Window
+    public partial class OpenCabinet : UserControl
     {
         private SoundPlayer media;
         private DispatcherTimer ShowTimer;
@@ -51,7 +51,7 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         public void Time(object sender, EventArgs e)
         {
-            this.Close();
+            //this.Close();
         }
     }
 }

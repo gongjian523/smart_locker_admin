@@ -17,12 +17,12 @@ using System.Windows.Threading;
 namespace CFLMedCab.View
 {
     /// <summary>
-    /// ClosetCabinet.xaml 的交互逻辑
+    /// CloseCabinet.xaml 的交互逻辑
     /// </summary>
-    public partial class ClosetCabinet : Window
+    public partial class CloseCabinet : UserControl
     {
         private DispatcherTimer ShowTimer;
-        public ClosetCabinet()
+        public CloseCabinet()
         {
             InitializeComponent();
         }
@@ -48,7 +48,7 @@ namespace CFLMedCab.View
         public void Time(object sender, EventArgs e)
         {
 
-            this.Close();
+            //this.Close();
         }
 
         public void StockChange(List<Goods> goods,int type)

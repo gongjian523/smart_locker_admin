@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 
-namespace CFLMedCab.Infrastructure.CollectHelper
+namespace CFLMedCab.Infrastructure.ToolHelper
 {
 	public class CollectHelper
 	{

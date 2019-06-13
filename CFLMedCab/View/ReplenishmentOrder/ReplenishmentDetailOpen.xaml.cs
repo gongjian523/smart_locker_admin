@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace CFLMedCab.View.ReplenishmentOrder
 {
     /// <summary>
-    /// ReplenishOpenCabinet.xaml 的交互逻辑
+    /// ReplenishmentDetailOpen.xaml 的交互逻辑
     /// </summary>
-    public partial class ReplenishOpenCabinet : UserControl
+    public partial class ReplenishmentDetailOpen : UserControl
     {
-        public ReplenishOpenCabinet()
+        public ReplenishmentDetailOpen()
         {
             InitializeComponent();
         }

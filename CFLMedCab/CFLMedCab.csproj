@@ -103,6 +103,7 @@
     <Reference Include="System.Data.SQLite.Linq, Version=1.0.111.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Data.SQLite.Linq.1.0.111.0\lib\net451\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
+    <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -126,6 +127,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="BLL\FetchOrderBll.cs" />
+    <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\UserBll.cs" />
     <Compile Include="BLL\FetchOrderdtlBll.cs" />
     <Compile Include="BLL\GoodsChageOrderdtlDll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
@@ -134,6 +137,7 @@
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
+    <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarContext.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
@@ -152,7 +156,7 @@
     <Compile Include="DAL\SurgeryOrderDal.cs" />
     <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
-    <Compile Include="Infrastructure\CollectHelper\CollectHelper.cs" />
+    <Compile Include="Infrastructure\ToolHelper\CollectHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
@@ -177,8 +181,8 @@
     <Compile Include="Model\FetchOrderdtl.cs" />
     <Compile Include="Model\FetchOrderdtlView.cs" />
     <Compile Include="Model\User.cs" />
-    <Compile Include="View\ClosetCabinet.xaml.cs">
-      <DependentUpon>ClosetCabinet.xaml</DependentUpon>
+    <Compile Include="View\CloseCabinet.xaml.cs">
+      <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
     <Compile Include="Infrastructure\DbHelper\SqliteHelper.cs" />
     <Compile Include="View\GerFetchView.xaml.cs">
@@ -211,8 +215,8 @@
     <Compile Include="View\ReplenishmentOrder\ReplenishmentClose.xaml.cs">
       <DependentUpon>ReplenishmentClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\ReplenishmentConfirm.xaml.cs">
-      <DependentUpon>ReplenishmentConfirm.xaml</DependentUpon>
+    <Compile Include="View\ReplenishmentOrder\ReplenishmentDetail.xaml.cs">
+      <DependentUpon>ReplenishmentDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\ReturnGoodsOrder\ReturnGoodsClose.xaml.cs">
       <DependentUpon>ReturnGoodsClose.xaml</DependentUpon>
@@ -220,8 +224,8 @@
     <Compile Include="View\ReturnGoodsOrder\ReturnGoodsConfirm.xaml.cs">
       <DependentUpon>ReturnGoodsConfirm.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\ReplenishmentOrder\ReplenishOpenCabinet.xaml.cs">
-      <DependentUpon>ReplenishOpenCabinet.xaml</DependentUpon>
+    <Compile Include="View\ReplenishmentOrder\ReplenishmentDetailOpen.xaml.cs">
+      <DependentUpon>ReplenishmentDetailOpen.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\SurgeryCollarUse\ConsumablesDetails.xaml.cs">
       <DependentUpon>ConsumablesDetails.xaml</DependentUpon>
@@ -268,7 +272,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="View\ClosetCabinet.xaml">
+    <Page Include="View\CloseCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -312,7 +316,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\ReplenishmentConfirm.xaml">
+    <Page Include="View\ReplenishmentOrder\ReplenishmentDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -324,7 +328,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\ReplenishmentOrder\ReplenishOpenCabinet.xaml">
+    <Page Include="View\ReplenishmentOrder\ReplenishmentDetailOpen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -424,6 +428,7 @@
     <Resource Include="Resources\Images\logo.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\OpenDoor.png" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup />

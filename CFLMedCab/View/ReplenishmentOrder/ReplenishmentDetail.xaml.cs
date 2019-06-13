@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.DAL;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -19,17 +20,21 @@ using System.Windows.Threading;
 namespace CFLMedCab.View.ReplenishmentOrder
 {
     /// <summary>
-    /// ReplenishmentConfirm.xaml 的交互逻辑
+    /// ReplenishmentDetail.xaml 的交互逻辑
     /// </summary>
-    public partial class ReplenishmentConfirm : UserControl
+    public partial class ReplenishmentDetail : UserControl
     {
         ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
-        ReplenishOrder entity = new ReplenishOrder();
-        public ReplenishmentConfirm(ReplenishOrder model)
+        //ReplenishOrder entity = new ReplenishOrder();
+        //public ReplenishmentDetail(ReplenishOrder model)
+
+        ReplenishSubShortOrder entity = new ReplenishSubShortOrder();
+        public ReplenishmentDetail(ReplenishSubShortOrder model)
         {
             InitializeComponent();
             //操作人
-            principal.Content = model.principal_id;
+            //principal.Content = model.principal_id;
+            //principal.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             workOrderNum.Content = model.id;
             //listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
@@ -49,10 +54,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         private void Confirm_Click(object sender, RoutedEventArgs e)
         {
-            OpenCabinet openCabinet = new OpenCabinet();
-            openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            openCabinet.Owner = Application.Current.MainWindow;
-            openCabinet.ShowDialog();
+            //OpenCabinet openCabinet = new OpenCabinet();
+            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //openCabinet.Owner = Application.Current.MainWindow;
+            //openCabinet.ShowDialog();
         }
     }
 }

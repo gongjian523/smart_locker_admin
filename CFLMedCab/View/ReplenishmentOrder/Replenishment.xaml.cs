@@ -32,8 +32,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
             InitData();
         }
 
-        private ObservableCollection<ReplenishOrder> _replenishOrderView = new ObservableCollection<ReplenishOrder>();
-        public ObservableCollection<ReplenishOrder> ReplenishOrderViewList
+        //private ObservableCollection<ReplenishOrder> _replenishOrderView = new ObservableCollection<ReplenishOrder>();
+        //public ObservableCollection<ReplenishOrder> ReplenishOrderViewList     
+        private ObservableCollection<ReplenishSubShortOrder> _replenishOrderView = new ObservableCollection<ReplenishSubShortOrder>();
+        public ObservableCollection<ReplenishSubShortOrder> ReplenishOrderViewList
         {
             get
             {
@@ -51,7 +53,14 @@ namespace CFLMedCab.View.ReplenishmentOrder
         private void InitData()
         {
             ReplenishOrderViewList.Clear();
-            List<ReplenishOrder> replenishOrders= replenishOrderDal.GetList();
+
+            //List<ReplenishOrder> replenishOrders= replenishOrderDal.GetList();
+            List<ReplenishSubShortOrder> replenishOrders = new List<ReplenishSubShortOrder>();
+            replenishOrders.Add(new ReplenishSubShortOrder
+            {
+                id = 1,
+                unDoneNum = 1
+            });
             replenishOrders.ForEach(replenishOrder => ReplenishOrderViewList.Add(replenishOrder));
         }
         
@@ -60,12 +69,12 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Confirm_Click(object sender, RoutedEventArgs e)
+        private void EnterDetailOpen_Click(object sender, RoutedEventArgs e)
         {
-            OpenCabinet openCabinet = new OpenCabinet();
-            openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            openCabinet.Owner = Application.Current.MainWindow;
-            openCabinet.ShowDialog();
+            //OpenCabinet openCabinet = new OpenCabinet();
+            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            //openCabinet.Owner = Application.Current.MainWindow;
+            //openCabinet.ShowDialog();
         }
 
         /// <summary>
@@ -73,11 +82,16 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Retract_Click(object sender, RoutedEventArgs e)
+        private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
-            ReplenishOrder replenishOrder= (ReplenishOrder)((Button)sender).Tag;
-            ReplenishmentConfirm replenishmentConfirm = new ReplenishmentConfirm(replenishOrder);
-            ContentFrame.Navigate(replenishmentConfirm);
+            //ReplenishOrder replenishOrder= (ReplenishOrder)((Button)sender).Tag;
+            //ReplenishmentDetail ReplenishmentDetail = new ReplenishmentDetail(replenishOrder);
+            //ContentFrame.Navigate(ReplenishmentDetail);
+
+            ReplenishSubShortOrder replenishOrder= (ReplenishSubShortOrder)((Button)sender).Tag;
+            ReplenishmentDetail ReplenishmentDetail = new ReplenishmentDetail(replenishOrder);
+            ContentFrame.Navigate(ReplenishmentDetail);
+
         }
     }
 }
