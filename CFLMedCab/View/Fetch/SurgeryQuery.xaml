@@ -14,8 +14,8 @@
             <TextBox x:Name="tbOddNumbers" Height="48" Margin="20,20" TextWrapping="Wrap" Text="" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="{Binding Path=ActualWidth,ElementName=myGrid}" />
 
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button Content="暂无手术单号" HorizontalAlignment="Left" Margin="0,0,4,0" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" VerticalAlignment="Top" Width="113" Height="48" Click="NoNum"/>
-                <Button Content="查询" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="20,0,40,0" VerticalAlignment="Top" Height="48"  Click="Query"/>
+                <Button Content="暂无手术单号" HorizontalAlignment="Left" Margin="0,0,4,0" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" VerticalAlignment="Top" Width="113" Height="48" Click="EnterNoNum_Click"/>
+                <Button Content="查询" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="20,0,40,0" VerticalAlignment="Top" Height="48"  Click="EnterDetail_Click"/>
             </StackPanel>
             <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
                 <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>

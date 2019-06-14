@@ -30,7 +30,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
-        ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
+        //ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
         public ReplenishmentClose(ReplenishOrder model)
         {
             InitializeComponent();
@@ -39,7 +39,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             //工单号
             workOrderNum.Content = model.id;
             lDate.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
+            //listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
         }
 
         /// <summary>

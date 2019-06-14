@@ -37,7 +37,7 @@
             </ListView>
         </Grid>
         <Label Content="是否结束此次操作" HorizontalAlignment="Left" Margin="334,345,0,0" VerticalAlignment="Top"/>
-        <Button Content="是" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="236,383,0,0" VerticalAlignment="Top" Width="114" Click="Button_Click"/>
+        <Button Content="是" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="236,383,0,0" VerticalAlignment="Top" Width="114"/>
         <Button Content="否" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" HorizontalAlignment="Left" Margin="422,383,0,0" VerticalAlignment="Top" Width="114" Height="32"/>
 
         <!--<Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">

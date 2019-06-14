@@ -44,6 +44,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -182,11 +183,14 @@
     <Compile Include="View\CloseCabinet.xaml.cs">
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Fetch\GerFetchState.xaml.cs">
+      <DependentUpon>GerFetchState.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Fetch\SurgeryNumOpen.xaml.cs">
       <DependentUpon>SurgeryNumOpen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Fetch\SurgeryNumQuery.xaml.cs">
-      <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
+    <Compile Include="View\Fetch\SurgeryOrderDetail.xaml.cs">
+      <DependentUpon>SurgeryOrderDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Fetch\ReturnFetchView.xaml.cs">
       <DependentUpon>ReturnFetchView.xaml</DependentUpon>
@@ -236,8 +240,8 @@
     <Compile Include="View\Fetch\ConsumablesDetails.xaml.cs">
       <DependentUpon>ConsumablesDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Fetch\NoSurgeryNumClose.xaml.cs">
-      <DependentUpon>NoSurgeryNumClose.xaml</DependentUpon>
+    <Compile Include="View\Fetch\SurgeryNoNumClose.xaml.cs">
+      <DependentUpon>SurgeryNoNumClose.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Replenishment\Replenishment.xaml.cs">
       <DependentUpon>Replenishment.xaml</DependentUpon>
@@ -276,6 +280,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\CloseCabinet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Fetch\GerFetchState.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -347,7 +355,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Fetch\NoSurgeryNumClose.xaml">
+    <Page Include="View\Fetch\SurgeryNoNumClose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -367,7 +375,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Fetch\SurgeryNumQuery.xaml">
+    <Page Include="View\Fetch\SurgeryOrderDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

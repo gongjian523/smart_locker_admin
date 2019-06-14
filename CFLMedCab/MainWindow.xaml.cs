@@ -222,10 +222,30 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterGerFetch_Click(object sender, RoutedEventArgs e)
+        private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
+            GerFetchState gerFetchState = new GerFetchState(); 
+            ContentFrame.Navigate(gerFetchState);
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+        }
+
+        /// <summary>
+        /// 一般领用关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterGerFectchLockerEvent(object sender, bool isClose)
+        {
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
             GerFetchView gerFetchView = new GerFetchView();
-            ContentFrame.Navigate(gerFetchView);
+            gerFetchView.EnterPopCloseEvent += new GerFetchView.EnterPopCloseHandler(onEnterPopClose);
+
+            FullFrame.Navigate(gerFetchView);
         }
 
         /// <summary>
@@ -233,10 +253,102 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OperationCollarUse(object sender, RoutedEventArgs e)
+        private void onEnterSurgery(object sender, RoutedEventArgs e)
         {
-            SurgeryQuery surgeryQuery = new SurgeryQuery(); 
+            SurgeryQuery surgeryQuery = new SurgeryQuery();
+            surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
+            surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
             ContentFrame.Navigate(surgeryQuery);
+        }
+
+        /// <summary>
+        /// 进入手术无单领用-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSurgeryNoNumOpen(object sender, RoutedEventArgs e)
+        {
+            GerFetchState gerFetchState = new GerFetchState();
+            ContentFrame.Navigate(gerFetchState);
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+
+        }
+
+        /// <summary>
+        /// 手术无单领用关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSurgeryNoNumLockerEvent(object sender, bool isClose)
+        {
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
+            SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose();
+            surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
+
+            FullFrame.Navigate(surgeryNoNumClose);
+        }
+
+        /// <summary>
+        /// 手术领用详情页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fetchOrder"></param>
+        private void onEnterSurgeryDetail(object sender, FetchOrder fetchOrder)
+        {
+            SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(fetchOrder);
+            ContentFrame.Navigate(surgeryOrderDetail);
+        }
+
+        private void EnterSurgeryNumOpenEvent(object sender, FetchOrder fetchOrder)
+        {
+            SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(fetchOrder);
+            ContentFrame.Navigate(surgeryOrderDetail);
+        }
+
+        /// <summary>
+        /// 进入手术有单领用-开门状态 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSurgeryNumOpen(object sender, FetchOrder fetchOrder)
+        {
+            NaviView.Visibility = Visibility.Hidden;
+
+            SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(fetchOrder);
+            FullFrame.Navigate(surgeryNumOpen);
+
+            MaskView.Visibility = Visibility.Visible;
+            PopFrame.Visibility = Visibility.Visible;
+            OpenCabinet openCabinet = new OpenCabinet();
+            openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+            PopFrame.Navigate(openCabinet);
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
+
+        }
+
+        /// <summary>
+        /// 手术有单领用关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSurgeryNumLockerEvent(object sender, bool isClose)
+        {
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
+            SurgeryNumClose surgeryNumClose = new SurgeryNumClose(new FetchOrder());
+            surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
+
+            FullFrame.Navigate(surgeryNumClose);
         }
 
         /// <summary>
