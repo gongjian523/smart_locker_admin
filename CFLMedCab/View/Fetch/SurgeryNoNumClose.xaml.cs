@@ -18,9 +18,15 @@ namespace CFLMedCab.View.Fetch
     /// <summary>
     /// NoSurgeryNumClose.xaml 的交互逻辑
     /// </summary>
-    public partial class NoSurgeryNumClose : UserControl
-    {
-        public NoSurgeryNumClose(string OddNumbers = null)
+    public partial class SurgeryNoNumClose : UserControl
+    { 
+        public delegate void EnterSurgeryNoNumOpenHandler(object sender, RoutedEventArgs e);
+        public event EnterSurgeryNoNumOpenHandler EnterSurgeryNoNumOpenEvent;
+
+        //跳出关闭弹出框
+        public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
+        public event EnterPopCloseHandler EnterPopCloseEvent;
+        public SurgeryNoNumClose(string OddNumbers = null)
         {
             InitializeComponent();
             lName.Content = OddNumbers;
@@ -31,12 +37,9 @@ namespace CFLMedCab.View.Fetch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            //CloseCabinet CloseCabinet = new CloseCabinet();
-            //CloseCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //CloseCabinet.Owner = Application.Current.MainWindow;
-            //CloseCabinet.ShowDialog();
+            EnterPopCloseEvent(this,null);
         }
 
         /// <summary>
@@ -44,12 +47,9 @@ namespace CFLMedCab.View.Fetch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            //OpenCabinet openCabinet = new OpenCabinet();
-            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //openCabinet.Owner = Application.Current.MainWindow;
-            //openCabinet.ShowDialog();
+            EnterSurgeryNoNumOpenEvent(this, null);
         }
     }
 }

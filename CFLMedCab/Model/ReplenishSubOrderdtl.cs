@@ -19,7 +19,7 @@ namespace CFLMedCab.Model
         public int id { get; set; }
 
         /// <summary>
-        /// 上架单编号
+        /// 上架单id
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public int replenish_sub_orderid { get; set; }

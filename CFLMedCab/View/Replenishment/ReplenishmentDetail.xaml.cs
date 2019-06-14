@@ -24,7 +24,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class ReplenishmentDetail : UserControl
     {
-        ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
+        //ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
         //ReplenishOrder entity = new ReplenishOrder();
         //public ReplenishmentDetail(ReplenishOrder model)
 
@@ -45,7 +45,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             //principal.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             workOrderNum.Content = model.id;
-            listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
+            //listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
             entity = model;
         }
         

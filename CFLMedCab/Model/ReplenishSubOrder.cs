@@ -13,16 +13,22 @@ namespace CFLMedCab.Model
     public class ReplenishSubOrder
     {
         /// <summary>
-        /// 上架单编号
+        /// 上架单id
         /// </summary>
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
-        /// <summary>
-        /// 上架工单号
-        /// </summary>
-        [SugarColumn(IsNullable = true)]
-        public int replenish_order_code { get; set; }
+		/// <summary>
+		/// 上架单编号
+		/// </summary>
+		[SugarColumn(IsNullable = false)]
+		public string code { get; set; }
+
+		/// <summary>
+		/// 上架工单号
+		/// </summary>
+		[SugarColumn(IsNullable = false)]
+        public string replenish_order_code { get; set; }
 
         /// <summary>
         /// 生成时间

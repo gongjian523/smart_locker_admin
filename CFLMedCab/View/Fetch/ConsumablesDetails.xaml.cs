@@ -24,14 +24,14 @@ namespace CFLMedCab.View.Fetch
     public partial class ConsumablesDetails : UserControl
     {
         private FetchOrder fetchOrder;
-        private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
-        private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
+        //private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
+        //private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
         public ConsumablesDetails(FetchOrder model)
         {
             InitializeComponent();
             fetchOrder = model;
             SurgeryNum.Content = model.business_order_id;
-            listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(model.id);
+            //listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(model.id);
         }
 
         /// <summary>

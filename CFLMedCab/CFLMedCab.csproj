@@ -44,6 +44,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -97,6 +98,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.111.0\lib\net451\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -120,6 +124,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="APO\BasePageDataApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
@@ -134,6 +139,8 @@
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
     <Compile Include="DAL\ReplenishDal.cs" />
+    <Compile Include="DTO\BasePageDataDto.cs" />
+    <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarHelper.cs" />
@@ -182,11 +189,14 @@
     <Compile Include="View\CloseCabinet.xaml.cs">
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Fetch\GerFetchState.xaml.cs">
+      <DependentUpon>GerFetchState.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Fetch\SurgeryNumOpen.xaml.cs">
       <DependentUpon>SurgeryNumOpen.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Fetch\SurgeryNumQuery.xaml.cs">
-      <DependentUpon>SurgeryNumQuery.xaml</DependentUpon>
+    <Compile Include="View\Fetch\SurgeryOrderDetail.xaml.cs">
+      <DependentUpon>SurgeryOrderDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Fetch\ReturnFetchView.xaml.cs">
       <DependentUpon>ReturnFetchView.xaml</DependentUpon>
@@ -236,8 +246,8 @@
     <Compile Include="View\Fetch\ConsumablesDetails.xaml.cs">
       <DependentUpon>ConsumablesDetails.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Fetch\NoSurgeryNumClose.xaml.cs">
-      <DependentUpon>NoSurgeryNumClose.xaml</DependentUpon>
+    <Compile Include="View\Fetch\SurgeryNoNumClose.xaml.cs">
+      <DependentUpon>SurgeryNoNumClose.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Replenishment\Replenishment.xaml.cs">
       <DependentUpon>Replenishment.xaml</DependentUpon>
@@ -276,6 +286,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\CloseCabinet.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Fetch\GerFetchState.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -347,7 +361,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Fetch\NoSurgeryNumClose.xaml">
+    <Page Include="View\Fetch\SurgeryNoNumClose.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -367,7 +381,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Fetch\SurgeryNumQuery.xaml">
+    <Page Include="View\Fetch\SurgeryOrderDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -443,7 +457,9 @@
     <Resource Include="Resources\Images\CloseDoor.png" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

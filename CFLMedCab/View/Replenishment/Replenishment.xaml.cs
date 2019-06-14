@@ -32,7 +32,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubShortOrder e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
-        ReplenishOrderDal replenishOrderDal = new ReplenishOrderDal();
+        //ReplenishOrderDal replenishOrderDal = new ReplenishOrderDal();
         public Replenishment()
         {
             InitializeComponent();

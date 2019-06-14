@@ -1,4 +1,7 @@
-﻿using CFLMedCab.Infrastructure.DbHelper;
+﻿using CFLMedCab.APO;
+using CFLMedCab.DTO;
+using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Model;
 using SqlSugar;
 using System;
@@ -48,6 +51,46 @@ namespace CFLMedCab.DAL
 		{
 			Db = SqlSugarHelper.GetInstance().Db;
 			
+		}
+
+
+		/// <summary>
+		/// 获取待完成上架工单
+		/// </summary>
+		/// <returns></returns>
+		public List<ReplenishSubOrderDto> GetReplenishSubOrderDto(BasePageDataApo pageDataApo, out int totalCount)
+		{
+
+			totalCount = 0;
+			List<ReplenishSubOrderDto> data;
+
+			//查询语句
+			var queryable = Db.Queryable<ReplenishSubOrder>()
+				.Where(it => it.status == 0)
+				.Select(it => new ReplenishSubOrderDto
+				{
+					id = it.id,
+					code = it.code,
+					replenish_order_code = it.replenish_order_code,
+					create_time = it.create_time,
+					status = it.status,
+					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
+													  .Where(itsub => itsub.replenish_sub_orderid == it.id && itsub.status == 0)
+													  .Count()
+				});
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();		
+			}
+			return data;
+
 		}
 
 	}
