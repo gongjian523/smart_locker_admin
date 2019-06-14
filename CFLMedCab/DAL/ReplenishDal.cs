@@ -50,7 +50,6 @@ namespace CFLMedCab.DAL
 		private ReplenishDal()
 		{
 			Db = SqlSugarHelper.GetInstance().Db;
-			
 		}
 
 
@@ -67,6 +66,7 @@ namespace CFLMedCab.DAL
 			//查询语句
 			var queryable = Db.Queryable<ReplenishSubOrder>()
 				.Where(it => it.status == 0)
+				.OrderBy(it => it.create_time, OrderByType.Desc)
 				.Select(it => new ReplenishSubOrderDto
 				{
 					id = it.id,
@@ -88,6 +88,37 @@ namespace CFLMedCab.DAL
 			{
 				data = queryable.ToList();
 				totalCount = data.Count();		
+			}
+			return data;
+
+		}
+
+		/// <summary>
+		/// 获取待完成上架商品列表
+		/// </summary>
+		/// <returns></returns>
+		public List<ReplenishSubOrderdtlDto> GetReplenishSubOrderdtlDto(ReplenishSubOrderdtlApo pageDataApo, out int totalCount)
+		{
+
+			totalCount = 0;
+			List<ReplenishSubOrderdtlDto> data;
+
+			//查询语句
+			var queryable = Db.Queryable<ReplenishSubOrderdtl>()
+				.Where(it => it.status == 0 && it.replenish_sub_orderid == pageDataApo.replenish_sub_orderid )
+				.OrderBy(it => it.birth_date, OrderByType.Desc)
+				.Select<ReplenishSubOrderdtlDto>();
+			
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
 			}
 			return data;
 
