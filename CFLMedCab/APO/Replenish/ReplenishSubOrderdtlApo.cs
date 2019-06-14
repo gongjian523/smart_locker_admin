@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.APO;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,12 +8,11 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DTO.Replenish
 {
-	public class ReplenishSubOrderDto: ReplenishSubOrder
+	public class ReplenishSubOrderdtlApo : BasePageDataApo
 	{
-
 		/// <summary>
-		/// 待上架商品数量
+		/// 上架单id
 		/// </summary>
-		public int not_picked_goods_num { get; set; }
+		public int replenish_sub_orderid { get; set; }
 	}
 }

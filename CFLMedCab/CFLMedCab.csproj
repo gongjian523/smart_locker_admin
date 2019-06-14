@@ -125,6 +125,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APO\BasePageDataApo.cs" />
+    <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
     <Compile Include="DAL\ReplenishDal.cs" />
     <Compile Include="DTO\BasePageDataDto.cs" />
+    <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
