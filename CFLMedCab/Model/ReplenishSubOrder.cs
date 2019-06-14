@@ -13,7 +13,7 @@ namespace CFLMedCab.Model
     public class ReplenishSubOrder
     {
         /// <summary>
-        /// 上架单号
+        /// 上架单编号
         /// </summary>
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
@@ -22,7 +22,7 @@ namespace CFLMedCab.Model
         /// 上架工单号
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public int replenish_order_id { get; set; }
+        public int replenish_order_code { get; set; }
 
         /// <summary>
         /// 生成时间
