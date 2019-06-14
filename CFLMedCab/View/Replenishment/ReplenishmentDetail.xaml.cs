@@ -61,8 +61,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         private void EnterDetialOpen_Click(object sender, RoutedEventArgs e)
         {
-            ReplenishSubShortOrder replenishOrder = (ReplenishSubShortOrder)((Button)sender).Tag;
-            EnterReplenishmentDetailOpenEvent(this, replenishOrder);
+            //ReplenishSubShortOrder replenishOrder = (ReplenishSubShortOrder)((Button)sender).Tag;
+            EnterReplenishmentDetailOpenEvent(this, entity);
         }
     }
 }

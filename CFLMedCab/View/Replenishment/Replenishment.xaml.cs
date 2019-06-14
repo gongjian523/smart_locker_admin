@@ -39,12 +39,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
             DataContext = this;
 
             InitData();
-
-            //Timer loginTimer = new Timer(2000);
-            //loginTimer.AutoReset = false;
-            //loginTimer.Enabled = true;
-            //loginTimer.Elapsed += new ElapsedEventHandler(TestGetEpcData);   
-
         }
 
         //private ObservableCollection<ReplenishOrder> _replenishOrderView = new ObservableCollection<ReplenishOrder>();
@@ -86,8 +80,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetailOpen_Click(object sender, RoutedEventArgs e)
         {
-            ReplenishSubShortOrder replenishOrder = (ReplenishSubShortOrder)((Button)sender).Tag;
-            EnterReplenishmentDetailOpenEvent(this, replenishOrder);
+            ReplenishSubShortOrder replenishSubShortOrder = (ReplenishSubShortOrder)((Button)sender).Tag;
+            EnterReplenishmentDetailOpenEvent(this, replenishSubShortOrder);
         }
 
         /// <summary>
@@ -97,15 +91,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
-            ReplenishSubShortOrder replenishOrder= (ReplenishSubShortOrder)((Button)sender).Tag;
-            EnterReplenishmentDetailEvent(this, replenishOrder);
-        }
-
-        public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
-        {
-          
-             RfidHelper.GetEpcData(out bool isGetSuccess);
-           
+            ReplenishSubShortOrder replenishSubShortOrder = (ReplenishSubShortOrder)((Button)sender).Tag;
+            EnterReplenishmentDetailEvent(this, replenishSubShortOrder);
         }
     }
 }

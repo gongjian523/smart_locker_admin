@@ -218,8 +218,8 @@
     <Compile Include="View\OpenCabinet.xaml.cs">
       <DependentUpon>OpenCabinet.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Return\ReturnGoodsOpenCabinet.xaml.cs">
-      <DependentUpon>ReturnGoodsOpenCabinet.xaml</DependentUpon>
+    <Compile Include="View\Return\ReturnGoodsDetailOpen.xaml.cs">
+      <DependentUpon>ReturnGoodsDetailOpen.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Replenishment\ReplenishmentClose.xaml.cs">
       <DependentUpon>ReplenishmentClose.xaml</DependentUpon>
@@ -230,8 +230,8 @@
     <Compile Include="View\Return\ReturnGoodsClose.xaml.cs">
       <DependentUpon>ReturnGoodsClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Return\ReturnGoodsConfirm.xaml.cs">
-      <DependentUpon>ReturnGoodsConfirm.xaml</DependentUpon>
+    <Compile Include="View\Return\ReturnGoodsDetail.xaml.cs">
+      <DependentUpon>ReturnGoodsDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Replenishment\ReplenishmentDetailOpen.xaml.cs">
       <DependentUpon>ReplenishmentDetailOpen.xaml</DependentUpon>
@@ -322,7 +322,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Return\ReturnGoodsOpenCabinet.xaml">
+    <Page Include="View\Return\ReturnGoodsDetailOpen.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -338,7 +338,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Return\ReturnGoodsConfirm.xaml">
+    <Page Include="View\Return\ReturnGoodsDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

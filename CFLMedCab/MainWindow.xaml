@@ -74,7 +74,7 @@
                         <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,64,0,0" VerticalAlignment="Top"  Foreground="White" Content="手术领用" Click="OperationCollarUse" />
                         <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,114,0,0" VerticalAlignment="Top"  Foreground="White" Content="领用退回" Click="ReturnFetch_Click"/>
                         <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,164,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" Click="onEnterReplenishment" />
-                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,214,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" Click="ReturnGoods" />
+                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,214,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" Click="onEnterReturnGoods" />
                         <RadioButton x:Name="BtnEntetInv" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,264,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" Click="EnterInv_Click"/>
                         <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="Stock" />
                     </Grid>

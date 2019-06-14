@@ -25,7 +25,7 @@ using CFLMedCab.Model;
 using GDotnet.Reader.Api.Protocol.Gx;
 using GDotnet.Reader.Api.DAL;
 using CFLMedCab.View.ReplenishmentOrder;
-using CFLMedCab.View.ReturnGoodsOrder;
+using CFLMedCab.View.Return;
 using CFLMedCab.DAL;
 using SqlSugar;
 using CFLMedCab.BLL;
@@ -250,6 +250,7 @@ namespace CFLMedCab
             ContentFrame.Navigate(returnFetchView);
         }
 
+        #region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -297,30 +298,120 @@ namespace CFLMedCab
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
 
+
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentLockerEvent); 
-                       
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
         }
 
+
         /// <summary>
-        /// 关门状态
+        /// 进入上架单详情页-关门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentLockerEvent(object sender, bool isClose)
+        private void onEnterReplenishmentCloseEvent(object sender, bool isClose)
         {
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
             if (!isClose)
                 return;
 
-            ReplenishmentClose replenishmentClose = new ReplenishmentClose(new ReplenishOrder());
-            replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
-            replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
+            bool isGetSuccess;
+            Hashtable ht =  RfidHelper.GetEpcData(out isGetSuccess);
 
-            FullFrame.Navigate(replenishmentClose);         
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(new ReplenishOrder());
+                replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
+                replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
+
+                FullFrame.Navigate(replenishmentClose);
+            }));
+        }
+        #endregion
+
+        #region  ReturnGoods
+        /// <summary>
+        /// 进入退货出库页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnGoods(object sender, RoutedEventArgs e)
+        {
+            ReturnGoods returnGoods = new ReturnGoods();
+            returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
+            returnGoods.EnterReturnGoodsDetailOpenEvent += new ReturnGoods.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
+
+            ContentFrame.Navigate(returnGoods);
         }
 
+        /// <summary>
+        /// 进入退货出库详情页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnGoodsDetail(object sender, PickingSubShortOrder e)
+        {
+            ReturnGoodsDetail returnGoodsDetail = new ReturnGoodsDetail(e);
+            returnGoodsDetail.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsDetail.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
+            returnGoodsDetail.EnterReturnGoodsEvent += new ReturnGoodsDetail.EnterReturnGoodsHandler(onEnterReturnGoods);
+
+            ContentFrame.Navigate(returnGoodsDetail);
+        }
+
+
+        /// <summary>
+        /// 进入退货出库详情页面-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnGoodsDetailOpen(object sender, PickingSubShortOrder e)
+        {
+            NaviView.Visibility = Visibility.Hidden;
+
+            ReturnGoodsDetailOpen returnGoodsDetailOpen = new ReturnGoodsDetailOpen(e);
+            FullFrame.Navigate(returnGoodsDetailOpen);
+
+            MaskView.Visibility = Visibility.Visible;
+            PopFrame.Visibility = Visibility.Visible;
+            OpenCabinet openCabinet = new OpenCabinet();
+            openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+            PopFrame.Navigate(openCabinet);
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
+        }
+
+
+        /// <summary>
+        /// 进入拣货单详情页-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnGoodsCloseEvent(object sender, bool isClose)
+        {
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(new PickingOrder());
+                returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
+                returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
+
+                FullFrame.Navigate(returnGoodsClose);
+            }));
+        }
+        #endregion
 
         /// <summary>
         /// 弹出关门提示框
@@ -349,13 +440,16 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopClose(object sender, RoutedEventArgs e)
         {
-            PopFrame.Visibility = Visibility.Hidden;
-            MaskView.Visibility = Visibility.Hidden;
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;
 
-            LoginBkView.Visibility = Visibility.Visible;
+                LoginBkView.Visibility = Visibility.Visible;
 
-            vein.Close();
-            vein.ChekVein();
+                vein.Close();
+                vein.ChekVein();
+            }));
         }
 
 
@@ -373,16 +467,7 @@ namespace CFLMedCab
             }));
         }
 
-        /// <summary>
-        /// 退货出库
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ReturnGoods(object sender, RoutedEventArgs e)
-        {
-            ReturnGoods returnGoods = new ReturnGoods();
-            ContentFrame.Navigate(returnGoods);
-        }
+ 
 
         /// <summary>
         /// 库存盘点
@@ -415,11 +500,6 @@ namespace CFLMedCab
             Stock stock = new Stock();
             ContentFrame.Navigate(stock);
         }
-
-
-
-
-
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {

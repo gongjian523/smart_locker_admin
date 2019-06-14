@@ -16,7 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View.ReturnGoodsOrder
+namespace CFLMedCab.View.Return
 {
     /// <summary>
     /// ReturnGoods.xaml 的交互逻辑
@@ -24,6 +24,13 @@ namespace CFLMedCab.View.ReturnGoodsOrder
     public partial class ReturnGoods : UserControl
     {
         PickingOrderDal pickingOrderDal = new PickingOrderDal();
+
+        public delegate void EnterReturnGoodsDetailHandler(object sender, PickingSubShortOrder e);
+        public event EnterReturnGoodsDetailHandler EnterReturnGoodsDetailEvent;
+
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubShortOrder e);
+        public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
+
         public ReturnGoods()
         {
             InitializeComponent();
@@ -32,8 +39,10 @@ namespace CFLMedCab.View.ReturnGoodsOrder
             InitData();
         }
 
-        private ObservableCollection<PickingOrder> _pickingOrderView = new ObservableCollection<PickingOrder>();
-        public ObservableCollection<PickingOrder> PickingOrderList
+        //private ObservableCollection<PickingOrder> _pickingOrderView = new ObservableCollection<PickingOrder>();
+        //public ObservableCollection<PickingOrder> PickingOrderList
+        private ObservableCollection<PickingSubShortOrder> _pickingOrderView = new ObservableCollection<PickingSubShortOrder>();
+        public ObservableCollection<PickingSubShortOrder> PickingOrderList
         {
             get
             {
@@ -56,28 +65,25 @@ namespace CFLMedCab.View.ReturnGoodsOrder
         }
 
         /// <summary>
-        /// 确认开柜
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Confirm_Click(object sender, RoutedEventArgs e)
-        {
-          //OpenCabinet openCabinet = new OpenCabinet();
-          //  openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-          //  openCabinet.Owner = Application.Current.MainWindow;
-          //  openCabinet.ShowDialog();
-        }
-
-        /// <summary>
         /// 查看详情
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Retract_Click(object sender, RoutedEventArgs e)
+        private void onEnterDetail(object sender, RoutedEventArgs e)
         {
-            PickingOrder pickingOrder = (PickingOrder)((Button)sender).Tag;
-            ReturnGoodsConfirm returnGoodsConfirm = new ReturnGoodsConfirm(pickingOrder);
-            ContentFrame.Navigate(returnGoodsConfirm);
+            PickingSubShortOrder pickingSubShortOrder = (PickingSubShortOrder)((Button)sender).Tag;
+            EnterReturnGoodsDetailEvent(this, pickingSubShortOrder);
+        }
+
+        /// <summary>
+        /// 确认开柜
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterDetailOpen(object sender, RoutedEventArgs e)
+        {
+            PickingSubShortOrder pickingSubShortOrder = (PickingSubShortOrder)((Button)sender).Tag;
+            EnterReturnGoodsDetailOpenEvent(this, pickingSubShortOrder);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.DAL;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -16,20 +17,28 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace CFLMedCab.View.ReturnGoodsOrder
+namespace CFLMedCab.View.Return
 {
     /// <summary>
     /// ReturnGoodsConfirm.xaml 的交互逻辑
     /// </summary>
-    public partial class ReturnGoodsConfirm : UserControl
+    public partial class ReturnGoodsDetail : UserControl
     {
-        PickingOrder entity = new PickingOrder();
+        //进入拣货单详情开门状态页面
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubShortOrder e);
+        public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
+
+        //进入拣货单列表页面
+        public delegate void EnterReturnGoodsHandler(object sender, RoutedEventArgs e);
+        public event EnterReturnGoodsHandler EnterReturnGoodsEvent;
+
+        PickingSubShortOrder entity = new PickingSubShortOrder();
         PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
-        public ReturnGoodsConfirm(PickingOrder model)
+        public ReturnGoodsDetail(PickingSubShortOrder model)
         {
             InitializeComponent();
             //操作人
-            principal.Content = model.principal_id;
+            //principal.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             workOrderNum.Content = model.id;
             //listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
@@ -41,10 +50,9 @@ namespace CFLMedCab.View.ReturnGoodsOrder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void onBackward(object sender, RoutedEventArgs e)
         {
-            ReturnGoods returnGoods = new ReturnGoods();
-            ContentFrame.Navigate(returnGoods);
+            EnterReturnGoodsEvent(this, null);
         }
 
         /// <summary>
@@ -52,12 +60,9 @@ namespace CFLMedCab.View.ReturnGoodsOrder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Confirm_Click(object sender, RoutedEventArgs e)
+        private void onEnerDetailOpen(object sender, RoutedEventArgs e)
         {
-            //OpenCabinet openCabinet = new OpenCabinet();
-            //openCabinet.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            //openCabinet.Owner = Application.Current.MainWindow;
-            //openCabinet.ShowDialog();
+            EnterReturnGoodsDetailOpenEvent(this, entity);
         }
     }
 }

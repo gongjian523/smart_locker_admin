@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections;

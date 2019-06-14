@@ -65,7 +65,7 @@ namespace CFLMedCab.Model
         public DateTime create_time { get; set; }
 
         /// <summary>
-        /// 带上架数据
+        /// 待上架数量
         /// </summary>
         public int unDoneNum { get; set; }
     }
