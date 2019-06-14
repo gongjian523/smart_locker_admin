@@ -18,10 +18,13 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// InventoryPlan.xaml 的交互逻辑
     /// </summary>
-    public partial class InventoryPlan : Window
+    public partial class InventoryPlanDetail : UserControl
     {
+        public delegate void HidePopInventoryPlanHandler(object sender, RoutedEventArgs e);
+        public event HidePopInventoryPlanHandler HidePopInventoryPlanEvent;
+
         InventoryPlanDal inventoryPlanDal = new InventoryPlanDal();
-        public InventoryPlan()
+        public InventoryPlanDetail()
         {
             InitializeComponent();
             //listView.DataContext = inventoryPlanDal.GetAllInventoryPlan().DefaultView;
@@ -41,9 +44,31 @@ namespace CFLMedCab.View.Inventory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Save(object sender, RoutedEventArgs e)
+        private void onSave(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            
+
+            HidePopInventoryPlanEvent(this, null);
+        }
+
+        /// <summary>
+        /// 取消
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onCancel(object sender, RoutedEventArgs e)
+        {
+            HidePopInventoryPlanEvent(this, null);
+        }
+
+        /// <summary>
+        /// 添加计划 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onAddPlan(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -55,11 +55,11 @@
                 <Border Margin="20"  Background="#FFFFFF" CornerRadius="3,3,3,3" Padding="10">
                     <WrapPanel Orientation="Horizontal" >
                         <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#7291FD"  Content="一般领用"
-                                 Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="EnterInv_Click"/>
+                                 Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="onEnterInvtory"/>
                         <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#9394FE"  Content="库存盘点"
-                                 Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="EnterInv_Click"/>
+                                 Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="onEnterInvtory"/>
                         <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#3174FF"  Content="库存查询"
-                                 Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="EnterInv_Click"/>
+                                 Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterInvtory"/>
                     </WrapPanel>
                 </Border>
             </Grid>
@@ -75,8 +75,8 @@
                         <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,114,0,0" VerticalAlignment="Top"  Foreground="White" Content="领用退回" Click="ReturnFetch_Click"/>
                         <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,164,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" Click="onEnterReplenishment" />
                         <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,214,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" Click="onEnterReturnGoods" />
-                        <RadioButton x:Name="BtnEntetInv" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,264,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" Click="EnterInv_Click"/>
-                        <RadioButton Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="Stock" />
+                        <RadioButton x:Name="BtnEnterInventory" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,264,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" Click="onEnterInvtory"/>
+                        <RadioButton x:Name="BtnEnterStock" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="onEnterStock" />
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="1"  x:Name="ContentView">

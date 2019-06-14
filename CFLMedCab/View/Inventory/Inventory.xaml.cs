@@ -22,8 +22,11 @@ namespace CFLMedCab.View.Inventory
     {
 
 
-        public delegate void MaskShowHandler(object sender, System.EventArgs e);
-        public event MaskShowHandler MaskShowEvent;
+        public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
+        public event EnterPopInventoryHandler EnterPopInventoryEvent;
+
+        public delegate void EnterPopInventoryPlanHandler(object sender, System.EventArgs e);
+        public event EnterPopInventoryPlanHandler EnterPopInventoryPlanEvent;
 
         public Inventory()
         {
@@ -37,13 +40,9 @@ namespace CFLMedCab.View.Inventory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void InvPopDialog(object sender, RoutedEventArgs e)
+        private void onEnterPopInventory(object sender, RoutedEventArgs e)
         {
-            InvPopDialog invPopDialog = new InvPopDialog();
-            invPopDialog.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            invPopDialog.Owner = Application.Current.MainWindow;
-            invPopDialog.ShowDialog();
-            MaskShowEvent(this, null);
+            EnterPopInventoryEvent(this, null);
         }
 
         /// <summary>
@@ -51,12 +50,9 @@ namespace CFLMedCab.View.Inventory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void InventoryPlanSetUp(object sender, RoutedEventArgs e)
+        private void onEnterPopInventoryPlan(object sender, RoutedEventArgs e)
         {
-            InventoryPlan inventoryPlan = new InventoryPlan();
-            inventoryPlan.WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            inventoryPlan.Owner = Application.Current.MainWindow;
-            inventoryPlan.ShowDialog();
+            EnterPopInventoryPlanEvent(this, null);
         }
     }
 }

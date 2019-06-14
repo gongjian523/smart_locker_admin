@@ -43,15 +43,7 @@ namespace CFLMedCab
     {
         private DispatcherTimer ShowTimer;
         private VeinHelper vein;
-        private SerialPort com;
 
-        private Timer loginTimer;
-
-        private SoundPlayer media;
-
-        private Inventory inventory = new Inventory();
-        //private LoginStatus loginStatus = new LoginStatus();
-        
         public MainWindow()
         {
             InitializeComponent();
@@ -413,6 +405,151 @@ namespace CFLMedCab
         }
         #endregion
 
+        #region Inventory
+        /// <summary>
+        /// 库存盘点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterInvtory(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterInventory.IsChecked = true;
+
+            Inventory inventory = new Inventory();
+            inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
+            inventory.EnterPopInventoryPlanEvent += new Inventory.EnterPopInventoryPlanHandler(onEnterPopInventoryPlan);
+
+            ContentFrame.Navigate(inventory);
+
+        }
+
+        /// <summary>
+        /// 弹出库存盘点正在进行中
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterPopInventory(object sender, System.EventArgs e)
+        {
+            InventoryOngoing inventoryOngoing = new InventoryOngoing();
+            inventoryOngoing.HidePopInventoryEvent += new InventoryOngoing.HidePopInventoryHandler(onHidePopInventory);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(inventoryOngoing);
+            }));
+        }
+
+        /// <summary>
+        /// 关闭库存盘点正在进行中
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onHidePopInventory(object sender, System.EventArgs e)
+        {
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;
+            }));
+        }
+
+
+        /// <summary>
+        /// 弹出盘点计划
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterPopInventoryPlan(object sender, System.EventArgs e)
+        {
+            InventoryPlanDetail inventoryPlanDetail = new InventoryPlanDetail();
+            inventoryPlanDetail.HidePopInventoryPlanEvent += new InventoryPlanDetail.HidePopInventoryPlanHandler(onHidePopInventoryPlan);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(inventoryPlanDetail);
+            }));
+        }
+
+        /// <summary>
+        /// 关闭盘点计划
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onHidePopInventoryPlan(object sender, System.EventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;
+            }));
+        }
+
+
+        /// <summary>
+        /// 进入添加单品码弹出框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterPopAddProduct(object sender, System.EventArgs e)
+        {
+            AddProduct addProduct = new AddProduct();
+            addProduct.HidePopAddProductEvent += new AddProduct.HidePopAddProductHandler (onHidePopAddProduct);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(addProduct);
+            }));
+        }
+
+
+        /// <summary>
+        /// 关闭添加单品码弹出框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onHidePopAddProduct(object sender, System.EventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;
+            }));
+        }
+
+
+        /// <summary>
+        /// 库存查询
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterStock(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            BtnEnterStock.IsChecked = true;
+
+            Stock stock = new Stock();
+            ContentFrame.Navigate(stock);
+        }
+
+        #endregion
+
+
         /// <summary>
         /// 弹出关门提示框
         /// </summary>
@@ -467,39 +604,6 @@ namespace CFLMedCab
             }));
         }
 
- 
-
-        /// <summary>
-        /// 库存盘点
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EnterInv_Click(object sender, RoutedEventArgs e)
-        {
-            HomePageView.Visibility = Visibility.Hidden;
-            BtnEntetInv.IsChecked = true;
-
-            ContentFrame.Navigate(inventory);
-
-            inventory.MaskShowEvent += new Inventory.MaskShowHandler(onInventoryMaskShowEvent);
-
-        }
-
-        private void onInventoryMaskShowEvent(object sender, System.EventArgs e)
-        {
-            //MaskView.Visibility = Visibility.Visible;
-        }
-
-        /// <summary>
-        /// 库存查询
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void Stock(object sender, RoutedEventArgs e)
-        {
-            Stock stock = new Stock();
-            ContentFrame.Navigate(stock);
-        }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
@@ -512,11 +616,6 @@ namespace CFLMedCab
             this.Width = SystemParameters.PrimaryScreenWidth;
             this.Height = SystemParameters.PrimaryScreenHeight;
         }
-
-
-
-
-
 
 		private void TestLocker(object sender, ElapsedEventArgs e)
 		{

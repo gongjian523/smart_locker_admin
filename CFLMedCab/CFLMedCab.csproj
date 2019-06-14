@@ -194,20 +194,20 @@
     <Compile Include="View\Fetch\GerFetchView.xaml.cs">
       <DependentUpon>GerFetchView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\AddSingleProduct.xaml.cs">
-      <DependentUpon>AddSingleProduct.xaml</DependentUpon>
+    <Compile Include="View\Inventory\AddProduct.xaml.cs">
+      <DependentUpon>AddProduct.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\InvPopDialog.xaml.cs">
-      <DependentUpon>InvPopDialog.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InventoryOngoing.xaml.cs">
+      <DependentUpon>InventoryOngoing.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Inventory\Inventory.xaml.cs">
       <DependentUpon>Inventory.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\InventoryConfirm.xaml.cs">
-      <DependentUpon>InventoryConfirm.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InventoryDetail.xaml.cs">
+      <DependentUpon>InventoryDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\InventoryPlan.xaml.cs">
-      <DependentUpon>InventoryPlan.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InventoryPlanDetail.xaml.cs">
+      <DependentUpon>InventoryPlanDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Login\LoginInfo.xaml.cs">
       <DependentUpon>LoginInfo.xaml</DependentUpon>
@@ -245,7 +245,7 @@
     <Compile Include="View\Return\ReturnGoods.xaml.cs">
       <DependentUpon>ReturnGoods.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Stock.xaml.cs">
+    <Compile Include="View\Inventory\Stock.xaml.cs">
       <DependentUpon>Stock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Fetch\SurgeryNumClose.xaml.cs">
@@ -291,11 +291,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\AddSingleProduct.xaml">
+    <Page Include="View\Inventory\AddProduct.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\InvPopDialog.xaml">
+    <Page Include="View\Inventory\InventoryOngoing.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -303,11 +303,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\InventoryConfirm.xaml">
+    <Page Include="View\Inventory\InventoryDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\InventoryPlan.xaml">
+    <Page Include="View\Inventory\InventoryPlanDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -359,7 +359,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Stock.xaml">
+    <Page Include="View\Inventory\Stock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
