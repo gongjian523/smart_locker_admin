@@ -1,15 +1,19 @@
-﻿using CFLMedCab.DAL;
-using CFLMedCab.Model;
-using System.Collections.Generic;
+﻿using CFLMedCab.APO;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO;
+using CFLMedCab.DTO.Replenish;
 
 namespace CFLMedCab.BLL
 {
 	/// <summary>
 	/// 补货入库业务层
 	/// </summary>
-	class ReplenishmentBll
+	public class ReplenishmentBll
 	{
 		
+		/// <summary>
+		/// 获取操作实体
+		/// </summary>
 		private readonly ReplenishDal replenishDal;
 
 		public ReplenishmentBll()
@@ -21,10 +25,14 @@ namespace CFLMedCab.BLL
 		/// 获取待完成上架工单
 		/// </summary>
 		/// <returns></returns>
-		public List<ReplenishOrder> GetIncompleteWorkOrder()
+		public BasePageDataDto<ReplenishSubOrderDto> GetReplenishSubOrderDto(BasePageDataApo basePageDataApo)
 		{
-
-			return null;
+			return new BasePageDataDto<ReplenishSubOrderDto>() {
+				PageIndex = basePageDataApo.PageIndex,
+				PageSize = basePageDataApo.PageSize,
+				Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount),
+				TotalCount = totalCount
+			};
 		}
 	}
 }
