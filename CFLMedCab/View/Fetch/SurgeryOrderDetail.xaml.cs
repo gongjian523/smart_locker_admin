@@ -49,7 +49,7 @@ namespace CFLMedCab.View.Fetch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Detail_Click(object sender, RoutedEventArgs e)
+        private void EnterSurgeryDetail(object sender, RoutedEventArgs e)
         {
             EnterSurgeryConsumablesDetailEvent(this, fetchOrder);
         }
@@ -59,7 +59,7 @@ namespace CFLMedCab.View.Fetch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void EnterSurgeryNumOpen(object sender, RoutedEventArgs e)
         {
             EnterSurgeryNumOpenEvent(this, fetchOrder);
         }

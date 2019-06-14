@@ -29,7 +29,7 @@ namespace CFLMedCab.View.Fetch
     public partial class GerFetchView : UserControl
     {
         public delegate void EnterFetchOpenHandler(object sender, RoutedEventArgs e);
-        public event EnterFetchOpenHandler onEnterGerFetch;
+        public event EnterFetchOpenHandler EnterGerFetch;
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
@@ -44,7 +44,7 @@ namespace CFLMedCab.View.Fetch
         {
             InitializeComponent();
             lDate.Content = DateTime.Now;
-            Operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            //Operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
 
         }
 
@@ -119,7 +119,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param> 
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            onEnterGerFetch(this, null);
+            EnterGerFetch(this, null);
         }
 
         /// <summary>

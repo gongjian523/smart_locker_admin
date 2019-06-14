@@ -24,6 +24,8 @@ namespace CFLMedCab.View.Fetch
     public partial class ConsumablesDetails : UserControl
     {
         private FetchOrder fetchOrder;
+        public delegate void EnterSurgeryDetailHandler(object sender, FetchOrder e);
+        public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
         //private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
         //private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
         public ConsumablesDetails(FetchOrder model)
@@ -41,6 +43,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void Return(object sender, RoutedEventArgs e)
         {
+            EnterSurgeryDetailEvent(this, fetchOrder);
             //SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(fetchOrder.id);
             //ContentFrame.Navigate(surgeryNumQuery);
 

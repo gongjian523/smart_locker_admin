@@ -32,8 +32,8 @@ namespace CFLMedCab.View.Return
         public delegate void EnterReturnGoodsHandler(object sender, RoutedEventArgs e);
         public event EnterReturnGoodsHandler EnterReturnGoodsEvent;
 
-        PickingSubShortOrder entity = new PickingSubShortOrder();
-        PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
+        //PickingSubShortOrder entity = new PickingSubShortOrder();
+        //PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
         public ReturnGoodsDetail(PickingSubShortOrder model)
         {
             InitializeComponent();
@@ -42,7 +42,7 @@ namespace CFLMedCab.View.Return
             //工单号
             workOrderNum.Content = model.id;
             //listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
-            entity = model;
+            //entity = model;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnerDetailOpen(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsDetailOpenEvent(this, entity);
+            EnterReturnGoodsDetailOpenEvent(this, new PickingSubShortOrder());
         }
     }
 }

@@ -28,6 +28,12 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class ReturnFetchView : UserControl
     {
+        //跳出关闭弹出框
+        public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
+        public event EnterPopCloseHandler EnterPopCloseEvent;
+
+        public delegate void EnterReturnFetchHandler(object sender, RoutedEventArgs e);
+        public event EnterReturnFetchHandler EnterReturnFetch;
         //private FetchOrderBll fetchOrderBll = new FetchOrderBll();
         //private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
         //private GoodsBll goodsBll = new GoodsBll();
@@ -38,7 +44,7 @@ namespace CFLMedCab.View.Fetch
         {
             InitializeComponent();
             lDate.Content = DateTime.Now;
-            Operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name; 
+            //Operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name; 
         }
 
         private int userId;
@@ -114,6 +120,26 @@ namespace CFLMedCab.View.Fetch
         //    }
         //    listView.DataContext = goodsChageOrderdtls.OrderBy(t => t.expire_date).OrderBy(t => t.exceptional);
         //}
+
+        /// <summary>
+        /// 不结束本次退回
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param> 
+        public void onNoEndOperation(object sender, RoutedEventArgs e)
+        {
+            EnterReturnFetch(this, null);
+        }
+
+        /// <summary>
+        /// 结束本次退回
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEndOperation(object sender, RoutedEventArgs e)
+        {
+            EnterPopCloseEvent(this, null);
+        }
     }
 
 }

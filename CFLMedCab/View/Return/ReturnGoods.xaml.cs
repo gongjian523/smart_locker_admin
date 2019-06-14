@@ -23,7 +23,7 @@ namespace CFLMedCab.View.Return
     /// </summary>
     public partial class ReturnGoods : UserControl
     {
-        PickingOrderDal pickingOrderDal = new PickingOrderDal();
+        //PickingOrderDal pickingOrderDal = new PickingOrderDal();
 
         public delegate void EnterReturnGoodsDetailHandler(object sender, PickingSubShortOrder e);
         public event EnterReturnGoodsDetailHandler EnterReturnGoodsDetailEvent;
@@ -60,8 +60,8 @@ namespace CFLMedCab.View.Return
         private void InitData()
         {
             PickingOrderList.Clear();
-            //List<PickingOrder> pickingOrders = pickingOrderDal.GetAllPickingOrder();
-            //pickingOrders.ForEach(pickingOrder => PickingOrderList.Add(pickingOrder));
+            List<PickingSubShortOrder> pickingOrders =new List<PickingSubShortOrder> { new PickingSubShortOrder { id=1,create_time=DateTime.Now,unDoneNum=20} };
+            pickingOrders.ForEach(pickingOrder => PickingOrderList.Add(pickingOrder));
         }
 
         /// <summary>
