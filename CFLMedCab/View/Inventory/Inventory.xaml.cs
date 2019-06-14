@@ -21,7 +21,6 @@ namespace CFLMedCab.View.Inventory
     public partial class Inventory : UserControl
     {
 
-
         public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryHandler EnterPopInventoryEvent;
 

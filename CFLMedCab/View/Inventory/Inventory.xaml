@@ -45,8 +45,26 @@
                     </StackPanel>
                     <Label Margin="20,49,20,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="1"/>
                 </Grid>
-                <Grid Grid.Row="1" x:Name="ContentView">
-                    
+                <Grid Grid.Row="1" x:Name="InventoryList">
+                    <Grid.Resources>
+                        <!--<DataTemplate x:Key="logItem" >
+                            <Grid x:Name="itmeGrid" Height="36">
+                                <TextBlock Margin="5,0,0,0" Width="90"  VerticalAlignment="Center" HorizontalAlignment="Left" 
+                               Text="{Binding Date, StringFormat={}{0:yyyy/MM/dd}}" FontSize="16"/>
+                                <TextBlock Margin="100,0,186,0" VerticalAlignment="Center"  HorizontalAlignment="Stretch" 
+                               Text="{Binding Info}" FontSize="16"/>
+                                <TextBlock Margin="0,0,60,0" VerticalAlignment="Center" HorizontalAlignment="Right"  Width="80"  
+                               Text="{Binding Price, StringFormat={}{0:}元 }" FontSize="16"/>
+                                <ctrls:IconBtn  x:Name="editBtn" Style="{DynamicResource IconButtonStyle}" Margin="0,0,33,0"  HorizontalAlignment="Right"  
+                               Click="EidtLogItem" Tag="{Binding}" ToolTip="编辑日志" IconCanvas="{DynamicResource appbar_edit}"/>
+                                <ctrls:IconBtn  x:Name="delBtn" Style="{DynamicResource IconButtonStyle}" Margin="0,0,10,0" HorizontalAlignment="Right"  
+                               Click="DelLogItem" Tag="{Binding}" ToolTip="删除日志" IconCanvas="{DynamicResource appbar_delete}"/>
+                            </Grid>
+                        </DataTemplate>-->
+                    </Grid.Resources>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                        <ItemsControl ItemTemplate="{StaticResource logItem}" ItemsSource="{Binding LogList}"/>
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </Border>
