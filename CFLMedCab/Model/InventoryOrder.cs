@@ -10,10 +10,14 @@ namespace CFLMedCab.Model
     public class InventoryOrder
     {
         /// <summary>
-        /// 盘点单号
+        /// 盘点编号
         /// </summary>
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
+        /// <summary>
+        /// 盘点单号
+        /// </summary>
+        public string code { get; set; }
 
         /// <summary>
         /// 盘点类型:：0  自动盘点；1 手动盘点

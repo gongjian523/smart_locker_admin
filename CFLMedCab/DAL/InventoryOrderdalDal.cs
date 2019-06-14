@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DAL
 {
-   public class InventoryOrderdalDal : SqlSugarContext<InventoryOrderdal>
+   public class InventoryOrderdalDal : SqlSugarContext<InventoryOrderdtl>
     {
       
     }
