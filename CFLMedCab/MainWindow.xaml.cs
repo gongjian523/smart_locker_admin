@@ -98,7 +98,7 @@ namespace CFLMedCab
 			//Hashtable cur =  RfidHelper.GetEpcData(out isGetSuccess);
 			//ApplicationState.SetValue((int)ApplicationKey.CurGoods, cur);//读取机柜内当前的商品编码
 
-			var testData = new ReplenishmentBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
+			var testData = new ReplenishBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
 				PageIndex = 1,
 				PageSize = 2
 			});

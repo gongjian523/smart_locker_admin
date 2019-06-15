@@ -13,7 +13,7 @@ namespace CFLMedCab.BLL
 	/// <summary>
 	/// 补货入库业务层
 	/// </summary>
-	public class ReplenishmentBll
+	public class ReplenishBll
 	{
 		
 		/// <summary>
@@ -21,7 +21,7 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		private readonly ReplenishDal replenishDal;
 
-		public ReplenishmentBll()
+		public ReplenishBll()
 		{
 			replenishDal = ReplenishDal.GetInstance();
 		}
@@ -63,9 +63,10 @@ namespace CFLMedCab.BLL
 		/// <param name="replenishSubOrderid"></param>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<ReplenishSubOrderdtlOperateDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, List<GoodsDto> goodsDtos)
+		public List<ReplenishSubOrderdtlOperateDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
+	
 
 			//获取当前工单商品
 			var replenishSubOrderdtlDtos = replenishDal.GetReplenishSubOrderdtlDto(
@@ -79,26 +80,39 @@ namespace CFLMedCab.BLL
 			datasDto.ForEach(it =>
 			{
 
-
-				if (it.operate_type == 1)
+				//入库
+				if (it.operate_type == (int)OperateType.入库)
 				{
-					//当前出库操作的商品是否在工单中存在
-					if (replenishSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code)))
+					it.operate_type_description = OperateType.入库.ToString();
+					//当前入库操作的商品是否在工单中存在
+					if (!replenishSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code)))
 					{
-
+						it.exception_flag = (int)ExceptionFlag.异常;
+						it.exception_flag_description = ExceptionFlag.异常.ToString();
+						it.exception_description = ExceptionDescription.上架商品不在工单目录.ToString();
+					}
+					else
+					{
+						it.exception_flag = (int)ExceptionFlag.正常;
 					}
 				}
-				else if(it.operate_type == 0)
+				//出库
+				else if (it.operate_type == (int)OperateType.出库)
 				{
 					it.operate_type_description = OperateType.出库.ToString();
-					it.exception_flag = ExceptionFlag.异常.ToString();
+					it.exception_flag = (int)ExceptionFlag.异常;
+					it.exception_flag_description = ExceptionFlag.异常.ToString();
 					it.exception_description = ExceptionDescription.操作与业务类型冲突.ToString();
 				}
 			});
 
-		
+			//统计数量
+			operateGoodsNum = datasDto.Count;
+			storageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.入库).Count();
+			outStorageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.出库).Count();
 
-			return null;
+			//均升序排列
+			return datasDto.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
 		}
 
 
