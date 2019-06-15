@@ -31,7 +31,7 @@ namespace CFLMedCab.View.Return
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
 
-        PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
+        //PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
         public ReturnGoodsClose(PickingOrder model)
         {
             InitializeComponent();

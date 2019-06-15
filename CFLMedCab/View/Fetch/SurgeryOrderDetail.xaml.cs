@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
+using CFLMedCab.DTO.Fetch;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -36,11 +37,26 @@ namespace CFLMedCab.View.Fetch
         public SurgeryOrderDetail(FetchOrder model)
         {
             InitializeComponent();
-            fetchOrder = model;
-            //SurgeryOrder surgeryOrder = surgeryOrderBll.GetById(fetchOrder.business_order_id);
-            //lNum.Content = surgeryOrder.id;
-            //time.Content = surgeryOrder.surgery_dateiime;
-            //listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(model.business_order_id);
+            SurgeryOrderDto surgeryOrderDto = new SurgeryOrderDto { id=2,surgery_dateiime=DateTime.Now};
+            surgeryNum.Content = surgeryOrderDto.id;
+            time.Content = surgeryOrderDto.surgery_dateiime;
+            List<SurgeryFetchDto> surgeryFetches = new List<SurgeryFetchDto>();
+            for(int i = 5; i >= 0; i--)
+            {
+                SurgeryFetchDto surgeryFetch = new SurgeryFetchDto
+                {
+                    fetch_order_id = i,
+                    goods_name = "注射器",
+                    goods_code = "gr1294",
+                    fetch_type = 1,
+                    wait_num = 2,
+                    fetch_num = 1,
+                    stock_num = 3,
+                    remarks = "麻醉专用"
+                };
+                surgeryFetches.Add(surgeryFetch);
+            }
+            listView.DataContext = surgeryFetches;
         }
 
 
@@ -49,7 +65,7 @@ namespace CFLMedCab.View.Fetch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Detail_Click(object sender, RoutedEventArgs e)
+        private void EnterSurgeryDetail(object sender, RoutedEventArgs e)
         {
             EnterSurgeryConsumablesDetailEvent(this, fetchOrder);
         }
@@ -59,7 +75,7 @@ namespace CFLMedCab.View.Fetch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void EnterSurgeryNumOpen(object sender, RoutedEventArgs e)
         {
             EnterSurgeryNumOpenEvent(this, fetchOrder);
         }

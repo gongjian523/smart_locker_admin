@@ -44,6 +44,13 @@ namespace CFLMedCab
         private DispatcherTimer ShowTimer;
         private VeinHelper vein;
 
+        private Timer loginTimer;
+
+        private SoundPlayer media;
+
+        private Inventory inventory = new Inventory();
+        //private LoginStatus loginStatus = new LoginStatus();
+
         public MainWindow()
         {
             InitializeComponent();
@@ -150,19 +157,22 @@ namespace CFLMedCab
                 LoginStatus sta = new LoginStatus();
 
                 //验证失败
-                if (id == 0) {
+                if (id == 0)
+                {
                     sta.LoginState = 0;
                     sta.LoginString = "登录失败";
                     sta.LoginString2 = "请再次进行验证";
                 }
-                else {
+                else
+                {
                     //UserBll userBll = new UserBll();
                     //User user = userBll.GetUserByVeinId(id);
                     UserDal userDal = new UserDal();
                     User user = userDal.GetUserByVeinId(id);
 
                     //本地数据库中没有查询到此次指静脉信息
-                    if (user == null) {
+                    if (user == null)
+                    {
                         sta.LoginState = 0;
                         sta.LoginString = "登录失败";
                         sta.LoginString2 = "请再次进行验证";
@@ -212,9 +222,10 @@ namespace CFLMedCab
             //获得年月日
             this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
             //获得时分秒
-           // this.tbTimeText.Text = DateTime.Now.ToString("HH:mm:ss");
+            // this.tbTimeText.Text = DateTime.Now.ToString("HH:mm:ss");
         }
-
+        #region 领用
+        #region 一般领用
         /// <summary>
         /// 一般领用
         /// </summary>
@@ -222,8 +233,8 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState(); 
-            ContentFrame.Navigate(gerFetchState);
+            GerFetchState gerFetchState = new GerFetchState();
+            FullFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
         }
@@ -239,26 +250,24 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            GerFetchView gerFetchView = new GerFetchView();
-            gerFetchView.EnterPopCloseEvent += new GerFetchView.EnterPopCloseHandler(onEnterPopClose);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
-            FullFrame.Navigate(gerFetchView);
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                GerFetchView gerFetchView = new GerFetchView();
+                gerFetchView.EnterPopCloseEvent += new GerFetchView.EnterPopCloseHandler(onEnterPopClose);
+                gerFetchView.EnterGerFetch += new GerFetchView.EnterFetchOpenHandler(onEnterGerFetch);
+                FullFrame.Navigate(gerFetchView);
+            }));
         }
+        #endregion
 
-        /// <summary>
-        /// 手术领用
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnterSurgery(object sender, RoutedEventArgs e)
-        {
-            SurgeryQuery surgeryQuery = new SurgeryQuery();
-            surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
-            surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
-            ContentFrame.Navigate(surgeryQuery);
-        }
+        #region 手术领用
 
+        #region 无手术单领用
         /// <summary>
         /// 进入手术无单领用-开门状态
         /// </summary>
@@ -284,13 +293,34 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
+            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
 
-            SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose();
-            surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
-            FullFrame.Navigate(surgeryNoNumClose);
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+
+                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose();
+                surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
+                surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
+                FullFrame.Navigate(surgeryNoNumClose);
+            }));
         }
+        #endregion
 
+        #region 有手术单领用
+        /// <summary>
+        /// 手术领用
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSurgery(object sender, RoutedEventArgs e)
+        {
+            SurgeryQuery surgeryQuery = new SurgeryQuery();
+            surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
+            surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
+            ContentFrame.Navigate(surgeryQuery);
+        }
         /// <summary>
         /// 手术领用详情页面
         /// </summary>
@@ -299,13 +329,21 @@ namespace CFLMedCab
         private void onEnterSurgeryDetail(object sender, FetchOrder fetchOrder)
         {
             SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(fetchOrder);
+            surgeryOrderDetail.EnterSurgeryNumOpenEvent += new SurgeryOrderDetail.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
+            surgeryOrderDetail.EnterSurgeryConsumablesDetailEvent += new SurgeryOrderDetail.EnterSurgeryConsumablesDetailHandler(EnterSurgeryConsumablesDetailEvent);
             ContentFrame.Navigate(surgeryOrderDetail);
         }
 
-        private void EnterSurgeryNumOpenEvent(object sender, FetchOrder fetchOrder)
+        /// <summary>
+        /// 手术耗材详情
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="fetchOrder"></param>
+        public void EnterSurgeryConsumablesDetailEvent(object sender, FetchOrder fetchOrder)
         {
-            SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(fetchOrder);
-            ContentFrame.Navigate(surgeryOrderDetail);
+            ConsumablesDetails consumablesDetails = new ConsumablesDetails(fetchOrder);
+            consumablesDetails.EnterSurgeryDetailEvent += new ConsumablesDetails.EnterSurgeryDetailHandler(onEnterSurgeryDetail);
+            ContentFrame.Navigate(consumablesDetails);
         }
 
         /// <summary>
@@ -313,7 +351,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterSurgeryNumOpen(object sender, FetchOrder fetchOrder)
+        private void EnterSurgeryNumOpenEvent(object sender, FetchOrder fetchOrder)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -342,23 +380,61 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
+            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
 
-            SurgeryNumClose surgeryNumClose = new SurgeryNumClose(new FetchOrder());
-            surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
-            FullFrame.Navigate(surgeryNumClose);
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(new FetchOrder());
+                surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
+                surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
+                FullFrame.Navigate(surgeryNumClose);
+            }));
         }
+        #endregion
+        #endregion
 
+        #region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void ReturnFetch_Click(object sender, RoutedEventArgs e)
+        private void onEnterReturnFetch(object sender, RoutedEventArgs e)
         {
-            ReturnFetchView returnFetchView = new ReturnFetchView();
-            ContentFrame.Navigate(returnFetchView);
+            GerFetchState gerFetchState = new GerFetchState();
+            FullFrame.Navigate(gerFetchState);
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
         }
+
+        /// <summary>
+        /// 领用退回关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnFetchLockerEvent(object sender, bool isClose)
+        {
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReturnFetchView returnFetchView = new ReturnFetchView();
+                returnFetchView.EnterPopCloseEvent += new ReturnFetchView.EnterPopCloseHandler(onEnterPopClose);
+                returnFetchView.EnterReturnFetch += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
+                FullFrame.Navigate(returnFetchView);
+            }));
+        }
+        #endregion
+        #endregion
 
         #region Replenishment
         /// <summary>
@@ -398,7 +474,7 @@ namespace CFLMedCab
         private void onEnterReplenishmentDetailOpen(object sender, ReplenishSubShortOrder e)
         {
             NaviView.Visibility = Visibility.Hidden;
-            
+
             ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
             FullFrame.Navigate(replenishmentDetailOpen);
 
@@ -427,7 +503,7 @@ namespace CFLMedCab
                 return;
 
             bool isGetSuccess;
-            Hashtable ht =  RfidHelper.GetEpcData(out isGetSuccess);
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
@@ -650,6 +726,7 @@ namespace CFLMedCab
             }));
         }
 
+ 
 
         /// <summary>
         /// 库存查询
@@ -728,9 +805,7 @@ namespace CFLMedCab
             this.WindowState = WindowState.Normal;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.CanResize;
-#if !DEBUG
-            this.Topmost = true; 
-#endif
+            this.Topmost = true;
             this.Left = 0.0;
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
@@ -744,11 +819,11 @@ namespace CFLMedCab
 			delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(TestLockerEvent);
 		}
 
-		private void TestLockerEvent(object sender, bool isClose)
-		{
-			Console.WriteLine("返回开锁状态{0}", isClose);
-			System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose); 
-		}
+        private void TestLockerEvent(object sender, bool isClose)
+        {
+            Console.WriteLine("返回开锁状态{0}", isClose);
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+        }
 
 
         private void AddGoodTest()
