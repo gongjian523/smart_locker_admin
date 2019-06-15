@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Model
 {
-    public class InventoryOrderdal
+    public class InventoryOrderdtl
     {
         /// <summary>
         /// 盘点详情单号
