@@ -19,7 +19,7 @@
             <Grid>
                 <Label HorizontalAlignment="Center" Margin="0,34,0,0" FontSize="19" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
                 <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,75,0,0" BorderThickness="0"  Width="113"  Height="32"  
-                        Background="#FFFFFF"  Foreground="#29A8EF" FontSize="14" Content="盘点"  Click="InvPopDialog" />
+                        Background="#FFFFFF"  Foreground="#29A8EF" FontSize="14" Content="盘点"  Click="onEnterPopInventory" />
             </Grid>
         </Border>
         <Border Grid.Column="1" Background="#27CDCB" Margin="10,20,20,0" CornerRadius="2,2,2,2">
@@ -27,7 +27,7 @@
                 <Label HorizontalAlignment="Center" Margin="0,24,0,0" FontSize="19" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
                 <Label HorizontalAlignment="Center" Margin="0,55,0,0" FontSize="13" FontWeight="Regular" Foreground="#FFFFFF" Content="下一次自动盘点时间："   />
                 <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,75,0,0" BorderThickness="0"  Width="113"  Height="32"  
-                        Background="#FFFFFF"  Foreground="#27CDCB" FontSize="14" Content="盘点计划设置"  Click="InventoryPlanSetUp" />
+                        Background="#FFFFFF"  Foreground="#27CDCB" FontSize="14" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
             </Grid>
         </Border>
 
@@ -46,11 +46,21 @@
                     <Label Margin="20,49,20,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="1"/>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="ContentView">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="79*"/>
-                        <ColumnDefinition Width="301*"/>
-                    </Grid.ColumnDefinitions>
-                    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Grid.ColumnSpan="2"/>
+
+                    <ListView  Margin="10" Grid.Row="1" Grid.ColumnSpan="3"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding id}"  Width="300"/>
+                                <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding birth_date}"   Width="300" />
+                                <GridViewColumn Header="盘点类型" DisplayMemberBinding="{Binding fetch_type}"  Width="300"/>
+                                <GridViewColumn Header="盘点结果" DisplayMemberBinding="{Binding wait_collar}"  Width="300" />
+                                <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding already_led}"  Width="300"/>
+                                <GridViewColumn Header="操作" DisplayMemberBinding="{Binding remarks}"  Width="300">
+                               
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
             </Grid>
         </Border>

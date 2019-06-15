@@ -98,6 +98,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.111.0\lib\net451\System.Data.SQLite.dll</HintPath>
+    </Reference>
     <Reference Include="System.Speech" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\System.Windows.Interactivity.dll</HintPath>
@@ -121,6 +124,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="APO\BasePageDataApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
@@ -135,6 +139,8 @@
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
     <Compile Include="DAL\ReplenishDal.cs" />
+    <Compile Include="DTO\BasePageDataDto.cs" />
+    <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarHelper.cs" />
@@ -198,20 +204,20 @@
     <Compile Include="View\Fetch\GerFetchView.xaml.cs">
       <DependentUpon>GerFetchView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\AddSingleProduct.xaml.cs">
-      <DependentUpon>AddSingleProduct.xaml</DependentUpon>
+    <Compile Include="View\Inventory\AddProduct.xaml.cs">
+      <DependentUpon>AddProduct.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\InvPopDialog.xaml.cs">
-      <DependentUpon>InvPopDialog.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InventoryOngoing.xaml.cs">
+      <DependentUpon>InventoryOngoing.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Inventory\Inventory.xaml.cs">
       <DependentUpon>Inventory.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\InventoryConfirm.xaml.cs">
-      <DependentUpon>InventoryConfirm.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InventoryDetail.xaml.cs">
+      <DependentUpon>InventoryDetail.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\InventoryPlan.xaml.cs">
-      <DependentUpon>InventoryPlan.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InventoryPlanDetail.xaml.cs">
+      <DependentUpon>InventoryPlanDetail.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Login\LoginInfo.xaml.cs">
       <DependentUpon>LoginInfo.xaml</DependentUpon>
@@ -249,7 +255,7 @@
     <Compile Include="View\Return\ReturnGoods.xaml.cs">
       <DependentUpon>ReturnGoods.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Stock.xaml.cs">
+    <Compile Include="View\Inventory\Stock.xaml.cs">
       <DependentUpon>Stock.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Fetch\SurgeryNumClose.xaml.cs">
@@ -299,11 +305,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\AddSingleProduct.xaml">
+    <Page Include="View\Inventory\AddProduct.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\InvPopDialog.xaml">
+    <Page Include="View\Inventory\InventoryOngoing.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -311,11 +317,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\InventoryConfirm.xaml">
+    <Page Include="View\Inventory\InventoryDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\InventoryPlan.xaml">
+    <Page Include="View\Inventory\InventoryPlanDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -367,7 +373,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Stock.xaml">
+    <Page Include="View\Inventory\Stock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -451,7 +457,9 @@
     <Resource Include="Resources\Images\CloseDoor.png" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="bin\Debug\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
