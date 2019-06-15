@@ -135,13 +135,15 @@
     <Compile Include="APO\GoodsChange\GoodsChangeApo.cs" />
     <Compile Include="APO\Inventory\GetGoodsApo.cs" />
     <Compile Include="APO\Inventory\InventoryOrderApo.cs" />
+    <Compile Include="APO\Picking\PickingSubOrderdtlApo.cs" />
     <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
+    <Compile Include="BLL\PickingBll.cs" />
     <Compile Include="BLL\SurgeryOrderdtlBll.cs" />
-    <Compile Include="BLL\ReplenishmentBll.cs" />
+    <Compile Include="BLL\ReplenishBll.cs" />
     <Compile Include="BLL\UserBll.cs" />
     <Compile Include="BLL\FetchOrderdtlBll.cs" />
     <Compile Include="BLL\GoodsChageOrderdtlBll.cs" />
@@ -151,6 +153,7 @@
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
     <Compile Include="DAL\InventoryDal.cs" />
+    <Compile Include="DAL\PickingDal.cs" />
     <Compile Include="DAL\ReplenishDal.cs" />
     <Compile Include="DTO\BasePageDataDto.cs" />
     <Compile Include="DTO\Fetch\FetchOrderDto.cs" />
@@ -160,6 +163,9 @@
     <Compile Include="DTO\Goodss\GoodsChangeDto.cs" />
     <Compile Include="DTO\Goodss\GoodsDto.cs" />
     <Compile Include="DTO\Inventory\InventoryOrderDto.cs" />
+    <Compile Include="DTO\Picking\PickingSubOrderdtlDto.cs" />
+    <Compile Include="DTO\Picking\PickingSubOrderdtlOperateDto.cs" />
+    <Compile Include="DTO\Picking\PickingSubOrderDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlOperateDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
@@ -287,7 +293,7 @@
     <Compile Include="View\Fetch\SurgeryQuery.xaml.cs">
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
-    <Page Include="Color.xaml">
+    <Page Include="Controls\Styles\Color.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

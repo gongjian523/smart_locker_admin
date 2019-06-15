@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CFLMedCab.DTO.Replenish
+namespace CFLMedCab.DTO.Picking
 {
-	public class ReplenishSubOrderdtlOperateDto : ReplenishSubOrderdtl
+	public class PickingSubOrderdtlOperateDto : PickingSubOrderdtl
 	{
 		/// <summary>
 		/// 操作类型 0 出库；1 入库 
@@ -93,7 +93,7 @@ namespace CFLMedCab.DTO.Replenish
 		/// 上架商品不在工单目录
 		/// </summary>
 		[Description("上架商品不在工单目录")]
-		上架商品不在工单目录 = 2
+		拣货商品不在工单目录 = 2
 
 	}
 
