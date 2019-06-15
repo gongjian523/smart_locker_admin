@@ -63,11 +63,11 @@
                 <ListView  Grid.Row="1" Grid.Column="1"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Padding="20">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
-                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding code}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                             <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                            <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding wait_collar}"   Width="{Binding ElementName=column4,Path=ActualWidth}" />
-                            <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding already_led}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                            <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding wait_num}"   Width="{Binding ElementName=column4,Path=ActualWidth}" />
+                            <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding stock_num}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                             <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}"   Width="{Binding ElementName=column6,Path=ActualWidth}"/>
                         </GridView>
                     </ListView.View>

@@ -1,4 +1,6 @@
 ﻿using CFLMedCab.BLL;
+using CFLMedCab.DTO.Fetch;
+using CFLMedCab.DTO.Stock;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
@@ -31,21 +33,63 @@ namespace CFLMedCab.View.Fetch
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
-        //FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        FetchOrder fetchOrder;
         //FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
         //SurgeryOrderBll surgeryOrderBll = new SurgeryOrderBll();
-        public SurgeryNumClose(FetchOrder fetchOrder)
+        public SurgeryNumClose(FetchOrder model)
         {
             InitializeComponent();
-            //FetchOrder fetchOrder = fetchOrderBll.GetById(id);
-            //SurgeryOrder surgeryOrder = surgeryOrderBll.GetById(fetchOrder.business_order_id);
-            //lNum.Content = surgeryOrder.id;
-            //time.Content = surgeryOrder.surgery_dateiime;
-            //Operator.Content= ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-            //listView.DataContext = fetchOrderdtlBll.GetDetailsUsage(id);
+            fetchOrder = model;
+            SurgeryOrderDto surgeryOrderDto = new SurgeryOrderDto { id = 2, surgery_dateiime = DateTime.Now };
+            surgeryNum.Content = surgeryOrderDto.id;
+            time.Content = surgeryOrderDto.surgery_dateiime;
+            List<SurgeryFetchDto> surgeryFetches = new List<SurgeryFetchDto>();
+            for (int i = 5; i >= 0; i--)
+            {
+                SurgeryFetchDetailsDto surgeryFetch = new SurgeryFetchDetailsDto
+                {
+                    fetch_order_id = i,
+                    goods_name = "注射器",
+                    goods_code = "gr1294",
+                    fetch_type = 1,
+                    wait_num = 2,
+                    fetch_num = 1,
+                    stock_num = 3,
+                    remarks = "麻醉专用"
+                };
+                surgeryFetch.total_num = surgeryFetch.wait_num + surgeryFetch.fetch_num;
+                surgeryFetches.Add(surgeryFetch);
+            }
+            listView.DataContext = surgeryFetches;
+
+            List<GoodsChageOrderdtlDto> goodsChageOrderdtls = new List<GoodsChageOrderdtlDto>();
+            for (int i = 5; i >= 0; i--)
+            {
+                GoodsChageOrderdtlDto goodsChageOrderdtl = new GoodsChageOrderdtlDto
+                {
+                    id = i,
+                    batch_number = "feg",
+                    birth_date = DateTime.Now,
+                    code = "ewfw",
+                    exceptional = 0,
+                    expire_date = DateTime.Now,
+                    explain = "测试数据",
+                    fetch_type = 1,
+                    goods_code = "fwe",
+                    goods_id = 1,
+                    good_change_orderid = 1,
+                    name = "测试数据",
+                    operate_type = 0,
+                    position = "1号柜",
+                    related_order_id = 1,
+                    remarks = "测试数据",
+                    status = 0,
+                    valid_period = 4
+                };
+                goodsChageOrderdtls.Add(goodsChageOrderdtl);
+            }
+            listView1.DataContext = goodsChageOrderdtls;
         }
-        private int exceptional;
-        private List<GoodsChageOrderdtl> goodsChageOrderdtls;
 
         /// <summary>
         /// 根据关门数据组合展示数据

@@ -54,7 +54,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="180"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -64,21 +67,19 @@
                         <Grid Grid.Column="5" x:Name="column6"/>
                         <Grid Grid.Column="6" x:Name="column7"/>
                         <Grid Grid.Column="7" x:Name="column8"/>
-                        <Grid Grid.Column="8" x:Name="column9"/>
                     </Grid>
 
                     <ListView  Margin="10" Grid.Row="1" Grid.ColumnSpan="3"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding id}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding birth_date}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点类型" DisplayMemberBinding="{Binding fetch_type}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点结果" DisplayMemberBinding="{Binding wait_collar}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding already_led}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点人" DisplayMemberBinding="{Binding already_led}"   Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="确认人" DisplayMemberBinding="{Binding already_led}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding already_led}"   Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作" DisplayMemberBinding="{Binding remarks}"   Width="{Binding ElementName=column9,Path=ActualWidth}">
+                                <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点类型" DisplayMemberBinding="{Binding type}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding status}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                <GridViewColumn Header="确认人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time}"   Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column9,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                             <!--<Button Width="30" Content="确认" Click="Button_Click"/>-->

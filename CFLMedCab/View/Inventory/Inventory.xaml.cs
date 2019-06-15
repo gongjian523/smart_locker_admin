@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.BLL;
+using CFLMedCab.DTO.Inventory;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,25 @@ namespace CFLMedCab.View.Inventory
 
             inventoryBll = new InventoryBll();
             //inventoryBll.GetInventoryOrder(new)
+            List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
+            for(int i = 5; i > 0; i--)
+            {
+                InventoryOrderDto inventoryOrderDto = new InventoryOrderDto
+                {
+                    id = i,
+                    code = "dff12412",
+                    confirm_time=DateTime.Now,
+                    create_time=DateTime.Now,
+                    inspector_id=2,
+                    inspector_name="何海霞",
+                    operator_id=1,
+                    operator_name="何海霞",
+                    status=0,
+                    type=1
+                };
+                inventoryOrderDtos.Add(inventoryOrderDto);
+            }
+            listView.DataContext = inventoryOrderDtos;
         }
 
         /// <summary>
