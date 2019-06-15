@@ -4,8 +4,24 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View"
+             xmlns:l="clr-namespace:CFLMedCab.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="{x:Type l:EditBox}" TargetType="{x:Type l:EditBox}" >
+            <Setter Property="HorizontalAlignment" Value="Left"  />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type l:EditBox}">
+                        <TextBlock x:Name="PART_TextBlockPart"  
+                     Text="{Binding Path=Value,RelativeSource = 
+                           {RelativeSource TemplatedParent}}">
+                        </TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
     <Grid Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="149"/>
@@ -46,7 +62,6 @@
                     <Label Margin="20,49,20,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="1"/>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="ContentView">
-
                     <Grid Margin="20">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -56,8 +71,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="180"/>
+                            <ColumnDefinition Width="181"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -68,27 +82,36 @@
                         <Grid Grid.Column="6" x:Name="column7"/>
                         <Grid Grid.Column="7" x:Name="column8"/>
                     </Grid>
-
-                    <ListView  Margin="10" Grid.Row="1" Grid.ColumnSpan="3"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
+                    <ListView  Margin="10,10,0,0" VerticalAlignment="Top"   ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left"  Padding="20" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                         <ListView.View>
-                            <GridView>
+                            <GridView AllowsColumnReorder="true">
                                 <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding id}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                                 <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                                 <GridViewColumn Header="盘点类型" DisplayMemberBinding="{Binding type}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding status}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="确认人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time}"   Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column9,Path=ActualWidth}">
+                                <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding status}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                <!--DisplayMemberBinding="{Binding operator_name}"-->
+                                <GridViewColumn Header="确认人"    Width="{Binding ElementName=column6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="确认" Click="Button_Click"></Button>
+                                            <l:EditBox Height="25" Value="{Binding Path=operator_name}" />
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+
+                                <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                
+                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="确认"  Width="75" Height="23"  Click="btnListViewItem_Click" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
+
                 </Grid>
             </Grid>
         </Border>

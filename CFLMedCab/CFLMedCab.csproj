@@ -147,6 +147,8 @@
     <Compile Include="BLL\GoodsChageOrderdtlBll.cs" />
     <Compile Include="BLL\SurgeryOrderBll.cs" />
     <Compile Include="ConsoleManager.cs" />
+    <Compile Include="Controls\EditBox.cs" />
+    <Compile Include="Controls\EditBoxAdorner.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />

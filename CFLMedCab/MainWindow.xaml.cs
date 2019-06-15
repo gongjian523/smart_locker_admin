@@ -802,6 +802,7 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+#if !DEBUG
             this.WindowState = WindowState.Normal;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.CanResize;
@@ -809,7 +810,8 @@ namespace CFLMedCab
             this.Left = 0.0;
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
-            this.Height = SystemParameters.PrimaryScreenHeight;
+            this.Height = SystemParameters.PrimaryScreenHeight; 
+#endif
         }
 
 		private void TestLocker(object sender, ElapsedEventArgs e)

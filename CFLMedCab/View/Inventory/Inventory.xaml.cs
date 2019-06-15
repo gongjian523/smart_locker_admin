@@ -73,9 +73,15 @@ namespace CFLMedCab.View.Inventory
             EnterPopInventoryPlanEvent(this, null);
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void btnListViewItem_Click(object sender, RoutedEventArgs e)
         {
+            Button btnItem = sender as Button;
+
+            var id = btnItem.CommandParameter;
+
+            this.listView.Items.Refresh();
 
         }
+
     }
 }
