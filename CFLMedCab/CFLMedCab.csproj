@@ -143,6 +143,10 @@
     <Compile Include="DAL\InventoryDal.cs" />
     <Compile Include="DAL\ReplenishDal.cs" />
     <Compile Include="DTO\BasePageDataDto.cs" />
+    <Compile Include="DTO\Fetch\FetchOrderDto.cs" />
+    <Compile Include="DTO\Fetch\SurgeryFetchDto.cs" />
+    <Compile Include="DTO\Fetch\SurgeryFetchDetailsDto.cs" />
+    <Compile Include="DTO\Fetch\SurgeryOrderDto.cs" />
     <Compile Include="DTO\Replenish\GoodsDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />

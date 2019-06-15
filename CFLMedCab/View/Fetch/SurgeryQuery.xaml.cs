@@ -46,7 +46,15 @@ namespace CFLMedCab.View.Fetch
                 MessageBox.Show("手术单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
-            EnterSurgeryDetailEvent(this, new FetchOrder());
+            EnterSurgeryDetailEvent(this, new FetchOrder
+            {
+                id = 1,
+                business_order_id = 1,
+                create_time = DateTime.Now,
+                operator_id=1,
+                status=0,
+                type=0
+            });
             //根据领用单查找手术单
             //FetchOrder fetchOrder = fetchOrderDal.CurrentDb.GetById(Convert.ToInt32(value));
             //if (fetchOrder.business_order_id > 0)

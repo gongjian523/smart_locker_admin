@@ -25,7 +25,7 @@
                     <RowDefinition></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Label Content="手术单号" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+                <Label Content="手术领用单号" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
                 <Label Content="Label" Grid.Column="0" Grid.Row="1" Name="lNum" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="18" Foreground="#619CF8"/>
                 <Label  Grid.Column="0" Grid.Row="2" Content="使用状态" Foreground="#666666" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                 <Label  Grid.Column="0" Grid.Row="2" Content="领用中" Name="state" Foreground="#666666" HorizontalAlignment="Left" Margin="0,33,0,-33" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
