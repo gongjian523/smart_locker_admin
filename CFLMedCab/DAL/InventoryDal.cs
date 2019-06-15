@@ -1,6 +1,6 @@
 ﻿using CFLMedCab.APO;
 using CFLMedCab.APO.Inventory;
-using CFLMedCab.DTO;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Inventory;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;

@@ -67,6 +67,9 @@ namespace CFLMedCab.Infrastructure.DbHelper
 			Db.CodeFirst.InitTables<ReplenishOrder>();
 			Db.CodeFirst.InitTables<ReplenishSubOrder>();
 			Db.CodeFirst.InitTables<ReplenishSubOrderdtl>();
+			Db.CodeFirst.InitTables<Goods>();
+			Db.CodeFirst.InitTables<GoodsChageOrder>();
+			Db.CodeFirst.InitTables<GoodsChageOrderdtl>();
 
             //创建盘点数据表
             Db.CodeFirst.InitTables<InventoryOrder>();
