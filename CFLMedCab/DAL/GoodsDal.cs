@@ -6,6 +6,7 @@ using SqlSugar;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using CFLMedCab.APO.Inventory;
 
 namespace CFLMedCab.DAL
 {
@@ -60,11 +61,42 @@ namespace CFLMedCab.DAL
 				.ToList();
 		}
 
-		/// <summary>
-		/// 根据集合获取完整商品属性集合(带有状态)
-		/// </summary>
-		/// <returns></returns>
-		public List<GoodsDto> GetGoodsDto(List<GoodsDto> goodsDatas)
+        /// <summary>
+        /// 根据集合获取符合条件的商品属性集合(带有状态)
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsDto> GetGoodsDto(GetGoodsApo pageDataApo, out int totalCount)
+        {
+            totalCount = 0;
+            List<GoodsDto> data;
+
+            //查询语句
+            var queryable = Db.Queryable<Goods>()
+                .Where(it => pageDataApo.goodsEpsDatas.Contains(it.code))
+                .WhereIF(pageDataApo.expire_date != null, it=> it.expiry_date <= pageDataApo.expire_date)
+                .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.name), it=> it.name.Contains(pageDataApo.name))
+                .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.code), it => it.name.Contains(pageDataApo.code))
+                .OrderBy(it => it.name, OrderByType.Asc)
+                .Select<GoodsDto>();
+
+            //如果小于0，默认查全部
+            if (pageDataApo.PageSize > 0)
+            {
+                data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+            }
+            else
+            {
+                data = queryable.ToList();
+                totalCount = data.Count();
+            }
+            return data;
+        }
+
+        /// <summary>
+        /// 根据集合获取完整商品属性集合(带有状态)
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsDto> GetGoodsDto(List<GoodsDto> goodsDatas)
 		{
 			//查询语句
 			return Db.Queryable<Goods>()

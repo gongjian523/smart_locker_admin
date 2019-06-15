@@ -132,6 +132,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APO\BasePageDataApo.cs" />
+    <Compile Include="APO\GoodsChange\GoodsChangeApo.cs" />
+    <Compile Include="APO\Inventory\GetGoodsApo.cs" />
     <Compile Include="APO\Inventory\InventoryOrderApo.cs" />
     <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
@@ -155,6 +157,7 @@
     <Compile Include="DTO\Fetch\SurgeryFetchDto.cs" />
     <Compile Include="DTO\Fetch\SurgeryFetchDetailsDto.cs" />
     <Compile Include="DTO\Fetch\SurgeryOrderDto.cs" />
+    <Compile Include="DTO\Goodss\GoodsChangeDto.cs" />
     <Compile Include="DTO\Goodss\GoodsDto.cs" />
     <Compile Include="DTO\Inventory\InventoryOrderDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />

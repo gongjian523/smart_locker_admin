@@ -18,10 +18,9 @@ namespace CFLMedCab.DAL
     /// <summary>
     /// 盘点库存dao层
     /// </summary>
-   public class InventoryDal
+    public class InventoryDal
     {
         //Db
-
         public SqlSugarClient Db = SqlSugarHelper.GetInstance().Db;
 
         // 定义一个静态变量来保存类的实例

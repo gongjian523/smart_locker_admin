@@ -10,11 +10,11 @@ namespace CFLMedCab.BLL
 {
     public class GoodsChangeOrderBll
     {
-        GoodsChageOrderDal goodsChageOrderDal = new GoodsChageOrderDal();
+        //GoodsChageOrderDal goodsChageOrderDal = new GoodsChageOrderDal();
 
-        public int Add(GoodsChageOrder model)
-        {
-            return goodsChageOrderDal.Insert(model);
-        }
+        //public int Add(GoodsChageOrder model)
+        //{
+        //    return goodsChageOrderDal.Insert(model);
+        //}
     }
 }
