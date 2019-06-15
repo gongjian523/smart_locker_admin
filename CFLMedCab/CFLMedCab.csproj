@@ -284,7 +284,7 @@
     <Compile Include="View\Fetch\SurgeryQuery.xaml.cs">
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
-    <Page Include="Color.xaml">
+    <Page Include="Controls\Styles\Color.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
