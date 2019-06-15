@@ -117,5 +117,36 @@ namespace CFLMedCab.BLL
 
 
 
+		/// <summary>
+		/// 确认时，修改工单数据
+		/// </summary>
+		/// <param name="replenishSubOrderid">上架单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdateReplenishStatus(int replenishSubOrderid, List<ReplenishSubOrderdtlOperateDto> datasDto)
+		{
+
+			//获取当前工单商品
+			var replenishSubOrderdtlDtos = replenishDal.GetReplenishSubOrderdtlDto(
+				new ReplenishSubOrderdtlApo
+				{
+					replenish_sub_orderid = replenishSubOrderid
+				}, out int totalCount);
+
+
+			//修改工单数据
+			replenishSubOrderdtlDtos.ForEach(it=> 
+			{
+				if (datasDto.Exists(dataDto => dataDto.exception_flag == (int)ExceptionFlag.正常 && it.code.Equals(dataDto.code)))
+				{
+					it.status = 1;
+				}
+			});
+
+
+			return replenishDal.UpdateReplenishStatus(replenishSubOrderid, replenishSubOrderdtlDtos);
+
+		}
+
 	}
 }

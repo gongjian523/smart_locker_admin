@@ -74,6 +74,8 @@ namespace CFLMedCab.DAL
 					replenish_order_code = it.replenish_order_code,
 					create_time = it.create_time,
 					status = it.status,
+					distribute_time = SqlFunc.Subqueryable<ReplenishOrder>()
+													  .Where(itpo => itpo.code == it.replenish_order_code).Select(itpo => itpo.create_time),
 					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
 													  .Where(itsub => itsub.replenish_sub_orderid == it.id && itsub.status == 0)
 													  .Count()
@@ -123,7 +125,33 @@ namespace CFLMedCab.DAL
 
 		}
 
+		/// <summary>
+		/// 确认时，修改工单数据
+		/// </summary>
+		/// <param name="replenishSubOrderid">上架单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdateReplenishStatus(int replenishSubOrderid, List<ReplenishSubOrderdtlDto> replenishSubOrderdtlDtos)
+		{
+			
 
+			//事务防止多插入产生脏数据
+			var result = Db.Ado.UseTran(() =>
+			{
+				Db.Updateable(replenishSubOrderdtlDtos).ExecuteCommand();
+				if (!replenishSubOrderdtlDtos.Exists(it => it.status == 0))
+				{
+					Db.Updateable<ReplenishSubOrder>()
+					.SetColumns(it => new ReplenishSubOrder() { status = 1 })
+					.Where(it => it.id == replenishSubOrderid)
+					.ExecuteCommand();
+				}
+				
+			});
+
+			return result.IsSuccess;
+
+		}
 		
 
 	}

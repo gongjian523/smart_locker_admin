@@ -115,7 +115,36 @@ namespace CFLMedCab.BLL
 			return datasDto.OrderBy (it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
 		}
 
+		/// <summary>
+		/// 确认时，修改工单数据
+		/// </summary>
+		/// <param name="pickingSubOrderid">拣货单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdatePickingStatus(int pickingSubOrderid, List<PickingSubOrderdtlOperateDto> datasDto)
+		{
 
+			//获取当前工单商品
+			var pickingSubOrderdtlDtos = pickingDal.GetPickingSubOrderdtlDto(
+				new PickingSubOrderdtlApo
+				{
+					picking_sub_orderid = pickingSubOrderid
+				}, out int totalCount);
+
+
+			//修改工单数据
+			pickingSubOrderdtlDtos.ForEach(it =>
+			{
+				if (datasDto.Exists(dataDto => dataDto.exception_flag == (int)ExceptionFlag.正常 && it.code.Equals(dataDto.code)))
+				{
+					it.status = 1;
+				}
+			});
+
+
+			return pickingDal.UpdatePickingStatus(pickingSubOrderid, pickingSubOrderdtlDtos);
+
+		}
 
 	}
 }

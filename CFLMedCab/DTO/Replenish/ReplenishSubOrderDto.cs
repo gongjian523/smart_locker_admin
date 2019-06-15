@@ -14,5 +14,11 @@ namespace CFLMedCab.DTO.Replenish
 		/// 待上架商品数量
 		/// </summary>
 		public int not_picked_goods_num { get; set; }
+
+		/// <summary>
+		/// 派发时间，来源总工单创建时间
+		/// </summary>
+		public DateTime distribute_time;
+
 	}
 }

@@ -74,6 +74,8 @@ namespace CFLMedCab.DAL
 					picking_order_code = it.picking_order_code,
 					create_time = it.create_time,
 					status = it.status,
+					distribute_time = SqlFunc.Subqueryable<PickingOrder>()
+													  .Where(itpo => itpo.code == it.picking_order_code).Select(itpo=>itpo.create_time),
 					picked_goods_num = SqlFunc.Subqueryable<PickingSubOrderdtl>()
 													  .Where(itsub => itsub.picking_sub_orderid == it.id && itsub.status == 0)
 													  .Count()
@@ -123,8 +125,34 @@ namespace CFLMedCab.DAL
 
 		}
 
+		/// <summary>
+		/// 确认时，修改工单数据
+		/// </summary>
+		/// <param name="pickingSubOrderid">上架单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdatePickingStatus(int pickingSubOrderid, List<PickingSubOrderdtlDto> pickingSubOrderdtlDtos)
+		{
 
-		
+
+			//事务防止多插入产生脏数据
+			var result = Db.Ado.UseTran(() =>
+			{
+				Db.Updateable(pickingSubOrderdtlDtos).ExecuteCommand();
+				if (!pickingSubOrderdtlDtos.Exists(it => it.status == 0))
+				{
+					Db.Updateable<ReplenishSubOrder>()
+					.SetColumns(it => new ReplenishSubOrder() { status = 1 })
+					.Where(it => it.id == pickingSubOrderid)
+					.ExecuteCommand();
+				}
+
+			});
+
+			return result.IsSuccess;
+
+		}
+
 
 	}
 }
