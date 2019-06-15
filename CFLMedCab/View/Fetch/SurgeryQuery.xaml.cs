@@ -33,7 +33,6 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
         }
         //private FetchOrderDal fetchOrderDal = new FetchOrderDal();
-        
         /// <summary>
         /// 查看详情
         /// </summary>
@@ -61,6 +60,19 @@ namespace CFLMedCab.View.Fetch
             //}
         }
         
+        /// <summary>
+        /// 扫码查询事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                EnterSurgeryDetailEvent(this, new FetchOrder());
+            }
+        }
+
         /// <summary>
         /// 暂无手术单号
         /// </summary>
