@@ -52,5 +52,10 @@ namespace CFLMedCab.View.Inventory
         {
             EnterPopInventoryPlanEvent(this, null);
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
