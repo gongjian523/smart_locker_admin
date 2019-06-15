@@ -80,8 +80,8 @@ namespace CFLMedCab.Model
         public int status { get; set; }
 
         /// <summary>
-        /// 关联操作单据
+        /// 捡练单id 
         /// </summary>
-        public int related_order_id { get; set; }
+        public int picking_sub_orderid { get; set; }
     }
 }
