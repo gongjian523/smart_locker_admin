@@ -35,33 +35,39 @@
                 <Button Grid.Column="2" Grid.Row="2" Content="手术耗材详情" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Width="75" Click="Detail_Click"/>
             </Grid>
         </StackPanel>
-        <StackPanel Background="White"  Grid.Row="1" Margin="20,10,20,20">
+        <StackPanel Background="White" x:Name="myGrid"  Grid.Row="1" Margin="20,10,20,20">
             <Grid Margin="20">
-                <Grid.RowDefinitions >
-                    <RowDefinition Height="Auto"></RowDefinition>
-                    <RowDefinition Height = "Auto"></RowDefinition>
-                    <RowDefinition Height = "Auto"></RowDefinition>
-                </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="2*"/>
+
                 </Grid.ColumnDefinitions>
-                <Label Content="手术单号" Margin="10,10,10,10"/>
-                <ListView  Margin="10" Grid.Row="1" Grid.ColumnSpan="3"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Width="auto" Padding="20">
+                    <Grid Grid.Column="0" x:Name="column1"/>
+                    <Grid Grid.Column="1" x:Name="column2"/>
+                    <Grid Grid.Column="2" x:Name="column3"/>
+                    <Grid Grid.Column="3" x:Name="column4"/>
+                    <Grid Grid.Column="4" x:Name="column5"/>
+                    <Grid Grid.Column="5" x:Name="column6"/>
+            </Grid>
+                <Label Content="手术单号" Margin="10,10,10,10" Width="{Binding Path=ActualWidth,ElementName=myGrid}"/>
+                <ListView  Margin="10"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Padding="20">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="300"/>
-                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding code}"   Width="300" />
-                            <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}"  Width="300"/>
-                            <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding wait_collar}"  Width="300" />
-                            <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding already_led}"  Width="300"/>
-                            <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}"  Width="300"/>
+                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                        <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding code}"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
+                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                        <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding wait_collar}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                        <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding already_led}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Button Content="确认"  Grid.Row="2" Grid.ColumnSpan="3" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="Button_Click_1"/>
-            </Grid>
+                <Button Content="确认"  Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="Button_Click_1"/>
+            
             <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
                 <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
             </Grid>
