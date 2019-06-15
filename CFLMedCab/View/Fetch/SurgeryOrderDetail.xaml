@@ -14,19 +14,19 @@
         </Grid.RowDefinitions>
 
         <StackPanel Background="White" Grid.Row="0" Margin="20,20,20,10" >
-            <Grid>
+            <Grid Margin="20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
-                    <RowDefinition></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
+                    <RowDefinition Height="*"></RowDefinition>
                 </Grid.RowDefinitions>
 
-                <Label Content="手术单号" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+                <Label Content="手术单号"  HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
                 <Label Content="Label" Grid.Column="0" Grid.Row="1" Name="lNum" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" FontSize="18" Foreground="#619CF8"/>
                 <Label  Grid.Column="0" Grid.Row="2" Content="使用状态" Foreground="#666666" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                 <Label  Grid.Column="0" Grid.Row="2" Content="领用中" Name="state" Foreground="#666666" HorizontalAlignment="Left" Margin="0,33,0,-33" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
@@ -38,23 +38,31 @@
         <StackPanel Background="White" x:Name="myGrid"  Grid.Row="1" Margin="20,10,20,20">
             <Grid Margin="20">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="auto"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
-
                 </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" x:Name="column1"/>
-                    <Grid Grid.Column="1" x:Name="column2"/>
-                    <Grid Grid.Column="2" x:Name="column3"/>
-                    <Grid Grid.Column="3" x:Name="column4"/>
-                    <Grid Grid.Column="4" x:Name="column5"/>
-                    <Grid Grid.Column="5" x:Name="column6"/>
+                <Grid Grid.Column="0" x:Name="column1"/>
+                <Grid Grid.Column="1" x:Name="column2"/>
+                <Grid Grid.Column="2" x:Name="column3"/>
+                <Grid Grid.Column="3" x:Name="column4"/>
+                <Grid Grid.Column="4" x:Name="column5"/>
+                <Grid Grid.Column="5" x:Name="column6"/>
             </Grid>
-                <Label Content="手术单号" Margin="10,10,10,10" Width="{Binding Path=ActualWidth,ElementName=myGrid}"/>
-                <ListView  Margin="10"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Padding="20">
+                <Label Content="手术单号" Grid.Row="0" Grid.Column="1" Margin="10,10,10,10" Width="{Binding Path=ActualWidth,ElementName=myGrid}"/>
+                <ListView  Margin="10" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Padding="20">
                     <ListView.View>
                         <GridView>
                         <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
@@ -66,9 +74,9 @@
                         </GridView>
                     </ListView.View>
                 </ListView>
-                <Button Content="确认"  Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="Button_Click_1"/>
-            
-            <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
+                <Button Content="确认" Grid.Row="2"  Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="Button_Click_1"/>
+                </Grid>
+               <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
                 <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
             </Grid>
         </StackPanel>
