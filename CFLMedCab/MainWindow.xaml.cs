@@ -33,6 +33,7 @@ using CFLMedCab.Infrastructure;
 using System.Speech.Synthesis;
 using CFLMedCab.View.Fetch;
 using System.Collections;
+using CFLMedCab.Test;
 
 namespace CFLMedCab
 {
@@ -44,12 +45,6 @@ namespace CFLMedCab
         private DispatcherTimer ShowTimer;
         private VeinHelper vein;
 
-        private Timer loginTimer;
-
-        private SoundPlayer media;
-
-        private Inventory inventory = new Inventory();
-        //private LoginStatus loginStatus = new LoginStatus();
 
         public MainWindow()
         {
@@ -68,10 +63,6 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 
-			//loginTimer = new Timer(20000);
-			//loginTimer.AutoReset = false;
-			//loginTimer.Enabled = true;
-			//loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
 
 			//App.Current.Dispatcher.Invoke((Action)(() =>
 			//{
@@ -81,17 +72,8 @@ namespace CFLMedCab
 			//        LoginBkView.Visibility = Visibility.Hidden;
 			//}));
 
-			//media = new SoundPlayer(@"../../Resources/Medias/Open-GerFetch.wav");
-			//media.Play();
 
-			//var user = new UserDal();
-			//user.Insert(new User
-			//{
-			//    name = "aaa",
-			//    role = 1,
-			//    vein_id = "111sfadfasd"
-			//});
-			//user.GetList();
+
 
 			//bool isGetSuccess;
 
@@ -104,25 +86,9 @@ namespace CFLMedCab
 			});
 
 
-			ConsoleManager.Show();
-        }
+            Test();
 
-
-
-        private void onLoginTimerUp(object sender, ElapsedEventArgs e)
-        {
-            //LoginInfo.Visibility = Visibility.Hidden;
-            //if (_loginStatus == 1)
-            //{
-            //    LoginBk.Visibility = Visibility.Hidden;
-            //    NaviView.Visibility = Visibility.Visible;
-            //}
-            //else
-            //{
-            //    vein.ChekVein();
-            //}
-            Console.WriteLine("onLoginTimerUp");
-            vein.ChekVein();
+            ConsoleManager.Show();
         }
 
 
@@ -646,15 +612,33 @@ namespace CFLMedCab
         private void onHidePopInventory(object sender, System.EventArgs e)
         {
             bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            Hashtable ht = new Hashtable();
+            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
+            ht.Add("COM1", hs1);
+            HashSet<string> hs4 = new HashSet<string> { "E20000176012028219504DAD", "E20000176012026619504D8D", "E20000176012026319404F98", "E20000176012028019504DA0", "E20000176012026519504D85" };
+            ht.Add("COM4", hs4);
 
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            InventoryBll inventoryBll = new InventoryBll();
+
+            GoodsBll goodsBll = new GoodsBll();
+            //goodsBll.ge
+
+
+
+
+
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 PopFrame.Visibility = Visibility.Hidden;
                 MaskView.Visibility = Visibility.Hidden;
             }));
+
+            
         }
 
 
@@ -814,23 +798,26 @@ namespace CFLMedCab
 #endif
         }
 
-		private void TestLocker(object sender, ElapsedEventArgs e)
-		{
-			Console.ReadKey();
-			LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
-			delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(TestLockerEvent);
-		}
+
+        #region test
+        private void Test()
+        {
+            //TestGoods.AddGoodTest();
+        }
+
+        private void TestLocker(object sender, ElapsedEventArgs e)
+        {
+            Console.ReadKey();
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(TestLockerEvent);
+        }
 
         private void TestLockerEvent(object sender, bool isClose)
         {
             Console.WriteLine("返回开锁状态{0}", isClose);
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
         }
+        #endregion
 
-
-        private void AddGoodTest()
-        {
-            
-        }
     }
 }

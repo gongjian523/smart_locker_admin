@@ -1,4 +1,5 @@
-﻿using CFLMedCab.DTO.Inventory;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DTO.Inventory;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -29,9 +30,14 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterPopInventoryPlanHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryPlanHandler EnterPopInventoryPlanEvent;
 
+        InventoryBll inventoryBll;
+
         public Inventory()
         {
             InitializeComponent();
+
+            inventoryBll = new InventoryBll();
+            //inventoryBll.GetInventoryOrder(new)
             List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
             for(int i = 5; i > 0; i--)
             {
