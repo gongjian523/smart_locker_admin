@@ -8,8 +8,8 @@
              d:DesignHeight="800" d:DesignWidth="900">
     <Grid Background="AliceBlue">
         <Grid.RowDefinitions>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="3*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -22,12 +22,12 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="60"></RowDefinition>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="40"></RowDefinition>
+                    <RowDefinition Height="28"></RowDefinition>
+                    <RowDefinition Height="50"></RowDefinition>
+                    <RowDefinition Height="28"></RowDefinition>
+                    <RowDefinition Height="28"></RowDefinition>
                 </Grid.RowDefinitions>
-                <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Background="{DynamicResource TipBgColor}" />
+                <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
                 <Label Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
                 <Label Content="操作人" Grid.Row="2" Grid.Column="0" />
                 <Label Content="Label" Name="Operator" Grid.Row="3" Grid.Column="0"  />
@@ -152,8 +152,8 @@
 
 
         </StackPanel>
-        <StackPanel Background="White" Margin="20,10,20,20" Grid.Row="2">
-            <Grid Margin="20">
+        <StackPanel Background="White" Margin="20,10,20,20" Grid.Row="2" Height="100">
+            <Grid Margin="20,10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
