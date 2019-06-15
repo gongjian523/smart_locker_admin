@@ -273,6 +273,14 @@
     <Compile Include="View\Fetch\SurgeryQuery.xaml.cs">
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
+    <Page Include="Color.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Styles\Color.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\Themes\AccentColors.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>

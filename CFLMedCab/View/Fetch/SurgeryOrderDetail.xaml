@@ -44,7 +44,6 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
-
                 </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" x:Name="column1"/>
                     <Grid Grid.Column="1" x:Name="column2"/>
@@ -53,8 +52,8 @@
                     <Grid Grid.Column="4" x:Name="column5"/>
                     <Grid Grid.Column="5" x:Name="column6"/>
             </Grid>
-                <Label Content="手术单号" Margin="10,10,10,10" Width="{Binding Path=ActualWidth,ElementName=myGrid}"/>
-                <ListView  Margin="10"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Padding="20">
+                <Label Content="手术单号" Grid.Row="0" Grid.Column="1" Margin="10,10,10,10" Background="{DynamicResource TipBgColor}"/>
+                <ListView  Margin="10" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Padding="20">
                     <ListView.View>
                         <GridView>
                         <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
