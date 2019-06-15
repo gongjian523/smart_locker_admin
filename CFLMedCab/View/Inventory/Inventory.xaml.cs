@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.DTO.Inventory;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,25 @@ namespace CFLMedCab.View.Inventory
         public Inventory()
         {
             InitializeComponent();
+            List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
+            for(int i = 5; i > 0; i--)
+            {
+                InventoryOrderDto inventoryOrderDto = new InventoryOrderDto
+                {
+                    id = i,
+                    code = "dff12412",
+                    confirm_time=DateTime.Now,
+                    create_time=DateTime.Now,
+                    inspector_id=2,
+                    inspector_name="何海霞",
+                    operator_id=1,
+                    operator_name="何海霞",
+                    status=0,
+                    type=1
+                };
+                inventoryOrderDtos.Add(inventoryOrderDto);
+            }
+            listView.DataContext = inventoryOrderDtos;
         }
 
         /// <summary>
@@ -51,6 +71,11 @@ namespace CFLMedCab.View.Inventory
         private void onEnterPopInventoryPlan(object sender, RoutedEventArgs e)
         {
             EnterPopInventoryPlanEvent(this, null);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

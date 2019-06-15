@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
+using CFLMedCab.DTO.Stock;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
@@ -43,13 +44,37 @@ namespace CFLMedCab.View.Fetch
         public ReturnFetchView()
         {
             InitializeComponent();
-            lDate.Content = DateTime.Now;
-            //Operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name; 
+            time.Content = DateTime.Now;
+            List<GoodsChageOrderdtlDto> goodsChageOrderdtls = new List<GoodsChageOrderdtlDto>();
+            for (int i = 5; i >= 0; i--)
+            {
+                GoodsChageOrderdtlDto goodsChageOrderdtl = new GoodsChageOrderdtlDto
+                {
+                    id = i,
+                    batch_number = "feg",
+                    birth_date = DateTime.Now,
+                    code = "ewfw",
+                    exceptional = 0,
+                    expire_date = DateTime.Now,
+                    explain = "测试数据",
+                    fetch_type = 1,
+                    goods_code = "fwe",
+                    goods_id = 1,
+                    good_change_orderid = 1,
+                    name = "测试数据",
+                    operate_type = 0,
+                    position = "1号柜",
+                    related_order_id = 1,
+                    remarks = "测试数据",
+                    status = 0,
+                    valid_period = 4
+                };
+                goodsChageOrderdtls.Add(goodsChageOrderdtl);
+            }
+            listView.DataContext = goodsChageOrderdtls;
         }
 
-        private int userId;
-        private List<GoodsChageOrderdtl> goodsChageOrderdtls;
-        private int exceptional;
+
         /// <summary>
         /// 关柜
         /// </summary>

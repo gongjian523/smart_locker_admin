@@ -18,11 +18,17 @@ namespace CFLMedCab.Model
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
-        /// <summary>
-        /// 拣货工单号
-        /// </summary>
-        [SugarColumn(IsNullable = true)]
-        public int picking_order_id { get; set; }
+		/// <summary>
+		/// 拣货单编号
+		/// </summary>
+		[SugarColumn(IsNullable = false)]
+		public string code { get; set; }
+
+		/// <summary>
+		/// 拣货工单号
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+        public string picking_order_code { get; set; }
 
         /// <summary>
         /// 生成时间

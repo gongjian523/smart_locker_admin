@@ -39,5 +39,10 @@ namespace CFLMedCab.Model
         /// 完成时间
         /// </summary>
         public DateTime end_time { get; set; }
-    }
+
+		/// <summary>
+		/// 上架工单号
+		/// </summary>
+		public string code { get; set; }
+	}
 }

@@ -88,7 +88,7 @@ namespace CFLMedCab.View.Fetch
                 };
                 goodsChageOrderdtls.Add(goodsChageOrderdtl);
             }
-            listView1.DataContext = surgeryFetches;
+            listView1.DataContext = goodsChageOrderdtls;
         }
 
         /// <summary>
