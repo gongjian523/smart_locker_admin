@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.APO;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Model;
 using System;
