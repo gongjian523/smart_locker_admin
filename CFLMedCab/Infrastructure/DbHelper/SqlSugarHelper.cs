@@ -68,7 +68,11 @@ namespace CFLMedCab.Infrastructure.DbHelper
 			Db.CodeFirst.InitTables<ReplenishSubOrder>();
 			Db.CodeFirst.InitTables<ReplenishSubOrderdtl>();
 
-		}
+            //创建盘点数据表
+            Db.CodeFirst.InitTables<InventoryOrder>();
+            Db.CodeFirst.InitTables<InventoryOrderdtl>();
+            Db.CodeFirst.InitTables<InventoryPlan>();
+        }
 
         public static string GetCurrentProjectPath
         {

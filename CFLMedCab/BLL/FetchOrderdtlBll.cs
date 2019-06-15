@@ -12,7 +12,7 @@ namespace CFLMedCab.BLL
     public class FetchOrderdtlBll
     {
         FetchOrderdtlDal fetchOrderdtlDal = new FetchOrderdtlDal();
-        GoodsDal goodsDal = new GoodsDal();
+
         /// <summary>
         /// 根据领用单号获取领用商品数量
         /// </summary>
@@ -78,32 +78,32 @@ namespace CFLMedCab.BLL
             List<GoodsChageOrderdtl> goodsChageOrderdtlsList = new List<GoodsChageOrderdtl>();
             foreach (string item in hashtable)
             {
-                Goods goods = goodsDal.GetGoodsById(Convert.ToInt32(item));
-                if (goods != null)
-                {
-                    GoodsChageOrderdtl goodsChageOrderdtl = new GoodsChageOrderdtl();
-                    goodsChageOrderdtl.batch_number = goods.batch_number;
-                    goodsChageOrderdtl.birth_date = goods.birth_date;
-                    goodsChageOrderdtl.code = goods.code;
-                    goodsChageOrderdtl.expire_date = goods.expiry_date;
-                    goodsChageOrderdtl.fetch_type = 1;
-                    goodsChageOrderdtl.goods_code = goods.goods_code;
-                    goodsChageOrderdtl.goods_id = goods.id;
-                    goodsChageOrderdtl.name = goods.name;
-                    goodsChageOrderdtl.operate_type = dataType;
-                    goodsChageOrderdtl.position = goods.position;
-                    goodsChageOrderdtl.remarks = goods.remarks;
-                    goodsChageOrderdtl.valid_period = goods.valid_period;
-                    if (dataType != pageType)//类型不同则为异常
-                    {
-                        exceptional++;
-                        goodsChageOrderdtl.exceptional = 1;
-                        goodsChageOrderdtl.explain = explain;
-                    }
-                    else
-                        goodsChageOrderdtl.exceptional = 0;
-                    goodsChageOrderdtlsList.Add(goodsChageOrderdtl);
-                }
+                //Goods goods = goodsDal.GetGoodsById(Convert.ToInt32(item));
+                //if (goods != null)
+                //{
+                //    GoodsChageOrderdtl goodsChageOrderdtl = new GoodsChageOrderdtl();
+                //    goodsChageOrderdtl.batch_number = goods.batch_number;
+                //    goodsChageOrderdtl.birth_date = goods.birth_date;
+                //    goodsChageOrderdtl.code = goods.code;
+                //    goodsChageOrderdtl.expire_date = goods.expiry_date;
+                //    goodsChageOrderdtl.fetch_type = 1;
+                //    goodsChageOrderdtl.goods_code = goods.goods_code;
+                //    goodsChageOrderdtl.goods_id = goods.id;
+                //    goodsChageOrderdtl.name = goods.name;
+                //    goodsChageOrderdtl.operate_type = dataType;
+                //    goodsChageOrderdtl.position = goods.position;
+                //    goodsChageOrderdtl.remarks = goods.remarks;
+                //    goodsChageOrderdtl.valid_period = goods.valid_period;
+                //    if (dataType != pageType)//类型不同则为异常
+                //    {
+                //        exceptional++;
+                //        goodsChageOrderdtl.exceptional = 1;
+                //        goodsChageOrderdtl.explain = explain;
+                //    }
+                //    else
+                //        goodsChageOrderdtl.exceptional = 0;
+                //    goodsChageOrderdtlsList.Add(goodsChageOrderdtl);
+                //}
             }
             return goodsChageOrderdtlsList;
         }

@@ -1,5 +1,9 @@
 ﻿using CFLMedCab.APO;
+using CFLMedCab.APO.Inventory;
+using CFLMedCab.DTO;
+using CFLMedCab.DTO.Inventory;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Model;
 using SqlSugar;
@@ -44,47 +48,119 @@ namespace CFLMedCab.DAL
             }
             return singleton;
         }
+
         /// <summary>
-        /// 手动盘点时生成盘点记录
+        /// 生成盘点记录
         /// </summary>
         /// <returns></returns>
-        public void addInventory(InventoryOrder inventory) {
-            
-             
-            //获取当前时间
-            inventory.create_time = System.DateTime.Now;
-            //获取当前用户
-            inventory.operator_id = 1;
-            //设置状态为待确认
-            inventory.status = 0;
-            //生成记录
-            Db.Insertable<InventoryOrder>(inventory).ExecuteReturnEntity();
-            
+        public int NewInventory(InventoryOrder inventoryOrder) {
+            return Db.Insertable<InventoryOrder>(inventoryOrder).ExecuteReturnEntity().id;
         }
+
         /// <summary>
         /// 确认盘点记录
         /// </summary>
-        public void confirmInventory(InventoryOrder inventoryOrder) {
-            //设置状态为已确认
-            inventoryOrder.status = 1;
+        public void ConfirmInventory(InventoryOrder inventoryOrder) {
             Db.Updateable<InventoryOrder>(inventoryOrder).ExecuteCommand();
+        }
 
+
+        /// <summary>
+        /// 获取盘点记录
+        /// </summary>
+        /// <returns></returns>
+        public List<InventoryOrderDto> GetInventoryOrder(InventoryOrderApo pageDataApo, out int totalCount)
+        {
+            totalCount = 0;
+            List<InventoryOrderDto> data;
+
+            //查询语句
+            var queryable = Db.Queryable<InventoryOrder>()
+                .Where(it => it.status == pageDataApo.status)
+                .OrderBy(it => it.create_time, OrderByType.Desc)
+                .Select<InventoryOrderDto>();
+
+
+            //如果小于0，默认查全部
+            if (pageDataApo.PageSize > 0)
+            {
+                data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+            }
+            else
+            {
+                data = queryable.ToList();
+                totalCount = data.Count();
+            }
+            return data;
         }
 
         /// <summary>
-        /// 获取盘点数据
+        /// 插入盘点记录详情
         /// </summary>
-        public List<GoodsDto> GetGoods(BasePageDataApo pageDataApo, out int totalCount)
+        /// <returns></returns>
+        public void InsertInventoryDetails(List<InventoryOrderdtl> list)
         {
-
-            totalCount = 0;
-            List<GoodsDto> data;
-            //查询语句
-            var queryable = Db.Queryable<GoodsDto>();
-
-            data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
-
-            return data;
+            Db.Insertable<InventoryOrderdtl>(list).ExecuteCommand();
         }
+
+        /// <summary>
+        /// 更新盘点记录详情
+        /// </summary>
+        /// <returns></returns>
+        public void UpdateInventoryDetails(List<InventoryOrderdtl> list)
+        {
+            Db.Updateable<InventoryOrderdtl>(list).ExecuteCommand();
+        }
+
+        public List<InventoryOrderdtl> GetInventoryDetailsByInventoryId(int invertoryOrderId)
+        {
+            return  Db.Queryable<InventoryOrderdtl>()
+                .Where(it => it.inventory_order_id == invertoryOrderId)
+                .OrderBy(it => it.name, OrderByType.Desc).ToList();
+        }
+
+        /// <summary>
+        /// 插入盘点计划
+        /// </summary>
+        /// <returns></returns>
+        public void InsertInventoryPlan(List<InventoryPlan> list)
+        {
+            Db.Insertable<InventoryPlan>(list).ExecuteCommand();
+        }
+
+        /// <summary>
+        /// 更新盘点计划
+        /// </summary>
+        /// <returns></returns>
+        public void UpdateInventoryPlan(List<InventoryPlan> list)
+        {
+            Db.Insertable<InventoryPlan>(list).ExecuteCommand();
+        }
+
+
+        /// <summary>
+        /// 获取盘点计划
+        /// </summary>
+        /// <returns></returns>
+        public List<InventoryPlan> GetInventoryPlan()
+        {
+            return Db.Queryable<InventoryPlan>().OrderBy(it => it.inventory_time, OrderByType.Desc).ToList();
+        }
+
+        ///// <summary>
+        ///// 获取盘点数据
+        ///// </summary>
+        //public List<GoodsDto> GetGoods(BasePageDataApo pageDataApo, out int totalCount)
+        //{
+
+        //    totalCount = 0;
+        //    List<GoodsDto> data;
+        //    //查询语句
+        //    var queryable = Db.Queryable<GoodsDto>();
+
+        //    data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+
+        //    return data;
+        //}
     }
 }

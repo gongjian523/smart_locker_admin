@@ -747,5 +747,11 @@ namespace CFLMedCab
 			Console.WriteLine("返回开锁状态{0}", isClose);
 			System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose); 
 		}
+
+
+        private void AddGoodTest()
+        {
+            
+        }
     }
 }

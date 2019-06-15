@@ -7,6 +7,23 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Model
 {
+    /// <summary>
+    /// 盘点类型:：0  自动盘点；1 手动盘点
+    /// </summary>
+    public enum InventoryType{
+        Auto,
+        Manual
+    }
+
+    /// <summary>
+    /// 盘点单状态：0  待确认；1  已确认。
+    /// </summary>
+    public enum InventoryStatus
+    {
+        Unconfirm,
+        Confirm
+    }
+
     public class InventoryOrder
     {
         /// <summary>
@@ -42,9 +59,19 @@ namespace CFLMedCab.Model
         public int operator_id { get; set; }
 
         /// <summary>
+        /// 盘点人姓名
+        /// </summary>
+        public string operator_name { get; set; }
+
+        /// <summary>
         /// 确认人
         /// </summary>
         public int inspector_id { get; set; }
+
+        /// <summary>
+        /// 确认人姓名
+        /// </summary>
+        public string inspector_name { get; set; }
 
         /// <summary>
         /// 盘点单状态：0  待确认；1  已确认。

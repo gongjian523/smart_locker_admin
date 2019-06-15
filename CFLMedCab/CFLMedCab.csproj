@@ -125,6 +125,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APO\BasePageDataApo.cs" />
+    <Compile Include="APO\Inventory\InventoryOrderApo.cs" />
     <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
@@ -143,6 +144,7 @@
     <Compile Include="DAL\InventoryDal.cs" />
     <Compile Include="DAL\ReplenishDal.cs" />
     <Compile Include="DTO\BasePageDataDto.cs" />
+    <Compile Include="DTO\Inventory\InventoryOrderDto.cs" />
     <Compile Include="DTO\Replenish\GoodsDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />

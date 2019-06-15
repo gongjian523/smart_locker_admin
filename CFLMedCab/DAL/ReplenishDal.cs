@@ -99,7 +99,6 @@ namespace CFLMedCab.DAL
 		/// <returns></returns>
 		public List<ReplenishSubOrderdtlDto> GetReplenishSubOrderdtlDto(ReplenishSubOrderdtlApo pageDataApo, out int totalCount)
 		{
-
 			totalCount = 0;
 			List<ReplenishSubOrderdtlDto> data;
 
