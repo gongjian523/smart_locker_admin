@@ -64,7 +64,6 @@ namespace CFLMedCab.DTO.Goodss
         /// </summary>
         public int operate_type { get; set; }
 
-
         /// <summary>
         /// 创造日期
         /// </summary>

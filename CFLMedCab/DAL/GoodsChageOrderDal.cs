@@ -58,12 +58,20 @@ namespace CFLMedCab.DAL
             //查询语句
             var queryable = Db.Queryable<GoodsChageOrderdtl, GoodsChageOrder>((ordtl, or) => new object[] { JoinType.Left, ordtl.good_change_orderid == or.id })
                 .Where((ordtl, or) => ordtl.operate_type == pageDataApo.operate_type)
-                
+                .WhereIF(pageDataApo.startTime.HasValue, (ordtl, or) => or.create_time >= pageDataApo.startTime)
+                .WhereIF(pageDataApo.endTime.HasValue, (ordtl, or) => or.create_time <= pageDataApo.endTime)
                 .OrderBy((ordtl, or) => or.create_time, OrderByType.Desc)
                 .Select((ordtl, or) => new GoodsChangeDto
                 {
                     id = ordtl.id,
                     good_change_orderid = ordtl.good_change_orderid,
+                    goods_id = ordtl.goods_id,
+                    name = ordtl.name,
+                    goods_code = ordtl.goods_code,
+                    code = ordtl.code,
+                    batch_number = ordtl.batch_number,
+                    birth_date = ordtl.birth_date,
+                    expire_date = ordtl.expire_date,
                     create_time = or.create_time
                 });
 

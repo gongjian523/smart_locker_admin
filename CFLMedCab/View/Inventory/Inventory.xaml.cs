@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,9 +29,14 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterPopInventoryPlanHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryPlanHandler EnterPopInventoryPlanEvent;
 
+        InventoryBll inventoryBll;
+
         public Inventory()
         {
             InitializeComponent();
+
+            inventoryBll = new InventoryBll();
+            //inventoryBll.GetInventoryOrder(new)
         }
 
         /// <summary>
@@ -51,11 +57,6 @@ namespace CFLMedCab.View.Inventory
         private void onEnterPopInventoryPlan(object sender, RoutedEventArgs e)
         {
             EnterPopInventoryPlanEvent(this, null);
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

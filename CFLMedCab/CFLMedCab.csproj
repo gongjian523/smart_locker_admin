@@ -132,6 +132,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APO\BasePageDataApo.cs" />
+    <Compile Include="APO\Inventory\GetGoodApo.cs" />
     <Compile Include="APO\GoodsChange\GoodsChangeApo.cs" />
     <Compile Include="APO\Inventory\GetGoodsApo.cs" />
     <Compile Include="APO\Inventory\InventoryOrderApo.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="DTO\Fetch\SurgeryFetchDto.cs" />
     <Compile Include="DTO\Fetch\SurgeryFetchDetailsDto.cs" />
     <Compile Include="DTO\Fetch\SurgeryOrderDto.cs" />
+    <Compile Include="DTO\Goodss\GoodDto.cs" />
     <Compile Include="DTO\Goodss\GoodsChangeDto.cs" />
     <Compile Include="DTO\Goodss\GoodsDto.cs" />
     <Compile Include="DTO\Inventory\InventoryOrderDto.cs" />
@@ -215,6 +217,7 @@
     <Compile Include="Model\FetchOrderdtl.cs" />
     <Compile Include="Model\FetchOrderdtlView.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Test\TestGoods.cs" />
     <Compile Include="View\CloseCabinet.xaml.cs">
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>

@@ -16,12 +16,12 @@ namespace CFLMedCab.APO.GoodsChange
         /// <summary>
         /// 起始时间
         /// </summary>
-        public DateTime startTtime  { get; set; }
+        public DateTime? startTime  { get; set; }
 
         /// <summary>
         /// 结束时间
         /// </summary>
-        public DateTime endTtime { get; set; }
+        public DateTime? endTime { get; set; }
 
     }
 }

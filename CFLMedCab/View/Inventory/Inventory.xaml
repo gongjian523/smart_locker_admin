@@ -81,7 +81,7 @@
                                 <GridViewColumn Header="操作" DisplayMemberBinding="{Binding remarks}"   Width="{Binding ElementName=column9,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                            <Button Width="30" Content="确认" Click="Button_Click"/>
+                                            <!--<Button Width="30" Content="确认" Click="Button_Click"/>-->
 
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>

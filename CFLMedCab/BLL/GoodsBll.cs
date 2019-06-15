@@ -103,5 +103,14 @@ namespace CFLMedCab.BLL
 		{
 			return GoodsDal.GetGoodsDto(GetCompareSimpleGoodsDto(preGoodsEpsCollect, afterGoodsEpsCollect));
 		}
-	}
+
+        /// <summary>
+        /// 获取盘点所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsDto> GetInvetoryGoodsDto(Hashtable goodsEpsCollect)
+        {
+            return GoodsDal.GetGoodsDto(goodsEpsCollect);
+        }
+    }
 }
