@@ -68,37 +68,43 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 
-            //loginTimer = new Timer(20000);
-            //loginTimer.AutoReset = false;
-            //loginTimer.Enabled = true;
-            //loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
+			//loginTimer = new Timer(20000);
+			//loginTimer.AutoReset = false;
+			//loginTimer.Enabled = true;
+			//loginTimer.Elapsed += new ElapsedEventHandler(onLoginTimerUp);
 
-            //App.Current.Dispatcher.Invoke((Action)(() =>
-            //{
-            //    PopFrame.Visibility = Visibility.Hidden;
-            //    MaskView.Visibility = Visibility.Hidden;
+			//App.Current.Dispatcher.Invoke((Action)(() =>
+			//{
+			//    PopFrame.Visibility = Visibility.Hidden;
+			//    MaskView.Visibility = Visibility.Hidden;
 
-            //        LoginBkView.Visibility = Visibility.Hidden;
-            //}));
+			//        LoginBkView.Visibility = Visibility.Hidden;
+			//}));
 
-            //media = new SoundPlayer(@"../../Resources/Medias/Open-GerFetch.wav");
-            //media.Play();
+			//media = new SoundPlayer(@"../../Resources/Medias/Open-GerFetch.wav");
+			//media.Play();
 
-            //var user = new UserDal();
-            //user.Insert(new User
-            //{
-            //    name = "aaa",
-            //    role = 1,
-            //    vein_id = "111sfadfasd"
-            //});
-            //user.GetList();
+			//var user = new UserDal();
+			//user.Insert(new User
+			//{
+			//    name = "aaa",
+			//    role = 1,
+			//    vein_id = "111sfadfasd"
+			//});
+			//user.GetList();
 
-            //bool isGetSuccess;
+			//bool isGetSuccess;
 
-            //Hashtable cur =  RfidHelper.GetEpcData(out isGetSuccess);
-            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, cur);//读取机柜内当前的商品编码
+			//Hashtable cur =  RfidHelper.GetEpcData(out isGetSuccess);
+			//ApplicationState.SetValue((int)ApplicationKey.CurGoods, cur);//读取机柜内当前的商品编码
 
-            ConsoleManager.Show();
+			var testData = new ReplenishmentBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
+				PageIndex = 1,
+				PageSize = 2
+			});
+
+
+			ConsoleManager.Show();
         }
 
 
@@ -805,11 +811,6 @@ namespace CFLMedCab
             this.Width = SystemParameters.PrimaryScreenWidth;
             this.Height = SystemParameters.PrimaryScreenHeight;
         }
-
-
-
-
-
 
 		private void TestLocker(object sender, ElapsedEventArgs e)
 		{

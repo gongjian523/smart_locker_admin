@@ -125,9 +125,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APO\BasePageDataApo.cs" />
+    <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\InventoryBll.cs" />
     <Compile Include="BLL\SurgeryOrderdtlBll.cs" />
     <Compile Include="BLL\ReplenishmentBll.cs" />
     <Compile Include="BLL\UserBll.cs" />
@@ -138,8 +140,11 @@
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
+    <Compile Include="DAL\InventoryDal.cs" />
     <Compile Include="DAL\ReplenishDal.cs" />
     <Compile Include="DTO\BasePageDataDto.cs" />
+    <Compile Include="DTO\Replenish\GoodsDto.cs" />
+    <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
@@ -168,7 +173,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Model\InventoryOrder.cs" />
-    <Compile Include="Model\InventoryOrderdal.cs" />
+    <Compile Include="Model\InventoryOrderdtl.cs" />
     <Compile Include="Model\LoginStatus.cs" />
     <Compile Include="Model\ReplenishSubOrder.cs" />
     <Compile Include="Model\Enum\CollarType.cs" />
