@@ -2,6 +2,7 @@
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Picking;
 using CFLMedCab.Infrastructure.DbHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using SqlSugar;
 using System;
@@ -138,7 +139,7 @@ namespace CFLMedCab.DAL
 			//事务防止多插入产生脏数据
 			var result = Db.Ado.UseTran(() =>
 			{
-				Db.Updateable(pickingSubOrderdtlDtos).ExecuteCommand();
+				Db.Updateable(pickingSubOrderdtlDtos.MapToList<PickingSubOrderdtlDto, PickingSubOrderdtl>()).ExecuteCommand();
 				if (!pickingSubOrderdtlDtos.Exists(it => it.status == 0))
 				{
 					Db.Updateable<ReplenishSubOrder>()
