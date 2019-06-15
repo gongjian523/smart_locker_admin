@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.APO;
 using CFLMedCab.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,6 @@ namespace CFLMedCab.DTO.Replenish
 		/// 上架单id
 		/// </summary>
 		public int replenish_sub_orderid { get; set; }
+
 	}
 }

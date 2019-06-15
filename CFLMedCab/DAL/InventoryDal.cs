@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.APO;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Model;

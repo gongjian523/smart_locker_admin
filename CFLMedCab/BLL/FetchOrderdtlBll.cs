@@ -12,7 +12,7 @@ namespace CFLMedCab.BLL
     public class FetchOrderdtlBll
     {
         FetchOrderdtlDal fetchOrderdtlDal = new FetchOrderdtlDal();
-        GoodsDal goodsDal = new GoodsDal();
+        GoodsDal goodsDal = GoodsDal.GetInstance();
         /// <summary>
         /// 根据领用单号获取领用商品数量
         /// </summary>
@@ -78,7 +78,7 @@ namespace CFLMedCab.BLL
             List<GoodsChageOrderdtl> goodsChageOrderdtlsList = new List<GoodsChageOrderdtl>();
             foreach (string item in hashtable)
             {
-                Goods goods = goodsDal.GetGoodsById(Convert.ToInt32(item));
+                Goods goods = goodsDal.Db.Queryable<Goods>().Where(it=> it.id == Convert.ToInt32(item)).Single();
                 if (goods != null)
                 {
                     GoodsChageOrderdtl goodsChageOrderdtl = new GoodsChageOrderdtl();
