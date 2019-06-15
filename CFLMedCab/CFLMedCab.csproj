@@ -160,6 +160,7 @@
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlOperateDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
+    <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarHelper.cs" />
