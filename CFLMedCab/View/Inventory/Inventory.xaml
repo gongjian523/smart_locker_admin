@@ -54,7 +54,10 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="180"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -76,7 +79,13 @@
                                 <GridViewColumn Header="盘点人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column6,Path=ActualWidth}"/>
                                 <GridViewColumn Header="确认人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
                                 <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time}"   Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作" DisplayMemberBinding="{Binding remarks}"   Width="{Binding ElementName=column9,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column9,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="确认" Click="Button_Click"></Button>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
