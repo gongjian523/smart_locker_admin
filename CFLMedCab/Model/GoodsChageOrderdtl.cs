@@ -73,14 +73,14 @@ namespace CFLMedCab.Model
         public int operate_type { get; set; }
 
         /// <summary>
-        /// 异常标识 异常标识：1 异常； 0  非异常
+        /// 异常标识 异常标识：1 异常； 0  正常
         /// </summary>
-        public int exceptional { get; set; }
+        public int exception_flag { get; set; }
 
         /// <summary>
         /// 异常说明
         /// </summary>
-        public string explain { get; set; }
+        public string exception_description { get; set; }
 
         /// <summary>
         /// 货位

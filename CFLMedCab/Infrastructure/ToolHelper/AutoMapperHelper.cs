@@ -39,5 +39,22 @@ namespace CFLMedCab.Infrastructure.ToolHelper
 			IMapper mapper = new Mapper(config);
 			return mapper.Map<List<TDestination>>(source);
 		}
+
+		/// <summary>
+		/// 集合列表类型映射
+		/// </summary>
+		public static List<TDestination> MapToListIgnoreId<TSource, TDestination>(this IEnumerable<TSource> source)
+		{
+			//Mapper.Initialize(x => x.CreateMap<TSource, TDestination>());
+			//return Mapper.Map<List<TDestination>>(source);
+			if (source == null)
+			{
+				return new List<TDestination>();
+			}
+			var config = new MapperConfiguration(x => x.CreateMap<TSource, TDestination>().ForMember("id", opt => opt.Ignore()));
+			IMapper mapper = new Mapper(config);
+			return mapper.Map<List<TDestination>>(source);
+		}
+
 	}
 }
