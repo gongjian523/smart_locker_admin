@@ -7,18 +7,100 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid  Background="AliceBlue">
-        <Button Content="返回" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"  Foreground="#619CF8" Click="onCancel"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,40,0,0" TextWrapping="Wrap" 
-                   VerticalAlignment="Top" Height="118" Width="780" Background="White"/>
-        <Label Content="盘点单号" HorizontalAlignment="Left" Margin="21,40,0,0" VerticalAlignment="Top" FontSize="11" FontWeight="Bold"/>
-        <Label Content="盘点日期" HorizontalAlignment="Left" Margin="35,105,0,0" VerticalAlignment="Top" FontSize="9"/>
-        <Label Content="盘点状态" HorizontalAlignment="Left" Margin="124,105,0,0" VerticalAlignment="Top" FontSize="9"/>
-        <Label Content="盘点类型" HorizontalAlignment="Left" Margin="229,105,0,0" VerticalAlignment="Top" FontSize="9"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,172,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="268" Width="780" Background="White"><InlineUIContainer>
-            
-            </InlineUIContainer></TextBlock>
-        <Button Content="盘点确认" HorizontalAlignment="Left" Margin="345,400,0,0" VerticalAlignment="Top" Width="75" Click="onConfirm"/>
-        <Button Content="取消" HorizontalAlignment="Left" Margin="500,400,0,0" VerticalAlignment="Top" Width="75" Click="onCancel"/>
-        <Button Content="新增实际库存商品" Margin="633,356,63,67" Click="onAddProduct"/>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Button Content="返回" HorizontalAlignment="Left"  Grid.Row="0" VerticalAlignment="Top"   Foreground="#619CF8" Click="onCancel"/>
+            <StackPanel Background="White" Grid.Row="1" Margin="0,10,0,5" >
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="{DynamicResource rowHeight25}"/>
+                        <RowDefinition Height="{DynamicResource rowHeight50}"/>
+                        <RowDefinition Height="{DynamicResource rowHeight25}"/>
+                        <RowDefinition Height="{DynamicResource rowHeight25}"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"  Background="Red" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                    <Label Content="Label" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
+                    <Label Content="盘点日期" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="盘点状态" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="盘点类型" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="盘点日期" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="盘点状态" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="盘点类型" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Background="White" Grid.Row="2" Margin="0,5,0,10">
+
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" MinHeight="120"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Grid  x:Name="myGrid">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" x:Name="column1"/>
+                            <Grid Grid.Column="1" x:Name="column2"/>
+                            <Grid Grid.Column="2" x:Name="column3"/>
+                            <Grid Grid.Column="3" x:Name="column4"/>
+                            <Grid Grid.Column="4" x:Name="column5"/>
+                            <Grid Grid.Column="5" x:Name="column6"/>
+                            <Grid Grid.Column="6" x:Name="column7"/>
+                            <Grid Grid.Column="7" x:Name="column8"/>
+                            <Grid Grid.Column="8" x:Name="column9"/>
+                            <Grid Grid.Column="9" x:Name="column10"/>
+                        </Grid>
+                       <ListView VerticalAlignment="Top" Grid.Row="1"   Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="商品码"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
+                                    <GridViewColumn Header="单品码" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="批号"  Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="失效期" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="领用属性" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="货位" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="账面库存" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="实际库存" Width="{Binding ElementName=column9,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="备注" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                    <Button Content="新增实际库存商品"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Width="150" Margin="0,5,20,5"  Click="onAddProduct" HorizontalAlignment="Right"/>
+                    <Button Content="盘点确认"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,30,0" VerticalAlignment="Center" Width="75" Click="onConfirm"/>
+                    <Button Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="75" Click="onCancel"/>
+                </Grid>
+            </StackPanel>
+
+        </Grid>
+
     </Grid>
 </UserControl>
