@@ -63,7 +63,7 @@ namespace CFLMedCab.BLL
         /// <param name="dataType">机构数据类型 出库/入库</param>
         /// <param name="pageType">页面操作类型 出库/入库</param>
         /// <returns></returns>
-        public List<GoodsChageOrderdtl> newGoodsChageOrderdtls(HashSet<string> hashtable, int dataType, int pageType,string explain, ref int exceptional)
+        public List<GoodsChageOrderdtl> newGoodsChageOrderdtls(HashSet<string> hashtable, int dataType, int pageType,string exception_description, ref int exception_flag)
         {
             List<GoodsChageOrderdtl> goodsChageOrderdtlsList = new List<GoodsChageOrderdtl>();
             foreach (string item in hashtable)
@@ -86,12 +86,12 @@ namespace CFLMedCab.BLL
                     goodsChageOrderdtl.valid_period = goods.valid_period;
                     if (dataType != pageType)//类型不同则为异常
                     {
-                        exceptional++;
-                        goodsChageOrderdtl.exceptional = 1;
-                        goodsChageOrderdtl.explain = explain;
+                        exception_flag++;
+                        goodsChageOrderdtl.exception_flag = 1;
+                        goodsChageOrderdtl.exception_description = exception_description;
                     }
                     else
-                        goodsChageOrderdtl.exceptional = 0;
+                        goodsChageOrderdtl.exception_flag = 0;
                     goodsChageOrderdtlsList.Add(goodsChageOrderdtl);
                 }
             }
