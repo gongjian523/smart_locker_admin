@@ -1,5 +1,10 @@
-﻿using CFLMedCab.Infrastructure.DbHelper;
+﻿
+using CFLMedCab.DTO.Goodss;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DbHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -10,8 +15,8 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DAL
 {
-    public class FetchOrderDal
-    {
+	public class FetchOrderDal
+	{
 		//Db
 		public SqlSugarClient Db;
 
@@ -47,7 +52,54 @@ namespace CFLMedCab.DAL
 		}
 
 
+		/// <summary>
+		///  生成领用信息
+		/// </summary>
+		/// <param name="goodsDtos">正常数据</param>
+		/// <returns></returns>
+		public bool InsertFetchOrderInfo(List<GoodsDto> goodsDtos, RequisitionType requisitionType, RequisitionStatus requisitionStatus, ConsumablesStatus consumablesStatus)
+		{
+			if (goodsDtos.Count <= 0)
+			{
+				return false;
+			}
+			List<GoodsDto> goodsDtosNotEx = goodsDtos.Where(it => it.exception_flag == (int)ExceptionFlag.正常).ToList();
+
+			if (goodsDtosNotEx.Count <= 0)
+			{
+				return false;
+			}
+
+			//事务防止多插入产生脏数据
+			var result = Db.Ado.UseTran(() =>
+			{
+			
+				//领用单id
+				int fetchOrderId = Db.Insertable(new FetchOrder
+				{
+					create_time = DateTime.Now,
+					operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+					type = (int)requisitionType,
+					status = (int)requisitionStatus,
+
+				}).ExecuteReturnIdentity();
+
+				List<FetchOrderdtl> fetchOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, FetchOrderdtl>();
 
 
+
+				fetchOrderdtls.ForEach(it =>
+				{
+					it.is_add = 0;
+					it.related_order_id = fetchOrderId;
+					it.status = (int)consumablesStatus;
+				});
+
+				Db.Insertable(fetchOrderdtls).ExecuteCommand();
+
+			});
+
+			return result.IsSuccess;
+		}
 	}
 }

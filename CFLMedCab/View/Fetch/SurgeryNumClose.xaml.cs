@@ -71,9 +71,9 @@ namespace CFLMedCab.View.Fetch
                     batch_number = "feg",
                     birth_date = DateTime.Now,
                     code = "ewfw",
-                    exceptional = 0,
+                    exception_flag = 0,
                     expire_date = DateTime.Now,
-                    explain = "测试数据",
+                    exception_description = "测试数据",
                     fetch_type = 1,
                     goods_code = "fwe",
                     goods_id = 1,
@@ -105,12 +105,12 @@ namespace CFLMedCab.View.Fetch
         //    HashSet<string> inHashtable;
         //    HashSet<string> outHashtable;
         //    CollectHelper.CompareCollect(befroe, after, out inHashtable, out outHashtable);
-        //    goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, 0, "操作与业务类型冲突", ref exceptional);
-        //    foreach (GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(outHashtable, 0, 0, "操作与业务类型冲突", ref exceptional))
+        //    goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, 0, "操作与业务类型冲突", ref exception_flag);
+        //    foreach (GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(outHashtable, 0, 0, "操作与业务类型冲突", ref exception_flag))
         //    {
         //        goodsChageOrderdtls.Add(item);
         //    }
-        //    listView.DataContext = goodsChageOrderdtls.OrderBy(t => t.expire_date).OrderBy(t => t.exceptional);
+        //    listView.DataContext = goodsChageOrderdtls.OrderBy(t => t.expire_date).OrderBy(t => t.exception_flag);
         //}
 
         /// <summary>

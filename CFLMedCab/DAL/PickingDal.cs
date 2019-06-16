@@ -136,7 +136,7 @@ namespace CFLMedCab.DAL
 		{
 
 
-			//事务防止多插入产生脏数据
+			//事务防止多修改产生脏数据
 			var result = Db.Ado.UseTran(() =>
 			{
 				Db.Updateable(pickingSubOrderdtlDtos.MapToList<PickingSubOrderdtlDto, PickingSubOrderdtl>()).ExecuteCommand();
