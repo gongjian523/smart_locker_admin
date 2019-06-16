@@ -53,7 +53,7 @@
                     <Grid Grid.Column="5" x:Name="column6"/>
             </Grid>
                 <Label Content="手术单号" Grid.Row="0" Grid.Column="1" Margin="10,10,10,10" Background="{DynamicResource TipBgColor}"/>
-                <ListView  Margin="10" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Padding="20" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView  Margin="10" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.View>
                     <GridView>
                         <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
