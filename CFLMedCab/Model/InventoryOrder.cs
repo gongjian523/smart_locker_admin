@@ -89,4 +89,14 @@ namespace CFLMedCab.Model
         /// </summary>
         public int status { get; set; }
     }
+
+    public class InventoryDetailPara : InventoryOrder
+    {
+        /// <summary>
+        /// 盘点编号
+        /// </summary>
+        /// 0 确认， 1查询详情
+        public int type { get; set; }
+    }
+
 }

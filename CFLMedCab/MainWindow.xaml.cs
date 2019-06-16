@@ -585,6 +585,7 @@ namespace CFLMedCab
             Inventory inventory = new Inventory();
             inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
             inventory.EnterPopInventoryPlanEvent += new Inventory.EnterPopInventoryPlanHandler(onEnterPopInventoryPlan);
+            inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
 
             ContentFrame.Navigate(inventory);
 
@@ -639,6 +640,27 @@ namespace CFLMedCab
                 MaskView.Visibility = Visibility.Hidden;
             }));            
         }
+
+        /// <summary>
+        /// 关闭库存盘点正在进行中
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterInventoryDetail(object sender, InventoryDetailPara e)
+        {
+            InventoryDetail inventoryDetail = new InventoryDetail(e);
+            inventoryDetail.EnterAddProductEvent += new InventoryDetail.EnterAddProductHandler(onEnterPopAddProduct);
+            inventoryDetail.EnterInventoryEvent += new InventoryDetail.EnterInventoryHandler(onEnterInvtory);
+
+            ContentFrame.Navigate(inventoryDetail);
+
+        }
+
+        private void InventoryDetail_EnterAddProductEvent(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
 
 
         /// <summary>
@@ -787,7 +809,7 @@ namespace CFLMedCab
         {
             this.WindowState = WindowState.Normal;
             this.WindowStyle = WindowStyle.None;
-            this.ResizeMode = ResizeMode.CanResize;
+            this.ResizeMode = ResizeMode.CanMinimize;
             this.Topmost = true;
             this.Left = 0.0;
             this.Top = 0.0;

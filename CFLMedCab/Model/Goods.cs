@@ -62,5 +62,11 @@ namespace CFLMedCab.Model
         /// 备注
         /// </summary>
         public string remarks { get; set; }
-    }
+
+		/// <summary>
+		/// 领用属性
+		/// </summary>
+		public int fetch_type { get; set; }
+
+	}
 }

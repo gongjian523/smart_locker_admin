@@ -88,7 +88,7 @@ namespace CFLMedCab.Model
         public int related_order_id { get; set; }
 
         /// <summary>
-        /// 是否临时新增 1。是；否。2。一般领用单均为否。3。手术领用单，如标识异常为异常，且异常说明为“商品不在待领目录的”为是，其余为否。
+        /// 是否临时新增 0: 否 1：是；一般领用单均为否。3。手术领用单，如标识异常为异常，且异常说明为“商品不在待领目录的”为是，其余为否。
         /// </summary>
         public int is_add { get; set; }
 

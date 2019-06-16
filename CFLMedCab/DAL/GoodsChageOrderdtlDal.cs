@@ -35,8 +35,8 @@ namespace CFLMedCab.DAL
         //                                                           'expire_date' not null default (datetime('localtime')), 
         //                                                           'valid_period' INTEGER,
         //                                                           'operate_type' INTEGER,
-        //                                                           'exceptional' INTEGER,
-        //                                                           'explain' VARCHAR(50),
+        //                                                           'exception_flag' INTEGER,
+        //                                                           'exception_description' VARCHAR(50),
         //                                                           'position' INTEGER, 
         //                                                           'fetch_type' VARCHAR(50),
         //                                                           'remarks' VARCHAR(200), 
@@ -54,11 +54,11 @@ namespace CFLMedCab.DAL
         //public int InsertNewGoodsChageOrderdtl(GoodsChageOrderdtl goodsChageOrderdtl)
         //{
         //    string commandText = string.Format(@"INSERT INTO goods_chage_orderdtl (good_change_orderid,goods_id, name, goods_code, code,batch_number,
-        //                                        birth_date,expire_date,valid_period,operate_type,exceptional,explain,position,fetch_type,remarks,status,related_order_id) VALUES 
+        //                                        birth_date,expire_date,valid_period,operate_type,exception_flag,exception_description,position,fetch_type,remarks,status,related_order_id) VALUES 
         //                                        ('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}', '{15}', '{16}')",
         //                                        goodsChageOrderdtl.good_change_orderid, goodsChageOrderdtl.goods_id, goodsChageOrderdtl.name, goodsChageOrderdtl.goods_code, 
         //                                        goodsChageOrderdtl.code,goodsChageOrderdtl.batch_number, goodsChageOrderdtl.birth_date, goodsChageOrderdtl.expire_date, 
-        //                                        goodsChageOrderdtl.valid_period,goodsChageOrderdtl.operate_type, goodsChageOrderdtl.exceptional, goodsChageOrderdtl.explain,
+        //                                        goodsChageOrderdtl.valid_period,goodsChageOrderdtl.operate_type, goodsChageOrderdtl.exception_flag, goodsChageOrderdtl.exception_description,
         //                                        goodsChageOrderdtl.position, goodsChageOrderdtl.fetch_type, goodsChageOrderdtl.remarks, goodsChageOrderdtl.status, goodsChageOrderdtl.related_order_id);
 
         //    if (!SqliteHelper.Instance.ExecuteNonQuery(commandText))

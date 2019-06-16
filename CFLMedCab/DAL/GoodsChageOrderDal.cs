@@ -1,7 +1,10 @@
 ﻿using CFLMedCab.APO.GoodsChange;
 using CFLMedCab.DTO.Goodss;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -88,6 +91,56 @@ namespace CFLMedCab.DAL
             }
             return data;
         }
-    }
+
+		/// <summary>
+		///  生成领用信息
+		/// </summary>
+		/// <param name="goodsDtos">正常数据</param>
+		/// <returns></returns>
+		public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, RequisitionType requisitionType, RequisitionStatus requisitionStatus, ConsumablesStatus consumablesStatus)
+		{
+			if (goodsDtos.Count <= 0)
+			{
+				return false;
+			}
+			List<GoodsDto> goodsDtosNotEx = goodsDtos.ToList();
+
+			if (goodsDtosNotEx.Count <= 0)
+			{
+				return false;
+			}
+
+			//事务防止多插入产生脏数据
+			var result = Db.Ado.UseTran(() =>
+			{
+
+				//领用单id
+				int goodsChageOrderId = Db.Insertable(new GoodsChageOrder
+				{
+					create_time = DateTime.Now,
+					operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+					type = (int)requisitionType,
+					status = (int)requisitionStatus,
+
+				}).ExecuteReturnIdentity();
+
+				List<GoodsChageOrderdtl> goodsChageOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, GoodsChageOrderdtl>();
+
+
+
+				goodsChageOrderdtls.ForEach(it =>
+				{
+					it.related_order_id = goodsChageOrderId;
+					it.status = (int)consumablesStatus;
+				});
+
+				Db.Insertable(goodsChageOrderdtls).ExecuteCommand();
+
+			});
+
+			return result.IsSuccess;
+		}
+
+	}
 
 }
