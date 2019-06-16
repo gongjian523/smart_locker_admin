@@ -91,7 +91,7 @@
                                Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
-                                <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding id}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding code}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                                 <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                                 <GridViewColumn Header="盘点类型" DisplayMemberBinding="{Binding type, Converter={StaticResource InventoryTypeStrConverter}}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
                                 <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding status,  Converter= {StaticResource InventoryStatusStrConverter}}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
