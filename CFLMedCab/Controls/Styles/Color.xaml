@@ -12,7 +12,7 @@
     <GridLength x:Key="rowHeight30">30</GridLength>
     <GridLength x:Key="rowHeight50">50</GridLength>
     <GridLength x:Key="rowHeight60">60</GridLength>
-    
-    <CornerRadius x:Key="GRadius">2</CornerRadius>
+
+    <CornerRadius x:Key="GRadius">4</CornerRadius>
 
 </ResourceDictionary>

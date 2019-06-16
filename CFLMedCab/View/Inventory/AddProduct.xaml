@@ -6,8 +6,15 @@
         xmlns:local="clr-namespace:CFLMedCab.View.Inventory"
         mc:Ignorable="d"
         Height="350" 
-        Width="480" >
-    <Grid  Background="White" Margin="20">
+        Width="480"  >
+    <!--<UserControl.Resources>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FrameworkElement.Visibility" Value="Hidden"/>
+        </Style>
+    </UserControl.Resources>-->
+    <Border Background="White" Padding="25" CornerRadius="{DynamicResource GRadius}">
+        <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -18,17 +25,16 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
+            <Grid>
+                <Label Content="录入单品码" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.584,-0.333"/>
 
-        <Label Content="录入单品码" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.584,-0.333"/>
-
-        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" x:Name="column1"/>
             </Grid>
-            <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left">
+                <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
                 <ListView.View>
                     <GridView>
                         <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=id}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
@@ -43,14 +49,16 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-
+            
             <Label Content="单品码：" VerticalContentAlignment="Center" Grid.Column="0" />
             <TextBox  Height="28" Grid.Column="1" />
             <Button Content="新增单品码" Grid.Column="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="30 5" Click="onAddProduct"/>
         </Grid>
-
-        <Button Content="保存" Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="onSave" Margin="0,5,30,5"/>
+        <Grid>
+               <Button Content="保存" Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="onSave" Margin="0,5,30,5"/>
         <Button Content="取消" Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="onCancel" Margin="30,5,0,5" />
 
     </Grid>
+            </Grid>
+    </Border>
 </UserControl>

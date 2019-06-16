@@ -8,6 +8,7 @@
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.Resources>
         <Style x:Key="{x:Type l:EditBox}" TargetType="{x:Type l:EditBox}" >
             <Setter Property="HorizontalAlignment" Value="Left"  />
@@ -49,7 +50,7 @@
                         Background="#FFFFFF"  Foreground="#27CDCB" FontSize="14" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
             </Grid>
         </Border>
-       
+
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="20,20,20,20" CornerRadius="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
@@ -88,7 +89,8 @@
                     <ListView  Margin="10,10,0,0" VerticalAlignment="Top"  AlternationCount="2" 
                                ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left"  
                                Padding="20" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                               Style="{StaticResource DefaultListView}">
+                             
+                               Style="{StaticResource DefaultListView}" >
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
                                 <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding code}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
@@ -106,7 +108,7 @@
                                 </GridViewColumn>
 
                                 <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                
+
                                 <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

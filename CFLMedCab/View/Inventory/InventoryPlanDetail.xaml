@@ -6,46 +6,48 @@
         xmlns:local="clr-namespace:CFLMedCab.View"
         mc:Ignorable="d"
         Height="350" Width="600" >
-    <Grid  Background="White" Margin="20">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="{StaticResource rowHeight30}"/>
-            <RowDefinition/>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="auto"/>
-        </Grid.RowDefinitions>
+    <Border Background="White" Padding="25" CornerRadius="{DynamicResource GRadius}">
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="{StaticResource rowHeight30}"/>
+                <RowDefinition/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
 
-        <Label Content="盘点计划" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+            <Label Content="盘点计划" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
 
-        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" x:Name="column1"/>
-                <Grid Grid.Column="1" x:Name="column2"/>
-                <Grid Grid.Column="2" x:Name="column3"/>
+            <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" x:Name="column1"/>
+                    <Grid Grid.Column="1" x:Name="column2"/>
+                    <Grid Grid.Column="2" x:Name="column3"/>
+                </Grid>
+                <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="编号" DisplayMemberBinding="{Binding Path=id}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                            <GridViewColumn Header="盘点时间" DisplayMemberBinding="{Binding Path=inventory_time}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                            <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Path=status}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
             </Grid>
-            <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="编号" DisplayMemberBinding="{Binding Path=id}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
-                        <GridViewColumn Header="盘点时间" DisplayMemberBinding="{Binding Path=inventory_time}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
-                        <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Path=status}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
+
+            <Button Content="新增计划 " Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75"  Click="onAddPlan" Margin="0,5,60,5"/>
+            <Button Content="保存"  Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="onSave" Margin="0,5,30,5"/>
+            <Button Content="取消 " Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="onCancel" Margin="30,5,0,5"/>
+
+
         </Grid>
-
-        <Button Content="新增计划 " Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75"  Click="onAddPlan" Margin="0,5,60,5"/>
-        <Button Content="保存"  Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="onSave" Margin="0,5,30,5"/>
-        <Button Content="取消 " Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="onCancel" Margin="30,5,0,5"/>
-
-
-    </Grid>
+    </Border>
 </UserControl>
