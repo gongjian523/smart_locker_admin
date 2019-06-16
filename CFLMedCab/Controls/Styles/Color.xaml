@@ -2,6 +2,11 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:CFLMedCab.Controls.Styles">
     <SolidColorBrush x:Key="TipBgColor" Color="#FD854E" />
+    <SolidColorBrush x:Key="AlternationColor" Color="#ECECEC" />
+    <SolidColorBrush x:Key="SelectedColor" Color="#457EFF" />
+    <SolidColorBrush x:Key="MouseOverColor" Color="#FFEAE4" />
+    <SolidColorBrush x:Key="GListColor" Color="#D8E7FF" />
+
 
     <GridLength x:Key="rowHeight25">25</GridLength>
     <GridLength x:Key="rowHeight30">30</GridLength>
