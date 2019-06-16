@@ -7,6 +7,12 @@
         mc:Ignorable="d"
         Height="350" 
         Width="480"  >
+    <!--<UserControl.Resources>
+        <Style TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="FrameworkElement.Visibility" Value="Hidden"/>
+        </Style>
+    </UserControl.Resources>-->
     <Border Background="White" Padding="25" CornerRadius="{DynamicResource GRadius}">
         <Grid>
         <Grid.ColumnDefinitions>
@@ -22,7 +28,6 @@
 
         <Label Content="录入单品码" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.584,-0.333"/>
 
-        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
