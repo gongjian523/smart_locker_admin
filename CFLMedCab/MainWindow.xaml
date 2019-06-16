@@ -11,7 +11,7 @@
         MinHeight="540"
         MinWidth ="960"
         WindowStyle="None"
-        AllowsTransparency="True" Loaded="MetroWindow_Loaded" >
+        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" >
     <Control.Resources>
         <cvt:LoginInfoFGBrushConverter x:Key="LoginInfoFGBrushConverter"/>
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
@@ -19,8 +19,8 @@
     <Grid>
         <Frame x:Name="PopFrame" Panel.ZIndex="4" Visibility="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
-        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Hidden" >
-            <Image Height="Auto" Width="Auto" HorizontalAlignment="Left" Margin="0">
+        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Visible" >
+            <Image Height="Auto" Width="Auto" Margin="-30" Name="logImg">
                 <Image.Source>
                     <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/login.png" />
                 </Image.Source>
