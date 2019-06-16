@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,14 +26,21 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterInventoryHandler(object sender, RoutedEventArgs e);
         public event EnterInventoryHandler EnterInventoryEvent;
 
-
         public delegate void EnterAddProductHandler(object sender, RoutedEventArgs e);
         public event EnterAddProductHandler EnterAddProductEvent;
 
+        InventoryBll inventoryBll = new InventoryBll();
 
         public InventoryDetail(InventoryDetailPara para)
         {
             InitializeComponent();
+
+            //inventoryBll.GetInventoryOrder
+
+
+
+
+
         }
 
         /// <summary>
