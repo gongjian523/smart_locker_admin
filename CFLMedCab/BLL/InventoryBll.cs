@@ -1,4 +1,5 @@
-﻿using CFLMedCab.APO;
+﻿using AutoMapper;
+using CFLMedCab.APO;
 using CFLMedCab.APO.Inventory;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO;
@@ -6,6 +7,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Inventory;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -92,12 +94,23 @@ namespace CFLMedCab.BLL
         /// 插入盘点记录详情
         /// </summary>
         /// <returns></returns>
-        public void InsertInventoryDetails(List<InventoryOrderdtl> list, int invertoryOrderId)
+        public void InsertInventoryDetails(List<GoodsDto> list, int invertoryOrderId)
         {
-            foreach (InventoryOrderdtl item in list)
-                item.inventory_order_id = invertoryOrderId;
+            var config = new MapperConfiguration(x => x.CreateMap<GoodsDto, InventoryOrderdtl>()
+                                                        .ForMember(d => d.goods_id, o => o.MapFrom(s => s.id) ));
+            IMapper mapper = new Mapper(config);
+            var listDtl =  mapper.Map<List<InventoryOrderdtl>>(list);
 
-            inventoryDal.InsertInventoryDetails(list);
+            foreach (InventoryOrderdtl item in listDtl)
+            {
+                item.inventory_order_id = invertoryOrderId;
+                item.goods_type = (int)GoodsInventoryStatus.Auto;
+                item.book_inventory = 1;
+                item.actual_inventory = 1;
+                item.num_differences = 0;
+            }
+
+            inventoryDal.InsertInventoryDetails(listDtl);
         }
 
         /// <summary>

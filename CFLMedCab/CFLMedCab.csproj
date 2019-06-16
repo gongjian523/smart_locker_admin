@@ -218,7 +218,6 @@
     <Compile Include="Model\ReplenishSubOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\FetchOrderdtl.cs" />
-    <Compile Include="Model\FetchOrderdtlView.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Test\TestGoods.cs" />
     <Compile Include="View\CloseCabinet.xaml.cs">
