@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -17,18 +19,44 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// AddStock.xaml 的交互逻辑
     /// </summary>
+    /// 
     public partial class AddProduct : UserControl
     {
-        public delegate void HidePopAddProductHandler(object sender, System.EventArgs e);
+        public delegate void HidePopAddProductHandler(object sender, RoutedEventArgs e);
         public event HidePopAddProductHandler HidePopAddProductEvent;
 
-        public AddProduct()
+        public delegate void EnterInventoryDetailHandler(object sender, InventoryDetailPara e);
+        public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
+
+
+        GoodsBll goodsBll = new GoodsBll();
+        InventoryBll inventoryBll = new InventoryBll();
+
+        InventoryDetailPara inventoryPara = new InventoryDetailPara();
+        List<AddGoodsCode> codeList = new List<AddGoodsCode>();
+
+        public AddProduct(InventoryDetailPara dtlPara)
         {
             InitializeComponent();
+
+            inventoryPara = dtlPara;
+            listView.DataContext = codeList;
+
         }
 
         private void onSave(object sender, RoutedEventArgs e)
         {
+            HashSet<string> hs = new HashSet<string>();
+
+            if(inventoryPara.newlyAddCodes != null)
+                inventoryPara.newlyAddCodes.Clear();
+            else
+                inventoryPara.newlyAddCodes = new HashSet<string>();
+
+            foreach (var code in codeList)
+                inventoryPara.newlyAddCodes.Add(code.code);
+            EnterInventoryDetailEvent(this, inventoryPara);
+
             HidePopAddProductEvent(this, null);
         }
 
@@ -39,7 +67,41 @@ namespace CFLMedCab.View.Inventory
 
         private void onAddProduct(object sender, RoutedEventArgs e)
         {
+            string inputStr = codeInputTb.Text;
+            
+            if(!goodsBll.IsGoodsInfoExsits(inputStr))
+            {
+                codeInputTb.Text = "无法查询到商品信息";
+                return;
+            }
 
+            if(inventoryBll.IsGoodsInInventoryOrder(inventoryPara.id, inputStr))
+            {
+                codeInputTb.Text = "此商品已经在盘存单中";
+                return;
+            }
+
+            if(inventoryPara.alreadyAddCodes != null)
+            {
+                if (inventoryPara.alreadyAddCodes.Contains(inputStr))
+                {
+                    codeInputTb.Text = "此商品已经添加";
+                    return;
+                }
+            }
+
+            if (codeList.Where(item => item.code == inputStr).ToList().Count > 0)
+            {
+                codeInputTb.Text = "此商品已经添加";
+                return;
+            }
+
+            codeList.Add(new AddGoodsCode {
+                code = inputStr
+            });
+            codeInputTb.Text = "";
+
+            listView.Items.Refresh();
         }
     }
 }

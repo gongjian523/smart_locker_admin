@@ -97,6 +97,19 @@ namespace CFLMedCab.Model
         /// </summary>
         /// 0 确认， 1查询详情
         public int btnType { get; set; }
+
+        public HashSet<string> alreadyAddCodes { get; set; }
+
+        public HashSet<string>  newlyAddCodes { get; set; }
+
+    }
+
+    public class  AddGoodsCode 
+    {
+        /// <summary>
+        /// 商品码
+        /// </summary>
+        public string code { get; set; }
     }
 
 }
