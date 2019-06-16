@@ -1,5 +1,8 @@
-﻿using CFLMedCab.Infrastructure.DbHelper;
+﻿using CFLMedCab.APO.GoodsChange;
+using CFLMedCab.DTO.Goodss;
+using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Model;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,53 +12,82 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DAL
 {
-    public class GoodsChageOrderDal : SqlSugarContext<GoodsChageOrder>
+    /// <summary>
+    /// 盘点库存dao层
+    /// </summary>
+    public class GoodsChangeOrderDal
     {
-        /// <summary>
-        /// 根据主键id修改状态
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="status"></param>
-        /// <returns></returns>
-        public int UpdateOrderStatus(int id, int status)
+        //Db
+        public SqlSugarClient Db = SqlSugarHelper.GetInstance().Db;
+
+        // 定义一个静态变量来保存类的实例
+        private static GoodsChangeOrderDal singleton;
+        // 定义一个标识确保线程同步
+        private static readonly object locker = new object();
+
+
+        //定义公有方法提供一个全局访问点。
+        public static GoodsChangeOrderDal GetInstance()
         {
-            return Db.Updateable<GoodsChageOrder>(it => new GoodsChageOrder() { status =status}).Where(it => it.id==id).ExecuteCommand();
+            //这里的lock其实使用的原理可以用一个词语来概括“互斥”这个概念也是操作系统的精髓
+            //其实就是当一个进程进来访问的时候，其他进程便先挂起状态
+            if (singleton == null)
+            {
+                lock (locker)
+                {
+                    // 如果类的实例不存在则创建，否则直接返回
+                    if (singleton == null)
+                    {
+                        singleton = new GoodsChangeOrderDal();
+                    }
+                }
+            }
+            return singleton;
         }
-        ///// <summary>
-        ///// 数据库没有表时创建
-        ///// </summary>
-        //public void CreateTable_GoodsChageOrder()
-        //{
-        //    string commandText = @"CREATE TABLE if not exists goods_chage_order ('id' INTEGER PRIMARY KEY AUTOINCREMENT, 
-        //                                                           'operator_id' INTEGER,
-        //                                                           'create_time' not null default (datetime('localtime')),
-        //                                                           'type' INTEGER, 
-        //                                                           'status' INTEGER);";
-        //    SqliteHelper.Instance.ExecuteNonQuery(commandText);
-        //    return;
-        //}
-
-        ///// <summary>
-        ///// 新增库存变化单
-        ///// </summary>
-        ///// <param name="goodsChageOrder"></param>
-        ///// <returns></returns>
-        //public int InsertNewGoodsChageOrder(GoodsChageOrder goodsChageOrder)
-        //{
-        //    string commandText = string.Format(@"INSERT INTO goods_chage_order (create_time, operator_id, type, status) VALUES 
-        //                                        ('{0}', '{1}', '{2}', '{3}')",
-        //                                        goodsChageOrder.create_time, goodsChageOrder.operator_id, goodsChageOrder.type, goodsChageOrder.status);
-
-        //    if (!SqliteHelper.Instance.ExecuteNonQuery(commandText))
-        //        return 0;
 
 
-        //    return LastInsertRowId();
-        //}
+        /// <summary>
+        /// 获取出入库记录
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsChangeDto> GetGoodsChange(GoodsChangeApo pageDataApo, out int totalCount)
+        {
+            totalCount = 0;
+            List<GoodsChangeDto> data;
 
-        //private int LastInsertRowId()
-        //{
-        //    return Convert.ToInt16(SqliteHelper.Instance.ExecuteScalar("SELECT last_insert_rowid();"));
-        //}
+            //查询语句
+            var queryable = Db.Queryable<GoodsChageOrderdtl, GoodsChageOrder>((ordtl, or) => new object[] { JoinType.Left, ordtl.good_change_orderid == or.id })
+                .Where((ordtl, or) => ordtl.operate_type == pageDataApo.operate_type)
+                .WhereIF(pageDataApo.startTime.HasValue, (ordtl, or) => or.create_time >= pageDataApo.startTime)
+                .WhereIF(pageDataApo.endTime.HasValue, (ordtl, or) => or.create_time <= pageDataApo.endTime)
+                .OrderBy((ordtl, or) => or.create_time, OrderByType.Desc)
+                .Select((ordtl, or) => new GoodsChangeDto
+                {
+                    id = ordtl.id,
+                    good_change_orderid = ordtl.good_change_orderid,
+                    goods_id = ordtl.goods_id,
+                    name = ordtl.name,
+                    goods_code = ordtl.goods_code,
+                    code = ordtl.code,
+                    batch_number = ordtl.batch_number,
+                    birth_date = ordtl.birth_date,
+                    expire_date = ordtl.expire_date,
+                    create_time = or.create_time
+                });
+
+
+            //如果小于0，默认查全部
+            if (pageDataApo.PageSize > 0)
+            {
+                data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+            }
+            else
+            {
+                data = queryable.ToList();
+                totalCount = data.Count();
+            }
+            return data;
+        }
     }
+
 }

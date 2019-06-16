@@ -108,8 +108,8 @@ namespace CFLMedCab.BLL
 
 			//统计数量
 			operateGoodsNum = datasDto.Count;
-			storageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.入库).Count();
-			outStorageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.出库).Count();
+			storageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列
 			return datasDto.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();

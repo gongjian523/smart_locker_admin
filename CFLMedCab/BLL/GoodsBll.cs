@@ -21,8 +21,10 @@ namespace CFLMedCab.BLL
 		}
 
 		/// <summary>
-		/// 获取补货操作商品情况
+		/// 获取商品库存变化
 		/// </summary>
+		/// <param name="preGoodsEpsCollect">之前商品集合</param>
+		/// <param name="afterGoodsEpsCollect">之后商品集合</param>
 		/// <returns></returns>
 		public List<GoodsDto> GetCompareSimpleGoodsDto(HashSet<string> preGoodsEpsCollect, HashSet<string> afterGoodsEpsCollect)
 		{
@@ -56,7 +58,12 @@ namespace CFLMedCab.BLL
 			return goodsDtos;
 		}
 
-
+		/// <summary>
+		/// 获取商品库存变化
+		/// </summary>
+		/// <param name="preGoodsEpsCollect">之前商品集合</param>
+		/// <param name="afterGoodsEpsCollect">之后商品集合</param>
+		/// <returns></returns>
 		public List<GoodsDto> GetCompareSimpleGoodsDto(Hashtable preGoodsEpsCollect, Hashtable afterGoodsEpsCollect)
 		{
 
@@ -90,8 +97,10 @@ namespace CFLMedCab.BLL
 		}
 
 		/// <summary>
-		/// 获取补货操作商品情况
+		/// 获取商品库存变化
 		/// </summary>
+		/// <param name="preGoodsEpsCollect">之前商品集合</param>
+		/// <param name="afterGoodsEpsCollect">之后商品集合</param>
 		/// <returns></returns>
 		public List<GoodsDto> GetCompareGoodsDto(HashSet<string> preGoodsEpsCollect, HashSet<string> afterGoodsEpsCollect)
 		{
@@ -103,5 +112,14 @@ namespace CFLMedCab.BLL
 		{
 			return GoodsDal.GetGoodsDto(GetCompareSimpleGoodsDto(preGoodsEpsCollect, afterGoodsEpsCollect));
 		}
-	}
+
+        /// <summary>
+        /// 获取盘点所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsDto> GetInvetoryGoodsDto(Hashtable goodsEpsCollect)
+        {
+            return GoodsDal.GetGoodsDto(goodsEpsCollect);
+        }
+    }
 }

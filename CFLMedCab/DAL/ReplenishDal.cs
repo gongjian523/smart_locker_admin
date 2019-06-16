@@ -2,6 +2,7 @@
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure.DbHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using SqlSugar;
 using System;
@@ -138,7 +139,8 @@ namespace CFLMedCab.DAL
 			//事务防止多插入产生脏数据
 			var result = Db.Ado.UseTran(() =>
 			{
-				Db.Updateable(replenishSubOrderdtlDtos).ExecuteCommand();
+
+				Db.Updateable(replenishSubOrderdtlDtos.MapToList<ReplenishSubOrderdtlDto, ReplenishSubOrderdtl>()).ExecuteCommand();
 				if (!replenishSubOrderdtlDtos.Exists(it => it.status == 0))
 				{
 					Db.Updateable<ReplenishSubOrder>()

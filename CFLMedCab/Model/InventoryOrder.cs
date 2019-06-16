@@ -24,6 +24,16 @@ namespace CFLMedCab.Model
         Confirm
     }
 
+    /// <summary>
+    /// 账面库存：0 手工新增；1  账面存在
+    /// </summary>
+    public enum GoodsInventoryStatus
+    {
+        Manual,
+        Auto
+    }
+
+
     public class InventoryOrder
     {
         /// <summary>

@@ -132,6 +132,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="APO\BasePageDataApo.cs" />
+    <Compile Include="APO\Inventory\GetGoodApo.cs" />
+    <Compile Include="APO\GoodsChange\GoodsChangeApo.cs" />
+    <Compile Include="APO\Inventory\GetGoodsApo.cs" />
     <Compile Include="APO\Inventory\InventoryOrderApo.cs" />
     <Compile Include="APO\Picking\PickingSubOrderdtlApo.cs" />
     <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
@@ -147,6 +150,8 @@
     <Compile Include="BLL\GoodsChageOrderdtlBll.cs" />
     <Compile Include="BLL\SurgeryOrderBll.cs" />
     <Compile Include="ConsoleManager.cs" />
+    <Compile Include="Controls\EditBox.cs" />
+    <Compile Include="Controls\EditBoxAdorner.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
@@ -158,6 +163,8 @@
     <Compile Include="DTO\Fetch\SurgeryFetchDto.cs" />
     <Compile Include="DTO\Fetch\SurgeryFetchDetailsDto.cs" />
     <Compile Include="DTO\Fetch\SurgeryOrderDto.cs" />
+    <Compile Include="DTO\Goodss\GoodDto.cs" />
+    <Compile Include="DTO\Goodss\GoodsChangeDto.cs" />
     <Compile Include="DTO\Goodss\GoodsDto.cs" />
     <Compile Include="DTO\Inventory\InventoryOrderDto.cs" />
     <Compile Include="DTO\Picking\PickingSubOrderdtlDto.cs" />
@@ -211,8 +218,8 @@
     <Compile Include="Model\ReplenishSubOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\FetchOrderdtl.cs" />
-    <Compile Include="Model\FetchOrderdtlView.cs" />
     <Compile Include="Model\User.cs" />
+    <Compile Include="Test\TestGoods.cs" />
     <Compile Include="View\CloseCabinet.xaml.cs">
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
@@ -292,6 +299,10 @@
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Styles\Color.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Styles\ListviewStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

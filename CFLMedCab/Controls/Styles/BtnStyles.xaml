@@ -296,4 +296,17 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="btnScanStyle" TargetType="{x:Type ToggleButton}">
+        <Setter Property="Content" Value="扫描"></Setter>
+        <Setter Property="Background" Value="Red"></Setter>
+        <Style.Triggers>
+            <Trigger Property="IsChecked" Value="true" >
+                <Trigger.Setters>
+                    <Setter Property="Content" Value="停止"></Setter>
+                    <Setter Property="Background" Value="Green"></Setter>
+                </Trigger.Setters>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>
