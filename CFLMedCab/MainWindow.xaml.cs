@@ -34,6 +34,7 @@ using System.Speech.Synthesis;
 using CFLMedCab.View.Fetch;
 using System.Collections;
 using CFLMedCab.Test;
+using CFLMedCab.DTO.Goodss;
 
 namespace CFLMedCab
 {
@@ -623,22 +624,16 @@ namespace CFLMedCab
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
             InventoryBll inventoryBll = new InventoryBll();
-
             GoodsBll goodsBll = new GoodsBll();
-            //goodsBll.ge
-
-
-
-
-
+            List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+            int id = inventoryBll.NewInventory(InventoryType.Manual);
+            inventoryBll.InsertInventoryDetails(list, id);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 PopFrame.Visibility = Visibility.Hidden;
                 MaskView.Visibility = Visibility.Hidden;
-            }));
-
-            
+            }));            
         }
 
 
