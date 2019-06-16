@@ -475,12 +475,10 @@ namespace CFLMedCab
 
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
             ReplenishSubOrderDto replenishSubOrderDto = (ReplenishSubOrderDto)delegateGetMsg.userData;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto, ht);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -559,11 +557,11 @@ namespace CFLMedCab
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingSubOrderDto)delegateGetMsg.userData);
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingSubOrderDto)delegateGetMsg.userData, ht);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -787,7 +785,6 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-#if !DEBUG
             this.WindowState = WindowState.Normal;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.CanResize;
@@ -796,7 +793,6 @@ namespace CFLMedCab
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
             this.Height = SystemParameters.PrimaryScreenHeight; 
-#endif
         }
 
 

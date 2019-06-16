@@ -3,6 +3,7 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections;
@@ -34,18 +35,26 @@ namespace CFLMedCab.View.ReplenishmentOrder
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
-        
+
         ReplenishBll replenishBll = new ReplenishBll();
-        public ReplenishmentClose(ReplenishSubOrderDto model)
+        GoodsBll goodsBll = new GoodsBll();
+        private ReplenishSubOrderDto replenishSubOrderDto;
+        private Hashtable after;
+        private List<GoodsDto> goodsDetails;
+        public ReplenishmentClose(ReplenishSubOrderDto model,Hashtable hashtable)
         {
             InitializeComponent();
             //操作人
-            //principal.Content = model.principal_id;
-            ////工单号
-            //workOrderNum.Content = model.id;
-            //lDate.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            object oo = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            listView.DataContext = replenishBll.UpdateReplenishStatus(model.id, new List<GoodsDto>());
+            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            //工单号
+            orderNum.Content = model.id;
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
+            replenishSubOrderDto = model;
+            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            after = hashtable;
+            List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
+            goodsDetails = replenishBll.GetReplenishSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            listView.DataContext = goodsDetails;
         }
 
         /// <summary>
@@ -55,6 +64,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
         
@@ -65,7 +75,9 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterReplenishmentDetailOpenEvent(this, new ReplenishSubOrderDto());
+            if(replenishBll.UpdateReplenishStatus(replenishSubOrderDto.id,goodsDetails))
+                EnterReplenishmentDetailOpenEvent(this, new ReplenishSubOrderDto());
+            return;
         }
     }
 }

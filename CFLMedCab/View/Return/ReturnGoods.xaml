@@ -12,11 +12,11 @@
         <DataTemplate x:Key="pickingOrderView">
             <Grid Margin="10,0,10,10" Background="White" Name="data" Height="100">
                 <Label Content="工单编号：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                <Label Margin="80,10,579,179" Content="{Binding picking_order_code}"/>
+                <Label Margin="80,10,579,65" Content="{Binding picking_order_code}"/>
                 <Label Content="本柜拣货商品数量：" HorizontalAlignment="Left" Margin="186,10,0,0" VerticalAlignment="Top"/>
-                <Label Margin="309,10,334,179" Content="{Binding picked_goods_num}"/>
+                <Label Margin="309,10,334,65" Content="{Binding picked_goods_num}"/>
                 <Label Content="派发时间：" HorizontalAlignment="Left" Margin="553,10,0,0" VerticalAlignment="Top"/>
-                <Label Margin="623,10,0,179" Content="{Binding distribute_time}"/>
+                <Label Margin="623,10,0,65" Content="{Binding distribute_time}"/>
                 <Button Content="查看详情" Name="Retract"  BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" Tag="{Binding}" HorizontalAlignment="Left" Margin="500,50,0,0" VerticalAlignment="Top" Width="114" RenderTransformOrigin="0.51,-0.507" Click="onEnterDetail"/>
                 <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Tag="{Binding}" HorizontalAlignment="Left" Margin="620,50,0,0" VerticalAlignment="Top"  Click="onEnterDetailOpen"/>
             </Grid>
@@ -31,8 +31,8 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemTemplate="{StaticResource pickingOrderView}" ItemsSource="{Binding PickingOrderList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
-        <Grid x:Name="ContentView" Grid.RowSpan="2">
+        <!--<Grid x:Name="ContentView" Grid.RowSpan="2">
             <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>

@@ -1,5 +1,7 @@
 ﻿using CFLMedCab.DAL;
+using CFLMedCab.Infrastructure;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -17,6 +19,7 @@ namespace CFLMedCab
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, new Hashtable());
         }
     }
 }
