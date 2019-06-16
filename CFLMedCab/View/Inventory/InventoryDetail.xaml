@@ -30,7 +30,7 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"  Background="Red" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                    <Label Content="Label" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
+                    <Label Content="{}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
                     <Label Content="盘点日期" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
                     <Label Content="盘点状态" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
                     <Label Content="盘点类型" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>

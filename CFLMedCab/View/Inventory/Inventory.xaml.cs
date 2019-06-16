@@ -28,12 +28,14 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class Inventory : UserControl
     {
-
         public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryHandler EnterPopInventoryEvent;
 
         public delegate void EnterPopInventoryPlanHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryPlanHandler EnterPopInventoryPlanEvent;
+
+        public delegate void EnterInventoryDetailHandler(object sender, InventoryDetailPara e);
+        public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
 
         InventoryBll inventoryBll = new InventoryBll();
         List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
@@ -121,9 +123,19 @@ namespace CFLMedCab.View.Inventory
         {
             Button btnItem = sender as Button;
 
-            var id = btnItem.CommandParameter;
+            int type = 0;
+
+            if (btnItem.Name == "BtnDetail")
+                type = 1;
+
+            int id = (int)btnItem.CommandParameter;
 
             this.listView.Items.Refresh();
+
+            EnterInventoryDetailEvent(this, new InventoryDetailPara {
+                id = id,
+                type = type
+            });
 
         }
 
