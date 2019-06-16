@@ -1,43 +1,14 @@
-﻿using CFLMedCab.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CFLMedCab.DTO.Replenish
+namespace CFLMedCab.Model.Enum
 {
-	public class ReplenishSubOrderdtlOperateDto : ReplenishSubOrderdtl
+	class GoodsCommonEnum
 	{
-		/// <summary>
-		/// 操作类型 0 出库；1 入库 
-		/// </summary>
-		public int operate_type { get; set; }
-
-		/// <summary>
-		/// 操作类型说明
-		/// </summary>
-		public string operate_type_description { get; set; }
-
-		/// <summary>
-		/// 异常标识
-		/// </summary>
-		public int exception_flag { get; set; }
-
-		/// <summary>
-		/// 异常标识
-		/// </summary>
-		public string exception_flag_description { get; set; }
-
-		/// <summary>
-		/// 异常说明
-		/// </summary>
-		public string exception_description { get; set; }
-
-
-
-
 	}
 
 	/// <summary>
@@ -89,12 +60,24 @@ namespace CFLMedCab.DTO.Replenish
 		[Description("操作与业务类型冲突")]
 		操作与业务类型冲突 = 1,
 
+
+		/// <summary>
+		/// 领用属性与业务类型冲突
+		/// </summary>
+		[Description("领用属性与业务类型冲突")]
+		领用属性与业务类型冲突 = 2,
+
 		/// <summary>
 		/// 上架商品不在工单目录
 		/// </summary>
 		[Description("上架商品不在工单目录")]
-		上架商品不在工单目录 = 2
+		拣货商品不在工单目录 = 3,
 
+
+		/// <summary>
+		/// 上架商品不在工单目录
+		/// </summary>
+		[Description("上架商品不在工单目录")]
+		上架商品不在工单目录 = 4
 	}
-
 }

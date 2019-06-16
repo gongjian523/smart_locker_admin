@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
@@ -44,7 +45,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             //workOrderNum.Content = model.id;
             //lDate.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             object oo = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            listView.DataContext = replenishBll.UpdateReplenishStatus(model.id, new List<ReplenishSubOrderdtlOperateDto>());
+            listView.DataContext = replenishBll.UpdateReplenishStatus(model.id, new List<GoodsDto>());
         }
 
         /// <summary>

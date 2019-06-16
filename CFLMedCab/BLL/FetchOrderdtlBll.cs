@@ -75,7 +75,7 @@ namespace CFLMedCab.BLL
                     goodsChageOrderdtl.batch_number = goods.batch_number;
                     goodsChageOrderdtl.birth_date = goods.birth_date;
                     goodsChageOrderdtl.code = goods.code;
-                    goodsChageOrderdtl.expire_date = goods.expiry_date;
+                    goodsChageOrderdtl.expire_date = goods.expire_date;
                     goodsChageOrderdtl.fetch_type = 1;
                     goodsChageOrderdtl.goods_code = goods.goods_code;
                     goodsChageOrderdtl.goods_id = goods.id;

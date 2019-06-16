@@ -105,10 +105,10 @@ namespace CFLMedCab.DAL
         //    dataTable.Columns.Add("code", Type.GetType("System.String"));
         //    dataTable.Columns.Add("batch_number", Type.GetType("System.String"));
         //    dataTable.Columns.Add("birth_date", Type.GetType("System.String"));
-        //    dataTable.Columns.Add("expiry_date", Type.GetType("System.String"));
+        //    dataTable.Columns.Add("expire_date", Type.GetType("System.String"));
         //    dataTable.Columns.Add("fetch_type", Type.GetType("System.String"));
         //    dataTable.Columns.Add("remarks", Type.GetType("System.String"));
-        //    IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.id,b.goods_code,b.name,b.code,b.batch_number,b.birth_date,b.expiry_date,
+        //    IDataReader data = SqliteHelper.Instance.ExecuteReader(string.Format(@"SELECT a.id,b.goods_code,b.name,b.code,b.batch_number,b.birth_date,b.expire_date,
         //                                                                         a.fetch_type,b.remarks FROM surgery_orderdtl a LEFT JOIN goods b on a.goods_id=b.id 
         //                                                                         WHERE surgery_order_id = {0}", id));
         //    if (data == null)
@@ -122,7 +122,7 @@ namespace CFLMedCab.DAL
         //        entity[3] = data["code"];
         //        entity[4] = data["batch_number"];
         //        entity[5] = data["birth_date"];
-        //        entity[6] = data["expiry_date"];
+        //        entity[6] = data["expire_date"];
         //        entity[5] = data["fetch_type"];
         //        entity[6] = data["remarks"];
         //        dataTable.Rows.Add(entity);
