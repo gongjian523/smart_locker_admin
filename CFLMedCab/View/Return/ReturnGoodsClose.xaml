@@ -7,11 +7,9 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="900">
     <Grid Background="AliceBlue">
-        
-        
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -44,10 +42,18 @@
             <Grid x:Name="GridValue">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Label Content="入库明细" Margin="0,10" Grid.Row="0" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}"/>
-
+                <Border Grid.Row="0" Padding="10" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label Content="入库明细"/>
+                        <Label Content="入库明细"/>
+                        <Label Content="入库明细" />
+                        <Label Content="入库明细"/>
+                        <Label Content="入库明细" />
+                    </StackPanel>
+                </Border>
+         
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -66,7 +72,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <!--<ColumnDefinition Width="*"/>-->
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -79,11 +85,11 @@
                         <Grid Grid.Column="8" x:Name="column9"/>
                         <Grid Grid.Column="9" x:Name="column10"/>
                         <Grid Grid.Column="10" x:Name="column11"/>
-                        <Grid Grid.Column="11" x:Name="column12"/>
+                        <!--<Grid Grid.Column="11" x:Name="column12"/>-->
                     </Grid>
 
                     <Label Content="本次操作明细" Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="12" Height="30" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <ListView  VerticalAlignment="Bottom" Grid.Row="1"  ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" >
+                    <ListView  VerticalAlignment="top" Grid.Row="1"  ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}" />
@@ -92,11 +98,11 @@
                                 <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
                                 <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                                 <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column9,Path=ActualWidth}"/>
-                                <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column10,Path=ActualWidth}" />
-                                <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
-                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column12,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
+                                <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
+                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
 
                             </GridView>
                         </ListView.View>
@@ -104,8 +110,8 @@
                 </Grid>
             </Grid>
         </Border>
-        <Border Background="White" Margin="20,10,20,20" Grid.Row="2" Height="100">
-            <Grid Margin="20,10">
+        <Border Background="White" Padding="10" CornerRadius="{DynamicResource GRadius}"  Margin="20,10,20,20" Grid.Row="2" Height="100">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>
