@@ -103,9 +103,12 @@ namespace CFLMedCab.DAL
         /// <returns></returns>
         public List<GoodsDto> GetGoodsDto(List<GoodsDto> goodsDatas)
 		{
+			//转换为可支持的数组类型
+			var codeArray = goodsDatas.Select(it => it.code).ToArray();
+
 			//查询语句
 			return Db.Queryable<Goods>()
-				.Where(it => goodsDatas.Exists(goodsData => goodsData.code.Equals(it.code)))
+				.Where(it => codeArray.Contains(it.code))
 				.Select<GoodsDto>()
 				.OrderBy(it=>it.expiry_date, OrderByType.Asc)
 				.Mapper(it=> {
@@ -113,6 +116,7 @@ namespace CFLMedCab.DAL
 				}).ToList();
 
 		}
+
 
 		/// <summary>
 		/// 根据集合获取完整商品属性集合

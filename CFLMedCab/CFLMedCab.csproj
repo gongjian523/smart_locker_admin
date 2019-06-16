@@ -150,6 +150,8 @@
     <Compile Include="BLL\GoodsChageOrderdtlBll.cs" />
     <Compile Include="BLL\SurgeryOrderBll.cs" />
     <Compile Include="ConsoleManager.cs" />
+    <Compile Include="Controls\EditBox.cs" />
+    <Compile Include="Controls\EditBoxAdorner.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
@@ -297,6 +299,10 @@
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\Styles\Color.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Styles\ListviewStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
