@@ -15,8 +15,7 @@
         </Grid.RowDefinitions>
 
         <Border Background="White" Padding="10" CornerRadius="{DynamicResource GRadius}" Grid.Row="0" Margin="20,20,20,10" >
-
-            <Grid Margin="20">
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
                     <ColumnDefinition/>

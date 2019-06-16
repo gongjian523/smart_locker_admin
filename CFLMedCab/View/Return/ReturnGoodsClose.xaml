@@ -87,7 +87,7 @@
                         <!--<Grid Grid.Column="11" x:Name="column12"/>-->
                     </Grid>
 
-                    <ListView  Grid.Row="1"  ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView}">
+                    <ListView  Grid.Row="1"  ItemsSource="{Binding}" Name="listView"   Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}" />

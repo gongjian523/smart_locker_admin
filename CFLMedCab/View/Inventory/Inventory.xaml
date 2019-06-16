@@ -113,8 +113,9 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button x:Name="BtnConfirm" Content="确认"  Width="75" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
-                                                <Button x:Name="BtnDetail" Content="查看"  Width="75" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <Button x:Name="BtnConfirm" Content="确认"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <Button x:Name="BtnDetail" Content="查看"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}"   />
                                             </StackPanel>
                                         </DataTemplate>
 
@@ -124,30 +125,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <!--<ToggleButton Name="boldButton"  Width="25" FontWeight="Bold">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                            <Border x:Name="InnerBorder" Background="White" BorderBrush="Black" BorderThickness="1"/>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsChecked" Value="True">
-                                                    <Setter TargetName="InnerBorder" Property="Background">
-                                                        <Setter.Value>
-                                                            <ImageBrush ImageSource="/Resources/Images/btn-Return.png"/>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Setter TargetName="InnerBorder" Property="BorderThickness" Value="0"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>-->
-
+                  
                 </Grid>
             </Grid>
         </Border>
