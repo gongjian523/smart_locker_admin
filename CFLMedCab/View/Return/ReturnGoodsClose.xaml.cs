@@ -41,7 +41,7 @@ namespace CFLMedCab.View.Return
         private PickingSubOrderDto pickingSubOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
-        public ReturnGoodsClose(PickingSubOrderDto model,Hashtable hashtable)
+        public ReturnGoodsClose(PickingSubOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
             pickingSubOrderDto = model;
@@ -53,7 +53,7 @@ namespace CFLMedCab.View.Return
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
-            goodsDetails= pickingBll.GetPickingSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsDetails;
         }
 
@@ -64,7 +64,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            if (pickingBll.UpdatePickingStatus(pickingSubOrderDto.id, goodsDetails))
+                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
 
@@ -75,8 +76,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNotEndOperation(object sender, RoutedEventArgs e)
         {
-            if(pickingBll.UpdatePickingStatus(pickingSubOrderDto.id, goodsDetails))
-                EnterReturnGoodsDetailOpenEvent(this, new PickingSubOrderDto());
+            EnterReturnGoodsDetailOpenEvent(this, new PickingSubOrderDto());
             return;
         }
     }

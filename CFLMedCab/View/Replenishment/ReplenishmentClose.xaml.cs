@@ -41,7 +41,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         private ReplenishSubOrderDto replenishSubOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
-        public ReplenishmentClose(ReplenishSubOrderDto model,Hashtable hashtable)
+        public ReplenishmentClose(ReplenishSubOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
             //操作人
@@ -64,10 +64,11 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            if (replenishBll.UpdateReplenishStatus(replenishSubOrderDto.id, goodsDetails))
+                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
-        
+
         /// <summary>
         /// 继续操作
         /// </summary>
@@ -75,8 +76,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            if(replenishBll.UpdateReplenishStatus(replenishSubOrderDto.id,goodsDetails))
-                EnterReplenishmentDetailOpenEvent(this, new ReplenishSubOrderDto());
+            EnterReplenishmentDetailOpenEvent(this, new ReplenishSubOrderDto());
             return;
         }
     }
