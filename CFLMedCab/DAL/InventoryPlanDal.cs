@@ -9,8 +9,11 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DAL
 {
-    public class InventoryPlanDal : SqlSugarContext<InventoryPlan>
-    {
+
+
+
+    //public class InventoryPlanDal : SqlSugarContext<InventoryPlan>
+    //{
         ///// <summary>
         ///// 数据库没有表时创建
         ///// </summary>
@@ -69,5 +72,5 @@ namespace CFLMedCab.DAL
         //{
         //    return Convert.ToInt16(SqliteHelper.Instance.ExecuteScalar("SELECT last_insert_rowid();"));
         //}
-    }
+    //}
 }

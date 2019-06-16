@@ -152,6 +152,8 @@
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Controls\EditBox.cs" />
     <Compile Include="Controls\EditBoxAdorner.cs" />
+    <Compile Include="Converter\InventoryStatusStrConverter.cs" />
+    <Compile Include="Converter\InventoryTypeStrConverter.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
@@ -495,6 +497,7 @@
   <ItemGroup>
     <Resource Include="Resources\Images\OpenDoor.png" />
     <Resource Include="Resources\Images\CloseDoor.png" />
+    <Resource Include="Resources\Images\Inventorying.png" />
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup>

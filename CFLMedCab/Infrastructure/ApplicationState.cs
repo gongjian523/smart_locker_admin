@@ -29,6 +29,11 @@ namespace CFLMedCab.Infrastructure
 
         public static void SetValue(int key, object value)
         {
+            object sValue;
+
+            if (_values.TryGetValue(key, out sValue))
+                _values.Remove(key);
+
             _values.Add(key, value);
         }
 

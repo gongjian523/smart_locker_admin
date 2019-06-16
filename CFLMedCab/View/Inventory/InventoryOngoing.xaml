@@ -6,7 +6,15 @@
         xmlns:local="clr-namespace:CFLMedCab.View"
         mc:Ignorable="d"
         Width="960"   Height="540" >
-    <Grid Background="#000000" Opacity="0.1">
-         <Label Content="智能柜盘点中..." HorizontalAlignment="Left" Margin="100,144,0,0" VerticalAlignment="Top"/>
+    <Grid Height="245" Width="390">
+        <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
+            <StackPanel>
+                <Image Width="194" Height="128" HorizontalAlignment="Center" Margin="0,48,0,0" >
+                    <Image.Source>
+                        <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/Inventorying.png" />
+                    </Image.Source>
+                </Image>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

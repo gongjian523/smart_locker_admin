@@ -23,7 +23,7 @@ namespace CFLMedCab.View.Inventory
         public delegate void HidePopInventoryPlanHandler(object sender, RoutedEventArgs e);
         public event HidePopInventoryPlanHandler HidePopInventoryPlanEvent;
 
-        InventoryPlanDal inventoryPlanDal = new InventoryPlanDal();
+
         public InventoryPlanDetail()
         {
             InitializeComponent();
@@ -35,7 +35,7 @@ namespace CFLMedCab.View.Inventory
 
         private object GetDataTable()
         {
-            //inventoryPlanDal.GetAllInventoryPlan();
+
             throw new NotImplementedException();
         }
 
