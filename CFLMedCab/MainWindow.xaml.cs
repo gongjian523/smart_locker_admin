@@ -805,14 +805,14 @@ namespace CFLMedCab
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
 #if DEBUG
-            this.WindowState = WindowState.Normal;
+            this.WindowState = WindowState.Maximized;
             this.WindowStyle = WindowStyle.None;
-            this.ResizeMode = ResizeMode.CanMinimize;
+            this.ResizeMode = ResizeMode.NoResize;
            // this.Topmost = true;
             this.Left = 0.0;
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
-            this.Height = SystemParameters.PrimaryScreenHeight; 
+            this.Height = SystemParameters.PrimaryScreenHeight;
 #endif
         }
 
