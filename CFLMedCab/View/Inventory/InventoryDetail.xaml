@@ -5,8 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
+             xmlns:ctr="clr-namespace:CFLMedCab.Controls"
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              d:DesignHeight="450" d:DesignWidth="800">
-
+    <UserControl.Resources>
+        <Style x:Key="{x:Type ctr:EditBox}" TargetType="{x:Type ctr:EditBox}" >
+            <Setter Property="HorizontalAlignment" Value="Left"  />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ctr:EditBox}">
+                        <TextBlock x:Name="PART_TextBlockPart"  
+                     Text="{Binding Path=Value,RelativeSource = 
+                           {RelativeSource TemplatedParent}}">
+                        </TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <cvt:InventoryStatusStrConverter x:Key="InventoryStatusStrConverter"/>
+        <cvt:InventoryTypeStrConverter x:Key="InventoryTypeStrConverter"/>
+    </UserControl.Resources>
     <Grid  Background="AliceBlue">
         <Grid Margin="20">
             <Grid.RowDefinitions>
@@ -31,13 +49,13 @@
                     </Grid.ColumnDefinitions>
 
                     <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"  HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                    <Label Content="{}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
+                    <Label Content="{Binding code}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
                     <Label Content="盘点日期" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
                     <Label Content="盘点状态" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
                     <Label Content="盘点类型" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="盘点日期" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="盘点状态" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="盘点类型" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="{Binding create_time}" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="{Binding type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="{Binding status, Converter= {StaticResource InventoryStatusStrConverter} }" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
                 </Grid>
             </Border>
 
@@ -80,23 +98,29 @@
                         <ListView VerticalAlignment="Top" Grid.Row="1"   Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource DefaultListView}" >
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="商品码"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
-                                    <GridViewColumn Header="单品码" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="批号"  Width="{Binding ElementName=column4,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="失效期" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="领用属性" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="货位" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="账面库存" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="实际库存" Width="{Binding ElementName=column9,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="备注" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="商品名称"   DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="商品码"  DisplayMemberBinding="{Binding goods_code}" Width="{Binding ElementName=column2,Path=ActualWidth}" />
+                                    <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="批号"  DisplayMemberBinding="{Binding batch_number}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="账面库存" DisplayMemberBinding="{Binding book_inventory}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="实际库存"  Width="{Binding ElementName=column9,Path=ActualWidth}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <ctr:EditBox Height="25" Value="{Binding Path=actual_inventory}" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
                                 </GridView>
                             </ListView.View>
                         </ListView>
                     </Grid>
-                    <Button Content="新增实际库存商品"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Width="150" Margin="0,5,20,5"  Click="onAddProduct" HorizontalAlignment="Right"/>
-                    <Button Content="盘点确认"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,30,0" VerticalAlignment="Center" Width="75" Click="onConfirm"/>
-                    <Button Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="75" Click="onCancel"/>
+                    <Button x:Name="btnAddProduct" Content="新增实际库存商品"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Width="150" Margin="0,5,20,5"  Click="onAddProduct" HorizontalAlignment="Right"/>
+                    <Button x:Name="btnConfirm" Content="盘点确认"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,30,0" VerticalAlignment="Center" Width="75" Click="onConfirm"/>
+                    <Button x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="75" Click="onCancel"/>
                 </Grid>
             </Border>
             

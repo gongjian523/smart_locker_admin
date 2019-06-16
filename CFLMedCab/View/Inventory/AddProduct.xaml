@@ -25,16 +25,14 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-
             <Label Content="录入单品码" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.584,-0.333"/>
-
             <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" x:Name="column1"/>
-           
-                    <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="column1"/>
+
+                <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=id}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
