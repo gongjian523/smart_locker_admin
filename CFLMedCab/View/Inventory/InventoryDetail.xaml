@@ -95,7 +95,7 @@
                             <Grid Grid.Column="8" x:Name="column9"/>
                             <Grid Grid.Column="9" x:Name="column10"/>
                         </Grid>
-                        <ListView VerticalAlignment="Top" Grid.Row="1"   Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource DefaultListView}" >
+                        <ListView VerticalAlignment="Top" Grid.Row="1"  ItemsSource="{Binding}"  Name="goodsDtllistView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource DefaultListView}" >
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="商品名称"   DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>

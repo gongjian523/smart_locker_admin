@@ -104,12 +104,34 @@ namespace CFLMedCab.BLL
 		}
 
         /// <summary>
-        /// 获取盘点所有数据
+        /// 获取盘点所有数据(Hashtable)
         /// </summary>
         /// <returns></returns>
         public List<GoodsDto> GetInvetoryGoodsDto(Hashtable goodsEpsCollect)
         {
             return GoodsDal.GetGoodsDto(goodsEpsCollect);
         }
+
+
+        /// <summary>
+        /// 获取盘点所有数据(HashSet)
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsDto> GetInvetoryGoodsDto(HashSet<string> goodsEpsCollect)
+        {
+            return GoodsDal.GetGoodsDto(goodsEpsCollect);
+        }
+
+        /// <summary>
+        /// 通过单品码查询商品信息是否存在
+        /// </summary>
+        /// <returns></returns>
+        public bool IsGoodsInfoExsits(string code)
+        {
+            HashSet<string> hs = new HashSet<string>();
+            hs.Add(code);
+            return GoodsDal.GetGoodsDto(hs).Count> 0;
+        }
+
     }
 }

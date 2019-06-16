@@ -123,13 +123,30 @@ namespace CFLMedCab.BLL
             return inventoryDal.GetInventoryDetailsByInventoryId(invertoryOrderId);
         }
 
+
+        /// <summary>
+        /// 查询单品码是否在一个库存单中
+        /// </summary>
+        /// <returns></returns>
+        public bool IsGoodsInInventoryOrder(int invertoryOrderId, string code)
+        {
+            var list = inventoryDal.GetInventoryDetailsByInventoryId(invertoryOrderId);
+            return (list.Where(item => item.code == code).ToList().Count > 0);
+        }
+
         /// <summary>
         /// 更新盘点记录详情
         /// </summary>
         /// <returns></returns>
         public void UpdateInventoryDetails(List<InventoryOrderdtl> list)
         {
-            inventoryDal.UpdateInventoryDetails(list);
+            foreach(var item in list)
+            {
+                if (item.id == 0)
+                    inventoryDal.InsertInventoryDetails(item);
+                else
+                    inventoryDal.UpdateInventoryDetails(item);
+            }
         }
 
         /// <summary>
