@@ -93,10 +93,10 @@ namespace CFLMedCab.Model
     public class InventoryDetailPara : InventoryOrder
     {
         /// <summary>
-        /// 盘点编号
+        /// 按钮的类型
         /// </summary>
         /// 0 确认， 1查询详情
-        public int type { get; set; }
+        public int btnType { get; set; }
     }
 
 }

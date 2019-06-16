@@ -30,17 +30,22 @@ namespace CFLMedCab.View.Inventory
         public event EnterAddProductHandler EnterAddProductEvent;
 
         InventoryBll inventoryBll = new InventoryBll();
+        InventoryDetailPara order = new InventoryDetailPara();
+        List<InventoryOrderdtl> dtlList = new List<InventoryOrderdtl>();
 
         public InventoryDetail(InventoryDetailPara para)
         {
             InitializeComponent();
 
-            //inventoryBll.GetInventoryOrder
+            order = para;
+            DataContext = order;
 
+            dtlList = inventoryBll.GetInventoryDetailsByInventoryId(para.id);
+            listView.DataContext = dtlList;
 
-
-
-
+            btnAddProduct.Visibility = para.btnType == 0 ? Visibility.Visible : Visibility.Hidden;
+            btnCancel.Visibility = para.btnType == 0 ? Visibility.Visible : Visibility.Hidden;
+            btnConfirm.Visibility = para.btnType == 0 ? Visibility.Visible : Visibility.Hidden;
         }
 
         /// <summary>

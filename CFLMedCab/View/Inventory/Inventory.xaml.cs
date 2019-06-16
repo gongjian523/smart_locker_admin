@@ -4,6 +4,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Inventory;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections;
@@ -123,19 +124,15 @@ namespace CFLMedCab.View.Inventory
         {
             Button btnItem = sender as Button;
 
-            int type = 0;
-
-            if (btnItem.Name == "BtnDetail")
-                type = 1;
-
             int id = (int)btnItem.CommandParameter;
 
-            this.listView.Items.Refresh();
+            InventoryOrderDto orderDto = inventoryOrderDtos.Where(item => item.id == (int)btnItem.CommandParameter).ToList().First();
+            InventoryDetailPara para = AutoMapperHelper.MapTo<InventoryDetailPara>(orderDto);
+            para.btnType = btnItem.Name == "BtnDetail" ? 1 : 0;
 
-            EnterInventoryDetailEvent(this, new InventoryDetailPara {
-                id = id,
-                type = type
-            });
+            EnterInventoryDetailEvent(this, para);
+
+            this.listView.Items.Refresh();
 
         }
 
