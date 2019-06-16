@@ -1,4 +1,6 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -29,26 +31,21 @@ namespace CFLMedCab.View.ReplenishmentOrder
         //public ReplenishmentDetail(ReplenishOrder model)
 
         //进入补货单详情开门状态页面
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubShortOrder e);
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubOrderDto e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         //进入补货单列表页面
         public delegate void EnterReplenishmentHandler(object sender, RoutedEventArgs e);
         public event EnterReplenishmentHandler EnterReplenishmentEvent;
-
-        ReplenishSubShortOrder entity = new ReplenishSubShortOrder();
-        public ReplenishmentDetail(ReplenishSubShortOrder model)
+        ReplenishBll replenishBll = new ReplenishBll();
+        ReplenishSubOrderDto entity = new ReplenishSubOrderDto();
+        public ReplenishmentDetail(ReplenishSubOrderDto model)
         {
             InitializeComponent();
-            //操作人
-            //principal.Content = model.principal_id;
-            //principal.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-            //工单号
-            workOrderNum.Content = model.id;
-            //listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
             entity = model;
+            listView.DataContext = replenishBll.GetReplenishSubOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_sub_orderid = model.id }).Data;
         }
-        
+
         /// <summary>
         /// 返回工单列表页
         /// </summary>

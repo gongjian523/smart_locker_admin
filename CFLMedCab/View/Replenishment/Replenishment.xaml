@@ -9,27 +9,14 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
-        <DataTemplate x:Key="replenishOrderView">
+        <DataTemplate x:Key="replenishOrder">
             <Grid Margin="10,0,10,10" Background="White" Name="data" Height="100">
                 <Label Content="工单编号：" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                <Label Margin="80,10,579,179" Content="{Binding id}"/>
+                <Label Margin="80,10,579,179" Content="{Binding replenish_order_code}" Background="AliceBlue"/>
                 <Label Content="本柜拣货商品数量：" HorizontalAlignment="Left" Margin="186,10,0,0" VerticalAlignment="Top"/>
-                <Label Margin="309,10,334,179" Content="{Binding unDoneNum}"/>
+                <Label Margin="309,10,334,179" Content="{Binding not_picked_goods_num}"/>
                 <Label Content="派发时间：" HorizontalAlignment="Left" Margin="553,10,0,0" VerticalAlignment="Top"/>
-                <Label Margin="623,10,0,179" Content="{Binding create_time}"/>
-                <!--<ListView Margin="10,0,10,72" VerticalAlignment="Bottom" ItemsSource="{Binding replenishSubOrderdtls}" HorizontalAlignment="Center" MinWidth="756" MinHeight="100">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="108"/>
-                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}" Width="108"/>
-                            <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}" Width="108"/>
-                            <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}" Width="108"/>
-                            <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date}" Width="108"/>
-                            <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="108"/>
-                            <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="108"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>-->
+                <Label Margin="623,10,0,179" Content="{Binding distribute_time}"/>
                 <Button Content="查看详情" Name="Retract"  BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" Tag="{Binding}" HorizontalAlignment="Left" Margin="500,50,0,0" VerticalAlignment="Top" Width="114" RenderTransformOrigin="0.51,-0.507" Click="EnterDetail_Click"/>
                 <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Tag="{Binding}" HorizontalAlignment="Left" Margin="620,50,0,0" VerticalAlignment="Top"  Click="EnterDetailOpen_Click"/>
             </Grid>
@@ -42,15 +29,9 @@
         </Grid.RowDefinitions>
         <Label Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top" FontSize="16" />
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
-            <ItemsControl ItemTemplate="{StaticResource replenishOrderView}" ItemsSource="{Binding ReplenishOrderViewList, UpdateSourceTrigger=PropertyChanged}"/>
+            <ItemsControl ItemTemplate="{StaticResource replenishOrder}" ItemsSource="{Binding ReplenishOrderViewList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
         <Grid />
-        <!--<ListBox  Margin="21,50,19,0" x:Name="listView" ItemsSource="{Binding}" VerticalAlignment="Top" Height="400" MinWidth="753" Background="AliceBlue">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>-->
         <Grid x:Name="ContentView" Grid.RowSpan="2">
             <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
         </Grid>

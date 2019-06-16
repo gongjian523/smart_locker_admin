@@ -1,4 +1,6 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO.Picking;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -23,23 +25,24 @@ namespace CFLMedCab.View.Return
     public partial class ReturnGoodsClose : UserControl
     {
         //进入补货单详情开门状态页面
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubShortOrder e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubOrderDto e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
-
-        //PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
-        public ReturnGoodsClose(PickingOrder model)
+        PickingBll pickingBll = new PickingBll();
+        private PickingSubOrderDto pickingSubOrderDto;
+        public ReturnGoodsClose(PickingSubOrderDto model)
         {
             InitializeComponent();
+            pickingSubOrderDto = model;
             //操作人
-            principal.Content = model.principal_id;
-            //工单号
-            workOrderNum.Content = model.id;
-            lDate.Content= DateTime.Now.ToString("yyyy年MM月dd日");
+            //principal.Content = model.principal_id;
+            ////工单号
+            //workOrderNum.Content = model.id;
+            //lDate.Content= DateTime.Now.ToString("yyyy年MM月dd日");
             //listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
         }
 
@@ -60,7 +63,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNotEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsDetailOpenEvent(this, new PickingSubShortOrder());
+            EnterReturnGoodsDetailOpenEvent(this, new PickingSubOrderDto());
         }
     }
 }
