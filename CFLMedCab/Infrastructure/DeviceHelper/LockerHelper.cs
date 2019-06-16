@@ -247,7 +247,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// </summary>
 		public class DelegateGetMsg
 		{
-
+            public object userData { get; set; }
 			/// <summary>
 			/// 语音对象
 			/// </summary>

@@ -1,4 +1,6 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO.Picking;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -25,24 +27,24 @@ namespace CFLMedCab.View.Return
     public partial class ReturnGoodsDetail : UserControl
     {
         //进入拣货单详情开门状态页面
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubShortOrder e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubOrderDto e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
         //进入拣货单列表页面
         public delegate void EnterReturnGoodsHandler(object sender, RoutedEventArgs e);
         public event EnterReturnGoodsHandler EnterReturnGoodsEvent;
 
-        //PickingSubShortOrder entity = new PickingSubShortOrder();
-        //PickingSubOrderdtlDal pickingSubOrderdtlDal = new PickingSubOrderdtlDal();
-        public ReturnGoodsDetail(PickingSubShortOrder model)
+        private PickingSubOrderDto pickingSubOrderDto;
+        PickingBll pickingBll = new PickingBll();
+        public ReturnGoodsDetail(PickingSubOrderDto model)
         {
             InitializeComponent();
+            pickingSubOrderDto = model;
             //操作人
-            //principal.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
-            workOrderNum.Content = model.id;
-            //listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
-            //entity = model;
+            orderNum.Content = model.id;
+            listView.DataContext = pickingBll.GetPickingSubOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id });
         }
 
         /// <summary>
@@ -62,7 +64,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnerDetailOpen(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsDetailOpenEvent(this, new PickingSubShortOrder());
+            EnterReturnGoodsDetailOpenEvent(this, pickingSubOrderDto);
         }
     }
 }

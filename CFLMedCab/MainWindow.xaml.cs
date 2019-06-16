@@ -33,6 +33,8 @@ using CFLMedCab.Infrastructure;
 using System.Speech.Synthesis;
 using CFLMedCab.View.Fetch;
 using System.Collections;
+using CFLMedCab.DTO.Replenish;
+using CFLMedCab.DTO.Picking;
 using CFLMedCab.Test;
 using CFLMedCab.DTO.Goodss;
 
@@ -424,7 +426,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentDetail(object sender, ReplenishSubShortOrder e)
+        private void onEnterReplenishmentDetail(object sender, ReplenishSubOrderDto e)
         {
             ReplenishmentDetail replenishmentDetail = new ReplenishmentDetail(e);
             replenishmentDetail.EnterReplenishmentDetailOpenEvent += new ReplenishmentDetail.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
@@ -438,7 +440,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentDetailOpen(object sender, ReplenishSubShortOrder e)
+        private void onEnterReplenishmentDetailOpen(object sender, ReplenishSubOrderDto e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -453,6 +455,7 @@ namespace CFLMedCab
 
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
         }
 
@@ -464,6 +467,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReplenishmentCloseEvent(object sender, bool isClose)
         {
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
             if (!isClose)
@@ -473,10 +477,10 @@ namespace CFLMedCab
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
+            ReplenishSubOrderDto replenishSubOrderDto = (ReplenishSubOrderDto)delegateGetMsg.userData;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(new ReplenishOrder());
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -505,7 +509,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnGoodsDetail(object sender, PickingSubShortOrder e)
+        private void onEnterReturnGoodsDetail(object sender, PickingSubOrderDto e)
         {
             ReturnGoodsDetail returnGoodsDetail = new ReturnGoodsDetail(e);
             returnGoodsDetail.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsDetail.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
@@ -520,7 +524,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnGoodsDetailOpen(object sender, PickingSubShortOrder e)
+        private void onEnterReturnGoodsDetailOpen(object sender, PickingSubOrderDto e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -534,6 +538,7 @@ namespace CFLMedCab
             PopFrame.Navigate(openCabinet);
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+               delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
         }
 
@@ -545,6 +550,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnGoodsCloseEvent(object sender, bool isClose)
         {
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
             if (!isClose)
@@ -557,7 +563,7 @@ namespace CFLMedCab
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(new PickingOrder());
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingSubOrderDto)delegateGetMsg.userData);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
 

@@ -6,21 +6,46 @@
         xmlns:local="clr-namespace:CFLMedCab.View"
         mc:Ignorable="d"
         Height="350" Width="600" >
-    <Grid  Background="White">
-        <Label Content="盘点计划" HorizontalAlignment="Left" Margin="38,24,0,0" VerticalAlignment="Top"/>
+    <Grid  Background="White" Margin="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="{StaticResource rowHeight30}"/>
+            <RowDefinition/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
 
-        <ListView Height="152" Margin="123,0,138,121" VerticalAlignment="Bottom" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Width="331">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="编号" DisplayMemberBinding="{Binding Path=id}"  Width="100" />
-                    <GridViewColumn Header="盘点时间" DisplayMemberBinding="{Binding Path=inventory_time}" Width="100"/>
-                    <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Path=status}" Width="100"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
-        <Button Content="保存" HorizontalAlignment="Left" Margin="152,275,0,0" VerticalAlignment="Top" Width="75" Click="onSave"/>
-        <Button Content="取消 " HorizontalAlignment="Left" Margin="326,275,0,0" VerticalAlignment="Top" Width="75" Click="onCancel"/>
-        <Button Content="新增计划 " HorizontalAlignment="Left" Margin="446,228,0,0" VerticalAlignment="Top" Width="75" Click="onAddPlan"/>
+        <Label Content="盘点计划" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+
+        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" x:Name="column1"/>
+                <Grid Grid.Column="1" x:Name="column2"/>
+                <Grid Grid.Column="2" x:Name="column3"/>
+            </Grid>
+            <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="编号" DisplayMemberBinding="{Binding Path=id}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                        <GridViewColumn Header="盘点时间" DisplayMemberBinding="{Binding Path=inventory_time}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                        <GridViewColumn Header="状态" DisplayMemberBinding="{Binding Path=status}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Grid>
+
+        <Button Content="新增计划 " Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75"  Click="onAddPlan" Margin="0,5,60,5"/>
+        <Button Content="保存"  Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="onSave" Margin="0,5,30,5"/>
+        <Button Content="取消 " Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="onCancel" Margin="30,5,0,5"/>
+
 
     </Grid>
 </UserControl>

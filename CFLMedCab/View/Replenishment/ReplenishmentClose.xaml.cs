@@ -1,6 +1,11 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO.Goodss;
+using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,23 +28,24 @@ namespace CFLMedCab.View.ReplenishmentOrder
     public partial class ReplenishmentClose : UserControl
     {
         //进入补货单详情开门状态页面
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubShortOrder e);
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubOrderDto e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
-
-        //ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
-        public ReplenishmentClose(ReplenishOrder model)
+        
+        ReplenishBll replenishBll = new ReplenishBll();
+        public ReplenishmentClose(ReplenishSubOrderDto model)
         {
             InitializeComponent();
             //操作人
-            principal.Content = model.principal_id;
-            //工单号
-            workOrderNum.Content = model.id;
-            lDate.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            //listView.DataContext = replenishSubOrderdtlDal.GetReplenishSubOrderdtl(model.id);
+            //principal.Content = model.principal_id;
+            ////工单号
+            //workOrderNum.Content = model.id;
+            //lDate.Content = DateTime.Now.ToString("yyyy年MM月dd日");
+            object oo = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            listView.DataContext = replenishBll.UpdateReplenishStatus(model.id, new List<GoodsDto>());
         }
 
         /// <summary>
@@ -51,16 +57,15 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             EnterPopCloseEvent(this, null);
         }
-
+        
         /// <summary>
         /// 继续操作
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onNotEndOperation(object sender, RoutedEventArgs e)
+        private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterReplenishmentDetailOpenEvent(this, new ReplenishSubShortOrder());
+            EnterReplenishmentDetailOpenEvent(this, new ReplenishSubOrderDto());
         }
-
     }
 }

@@ -1,4 +1,6 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DTO.Picking;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +23,17 @@ namespace CFLMedCab.View.Return
     /// </summary>
     public partial class ReturnGoodsDetailOpen : UserControl
     {
-        public ReturnGoodsDetailOpen(PickingSubShortOrder mode)
+        private PickingSubOrderDto pickingSubOrderDto;
+        PickingBll pickingBll = new PickingBll();
+        public ReturnGoodsDetailOpen(PickingSubOrderDto model)
         {
             InitializeComponent();
+            pickingSubOrderDto = model;
+            //操作人
+            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            //工单号
+            orderNum.Content = model.id;
+            listView.DataContext = pickingBll.GetPickingSubOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id });
         }
     }
 }

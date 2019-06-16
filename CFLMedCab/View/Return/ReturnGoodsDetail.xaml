@@ -5,40 +5,80 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="500" d:DesignWidth="900">
     <Grid Background="AliceBlue">
-        <Grid Margin="10,46,10,284" Background="White" Height="120">
-            <Label Content="业务类型" Margin="10,10,701,87" FontSize="9"/>
-            <Label Name="lType" Content="退货出库" Margin="10,38,701,56" FontSize="14"/>
-            <Label Content="操作人" HorizontalAlignment="Left" Margin="13,69,0,0" VerticalAlignment="Top" FontSize="9"/>
-            <Label Content="Label" Name="principal" HorizontalAlignment="Left" Margin="10,95,0,0" VerticalAlignment="Top" Height="25"/>
-            <Label Content="上架工单号" HorizontalAlignment="Left" Margin="173,69,0,0" VerticalAlignment="Top"  FontSize="9"/>
-            <Label Content="Label" Name="workOrderNum" HorizontalAlignment="Left" Margin="173,95,0,0" VerticalAlignment="Top" Height="25"/>
-        </Grid>
-        <Grid Margin="10,182,10,63" Background="White">
-            <Label Content="本柜待拣货商品" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-            <ListView Margin="10,0,10,51" VerticalAlignment="Bottom" Name="listView" ItemsSource="{Binding}" HorizontalAlignment="Center" MinWidth="756" MinHeight="100">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="70"/>
-                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}" Width="70"/>
-                        <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}" Width="70"/>
-                        <GridViewColumn Header="批号" DisplayMemberBinding="{Binding position}" Width="70"/>
-                        <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date}" Width="70"/>
-                        <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding fetch_type}" Width="70"/>
-                        <GridViewColumn Header="货位" DisplayMemberBinding="{Binding remarks}" Width="70"/>
-                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding position}" Width="75"/>
-                        <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding expire_date}" Width="75"/>
-                        <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding fetch_type}" Width="75"/>
-                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="75"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
-        <Button BorderBrush="AliceBlue"  Content="返回>>" Foreground="#619CF8" FontSize="15" HorizontalAlignment="Left" Margin="10,12,0,0" VerticalAlignment="Top" Width="75" Click="onBackward"/>
-        <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Tag="{Binding}" HorizontalAlignment="Left" Margin="320,400,320,10" VerticalAlignment="Top"  Click="onEnerDetailOpen"/>
-        <Grid x:Name="ContentView">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,0"/>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="3*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Content="返回>>" Grid.Row="0" Click="onBackward" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" Height="30" Width="60"/>
+            <StackPanel Background="White" Grid.Row="1" Margin="0,20,20,10" >
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="60"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Content="业务类型" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+                    <Label Content="退货出库" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
+                    <Label  Grid.Column="0" Grid.Row="2" Content="操作人" Foreground="#666666" HorizontalAlignment="Left"  VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label  Grid.Column="0" Grid.Row="3" Content="操作人" Name="operator" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label  Grid.Column="1" Grid.Row="2" Content="上架工单号" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label  Grid.Column="1" Grid.Row="3" Content="上架工单号" Name="orderNum" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                </Grid>
+            </StackPanel>
+
+            <StackPanel Background="White" Grid.Row="2" Margin="0,10,20,20">
+                <Grid Margin="20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid  x:Name="myGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" x:Name="column1"/>
+                        <Grid Grid.Column="1" x:Name="column2"/>
+                        <Grid Grid.Column="2" x:Name="column3"/>
+                        <Grid Grid.Column="3" x:Name="column4"/>
+                        <Grid Grid.Column="4" x:Name="column5"/>
+                        <Grid Grid.Column="5" x:Name="column6"/>
+                        <Grid Grid.Column="6" x:Name="column7"/>
+                    </Grid>
+                    <Label Content="本柜待上架商品" Margin="0,10" Grid.Row="0" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}"/>
+                    <ListView VerticalAlignment="Top" Grid.Row="1"   ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_code}"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
+                                <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding fetch_type}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="货位" DisplayMemberBinding="{Binding total_num}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding wait_num}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding stock_num}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+                <Button Content="确认开柜"  Grid.Row="2" Grid.ColumnSpan="3" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="onEnerDetailOpen"/>
+                <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
+                    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
+                </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

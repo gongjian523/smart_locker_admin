@@ -170,10 +170,8 @@
     <Compile Include="DTO\Goodss\GoodsDto.cs" />
     <Compile Include="DTO\Inventory\InventoryOrderDto.cs" />
     <Compile Include="DTO\Picking\PickingSubOrderdtlDto.cs" />
-    <Compile Include="DTO\Picking\PickingSubOrderdtlOperateDto.cs" />
     <Compile Include="DTO\Picking\PickingSubOrderDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
-    <Compile Include="DTO\Replenish\ReplenishSubOrderdtlOperateDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
     <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
@@ -203,6 +201,7 @@
     <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />
     <Compile Include="Model\LoginStatus.cs" />

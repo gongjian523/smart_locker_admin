@@ -8,42 +8,40 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="AliceBlue">
         <Grid Margin="20">
-            
-       
-        <Grid.RowDefinitions>
+            <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="3*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Button Content="返回>>" Grid.Row="0" Click="Return" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" Height="30" Width="60"/>
-        <StackPanel Background="White" Grid.Row="1" Margin="0,20,20,10" >
-            <Grid Margin="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="60"></RowDefinition>
-                    <RowDefinition Height="30"></RowDefinition>
-                    <RowDefinition Height="30"></RowDefinition>
-               </Grid.RowDefinitions>
+                <RowDefinition Height="3*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Button Content="返回>>" Grid.Row="0" Click="Return" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" Height="30" Width="60"/>
+            <StackPanel Background="White" Grid.Row="1" Margin="0,20,20,10" >
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="60"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="30"></RowDefinition>
+                    </Grid.RowDefinitions>
 
-                <Label Content="手术领用单号" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
-                <Label Content="Label" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
-                <Label  Grid.Column="0" Grid.Row="2" Content="使用状态" Foreground="#666666" HorizontalAlignment="Left"  VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                <Label  Grid.Column="0" Grid.Row="3" Content="领用中" Name="state" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                <Label  Grid.Column="1" Grid.Row="2" Content="手术时间" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                <Label  Grid.Column="1" Grid.Row="3" Content="手术时间" Name="time" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-            </Grid>
-        </StackPanel>
+                    <Label Content="手术领用单号" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
+                    <Label Content="Label" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
+                    <Label  Grid.Column="0" Grid.Row="2" Content="使用状态" Foreground="#666666" HorizontalAlignment="Left"  VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label  Grid.Column="0" Grid.Row="3" Content="领用中" Name="state" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label  Grid.Column="1" Grid.Row="2" Content="手术时间" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label  Grid.Column="1" Grid.Row="3" Content="手术时间" Name="time" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                </Grid>
+            </StackPanel>
 
-        <StackPanel Background="White" Grid.Row="2" Margin="0,10,20,20">
+            <StackPanel Background="White" Grid.Row="2" Margin="0,10,20,20">
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
-                       
+
                     </Grid.RowDefinitions>
                     <Grid  x:Name="myGrid">
                         <Grid.ColumnDefinitions>
@@ -79,9 +77,9 @@
                     </ListView>
                 </Grid>
                 <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
-            </Grid>
-        </StackPanel>
+                    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
+                </Grid>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

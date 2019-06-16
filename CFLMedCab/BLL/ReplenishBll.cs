@@ -5,6 +5,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -63,7 +64,7 @@ namespace CFLMedCab.BLL
 		/// <param name="replenishSubOrderid"></param>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<ReplenishSubOrderdtlOperateDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+		public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 	
@@ -75,9 +76,8 @@ namespace CFLMedCab.BLL
 				}, out int totalCount);
 
 
-			var datasDto = goodsDtos.MapToList<GoodsDto, ReplenishSubOrderdtlOperateDto>();
 
-			datasDto.ForEach(it =>
+			goodsDtos.ForEach(it =>
 			{
 
 				//入库
@@ -107,12 +107,12 @@ namespace CFLMedCab.BLL
 			});
 
 			//统计数量
-			operateGoodsNum = datasDto.Count;
-			storageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
-			outStorageGoodsExNum = datasDto.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列
-			return datasDto.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
+			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
 		}
 
 
@@ -123,7 +123,7 @@ namespace CFLMedCab.BLL
 		/// <param name="replenishSubOrderid">上架单id</param>
 		/// <param name="datasDto">当前操作数据dto</param>
 		/// <returns></returns>
-		public bool UpdateReplenishStatus(int replenishSubOrderid, List<ReplenishSubOrderdtlOperateDto> datasDto)
+		public bool UpdateReplenishStatus(int replenishSubOrderid, List<GoodsDto> datasDto)
 		{
 
 			//获取当前工单商品

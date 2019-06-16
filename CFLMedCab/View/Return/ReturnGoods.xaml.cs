@@ -1,4 +1,6 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO.Picking;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -25,12 +27,12 @@ namespace CFLMedCab.View.Return
     {
         //PickingOrderDal pickingOrderDal = new PickingOrderDal();
 
-        public delegate void EnterReturnGoodsDetailHandler(object sender, PickingSubShortOrder e);
+        public delegate void EnterReturnGoodsDetailHandler(object sender, PickingSubOrderDto e);
         public event EnterReturnGoodsDetailHandler EnterReturnGoodsDetailEvent;
 
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubShortOrder e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubOrderDto e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
-
+        PickingBll pickingBll = new PickingBll();
         public ReturnGoods()
         {
             InitializeComponent();
@@ -41,8 +43,8 @@ namespace CFLMedCab.View.Return
 
         //private ObservableCollection<PickingOrder> _pickingOrderView = new ObservableCollection<PickingOrder>();
         //public ObservableCollection<PickingOrder> PickingOrderList
-        private ObservableCollection<PickingSubShortOrder> _pickingOrderView = new ObservableCollection<PickingSubShortOrder>();
-        public ObservableCollection<PickingSubShortOrder> PickingOrderList
+        private ObservableCollection<PickingSubOrderDto> _pickingOrderView = new ObservableCollection<PickingSubOrderDto>();
+        public ObservableCollection<PickingSubOrderDto> PickingOrderList
         {
             get
             {
@@ -60,7 +62,7 @@ namespace CFLMedCab.View.Return
         private void InitData()
         {
             PickingOrderList.Clear();
-            List<PickingSubShortOrder> pickingOrders =new List<PickingSubShortOrder> { new PickingSubShortOrder { id=1,create_time=DateTime.Now,unDoneNum=20} };
+            List<PickingSubOrderDto> pickingOrders = pickingBll.GetPickingSubOrderDto(new APO.BasePageDataApo()).Data;
             pickingOrders.ForEach(pickingOrder => PickingOrderList.Add(pickingOrder));
         }
 
@@ -71,7 +73,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnterDetail(object sender, RoutedEventArgs e)
         {
-            PickingSubShortOrder pickingSubShortOrder = (PickingSubShortOrder)((Button)sender).Tag;
+            PickingSubOrderDto pickingSubShortOrder = (PickingSubOrderDto)((Button)sender).Tag;
             EnterReturnGoodsDetailEvent(this, pickingSubShortOrder);
         }
 
@@ -82,7 +84,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnterDetailOpen(object sender, RoutedEventArgs e)
         {
-            PickingSubShortOrder pickingSubShortOrder = (PickingSubShortOrder)((Button)sender).Tag;
+            PickingSubOrderDto pickingSubShortOrder = (PickingSubOrderDto)((Button)sender).Tag;
             EnterReturnGoodsDetailOpenEvent(this, pickingSubShortOrder);
         }
     }

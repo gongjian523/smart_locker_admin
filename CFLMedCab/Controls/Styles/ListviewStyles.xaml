@@ -49,6 +49,7 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
                         </MultiTrigger>
+                        
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
@@ -62,24 +63,24 @@
                         <GridViewRowPresenter VerticalAlignment="Center" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
                     <ControlTemplate.Triggers>
+                        <Trigger Property="ListBox.AlternationIndex" Value="1">
+                            <Setter Property="Background" Value="{StaticResource AlternationColor}"/>
+                        </Trigger>
                         <Trigger Property="IsSelected" Value="True">
-                            <Setter Property="Background" Value="#457EFF"/>
+                            <Setter Property="Background" Value="{StaticResource SelectedColor}"/>
                             <!--<Setter Property="BorderThickness" TargetName="Bd" Value="2"></Setter>-->
                             <!--<Setter Property="BorderBrush" TargetName="Bd" Value="#FF866C"></Setter>-->
                         </Trigger>
-                        <!--<Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="#FFEAE4"/>
-                            --><!--<Setter Property="BorderThickness" TargetName="Bd" Value="2"></Setter>-->
-                            <!--<Setter Property="BorderBrush" TargetName="Bd" Value="#FFEAE4"></Setter>--><!--
-                        </Trigger>-->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="{StaticResource MouseOverColor}"/>
+                            <!--<Setter Property="BorderThickness" TargetName="Bd" Value="2"></Setter>
+                            <Setter Property="BorderBrush" TargetName="Bd" Value="#FFEAE4"></Setter>-->
+                        </Trigger>
                         <Trigger Property="Height" Value="Auto">
                             <Setter Property="MinHeight" Value="35" />
                         </Trigger>
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.5"/>
-                        </Trigger>
-                        <Trigger Property="ListBox.AlternationIndex" Value="1">
-                            <Setter Property="Background" Value="#ECECEC"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -87,7 +88,7 @@
         </Setter>
     </Style>
     <Style TargetType="{x:Type GridViewColumnHeader}">
-        <Setter Property="Background" Value="#D8E7FF" />
+        <Setter Property="Background" Value="{StaticResource GListColor}" />
         <Setter Property="Template" >
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
@@ -128,11 +129,11 @@
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" TargetName="HeaderBorder" Value="#D8E7FF"/>
+                            <Setter Property="Background" TargetName="HeaderBorder" Value="{StaticResource GListColor}"/>
                             <Setter Property="Background" TargetName="PART_HeaderGripper" Value="Transparent"/>
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" TargetName="HeaderBorder" Value="#D8E7FF"/>
+                            <Setter Property="Background" TargetName="HeaderBorder" Value="{StaticResource GListColor}"/>
                             <Setter Property="Visibility" TargetName="PART_HeaderGripper" Value="Hidden"/>
                         </Trigger>
                         <Trigger Property="Height" Value="Auto">
@@ -141,6 +142,7 @@
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter Property="Opacity" Value="0.5"/>
                         </Trigger>
+                      
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
