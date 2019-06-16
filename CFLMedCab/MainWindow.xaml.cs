@@ -810,7 +810,7 @@ namespace CFLMedCab
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
 #if DEBUG
-            this.WindowState = WindowState.Normal;
+            this.WindowState = WindowState.Maximized;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.NoResize;
            // this.Topmost = true;
@@ -818,7 +818,6 @@ namespace CFLMedCab
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
             this.Height = SystemParameters.PrimaryScreenHeight;
-            logImg.Width = SystemParameters.PrimaryScreenWidth;
 #endif
         }
 
