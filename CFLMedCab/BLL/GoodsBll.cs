@@ -67,33 +67,23 @@ namespace CFLMedCab.BLL
 		public List<GoodsDto> GetCompareSimpleGoodsDto(Hashtable preGoodsEpsCollect, Hashtable afterGoodsEpsCollect)
 		{
 
-			var goodsDtos = new List<GoodsDto>();
+            HashSet<string> preGoodsEpsHashSet = new HashSet<string>();
 
-			foreach (string currentEps in afterGoodsEpsCollect.Values)
+            HashSet<string> afterGoodsEpsHashSet = new HashSet<string>();
+
+            foreach (HashSet<string> currentEps in preGoodsEpsCollect.Values)
+            {
+
+                preGoodsEpsHashSet.UnionWith(currentEps);
+
+            }
+
+            foreach (HashSet<string> currentEps in afterGoodsEpsCollect.Values)
 			{
-				if (!preGoodsEpsCollect.ContainsValue(currentEps))
-				{
-					goodsDtos.Add(new GoodsDto
-					{
-						code = currentEps,
-						operate_type = 1,
-					});
-				}
-			}
+                afterGoodsEpsHashSet.UnionWith(currentEps);
+            }
 
-			foreach (string currentEps in preGoodsEpsCollect.Values)
-			{
-				if (!afterGoodsEpsCollect.ContainsValue(currentEps))
-				{
-					goodsDtos.Add(new GoodsDto
-					{
-						code = currentEps,
-						operate_type = 0,
-					});
-				}
-			}
-
-			return goodsDtos;
+			return GetCompareSimpleGoodsDto(preGoodsEpsHashSet, afterGoodsEpsHashSet);
 		}
 
 		/// <summary>

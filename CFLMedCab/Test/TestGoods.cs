@@ -19,6 +19,11 @@ namespace CFLMedCab.Test
 
         public void AddGoodTest()
         {
+            if (GoodsDal.GetGoodsNum() > 0)
+                return;
+
+
+
             List<Goods> goods = new List<Goods>{
                 new Goods
                 {
@@ -28,7 +33,7 @@ namespace CFLMedCab.Test
                     batch_number = "C1111",
                     birth_date = new DateTime(2019, 1, 2),
                     valid_period = 180,
-                    expiry_date = new DateTime(2019, 7, 2),
+                    expire_date = new DateTime(2019, 7, 2),
                     position = "Z1",
                     remarks = ""
                 },
@@ -40,7 +45,7 @@ namespace CFLMedCab.Test
                     batch_number = "C1112",
                     birth_date = new DateTime(2019, 2, 2),
                     valid_period = 180,
-                    expiry_date = new DateTime(2019, 8, 2),
+                    expire_date = new DateTime(2019, 8, 2),
                     position = "Z1",
                     remarks = ""
                 },
@@ -52,7 +57,7 @@ namespace CFLMedCab.Test
                     batch_number = "C1113",
                     birth_date = new DateTime(2019, 3, 2),
                     valid_period = 180,
-                    expiry_date = new DateTime(2019, 9, 2),
+                    expire_date = new DateTime(2019, 9, 2),
                     position = "Z1",
                     remarks = ""
                 },
@@ -64,7 +69,7 @@ namespace CFLMedCab.Test
                     batch_number = "C2111",
                     birth_date = new DateTime(2019, 2, 12),
                     valid_period = 90,
-                    expiry_date = new DateTime(2019, 5, 12),
+                    expire_date = new DateTime(2019, 5, 12),
                     position = "Z1",
                     remarks = ""
                 },
@@ -76,7 +81,7 @@ namespace CFLMedCab.Test
                     batch_number = "C2112",
                     birth_date = new DateTime(2019, 3, 12),
                     valid_period = 90,
-                    expiry_date = new DateTime(2019, 6, 12),
+                    expire_date = new DateTime(2019, 6, 12),
                     position = "Z1",
                     remarks = ""
                 },
@@ -88,7 +93,7 @@ namespace CFLMedCab.Test
                     batch_number = "C2113",
                     birth_date = new DateTime(2019, 4, 12),
                     valid_period = 90,
-                    expiry_date = new DateTime(2019, 7, 12),
+                    expire_date = new DateTime(2019, 7, 12),
                     position = "Z1",
                     remarks = ""
                 },
@@ -100,7 +105,7 @@ namespace CFLMedCab.Test
                     batch_number = "D1111",
                     birth_date = new DateTime(2019, 1, 2),
                     valid_period = 30,
-                    expiry_date = new DateTime(2019, 2, 2),
+                    expire_date = new DateTime(2019, 2, 2),
                     position = "Z1",
                     remarks = ""
                 },
@@ -112,7 +117,7 @@ namespace CFLMedCab.Test
                     batch_number = "D1112",
                     birth_date = new DateTime(2019, 1, 12),
                     valid_period = 30,
-                    expiry_date = new DateTime(2019,2, 12),
+                    expire_date = new DateTime(2019,2, 12),
                     position = "Z1",
                     remarks = ""
                 },
@@ -124,7 +129,7 @@ namespace CFLMedCab.Test
                     batch_number = "E1111",
                     birth_date = new DateTime(2019, 2, 2),
                     valid_period = 60,
-                    expiry_date = new DateTime(2019, 4, 2),
+                    expire_date = new DateTime(2019, 4, 2),
                     position = "Z1",
                     remarks = ""
                 },
@@ -136,7 +141,7 @@ namespace CFLMedCab.Test
                     batch_number = "E1113",
                     birth_date = new DateTime(2019, 3, 2),
                     valid_period = 60,
-                    expiry_date = new DateTime(2019, 4, 2),
+                    expire_date = new DateTime(2019, 4, 2),
                     position = "Z1",
                     remarks = ""
                 },

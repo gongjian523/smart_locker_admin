@@ -14,7 +14,7 @@ namespace CFLMedCab.Infrastructure.DbHelper
         public SqlSugarClient Db;//用来处理事务多表查询和复杂的操作
         public SimpleClient<T> CurrentDb { get { return new SimpleClient<T>(Db); } }//用来处理T表的常用操作
 
-        private static string dbFilename = @"CFLMedCab1.db";
+        private static string dbFilename = @"CFLMedCab.db";
         private static string ConnectionString = string.Format("Version=3;uri=file:{0}", dbFilename);
         //public static string ConnectionString = @"DataSource=" + GetCurrentProjectPath + @"CFLMedCab1.db";
 

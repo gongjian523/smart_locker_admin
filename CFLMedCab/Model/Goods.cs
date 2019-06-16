@@ -51,7 +51,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 有效期
         /// </summary>
-        public DateTime expiry_date { get; set; }
+        public DateTime expire_date { get; set; }
 
         /// <summary>
         /// 货位

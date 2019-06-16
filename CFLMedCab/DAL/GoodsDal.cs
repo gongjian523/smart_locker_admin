@@ -52,6 +52,11 @@ namespace CFLMedCab.DAL
             Db.Insertable<Goods>(list).ExecuteCommand();
         }
 
+        public int GetGoodsNum()
+        {
+            return  Db.Queryable<Goods>().Select<Goods>().ToList().Count;
+        }
+
         /// <summary>
         /// 根据集合获取完整商品属性集合
         /// </summary>
@@ -62,7 +67,7 @@ namespace CFLMedCab.DAL
 			return Db.Queryable<Goods>()
 				.Where(it => goodsEpsDatas.Contains(it.code))
 				.Select<GoodsDto>()
-				.OrderBy(it => it.expiry_date, OrderByType.Asc)
+				.OrderBy(it => it.expire_date, OrderByType.Asc)
 				.ToList();
 		}
 
@@ -78,7 +83,7 @@ namespace CFLMedCab.DAL
             //查询语句
             var queryable = Db.Queryable<Goods>()
                 .Where(it => pageDataApo.goodsEpsDatas.Contains(it.code))
-                .WhereIF(pageDataApo.expire_date != null, it=> it.expiry_date <= pageDataApo.expire_date)
+                .WhereIF(pageDataApo.expire_date != null, it=> it.expire_date <= pageDataApo.expire_date)
                 .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.name), it=> it.name.Contains(pageDataApo.name))
                 .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.code), it => it.name.Contains(pageDataApo.code))
                 .OrderBy(it => it.name, OrderByType.Asc)
@@ -110,7 +115,7 @@ namespace CFLMedCab.DAL
 			return Db.Queryable<Goods>()
 				.Where(it => codeArray.Contains(it.code))
 				.Select<GoodsDto>()
-				.OrderBy(it=>it.expiry_date, OrderByType.Asc)
+				.OrderBy(it=>it.expire_date, OrderByType.Asc)
 				.Mapper(it=> {
 					it.operate_type = goodsDatas.Where(goodsData => goodsData.code.Equals(it.code)).Single().operate_type;
 				}).ToList();
@@ -125,11 +130,10 @@ namespace CFLMedCab.DAL
 		public List<GoodsDto> GetGoodsDto(Hashtable goodsEpsDatas)
 		{
 			HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
-			foreach (var goodsEpsData in goodsEpsDatas.Values)
+			foreach (HashSet<string> goodsEpsData in goodsEpsDatas.Values)
 			{
-				goodsEpsHashSetDatas.Add((string)goodsEpsData);
-			}
-
+                goodsEpsHashSetDatas.UnionWith(goodsEpsData);
+            }
 			return GetGoodsDto(goodsEpsHashSetDatas);
 		}
 
@@ -149,14 +153,14 @@ namespace CFLMedCab.DAL
                 .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.name), it => it.name.Contains(pageDataApo.name))
                 .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.code), it => it.name.Contains(pageDataApo.code))
                 .GroupBy(it => it.goods_code)
-                .OrderBy(it => it.expiry_date, OrderByType.Asc)
+                .OrderBy(it => it.expire_date, OrderByType.Asc)
                 
                 .Select( it => new GoodDto
                 {
                     name = it.name,
                     goods_code = it.goods_code,
                     amount = SqlFunc.AggregateCount(it.id),
-                    expire_time = SqlFunc.AggregateMin(it.expiry_date)
+                    expire_time = SqlFunc.AggregateMin(it.expire_date)
                 });
 
             //如果小于0，默认查全部
