@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <Grid  Background="AliceBlue">
         <Grid Margin="20">
             <Grid.RowDefinitions>
@@ -29,7 +30,7 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"  Background="Red" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                    <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"  HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
                     <Label Content="{}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
                     <Label Content="盘点日期" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
                     <Label Content="盘点状态" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
@@ -76,7 +77,7 @@
                             <Grid Grid.Column="8" x:Name="column9"/>
                             <Grid Grid.Column="9" x:Name="column10"/>
                         </Grid>
-                        <ListView VerticalAlignment="Top" Grid.Row="1"   Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                        <ListView VerticalAlignment="Top" Grid.Row="1"   Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource DefaultListView}" >
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
@@ -98,8 +99,7 @@
                     <Button Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="75" Click="onCancel"/>
                 </Grid>
             </Border>
-
+            
         </Grid>
-
     </Grid>
 </UserControl>
