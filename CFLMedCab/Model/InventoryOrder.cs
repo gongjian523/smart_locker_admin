@@ -49,18 +49,17 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 盘点类型:：0  自动盘点；1 手动盘点
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int type { get; set; }
 
         /// <summary>
         /// 盘点时间
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public DateTime create_time { get; set; }
 
         /// <summary>
         /// 确认时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime confirm_time { get; set; }
 
         /// <summary>
@@ -76,17 +75,18 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 确认人
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int inspector_id { get; set; }
 
         /// <summary>
         /// 确认人姓名
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string inspector_name { get; set; }
 
         /// <summary>
         /// 盘点单状态：0  待确认；1  已确认。
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int status { get; set; }
     }
 }

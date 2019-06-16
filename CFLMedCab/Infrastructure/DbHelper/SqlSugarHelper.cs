@@ -14,7 +14,7 @@ namespace CFLMedCab.Infrastructure.DbHelper
         public SqlSugarClient Db;//用来处理事务多表查询和复杂的操作
         public SqlSugarClient GetDb { get { return Db; } }//用来处理T表的常用操作
 
-        private static string dbFilename = @"CFLMedCab1.db";
+        private static string dbFilename = @"CFLMedCab.db";
         private static string ConnectionString = string.Format("Version=3;uri=file:{0}", dbFilename);
 
 		// 定义一个静态变量来保存类的实例

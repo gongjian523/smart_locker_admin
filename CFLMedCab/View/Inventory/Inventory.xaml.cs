@@ -1,11 +1,16 @@
-﻿using CFLMedCab.BLL;
+﻿using CFLMedCab.APO.Inventory;
+using CFLMedCab.BLL;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Inventory;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -30,33 +35,33 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterPopInventoryPlanHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryPlanHandler EnterPopInventoryPlanEvent;
 
-        InventoryBll inventoryBll;
+        InventoryBll inventoryBll = new InventoryBll();
+        List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
 
         public Inventory()
         {
             InitializeComponent();
 
-            inventoryBll = new InventoryBll();
-            //inventoryBll.GetInventoryOrder(new)
-            List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
-            for(int i = 5; i > 0; i--)
-            {
-                InventoryOrderDto inventoryOrderDto = new InventoryOrderDto
-                {
-                    id = i,
-                    code = "dff12412",
-                    confirm_time=DateTime.Now,
-                    create_time=DateTime.Now,
-                    inspector_id=2,
-                    inspector_name="何海霞",
-                    operator_id=1,
-                    operator_name="何海霞",
-                    status=0,
-                    type=1
-                };
-                inventoryOrderDtos.Add(inventoryOrderDto);
-            }
-            listView.DataContext = inventoryOrderDtos;
+            GetInventoryList();
+            
+            //List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
+            //for(int i = 5; i > 0; i--)
+            //{
+            //    InventoryOrderDto inventoryOrderDto = new InventoryOrderDto
+            //    {
+            //        id = i,
+            //        code = "dff12412",
+            //        confirm_time=DateTime.Now,
+            //        create_time=DateTime.Now,
+            //        inspector_id=2,
+            //        inspector_name="何海霞",
+            //        operator_id=1,
+            //        operator_name="何海霞",
+            //        status=0,
+            //        type=1
+            //    };
+            //    inventoryOrderDtos.Add(inventoryOrderDto);
+            //}
         }
 
         /// <summary>
@@ -66,7 +71,40 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onEnterPopInventory(object sender, RoutedEventArgs e)
         {
+
             EnterPopInventoryEvent(this, null);
+
+            Timer invTimer = new Timer(1000);
+            invTimer.AutoReset = false;
+            invTimer.Enabled = true;
+            invTimer.Elapsed += new ElapsedEventHandler(onStartInventory);
+        }
+
+        public void onStartInventory(object sender, EventArgs e)
+        {
+            bool isGetSuccess;
+
+
+            Hashtable ht = new Hashtable();
+            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
+            ht.Add("COM1", hs1);
+            HashSet<string> hs4 = new HashSet<string> { "E20000176012028219504DAD", "E20000176012026619504D8D", "E20000176012026319404F98", "E20000176012028019504DA0", "E20000176012026519504D85" };
+            ht.Add("COM4", hs4);
+
+            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            InventoryBll inventoryBll = new InventoryBll();
+            GoodsBll goodsBll = new GoodsBll();
+            List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+            int id = inventoryBll.NewInventory(InventoryType.Manual);
+            inventoryBll.InsertInventoryDetails(list, id);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                GetInventoryList();
+            }));
         }
 
         /// <summary>
@@ -79,7 +117,7 @@ namespace CFLMedCab.View.Inventory
             EnterPopInventoryPlanEvent(this, null);
         }
 
-        private void btnListViewItem_Click(object sender, RoutedEventArgs e)
+        private void onEnterInventoryDetail(object sender, RoutedEventArgs e)
         {
             Button btnItem = sender as Button;
 
@@ -87,6 +125,33 @@ namespace CFLMedCab.View.Inventory
 
             this.listView.Items.Refresh();
 
+        }
+
+        private void onLoadInventory(object sender, RoutedEventArgs e)
+        {
+            GetInventoryList();
+        }
+
+
+        private void GetInventoryList()
+        {
+            if ((bool)BtnAll.IsChecked)
+            {
+                inventoryOrderDtos = inventoryBll.GetInventoryOrder(new InventoryOrderApo
+                {
+                    PageSize = 0,
+                }).Data;
+            }
+            else
+            {
+                inventoryOrderDtos = inventoryBll.GetInventoryOrder(new InventoryOrderApo
+                {
+                    PageSize = 0,
+                    status = (bool)BtnUnconfirmed.IsChecked ? (int)InventoryStatus.Unconfirm : (int)InventoryStatus.Confirm
+                }).Data;
+            }
+
+            listView.DataContext = inventoryOrderDtos;
         }
 
     }

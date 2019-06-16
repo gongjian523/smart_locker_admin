@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View"
              xmlns:l="clr-namespace:CFLMedCab.Controls"
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -21,6 +22,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <cvt:InventoryStatusStrConverter x:Key="InventoryStatusStrConverter"/>
+        <cvt:InventoryTypeStrConverter x:Key="InventoryTypeStrConverter"/>
     </UserControl.Resources>
     <Grid Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
@@ -55,9 +58,9 @@
                 </Grid.RowDefinitions>
                 <Grid>
                     <StackPanel Orientation="Horizontal" Margin="20,5,20,0">
-                        <RadioButton Style="{StaticResource TabButton}"  Width="70"  Content="待确认"  FontSize="16"  IsChecked="True"/>
-                        <RadioButton Style="{StaticResource TabButton}"  Width="70"  Content="已确认"  FontSize="16"/>
-                        <RadioButton Style="{StaticResource TabButton}"  Width="70"  Content="全部"  FontSize="16"/>
+                        <RadioButton x:Name="BtnUnconfirmed" Style="{StaticResource TabButton}"  Width="70"  Content="待确认"  FontSize="16"  IsChecked="True" Click="onLoadInventory"/>
+                        <RadioButton x:Name="BtnConfirmed"  Style="{StaticResource TabButton}"  Width="70"  Content="已确认"  FontSize="16" Click="onLoadInventory"/>
+                        <RadioButton x:Name="BtnAll" Style="{StaticResource TabButton}"  Width="70"  Content="全部"  FontSize="16" Click="onLoadInventory"/>
                     </StackPanel>
                     <Label Margin="20,49,20,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="1"/>
                 </Grid>
@@ -88,16 +91,16 @@
                                Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
-                                <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding id}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding code}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                                 <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点类型" DisplayMemberBinding="{Binding type}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding status}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点类型" DisplayMemberBinding="{Binding type, Converter={StaticResource InventoryTypeStrConverter}}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="盘点单状态" DisplayMemberBinding="{Binding status,  Converter= {StaticResource InventoryStatusStrConverter}}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
                                 <GridViewColumn Header="盘点人" DisplayMemberBinding="{Binding operator_name}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                                 <!--DisplayMemberBinding="{Binding operator_name}"-->
                                 <GridViewColumn Header="确认人"    Width="{Binding ElementName=column6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <l:EditBox Height="25" Value="{Binding Path=operator_name}" />
+                                            <l:EditBox Height="25" Value="{Binding Path=inspector_name}" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -107,10 +110,14 @@
                                 <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Button Content="确认"  Width="75" Height="23"  Click="btnListViewItem_Click" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
-                                            
+                                            <StackPanel Orientation="Horizontal">
+                                                <Button x:Name="BtnConfirm" Content="确认"  Width="75" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <Button x:Name="BtnDetail" Content="查看"  Width="75" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                            </StackPanel>
                                         </DataTemplate>
+
                                     </GridViewColumn.CellTemplate>
+
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>

@@ -52,6 +52,11 @@ namespace CFLMedCab.DAL
             Db.Insertable<Goods>(list).ExecuteCommand();
         }
 
+        public int GetGoodsNum()
+        {
+            return  Db.Queryable<Goods>().Select<Goods>().ToList().Count;
+        }
+
         /// <summary>
         /// 根据集合获取完整商品属性集合
         /// </summary>
@@ -125,11 +130,10 @@ namespace CFLMedCab.DAL
 		public List<GoodsDto> GetGoodsDto(Hashtable goodsEpsDatas)
 		{
 			HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
-			foreach (var goodsEpsData in goodsEpsDatas.Values)
+			foreach (HashSet<string> goodsEpsData in goodsEpsDatas.Values)
 			{
-				goodsEpsHashSetDatas.Add((string)goodsEpsData);
-			}
-
+                goodsEpsHashSetDatas.UnionWith(goodsEpsData);
+            }
 			return GetGoodsDto(goodsEpsHashSetDatas);
 		}
 
