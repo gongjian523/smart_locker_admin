@@ -27,15 +27,19 @@
             </Grid.RowDefinitions>
             <Label Content="录入单品码" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center" RenderTransformOrigin="0.584,-0.333"/>
             <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" x:Name="column1"/>
-
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" x:Name="column1"/>
+                    <Grid Grid.Column="1" x:Name="column2"/>
+                </Grid>
                 <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                            <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}"  Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                         </GridView>
                     </ListView.View>
                 </ListView>
