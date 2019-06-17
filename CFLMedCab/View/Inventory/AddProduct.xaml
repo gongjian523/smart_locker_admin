@@ -29,7 +29,7 @@
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0" x:Name="column1"/>
                     <Grid Grid.Column="1" x:Name="column2"/>
@@ -42,7 +42,7 @@
                     </ListView.Resources>
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                            <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=title}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                             <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}"  Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                         </GridView>
                     </ListView.View>

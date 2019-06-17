@@ -97,7 +97,8 @@ namespace CFLMedCab.View.Inventory
             }
 
             codeList.Add(new AddGoodsCode {
-                code = inputStr
+                code = inputStr,
+                title = "单品码"
             });
             codeInputTb.Text = "";
 

@@ -176,6 +176,7 @@
     <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
+    <Compile Include="Infrastructure\ComName.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarHelper.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarContext.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
@@ -194,13 +195,14 @@
     <Compile Include="DAL\SurgeryOrderDal.cs" />
     <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
+    <Compile Include="Infrastructure\DeviceHelper\SpeakerHelper.cs" />
+    <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Infrastructure\ToolHelper\AutoMapperHelper.cs" />
     <Compile Include="Infrastructure\ToolHelper\CollectHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
-    <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />

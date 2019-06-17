@@ -89,7 +89,7 @@ namespace CFLMedCab
 			});
 
 
-            //Test();
+            Test();
 
             ConsoleManager.Show();
         }

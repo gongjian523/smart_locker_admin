@@ -37,8 +37,9 @@ namespace CFLMedCab.BLL
 			{
 				PageIndex = basePageDataApo.PageIndex,
 				PageSize = basePageDataApo.PageSize,
-				Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount),
-				TotalCount = totalCount
+                //Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList().Where(item => item.not_picked_goods_num > 0).ToList(),
+                Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList(),
+                TotalCount = totalCount
 			};
 		}
 
@@ -67,7 +68,6 @@ namespace CFLMedCab.BLL
 		public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
-	
 
 			//获取当前工单商品
 			var replenishSubOrderdtlDtos = replenishDal.GetReplenishSubOrderdtlDto(
