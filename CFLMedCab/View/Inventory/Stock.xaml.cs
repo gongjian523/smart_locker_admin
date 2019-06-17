@@ -25,7 +25,7 @@ namespace CFLMedCab.View
     /// Stock.xaml 的交互逻辑
     /// </summary>
     public partial class Stock : UserControl
-    {       
+    {
         //跳出详情页面
         public delegate void EnterStockDetailedHandler(object sender, GoodDto goodDto);
         public event EnterStockDetailedHandler EnterStockDetailedEvent;
@@ -34,27 +34,7 @@ namespace CFLMedCab.View
         public Stock()
         {
             InitializeComponent();
-            query(this, null);
-        }
-        
-        /// <summary>
-        /// 库存快照事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StockSnapshot(object sender, RoutedEventArgs e)
-        {
-            Tips.Visibility = Visibility.Visible;
-            rbQuery.Visibility = Visibility.Visible;
-            gQuery.Visibility = Visibility.Hidden;
-            Content.Margin = new Thickness(10, 146, 0, 0);
-            single1.Visibility = Visibility.Hidden;
-            single2.Visibility = Visibility.Hidden;
-            single3.Visibility = Visibility.Hidden;
-            listView.Visibility = Visibility.Visible;
-            listView1.Visibility = Visibility.Hidden;
-            listView2.Visibility = Visibility.Hidden;
-            query(this,null);
+            queryData(this, null);
         }
 
         /// <summary>
@@ -62,28 +42,36 @@ namespace CFLMedCab.View
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void query(object sender, RoutedEventArgs e)
+        private void queryData(object sender, RoutedEventArgs e)
         {
             int totalCount;
             if (this.stockSnapshot.IsChecked == true)
             {
+                GetGoodApo getGoodApo = new GetGoodApo();
                 Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
                 HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
                 foreach (HashSet<string> goodsEpsData in ht.Values)
                 {
                     goodsEpsHashSetDatas.UnionWith(goodsEpsData);
                 }
-                listView.DataContext= goodsBll.GetStockGoodsDto(new GetGoodApo { goodsEpsDatas = goodsEpsHashSetDatas }, out totalCount);
+                getGoodApo.goodsEpsDatas = goodsEpsHashSetDatas;
+                getGoodApo.code = goods_code.Text == "输入商品编码" ? "" : goods_code.Text;
+                getGoodApo.name = goods_name.Text == "输入商品名称" ? "" : goods_name.Text;
+                listView.DataContext = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
             }
             if (this.validity.IsChecked == true)
             {
+                GetGoodsApo getGoodsApo = new GetGoodsApo();
                 Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
                 HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
                 foreach (HashSet<string> goodsEpsData in ht.Values)
                 {
                     goodsEpsHashSetDatas.UnionWith(goodsEpsData);
                 }
-                listView1.DataContext= goodsBll.GetValidityGoodsDto(new GetGoodsApo { goodsEpsDatas = goodsEpsHashSetDatas }, out totalCount);
+                getGoodsApo.goodsEpsDatas = goodsEpsHashSetDatas;
+                getGoodsApo.name = goods_name1.Text ==  "输入商品名称" ? "" : goods_name1.Text;
+                getGoodsApo.code = goods_code1.Text == "输入商品编码" ? "" : goods_code1.Text;
+                listView1.DataContext = goodsBll.GetValidityGoodsDto(getGoodsApo, out totalCount);
             }
             else if (this.stock.IsChecked == true)
             {
@@ -92,8 +80,30 @@ namespace CFLMedCab.View
                     goodsChangeApo.operate_type = 0;
                 else if (this.inStock.IsChecked == true)
                     goodsChangeApo.operate_type = 1;
-                listView2.DataContext= goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out totalCount);
+                goodsChangeApo.name = goods_name2.Text == "输入商品名称" ? "" : goods_name2.Text;
+                listView2.DataContext = goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out totalCount);
             }
+        }
+
+        /// <summary>
+        /// 库存快照事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void StockSnapshot(object sender, RoutedEventArgs e)
+        {
+            goods_code.Visibility = Visibility.Hidden;
+            goods_name.Visibility = Visibility.Hidden;
+            query.Visibility = Visibility.Hidden;
+
+            gChoice.Visibility = Visibility.Visible;
+            gChoice1.Visibility = Visibility.Hidden;
+            gChoice2.Visibility = Visibility.Hidden;
+
+            Content.Visibility = Visibility.Visible;
+            Content1.Visibility = Visibility.Hidden;
+            Content2.Visibility = Visibility.Hidden;
+            queryData(this, null);
         }
 
         /// <summary>
@@ -103,10 +113,9 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void ConditionQuery(object sender, RoutedEventArgs e)
         {
-            gChoice1.Visibility = Visibility.Hidden;
-            gChoice.Visibility = Visibility.Visible;
-            gQuery.Visibility = Visibility.Visible;
-            Content.Margin = new Thickness(10,196,0,0);
+            goods_code.Visibility = Visibility.Visible;
+            goods_name.Visibility = Visibility.Visible;
+            query.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -116,19 +125,14 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void EffectivePeriod(object sender, RoutedEventArgs e)
         {
-            gChoice1.Visibility = Visibility.Hidden;
-            gChoice.Visibility = Visibility.Visible;
-            Tips.Visibility = Visibility.Hidden;
-            rbQuery.Visibility = Visibility.Hidden;
-            gQuery.Visibility = Visibility.Visible;
-            Content.Margin = new Thickness(10, 196, 0, 0);
-            single1.Visibility = Visibility.Visible;
-            single2.Visibility = Visibility.Visible;
-            single3.Visibility = Visibility.Visible;
-            listView.Visibility = Visibility.Hidden;
-            listView1.Visibility = Visibility.Visible;
-            listView2.Visibility = Visibility.Hidden;
-            query(this, null);
+            gChoice.Visibility = Visibility.Hidden;
+            gChoice1.Visibility = Visibility.Visible;
+            gChoice2.Visibility = Visibility.Hidden;
+
+            Content.Visibility = Visibility.Hidden;
+            Content1.Visibility = Visibility.Visible;
+            Content2.Visibility = Visibility.Hidden;
+            queryData(this, null);
         }
 
         /// <summary>
@@ -138,12 +142,15 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void StockQuery(object sender, RoutedEventArgs e)
         {
+
             gChoice.Visibility = Visibility.Hidden;
-            gChoice1.Visibility = Visibility.Visible;
-            listView.Visibility = Visibility.Hidden;
-            listView1.Visibility = Visibility.Hidden;
-            listView2.Visibility = Visibility.Visible;
-            query(this, null);
+            gChoice1.Visibility = Visibility.Hidden;
+            gChoice2.Visibility = Visibility.Visible;
+
+            Content.Visibility = Visibility.Hidden;
+            Content1.Visibility = Visibility.Hidden;
+            Content2.Visibility = Visibility.Visible;
+            queryData(this, null);
         }
 
         /// <summary>

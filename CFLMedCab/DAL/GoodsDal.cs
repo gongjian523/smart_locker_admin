@@ -153,7 +153,7 @@ namespace CFLMedCab.DAL
             var queryable = Db.Queryable<Goods>()
                 .Where(it => pageDataApo.goodsEpsDatas.Contains(it.code))
                 .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.name), it => it.name.Contains(pageDataApo.name))
-                .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.code), it => it.name.Contains(pageDataApo.code))
+                .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.code), it => it.goods_code.Contains(pageDataApo.code))
                 .GroupBy(it => it.goods_code)
                 .OrderBy(it => it.expire_date, OrderByType.Asc)
                 
