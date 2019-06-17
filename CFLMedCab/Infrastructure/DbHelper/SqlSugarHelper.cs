@@ -89,7 +89,18 @@ namespace CFLMedCab.Infrastructure.DbHelper
             Db.CodeFirst.InitTables<InventoryOrderdtl>();
             Db.CodeFirst.InitTables<InventoryPlan>();
 
+            //创建退货出库表
+            Db.CodeFirst.InitTables<PickingOrder>();
+            Db.CodeFirst.InitTables<PickingSubOrder>();
+            Db.CodeFirst.InitTables<PickingSubOrderdtl>();
 
+
+            //创建手术表
+            Db.CodeFirst.InitTables<SurgeryOrder>();
+            Db.CodeFirst.InitTables<SurgeryOrderdtl>();
+
+            //创建用户表
+            Db.CodeFirst.InitTables<User>();
         }
 
         public static string GetCurrentProjectPath
