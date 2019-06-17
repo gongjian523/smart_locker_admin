@@ -16,6 +16,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
                 <ResourceDictionary Source="Controls/Styles/Color.xaml"/>
                 <ResourceDictionary Source="Controls/Styles/ListviewStyles.xaml"/>
+                <ResourceDictionary Source="Controls/Styles/ToggleButtonStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

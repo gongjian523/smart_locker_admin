@@ -8,6 +8,7 @@
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+
     <UserControl.Resources>
         <Style x:Key="{x:Type l:EditBox}" TargetType="{x:Type l:EditBox}" >
             <Setter Property="HorizontalAlignment" Value="Left"  />
@@ -49,7 +50,7 @@
                         Background="#FFFFFF"  Foreground="#27CDCB" FontSize="14" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
             </Grid>
         </Border>
-       
+
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="20,20,20,20" CornerRadius="2,2,2,2">
             <Grid>
                 <Grid.RowDefinitions>
@@ -88,7 +89,8 @@
                     <ListView  Margin="10,10,0,0" VerticalAlignment="Top"  AlternationCount="2" 
                                ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left"  
                                Padding="20" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                               Style="{StaticResource DefaultListView}">
+                             
+                               Style="{StaticResource DefaultListView}" >
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
                                 <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding code}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
@@ -106,13 +108,14 @@
                                 </GridViewColumn>
 
                                 <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                
+
                                 <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button x:Name="BtnConfirm" Content="确认"  Width="75" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
-                                                <Button x:Name="BtnDetail" Content="查看"  Width="75" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <Button x:Name="BtnConfirm" Content="确认"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <Button x:Name="BtnDetail" Content="查看"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}"   />
                                             </StackPanel>
                                         </DataTemplate>
 
@@ -122,30 +125,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <!--<ToggleButton Name="boldButton"  Width="25" FontWeight="Bold">
-                        <ToggleButton.Style>
-                            <Style TargetType="ToggleButton">
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type ToggleButton}">
-                                            <Border x:Name="InnerBorder" Background="White" BorderBrush="Black" BorderThickness="1"/>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="IsChecked" Value="True">
-                                                    <Setter TargetName="InnerBorder" Property="Background">
-                                                        <Setter.Value>
-                                                            <ImageBrush ImageSource="/Resources/Images/btn-Return.png"/>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                    <Setter TargetName="InnerBorder" Property="BorderThickness" Value="0"/>
-                                                </Trigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                            </Style>
-                        </ToggleButton.Style>
-                    </ToggleButton>-->
-
+                  
                 </Grid>
             </Grid>
         </Border>

@@ -656,12 +656,6 @@ namespace CFLMedCab
 
         }
 
-        private void InventoryDetail_EnterAddProductEvent(object sender, RoutedEventArgs e)
-        {
-            throw new NotImplementedException();
-        }
-
-
 
         /// <summary>
         /// 弹出盘点计划
@@ -702,10 +696,11 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterPopAddProduct(object sender, System.EventArgs e)
+        private void onEnterPopAddProduct(object sender, InventoryDetailPara e)
         {
-            AddProduct addProduct = new AddProduct();
+            AddProduct addProduct = new AddProduct(e);
             addProduct.HidePopAddProductEvent += new AddProduct.HidePopAddProductHandler (onHidePopAddProduct);
+            addProduct.EnterInventoryDetailEvent += new AddProduct.EnterInventoryDetailHandler(onEnterInventoryDetail);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -722,7 +717,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onHidePopAddProduct(object sender, System.EventArgs e)
+        private void onHidePopAddProduct(object sender, RoutedEventArgs e)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -821,10 +816,10 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Normal;
+            this.WindowState = WindowState.Maximized;
             this.WindowStyle = WindowStyle.None;
-            this.ResizeMode = ResizeMode.CanMinimize;
-            this.Topmost = true;
+            this.ResizeMode = ResizeMode.NoResize;
+           // this.Topmost = true;
             this.Left = 0.0;
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;

@@ -94,28 +94,46 @@ namespace CFLMedCab.DAL
         }
 
         /// <summary>
-        /// 插入盘点记录详情
+        /// 插入盘点记录详情（列表）
         /// </summary>
         /// <returns></returns>
         public void InsertInventoryDetails(List<InventoryOrderdtl> list)
         {
             Db.Insertable<InventoryOrderdtl>(list).ExecuteCommand();
         }
+        /// <summary>
+        /// 插入盘点记录详情（单个）
+        /// </summary>
+        /// <returns></returns>
+        public void InsertInventoryDetails(InventoryOrderdtl item)
+        {
+            Db.Insertable<InventoryOrderdtl>(item).ExecuteCommand();
+        }
 
         /// <summary>
-        /// 更新盘点记录详情
+        /// 更新盘点记录详情(列表)
         /// </summary>
         /// <returns></returns>
         public void UpdateInventoryDetails(List<InventoryOrderdtl> list)
         {
             Db.Updateable<InventoryOrderdtl>(list).ExecuteCommand();
         }
+        /// <summary>
+        /// 更新盘点记录详情(单个)
+        /// </summary>
+        /// <returns></returns>
+        public void UpdateInventoryDetails(InventoryOrderdtl item)
+        {
+            Db.Updateable<InventoryOrderdtl>(item).ExecuteCommand();
+        }
+
 
         public List<InventoryOrderdtl> GetInventoryDetailsByInventoryId(int invertoryOrderId)
         {
-            return  Db.Queryable<InventoryOrderdtl>()
+            var list =  Db.Queryable<InventoryOrderdtl>()
                 .Where(it => it.inventory_order_id == invertoryOrderId)
                 .OrderBy(it => it.name, OrderByType.Desc).ToList();
+            return list;
         }
 
         /// <summary>

@@ -14,17 +14,17 @@
                 <RowDefinition Height="3*"></RowDefinition>
             </Grid.RowDefinitions>
             <Button Content="返回>>" Grid.Row="0" Click="onBackward" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" Height="30" Width="60"/>
-            <StackPanel Background="White" Grid.Row="1" Margin="0,20,20,10" >
-                <Grid Margin="20">
+            <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF" Grid.Row="1" Margin="0,10,10,5" Padding="10" >
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"></RowDefinition>
-                        <RowDefinition Height="60"></RowDefinition>
-                        <RowDefinition Height="30"></RowDefinition>
-                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
+                        <RowDefinition Height="{StaticResource rowHeight50}"></RowDefinition>
+                        <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
+                        <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Label Content="业务类型" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
                     <Label Content="退货出库" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
@@ -33,13 +33,13 @@
                     <Label  Grid.Column="1" Grid.Row="2" Content="上架工单号" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                     <Label  Grid.Column="1" Grid.Row="3" Content="上架工单号" Name="orderNum" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                 </Grid>
-            </StackPanel>
-
-            <StackPanel Background="White" Grid.Row="2" Margin="0,10,20,20">
-                <Grid Margin="20">
+            </Border>
+            <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF" Grid.Row="2" Margin="0,10,20,20" Padding="10">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Grid  x:Name="myGrid">
                         <Grid.ColumnDefinitions>
@@ -59,8 +59,17 @@
                         <Grid Grid.Column="5" x:Name="column6"/>
                         <Grid Grid.Column="6" x:Name="column7"/>
                     </Grid>
-                    <Label Content="本柜待上架商品" Margin="0,10" Grid.Row="0" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}"/>
-                    <ListView VerticalAlignment="Top" Grid.Row="1"   ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
+                    <Border Grid.Row="0" Padding="10"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label Content="入库明细"/>
+                            <Label Content="入库明细"/>
+                            <Label Content="入库明细" />
+                            <Label Content="入库明细"/>
+                            <Label Content="入库明细" />
+                        </StackPanel>
+                    </Border>
+                    <ListView VerticalAlignment="Top" Grid.Row="1"   ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                              Style="{StaticResource DefaultListView }" Margin="0,10,0,0">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
@@ -73,12 +82,13 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
+
+                    <Button Content="确认开柜"  Grid.Row="2" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="onEnerDetailOpen"/>
+                    <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
+                        <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
+                    </Grid>
                 </Grid>
-                <Button Content="确认开柜"  Grid.Row="2" Grid.ColumnSpan="3" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="onEnerDetailOpen"/>
-                <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
-                </Grid>
-            </StackPanel>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>
