@@ -22,6 +22,7 @@
             </Border>
             <Border Background="White" Padding="10" Margin="10 5" Grid.Row="1" CornerRadius="{DynamicResource GRadius}" x:Name="gChoice" RenderTransformOrigin="0.497,0.507">
                 <Grid>
+              
                     <RadioButton  Content="库存快照" GroupName="Stock" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
                     <RadioButton  Content="条件查询" Name="rbQuery" GroupName="rbQuery" IsChecked="True" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top" Style="{DynamicResource CircularNavButton}"  Click="ConditionQuery" />
                     <RadioButton GroupName="single" Name="single1" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="129,-38,514,8" Content="效期小于1个月" />
