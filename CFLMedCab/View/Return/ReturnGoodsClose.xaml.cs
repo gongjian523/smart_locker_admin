@@ -55,6 +55,10 @@ namespace CFLMedCab.View.Return
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
             goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsDetails;
+            inNum.Content = operateGoodsNum;
+            abnormalInNum.Content = storageGoodsExNum;
+            abnormalOutNum.Content = outStorageGoodsExNum;
+            listView.DataContext = goodsDetails;
         }
 
         /// <summary>

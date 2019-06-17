@@ -54,6 +54,9 @@ namespace CFLMedCab.View.ReplenishmentOrder
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
             goodsDetails = replenishBll.GetReplenishSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            inNum.Content = operateGoodsNum;
+            abnormalInNum.Content = storageGoodsExNum;
+            abnormalOutNum.Content = outStorageGoodsExNum;
             listView.DataContext = goodsDetails;
         }
 

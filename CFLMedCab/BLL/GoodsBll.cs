@@ -134,5 +134,12 @@ namespace CFLMedCab.BLL
             return GoodsDal.GetGoodsDto(hs).Count> 0;
         }
 
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodDto> GetStockGoodsDto(GetGoodApo getGoodApo, out int totalCount)
+        {
+            return GoodsDal.GetGoodDto(getGoodApo, out totalCount);
+        }
+
     }
 }

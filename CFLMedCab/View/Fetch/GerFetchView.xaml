@@ -43,11 +43,11 @@
                 </Grid.RowDefinitions>
                 <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Label Content="入库明细"/>
-                        <Label Content="入库明细"/>
-                        <Label Content="入库明细" />
-                        <Label Content="入库明细"/>
-                        <Label Content="入库明细" />
+                        <Label Content="当前领用了"/>
+                        <Label Content=" " Name="normalNum"/>
+                        <Label Content="个商品，异常操作" />
+                        <Label Content=" " Name="abnormalNum"/>
+                        <Label Content="个商品入库" />
                     </StackPanel>
                 </Border>
                 <Border Grid.Row="1"  VerticalAlignment="Center">

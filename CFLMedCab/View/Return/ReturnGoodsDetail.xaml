@@ -59,13 +59,9 @@
                         <Grid Grid.Column="5" x:Name="column6"/>
                         <Grid Grid.Column="6" x:Name="column7"/>
                     </Grid>
-                    <Border Grid.Row="0" Padding="10"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                    <Border Grid.Row="0" Padding="10"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" CornerRadius="{DynamicResource GRadius}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="入库明细"/>
-                            <Label Content="入库明细"/>
-                            <Label Content="入库明细" />
-                            <Label Content="入库明细"/>
-                            <Label Content="入库明细" />
+                            <Label Content="本柜待拣货商品"/>
                         </StackPanel>
                     </Border>
                     <ListView VerticalAlignment="Top" Grid.Row="1"   ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 

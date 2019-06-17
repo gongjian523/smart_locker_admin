@@ -73,8 +73,19 @@
                         <Grid Grid.Column="4" x:Name="gcolumn5"/>
                         <Grid Grid.Column="5" x:Name="gcolumn6"/>
                     </Grid>
-
-                    <Label HorizontalAlignment="Left" Grid.Row="0" Content="sssssss" Grid.Column="0" VerticalAlignment="Center" Background="{DynamicResource TipBgColor}" Height="40" Width="{Binding ElementName=GridValue,Path=ActualWidth}"/>
+                    <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label Content="当前领用了"/>
+                            <Label Content=" " Name="inNum"/>
+                            <Label Content="个商品，其中异常操作" />
+                            <Label Content=" " Name="abnormalInNum"/>
+                            <Label Content="个商品入库；异常操作" />
+                            <Label Content=" " Name="abnormalOutNum"/>
+                            <Label Content="个商品出库；有" />
+                            <Label Content=" " Name="waitNum"/>
+                            <Label Content="个商品待领用" />
+                        </StackPanel>
+                    </Border>
                     <Label Content="本柜待领用商品" Grid.Row="1" Grid.Column="0" Height="30"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
                     <ListView  VerticalAlignment="Bottom" Grid.Row="2" Grid.Column="0" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center">
                         <ListView.View>

@@ -20,9 +20,13 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class GerFetchState : UserControl
     {
-        public GerFetchState()
+        public GerFetchState(int e)
         {
             InitializeComponent();
+            if (e == 1)
+                attention.Content = "请拿取您需要的耗材，拿取完毕请关闭柜门";
+            else if(e==2)
+                attention.Content = "请放入您需要回退的的耗材，放回完毕请关闭柜门";
         }
     }
 }

@@ -52,8 +52,16 @@
                     <Grid Grid.Column="4" x:Name="column5"/>
                     <Grid Grid.Column="5" x:Name="column6"/>
             </Grid>
-                <Label Content="手术单号" Grid.Row="0" Grid.Column="1" Margin="10,10,10,10" Background="{DynamicResource TipBgColor}"/>
-                <ListView  Margin="10" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Label Content="该手术领用单待领用耗材如下，其中"/>
+                    <Label Content=" " Name="inStock"/>
+                    <Label Content="种商品有库存，" />
+                    <Label Content=" " Name="noStock"/>
+                    <Label Content="种本柜无库存" />
+                </StackPanel>
+            </Border>
+            <ListView  Margin="10" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.View>
                     <GridView>
                         <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>

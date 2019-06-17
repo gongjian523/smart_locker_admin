@@ -115,6 +115,11 @@ namespace CFLMedCab.View
             gChoice1.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// 库存明细
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onStockDetailed(object sender, RoutedEventArgs e)
         {
             string code = (string)((Button)sender).Tag;

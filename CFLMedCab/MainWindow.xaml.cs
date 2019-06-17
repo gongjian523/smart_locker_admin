@@ -202,7 +202,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState();
+            GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
@@ -244,7 +244,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNoNumOpen(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState();
+            GerFetchState gerFetchState = new GerFetchState(1);
             ContentFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
@@ -372,7 +372,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnFetch(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState();
+            GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
