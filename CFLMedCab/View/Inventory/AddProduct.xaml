@@ -35,6 +35,11 @@
                     <Grid Grid.Column="1" x:Name="column2"/>
                 </Grid>
                 <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    <ListView.Resources>
+                        <Style TargetType="GridViewColumnHeader">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                        </Style>
+                    </ListView.Resources>
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
