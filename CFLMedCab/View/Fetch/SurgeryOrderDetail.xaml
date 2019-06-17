@@ -6,14 +6,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View.Fetch"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800">
     <Grid Background="AliceBlue">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"></RowDefinition>
             <RowDefinition Height="3*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Background="White" Grid.Row="0" Margin="20,20,20,10" >
+        <Border Background="White" Padding="10" CornerRadius="{DynamicResource GRadius}" Grid.Row="0" Margin="20,20,20,10" >
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition/>
@@ -34,9 +34,15 @@
                 <Label  Grid.Column="1" Grid.Row="2" Content="手术时间" Name="time" Foreground="#666666" HorizontalAlignment="Left" Margin="0,28,0,-28" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                 <Button Grid.Column="2" Grid.Row="2" Content="手术耗材详情" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top" Width="75" Click="EnterSurgeryDetail"/>
             </Grid>
-        </StackPanel>
-        <StackPanel Background="White" x:Name="myGrid"  Grid.Row="1" Margin="20,10,20,20">
-            <Grid Margin="20">
+        </Border>
+        <Border Background="White" Padding="10" CornerRadius="{DynamicResource GRadius}"  x:Name="myGrid"  Grid.Row="1" Margin="20,10,20,20">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition  Height="*"/>
+                    <RowDefinition  Height="auto"/>
+                </Grid.RowDefinitions>
+            <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -45,14 +51,14 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="2*"/>
                 </Grid.ColumnDefinitions>
-                    <Grid Grid.Column="0" x:Name="column1"/>
-                    <Grid Grid.Column="1" x:Name="column2"/>
-                    <Grid Grid.Column="2" x:Name="column3"/>
-                    <Grid Grid.Column="3" x:Name="column4"/>
-                    <Grid Grid.Column="4" x:Name="column5"/>
-                    <Grid Grid.Column="5" x:Name="column6"/>
+                <Grid Grid.Column="0" x:Name="column1"/>
+                <Grid Grid.Column="1" x:Name="column2"/>
+                <Grid Grid.Column="2" x:Name="column3"/>
+                <Grid Grid.Column="3" x:Name="column4"/>
+                <Grid Grid.Column="4" x:Name="column5"/>
+                <Grid Grid.Column="5" x:Name="column6"/>
             </Grid>
-            <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+            <Border Grid.Row="0" Padding="10 5"  Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                     <Label Content="该手术领用单待领用耗材如下，其中"/>
                     <Label Content=" " Name="inStock"/>
@@ -61,8 +67,11 @@
                     <Label Content="种本柜无库存" />
                 </StackPanel>
             </Border>
-            <ListView  Margin="10" Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                    <ListView.View>
+            <ListView  Grid.Row="1" ItemsSource="{Binding}" Name="listView" 
+                       Style="{StaticResource DefaultListView}"
+                       HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                       Margin="0,10,0,0">
+                <ListView.View>
                     <GridView>
                         <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                         <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
@@ -70,14 +79,15 @@
                         <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding wait_num}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
                         <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding stock_num}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                         <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-                <Button Content="确认"  Grid.Row="2" Grid.ColumnSpan="3" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="EnterSurgeryNumOpen"/>
-      
+                    </GridView>
+                </ListView.View>
+            </ListView>
+            <Button Content="确认"  Grid.Row="2"  Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Center" Margin="0" VerticalAlignment="Top" Click="EnterSurgeryNumOpen"/>
+
             <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
                 <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
             </Grid>
-        </StackPanel>
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

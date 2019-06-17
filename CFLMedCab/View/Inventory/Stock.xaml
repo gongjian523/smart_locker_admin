@@ -22,6 +22,7 @@
             </Border>
             <Border Background="White" Padding="10" Margin="10 5" Grid.Row="1" CornerRadius="{DynamicResource GRadius}" x:Name="gChoice" RenderTransformOrigin="0.497,0.507">
                 <Grid>
+              
                     <RadioButton  Content="库存快照" GroupName="Stock" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
                     <RadioButton  Content="条件查询" Name="rbQuery" GroupName="rbQuery" IsChecked="True" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top" Style="{DynamicResource CircularNavButton}"  Click="ConditionQuery" />
                     <RadioButton GroupName="single" Name="single1" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="129,-38,514,8" Content="效期小于1个月" />
@@ -56,20 +57,12 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <!--<ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>-->
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
                         <Grid Grid.Column="2" x:Name="column3"/>
                         <Grid Grid.Column="3" x:Name="column4"/>
                         <Grid Grid.Column="4" x:Name="column5"/>
-                        <!--<Grid Grid.Column="5" x:Name="column6"/>
-                        <Grid Grid.Column="6" x:Name="column7"/>
-                        <Grid Grid.Column="7" x:Name="column8"/>
-                        <Grid Grid.Column="8" x:Name="column9"/>-->
                     </Grid>
                     <Border Grid.Row="0" Padding="5"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -136,6 +129,99 @@
                     </ListView>
                 </Grid>
             </Border>
+
+            <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="2" CornerRadius="{DynamicResource GRadius}" Name="Content1" Visibility="Hidden" >
+                <Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" x:Name="ycolumn1"/>
+                        <Grid Grid.Column="1" x:Name="ycolumn2"/>
+                        <Grid Grid.Column="2" x:Name="ycolumn3"/>
+                        <Grid Grid.Column="3" x:Name="ycolumn4"/>
+                        <Grid Grid.Column="4" x:Name="ycolumn5"/>
+                        <Grid Grid.Column="5" x:Name="ycolumn6"/>
+                        <Grid Grid.Column="6" x:Name="ycolumn7"/>
+                        <Grid Grid.Column="7" x:Name="ycolumn8"/>
+                    </Grid>
+             
+                    <ListView  VerticalAlignment="Top"  Name="listView1" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                               Margin="0,10,0,0"
+                              Style="{StaticResource DefaultListView}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true">
+                                <GridViewColumn Header="商品编码"  Width="{Binding ElementName=ycolumn1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品名称"  Width="{Binding ElementName=ycolumn2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="单品码"  Width="{Binding ElementName=ycolumn3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="批号"  Width="{Binding ElementName=ycolumn4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效期"  Width="{Binding ElementName=ycolumn5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性"  Width="{Binding ElementName=ycolumn6,Path=ActualWidth}"/>
+                                <GridViewColumn Header="货位"  Width="{Binding ElementName=ycolumn7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="备注"  Width="{Binding ElementName=ycolumn8,Path=ActualWidth}"/>   
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </Border>
+
+            <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="2" CornerRadius="{DynamicResource GRadius}" Name="Content2" Visibility="Hidden" >
+                <Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" x:Name="zcolumn1"/>
+                        <Grid Grid.Column="1" x:Name="zcolumn2"/>
+                        <Grid Grid.Column="2" x:Name="zcolumn3"/>
+                        <Grid Grid.Column="3" x:Name="zcolumn4"/>
+                        <Grid Grid.Column="4" x:Name="zcolumn5"/>
+                        <Grid Grid.Column="5" x:Name="zcolumn6"/>
+                        <Grid Grid.Column="6" x:Name="zcolumn7"/>
+                        <Grid Grid.Column="7" x:Name="zcolumn8"/>
+                        <Grid Grid.Column="8" x:Name="zcolumn9"/>
+                        <Grid Grid.Column="9" x:Name="zcolumn10"/>
+                    </Grid>
+        
+                    <ListView  Name="listView2" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                               Margin="0,10,0,0"
+                              Style="{StaticResource DefaultListView}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true">
+                                <GridViewColumn Header="商品编码"  Width="{Binding ElementName=ycolumn1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品名称"  Width="{Binding ElementName=ycolumn2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="单品码"  Width="{Binding ElementName=ycolumn3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="生产批号"  Width="{Binding ElementName=ycolumn4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="生成日期"  Width="{Binding ElementName=ycolumn5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效日期"  Width="{Binding ElementName=ycolumn6,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作类型"  Width="{Binding ElementName=ycolumn7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="库存变化单号"  Width="{Binding ElementName=ycolumn8,Path=ActualWidth}"/>
+                                <GridViewColumn Header="业务类型"  Width="{Binding ElementName=ycolumn7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作日期"  Width="{Binding ElementName=ycolumn8,Path=ActualWidth}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+
+                </Grid>
+            </Border>
+
         </Grid>
     </Grid>
 </UserControl>
