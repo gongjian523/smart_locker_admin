@@ -5,52 +5,26 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View.Inventory"
              mc:Ignorable="d" >
-    <Grid Background="AliceBlue" Height="300" Width="600">
-        <Label Height="34" Content="库存" Margin="10,10,385,256" />
-        <Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition />
-
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"  />
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="0" x:Name="gcolumn1"/>
-                <Grid Grid.Column="1" x:Name="gcolumn2"/>
-                <Grid Grid.Column="2" x:Name="gcolumn3"/>
-                <Grid Grid.Column="3" x:Name="gcolumn4"/>
-                <Grid Grid.Column="4" x:Name="gcolumn5"/>
-                <Grid Grid.Column="5" x:Name="gcolumn6"/>
-                <Grid Grid.Column="6" x:Name="gcolumn7"/>
-                <Grid Grid.Column="7" x:Name="gcolumn8"/>
-            </Grid>
-            <ListView  VerticalAlignment="Bottom" Grid.Row="2" Grid.Column="0" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Margin="-95,0,-105,193" Width="800">
-                <ListView.View>
-                    <GridView>
-                        <GridViewColumn Header="商品编码" DisplayMemberBinding="{Binding Path=goods_name}" Width="{Binding ElementName=gcolumn1,Path=ActualWidth}"/>
-                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=goods_code}" Width="{Binding ElementName=gcolumn2,Path=ActualWidth}"/>
-                        <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=gcolumn3,Path=ActualWidth}"/>
-                        <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=wait_num}"  Width="{Binding ElementName=gcolumn4,Path=ActualWidth}"/>
-                        <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=gcolumn5,Path=ActualWidth}"/>
-                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=gcolumn6,Path=ActualWidth}"/>
-                        <GridViewColumn Header="货位" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=gcolumn5,Path=ActualWidth}"/>
-                        <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=gcolumn6,Path=ActualWidth}"/>
-                    </GridView>
-                </ListView.View>
-            </ListView>
-        </Grid>
+    <Grid Background="AliceBlue" Height="400" Width="600">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Label Height="34" Grid.Row="0" Content="库存" />
+        <ListView  VerticalAlignment="Bottom"  Grid.Row="1"  ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center" Width="560" Margin="10,0,30,87" Height="273">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="商品编码" DisplayMemberBinding="{Binding Path=goods_name}" Width="70"/>
+                    <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=goods_code}" Width="70"/>
+                    <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=fetch_type}" Width="70"/>
+                    <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=wait_num}"  Width="70"/>
+                    <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding Path=stock_num}" Width="70"/>
+                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=remarks}" Width="70"/>
+                    <GridViewColumn Header="货位" DisplayMemberBinding="{Binding Path=stock_num}" Width="70"/>
+                    <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="70"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Button Content="确认" HorizontalAlignment="Left" Margin="266,315,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75" Click="onStockEvent"/>
     </Grid>
 </UserControl>

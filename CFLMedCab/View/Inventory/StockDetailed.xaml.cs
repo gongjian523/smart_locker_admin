@@ -35,7 +35,12 @@ namespace CFLMedCab.View.Inventory
             listView.DataContext= goodsBll.GetInvetoryGoodsDto(code);
         }
 
-        public void onStockEvent()
+        /// <summary>
+        /// 返回列表
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onStockEvent(object sender, RoutedEventArgs e)
         {
             EnterStockEvent(this, null);
         }

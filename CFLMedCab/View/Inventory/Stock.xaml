@@ -15,9 +15,9 @@
             </Grid.RowDefinitions>
             <Border Background="White" Padding="10" Margin="10 5" Grid.Row="0" CornerRadius="{DynamicResource GRadius}">
                 <Grid>
-                    <RadioButton Content="手术单号" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="OperationNum"/>
-                    <RadioButton Content="效期查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
-                    <RadioButton Content="出入库记录查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
+                    <RadioButton Content="手术单号" Name="stockSnapshot" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="StockSnapshot"/>
+                    <RadioButton Content="效期查询" Name="validity" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
+                    <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
                 </Grid>
             </Border>
             <Border Background="White" Padding="10" Margin="10 5" Grid.Row="1" CornerRadius="{DynamicResource GRadius}" x:Name="gChoice" RenderTransformOrigin="0.497,0.507">
@@ -31,8 +31,8 @@
             </Border>
             <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="1" CornerRadius="{DynamicResource GRadius}"  x:Name="gChoice1" RenderTransformOrigin="0.497,0.507" Visibility="Hidden">
                 <Grid>
-                    <RadioButton GroupName="single" Name="out" Style="{DynamicResource SingleNavButton}" IsChecked="True"  Margin="-610,-38,0,0" Content="出库" />
-                    <RadioButton GroupName="single" Name="in"  Style="{DynamicResource SingleNavButton}" Margin="-300,-38,0,0" Content="入库" />
+                    <RadioButton GroupName="single" Name="outStock" Style="{DynamicResource SingleNavButton}" IsChecked="True"  Margin="-610,-38,0,0" Content="出库" />
+                    <RadioButton GroupName="single" Name="inStock"  Style="{DynamicResource SingleNavButton}" Margin="-300,-38,0,0" Content="入库" />
                 </Grid>
             </Border>
             <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="1" CornerRadius="{DynamicResource GRadius}"  Name="gQuery" Visibility="Hidden" >
@@ -91,7 +91,7 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button x:Name="BtnConfirm" Content="库存明细" Click="onStockDetailed"  Width="75" Height="23" Tag="{Binding Path=goods_code}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <Button x:Name="BtnConfirm" Content="库存明细" Click="onStockDetailed"  Width="75" Height="23" Tag="{Binding }" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -100,7 +100,40 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-
+                    <ListView  VerticalAlignment="Top" Grid.Row="1"  Name="listView1" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                               Margin="0,10,0,0"
+                              Style="{StaticResource DefaultListView}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true">
+                                <GridViewColumn Header="商品编码" DisplayMemberBinding="{Binding goods_code}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="批号" DisplayMemberBinding="{Binding batch_number}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                    <ListView  VerticalAlignment="Top" Grid.Row="1"  Name="listView2" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                               Margin="0,10,0,0"
+                              Style="{StaticResource DefaultListView}">
+                        <ListView.View>
+                            <GridView AllowsColumnReorder="true">
+                                <GridViewColumn Header="商品编码" DisplayMemberBinding="{Binding goods_code}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="生产批号" DisplayMemberBinding="{Binding batch_number}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="生成日期" DisplayMemberBinding="{Binding birth_date,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效日期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding operate_type}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                <GridViewColumn Header="库存变化单号" DisplayMemberBinding="{Binding good_change_orderid}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="业务类型" DisplayMemberBinding="{Binding business_type}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作日期" DisplayMemberBinding="{Binding create_time}"   Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
             </Border>
         </Grid>

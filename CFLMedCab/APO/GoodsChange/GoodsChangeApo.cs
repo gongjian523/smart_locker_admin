@@ -23,5 +23,9 @@ namespace CFLMedCab.APO.GoodsChange
         /// </summary>
         public DateTime? endTime { get; set; }
 
+        /// <summary>
+        /// 商品名称
+        /// </summary>
+        public string name { get; set; }
     }
 }

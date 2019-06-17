@@ -1,4 +1,5 @@
-﻿using CFLMedCab.APO.Inventory;
+﻿using CFLMedCab.APO.GoodsChange;
+using CFLMedCab.APO.Inventory;
 using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Infrastructure;
@@ -29,25 +30,13 @@ namespace CFLMedCab.View
         public delegate void EnterStockDetailedHandler(object sender, GoodDto goodDto);
         public event EnterStockDetailedHandler EnterStockDetailedEvent;
         GoodsBll goodsBll = new GoodsBll();
+        GoodsChangeOrderBll goodsChangeOrderBll = new GoodsChangeOrderBll();
         public Stock()
         {
             InitializeComponent();
-            Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
-            foreach (HashSet<string> goodsEpsData in ht.Values)
-            {
-                goodsEpsHashSetDatas.UnionWith(goodsEpsData);
-            }
-            data(new GetGoodApo { goodsEpsDatas= goodsEpsHashSetDatas }, out int totalCount);
-
+            query(this, null);
         }
-
-        public void data(GetGoodApo getGoodApo,out int totalCount)
-        {
-            totalCount = 0;
-            listView.DataContext = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
-        }
-
+        
         /// <summary>
         /// 库存快照事件
         /// </summary>
@@ -62,6 +51,10 @@ namespace CFLMedCab.View
             single1.Visibility = Visibility.Hidden;
             single2.Visibility = Visibility.Hidden;
             single3.Visibility = Visibility.Hidden;
+            listView.Visibility = Visibility.Visible;
+            listView1.Visibility = Visibility.Hidden;
+            listView2.Visibility = Visibility.Hidden;
+            query(this,null);
         }
 
         /// <summary>
@@ -71,6 +64,7 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void query(object sender, RoutedEventArgs e)
         {
+            int totalCount;
             if (this.stockSnapshot.IsChecked == true)
             {
                 Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
@@ -79,7 +73,7 @@ namespace CFLMedCab.View
                 {
                     goodsEpsHashSetDatas.UnionWith(goodsEpsData);
                 }
-                goodsBll.GetStockGoodsDto(new GetGoodApo { goodsEpsDatas = goodsEpsHashSetDatas }, out int totalCount);
+                listView.DataContext= goodsBll.GetStockGoodsDto(new GetGoodApo { goodsEpsDatas = goodsEpsHashSetDatas }, out totalCount);
             }
             if (this.validity.IsChecked == true)
             {
@@ -89,11 +83,16 @@ namespace CFLMedCab.View
                 {
                     goodsEpsHashSetDatas.UnionWith(goodsEpsData);
                 }
-                goodsBll.GetValidityGoodsDto(new GetGoodsApo { goodsEpsDatas = goodsEpsHashSetDatas }, out int totalCount);
+                listView1.DataContext= goodsBll.GetValidityGoodsDto(new GetGoodsApo { goodsEpsDatas = goodsEpsHashSetDatas }, out totalCount);
             }
             else if (this.stock.IsChecked == true)
             {
-
+                GoodsChangeApo goodsChangeApo = new GoodsChangeApo();
+                if (this.outStock.IsChecked == true)
+                    goodsChangeApo.operate_type = 0;
+                else if (this.inStock.IsChecked == true)
+                    goodsChangeApo.operate_type = 1;
+                listView2.DataContext= goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out totalCount);
             }
         }
 
@@ -126,6 +125,10 @@ namespace CFLMedCab.View
             single1.Visibility = Visibility.Visible;
             single2.Visibility = Visibility.Visible;
             single3.Visibility = Visibility.Visible;
+            listView.Visibility = Visibility.Hidden;
+            listView1.Visibility = Visibility.Visible;
+            listView2.Visibility = Visibility.Hidden;
+            query(this, null);
         }
 
         /// <summary>
@@ -137,6 +140,10 @@ namespace CFLMedCab.View
         {
             gChoice.Visibility = Visibility.Hidden;
             gChoice1.Visibility = Visibility.Visible;
+            listView.Visibility = Visibility.Hidden;
+            listView1.Visibility = Visibility.Hidden;
+            listView2.Visibility = Visibility.Visible;
+            query(this, null);
         }
 
         /// <summary>

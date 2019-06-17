@@ -59,12 +59,14 @@ namespace CFLMedCab.DAL
             List<GoodsChangeDto> data;
 
             //查询语句
-            var queryable = Db.Queryable<GoodsChageOrderdtl, GoodsChageOrder>((ordtl, or) => new object[] { JoinType.Left, ordtl.good_change_orderid == or.id })
-                .Where((ordtl, or) => ordtl.operate_type == pageDataApo.operate_type)
-                .WhereIF(pageDataApo.startTime.HasValue, (ordtl, or) => or.create_time >= pageDataApo.startTime)
-                .WhereIF(pageDataApo.endTime.HasValue, (ordtl, or) => or.create_time <= pageDataApo.endTime)
-                .OrderBy((ordtl, or) => or.create_time, OrderByType.Desc)
-                .Select((ordtl, or) => new GoodsChangeDto
+            var queryable = Db.Queryable<GoodsChageOrderdtl, GoodsChageOrder>((ordtl, orl) => new object[] { JoinType.Left, ordtl.good_change_orderid == orl.id })
+                .Where((ordtl, orl) => ordtl.operate_type == pageDataApo.operate_type)
+                .WhereIF(pageDataApo.startTime.HasValue, (ordtl, orl) => orl.create_time >= pageDataApo.startTime)
+                .WhereIF(pageDataApo.endTime.HasValue, (ordtl, orl) => orl.create_time <= pageDataApo.endTime)
+                .WhereIF((!string.IsNullOrEmpty(pageDataApo.name) && !string.IsNullOrWhiteSpace(pageDataApo.name)), (ordtl, orl) => ordtl.name.Contains(pageDataApo.name))
+
+                 .OrderBy((ordtl, orl) => orl.create_time, OrderByType.Desc)
+                .Select((ordtl, orl) => new GoodsChangeDto
                 {
                     id = ordtl.id,
                     good_change_orderid = ordtl.good_change_orderid,
@@ -75,7 +77,8 @@ namespace CFLMedCab.DAL
                     batch_number = ordtl.batch_number,
                     birth_date = ordtl.birth_date,
                     expire_date = ordtl.expire_date,
-                    create_time = or.create_time
+                    create_time = orl.create_time,
+                    business_type=orl.type
                 });
 
 
@@ -92,55 +95,55 @@ namespace CFLMedCab.DAL
             return data;
         }
 
-		/// <summary>
-		///  生成领用信息
-		/// </summary>
-		/// <param name="goodsDtos">正常数据</param>
-		/// <returns></returns>
-		public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, RequisitionType requisitionType, RequisitionStatus requisitionStatus, ConsumablesStatus consumablesStatus)
-		{
-			if (goodsDtos.Count <= 0)
-			{
-				return false;
-			}
-			List<GoodsDto> goodsDtosNotEx = goodsDtos.ToList();
+        /// <summary>
+        ///  生成领用信息
+        /// </summary>
+        /// <param name="goodsDtos">正常数据</param>
+        /// <returns></returns>
+        public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, RequisitionType requisitionType, RequisitionStatus requisitionStatus, ConsumablesStatus consumablesStatus)
+        {
+            if (goodsDtos.Count <= 0)
+            {
+                return false;
+            }
+            List<GoodsDto> goodsDtosNotEx = goodsDtos.ToList();
 
-			if (goodsDtosNotEx.Count <= 0)
-			{
-				return false;
-			}
+            if (goodsDtosNotEx.Count <= 0)
+            {
+                return false;
+            }
 
-			//事务防止多插入产生脏数据
-			var result = Db.Ado.UseTran(() =>
-			{
+            //事务防止多插入产生脏数据
+            var result = Db.Ado.UseTran(() =>
+            {
 
-				//领用单id
-				int goodsChageOrderId = Db.Insertable(new GoodsChageOrder
-				{
-					create_time = DateTime.Now,
-					operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
-					type = (int)requisitionType,
-					status = (int)requisitionStatus,
+                //领用单id
+                int goodsChageOrderId = Db.Insertable(new GoodsChageOrder
+                {
+                    create_time = DateTime.Now,
+                    operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+                    type = (int)requisitionType,
+                    status = (int)requisitionStatus,
 
-				}).ExecuteReturnIdentity();
+                }).ExecuteReturnIdentity();
 
-				List<GoodsChageOrderdtl> goodsChageOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, GoodsChageOrderdtl>();
+                List<GoodsChageOrderdtl> goodsChageOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, GoodsChageOrderdtl>();
 
 
 
-				goodsChageOrderdtls.ForEach(it =>
-				{
-					it.related_order_id = goodsChageOrderId;
-					it.status = (int)consumablesStatus;
-				});
+                goodsChageOrderdtls.ForEach(it =>
+                {
+                    it.related_order_id = goodsChageOrderId;
+                    it.status = (int)consumablesStatus;
+                });
 
-				Db.Insertable(goodsChageOrderdtls).ExecuteCommand();
+                Db.Insertable(goodsChageOrderdtls).ExecuteCommand();
 
-			});
+            });
 
-			return result.IsSuccess;
-		}
+            return result.IsSuccess;
+        }
 
-	}
+    }
 
 }

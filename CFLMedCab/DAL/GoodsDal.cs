@@ -65,9 +65,9 @@ namespace CFLMedCab.DAL
 		{
 			//查询语句
 			return Db.Queryable<Goods>()
-				.Where(it => goodsEpsDatas.Contains(it.code))
-				.Select<GoodsDto>()
-				.OrderBy(it => it.expire_date, OrderByType.Asc)
+				.Where(it => goodsEpsDatas.Contains(it.goods_code))
+                .OrderBy(it => it.expire_date, OrderByType.Asc)
+                .Select<GoodsDto>()
 				.ToList();
 		}
 
@@ -153,7 +153,7 @@ namespace CFLMedCab.DAL
             var queryable = Db.Queryable<Goods>()
                 .Where(it => pageDataApo.goodsEpsDatas.Contains(it.code))
                 .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.name), it => it.name.Contains(pageDataApo.name))
-                .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.code), it => it.goods_code.Contains(pageDataApo.code))
+                .WhereIF(!string.IsNullOrWhiteSpace(pageDataApo.code), it => it.name.Contains(pageDataApo.code))
                 .GroupBy(it => it.goods_code)
                 .OrderBy(it => it.expire_date, OrderByType.Asc)
                 

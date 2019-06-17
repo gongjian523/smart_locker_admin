@@ -71,7 +71,7 @@
                             <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                             <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                             <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                            <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date}"   Width="{Binding ElementName=column4,Path=ActualWidth}" />
+                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy年MM月dd日}'}"   Width="{Binding ElementName=column4,Path=ActualWidth}" />
                             <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                             <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}"   Width="{Binding ElementName=column6,Path=ActualWidth}"/>
                          </GridView>
