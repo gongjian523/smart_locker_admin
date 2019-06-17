@@ -40,55 +40,7 @@ namespace CFLMedCab.View.Fetch
         {
             InitializeComponent();
             fetchOrder = model;
-            SurgeryOrderDto surgeryOrderDto = new SurgeryOrderDto { id = 2, surgery_dateiime = DateTime.Now };
-            surgeryNum.Content = surgeryOrderDto.id;
-            time.Content = surgeryOrderDto.surgery_dateiime;
-            List<SurgeryFetchDto> surgeryFetches = new List<SurgeryFetchDto>();
-            for (int i = 5; i >= 0; i--)
-            {
-                SurgeryFetchDetailsDto surgeryFetch = new SurgeryFetchDetailsDto
-                {
-                    fetch_order_id = i,
-                    goods_name = "注射器",
-                    goods_code = "gr1294",
-                    fetch_type = 1,
-                    wait_num = 2,
-                    fetch_num = 1,
-                    stock_num = 3,
-                    remarks = "麻醉专用"
-                };
-                surgeryFetch.total_num = surgeryFetch.wait_num + surgeryFetch.fetch_num;
-                surgeryFetches.Add(surgeryFetch);
-            }
-            listView.DataContext = surgeryFetches;
-
-            List<GoodsChageOrderdtlDto> goodsChageOrderdtls = new List<GoodsChageOrderdtlDto>();
-            for (int i = 5; i >= 0; i--)
-            {
-                GoodsChageOrderdtlDto goodsChageOrderdtl = new GoodsChageOrderdtlDto
-                {
-                    id = i,
-                    batch_number = "feg",
-                    birth_date = DateTime.Now,
-                    code = "ewfw",
-                    exception_flag = 0,
-                    expire_date = DateTime.Now,
-                    exception_description = "测试数据",
-                    fetch_type = 1,
-                    goods_code = "fwe",
-                    goods_id = 1,
-                    good_change_orderid = 1,
-                    name = "测试数据",
-                    operate_type = 0,
-                    position = "1号柜",
-                    related_order_id = 1,
-                    remarks = "测试数据",
-                    status = 0,
-                    valid_period = 4
-                };
-                goodsChageOrderdtls.Add(goodsChageOrderdtl);
-            }
-            listView1.DataContext = goodsChageOrderdtls;
+           
         }
 
         /// <summary>
