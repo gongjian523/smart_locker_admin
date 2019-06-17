@@ -7,19 +7,26 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Background="AliceBlue" >
-        <StackPanel Background="White" Margin="40"  Name="myGrid" >
-        </StackPanel>
-        <StackPanel Background="White" Margin="20" >
-            <Label Content="请输入手术单号或扫描手术单二维码" HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" FontWeight="Bold" FontSize="17"/>
-            <TextBox x:Name="tbOddNumbers" Height="48" Margin="20,20" TextWrapping="Wrap" Text="" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
+        <Grid Margin="20">
+            <Border Background="White" Padding="30 40"  Grid.Row="0" CornerRadius="{DynamicResource GRadius}">
+                <Grid x:Name="myGrid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Label Content="请输入手术单号或扫描手术单二维码" Grid.Row="0"  Style="{StaticResource lblTitle1}"/>
+                    <TextBox x:Name="tbOddNumbers" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" Text="" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
 
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
-                <Button Content="暂无手术单号" HorizontalAlignment="Left" Margin="0,0,4,0" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" VerticalAlignment="Top" Width="113" Height="48" Click="EnterNoNum_Click"/>
-                <Button Content="查询" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="20,0,40,0" VerticalAlignment="Top" Height="48"  Click="EnterDetail_Click"/>
-            </StackPanel>
-            <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-            </Grid>
-        </StackPanel>
+                    <StackPanel  Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button Content="暂无手术单号" HorizontalAlignment="Left" Margin="0,0,4,0" BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" VerticalAlignment="Top" Padding="10 0" Height="48" Click="EnterNoNum_Click"/>
+                        <Button Content="查询" Style="{DynamicResource RightAngleNavButton}" HorizontalAlignment="Left" Margin="20,0,20,0" VerticalAlignment="Top" Height="48"  Click="EnterDetail_Click"/>
+                    </StackPanel>
+                    <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
+                        <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>
