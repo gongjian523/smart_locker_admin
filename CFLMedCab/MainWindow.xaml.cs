@@ -744,9 +744,23 @@ namespace CFLMedCab
             BtnEnterStock.IsChecked = true;
 
             Stock stock = new Stock();
+            stock.EnterStockDetailedEvent += new Stock.EnterStockDetailedHandler(onEnterStockDetailedEvent);
             ContentFrame.Navigate(stock);
         }
 
+        private void onEnterStockDetailedEvent(object sender, string e)
+        {
+            StockDetailed stockDetailed = new StockDetailed(e);
+            stockDetailed.EnterStockEvent += new StockDetailed.EnterStockHandler(onEnterStock);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(stockDetailed);
+            }));
+        }
         #endregion
 
 

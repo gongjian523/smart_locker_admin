@@ -1,4 +1,5 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.APO.Inventory;
+using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Infrastructure.ToolHelper;
 using System;
@@ -110,6 +111,15 @@ namespace CFLMedCab.BLL
         public List<GoodsDto> GetInvetoryGoodsDto(Hashtable goodsEpsCollect)
         {
             return GoodsDal.GetGoodsDto(goodsEpsCollect);
+        }
+
+        /// <summary>
+        /// 获取库存所有数据
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodDto> GetStockGoodsDto(GetGoodApo getGoodApo,out int totalCount)
+        {
+            return GoodsDal.GetGoodDto(getGoodApo, out totalCount);
         }
     }
 }

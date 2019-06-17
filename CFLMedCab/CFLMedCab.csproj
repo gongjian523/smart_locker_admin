@@ -254,6 +254,9 @@
     <Compile Include="View\Inventory\InventoryPlanDetail.xaml.cs">
       <DependentUpon>InventoryPlanDetail.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Inventory\StockDetailed.xaml.cs">
+      <DependentUpon>StockDetailed.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Login\LoginInfo.xaml.cs">
       <DependentUpon>LoginInfo.xaml</DependentUpon>
     </Compile>
@@ -365,6 +368,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Inventory\InventoryPlanDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Inventory\StockDetailed.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
