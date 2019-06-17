@@ -26,6 +26,7 @@ namespace CFLMedCab
             HashSet<string> hs4 = new HashSet<string> { "E20000176012028219504DAD", "E20000176012026619504D8D", "E20000176012026319404F98", "E20000176012028019504DA0", "E20000176012026519504D85" };
             ht.Add("COM4", hs4);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
             User user = new User
             {
                 id = 1111,
@@ -33,7 +34,6 @@ namespace CFLMedCab
                 vein_id = 12323,
             };
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
-
         }
     }
 }

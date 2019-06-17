@@ -49,7 +49,6 @@ namespace CFLMedCab.View.Fetch
             EnterSurgeryDetailEvent(this, new FetchOrder
             {
                 id = 1,
-                business_order_id = 1,
                 create_time = DateTime.Now,
                 operator_id=1,
                 status=0,

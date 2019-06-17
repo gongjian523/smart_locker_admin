@@ -743,10 +743,10 @@ namespace CFLMedCab
             ContentFrame.Navigate(stock);
         }
 
-        private void onEnterStockDetailedEvent(object sender, string e)
+        private void onEnterStockDetailedEvent(object sender, GoodDto goodDto)
         {
-            StockDetailed stockDetailed = new StockDetailed(e);
-            stockDetailed.EnterStockEvent += new StockDetailed.EnterStockHandler(onEnterStock);
+            StockDetailed stockDetailed = new StockDetailed(goodDto);
+            stockDetailed.EnterStockEvent += new StockDetailed.EnterStockHandler(colseStockDetailedEvent);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -754,6 +754,15 @@ namespace CFLMedCab
                 MaskView.Visibility = Visibility.Visible;
 
                 PopFrame.Navigate(stockDetailed);
+            }));
+        }
+
+        private void colseStockDetailedEvent(object sender, RoutedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;
             }));
         }
         #endregion

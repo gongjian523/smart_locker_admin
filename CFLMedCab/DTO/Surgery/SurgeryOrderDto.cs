@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CFLMedCab.DTO.Fetch
+namespace CFLMedCab.DTO.Surgery
 {
-    class SurgeryOrderDto: SurgeryOrder
-    {
-    }
+	public class SurgeryOrderDto : SurgeryOrder
+	{
+	}
 }
