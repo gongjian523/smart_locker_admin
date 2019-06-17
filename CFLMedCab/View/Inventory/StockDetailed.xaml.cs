@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DTO.Goodss;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,9 +25,19 @@ namespace CFLMedCab.View.Inventory
         //返回列表页面
         public delegate void EnterStockHandler(object sender, RoutedEventArgs e);
         public event EnterStockHandler EnterStockEvent;
-        public StockDetailed(string code)
+
+        GoodsBll goodsBll = new GoodsBll();
+        public StockDetailed(GoodDto goodDto)
         {
             InitializeComponent();
+            HashSet<string> code = new HashSet<string>();
+            code.Add(goodDto.goods_code);
+            listView.DataContext= goodsBll.GetInvetoryGoodsDto(code);
+        }
+
+        public void onStockEvent()
+        {
+            EnterStockEvent(this, null);
         }
     }
 }

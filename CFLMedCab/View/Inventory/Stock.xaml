@@ -8,9 +8,9 @@
              d:DesignHeight="450" Width="800" MinWidth ="800">
     <Grid Background="AliceBlue">
         <Grid Margin="10,10,10,387" Background="White">
-            <RadioButton Content="手术单号" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="OperationNum"/>
-            <RadioButton Content="效期查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
-            <RadioButton Content="出入库记录查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
+            <RadioButton Content="库存快照" GroupName="menu1" Name="stockSnapshot" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="StockSnapshot"/>
+            <RadioButton Content="效期查询" GroupName="menu1" Name="validity" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
+            <RadioButton Content="出入库记录查询" GroupName="menu1" Name="stock" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
         </Grid>
         <Grid Background="White" x:Name="gChoice" RenderTransformOrigin="0.497,0.507" Margin="10,78,10,324">
             <RadioButton  Content="库存快照" GroupName="Stock" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
@@ -26,7 +26,7 @@
         <Grid Background="White" Name="gQuery" HorizontalAlignment="Left" Height="50" Margin="10,126,0,0" VerticalAlignment="Top" MinWidth="780" Visibility="Hidden" >
             <TextBox HorizontalAlignment="Left" Height="30" Margin="20,10,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
             <TextBox HorizontalAlignment="Left" Height="30" Margin="325,9,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
-            <Button Content="查询" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,6,0,0" VerticalAlignment="Top" MinWidth="111" Height="30"/>
+            <Button Content="查询" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,6,0,0" VerticalAlignment="Top" MinWidth="111" Height="30" Click="query"/>
         </Grid>
         <Grid Name="Content" HorizontalAlignment="Left" Height="259" Margin="10,146,0,0" VerticalAlignment="Top" MinWidth="780" Background="White">
             <Label Content="累计库存数量：" Name="Tips" FontSize="15" HorizontalAlignment="Left" Margin="31,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>

@@ -743,9 +743,9 @@ namespace CFLMedCab
             ContentFrame.Navigate(stock);
         }
 
-        private void onEnterStockDetailedEvent(object sender, string e)
+        private void onEnterStockDetailedEvent(object sender, GoodDto goodDto)
         {
-            StockDetailed stockDetailed = new StockDetailed(e);
+            StockDetailed stockDetailed = new StockDetailed(goodDto);
             stockDetailed.EnterStockEvent += new StockDetailed.EnterStockHandler(onEnterStock);
 
             App.Current.Dispatcher.Invoke((Action)(() =>

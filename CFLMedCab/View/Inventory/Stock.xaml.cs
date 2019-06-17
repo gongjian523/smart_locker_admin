@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.APO.Inventory;
 using CFLMedCab.BLL;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Infrastructure;
 using System;
 using System.Collections;
@@ -25,7 +26,7 @@ namespace CFLMedCab.View
     public partial class Stock : UserControl
     {       
         //跳出详情页面
-        public delegate void EnterStockDetailedHandler(object sender, string goodsCode);
+        public delegate void EnterStockDetailedHandler(object sender, GoodDto goodDto);
         public event EnterStockDetailedHandler EnterStockDetailedEvent;
         GoodsBll goodsBll = new GoodsBll();
         public Stock()
@@ -48,11 +49,11 @@ namespace CFLMedCab.View
         }
 
         /// <summary>
-        /// 手术单号时间
+        /// 库存快照事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void OperationNum(object sender, RoutedEventArgs e)
+        private void StockSnapshot(object sender, RoutedEventArgs e)
         {
             Tips.Visibility = Visibility.Visible;
             rbQuery.Visibility = Visibility.Visible;
@@ -64,13 +65,36 @@ namespace CFLMedCab.View
         }
 
         /// <summary>
-        /// 库存快照事件
+        /// 查询
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void StockSnapshot(object sender, RoutedEventArgs e)
+        private void query(object sender, RoutedEventArgs e)
         {
-            
+            if (this.stockSnapshot.IsChecked == true)
+            {
+                Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+                HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
+                foreach (HashSet<string> goodsEpsData in ht.Values)
+                {
+                    goodsEpsHashSetDatas.UnionWith(goodsEpsData);
+                }
+                goodsBll.GetStockGoodsDto(new GetGoodApo { goodsEpsDatas = goodsEpsHashSetDatas }, out int totalCount);
+            }
+            if (this.validity.IsChecked == true)
+            {
+                Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+                HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
+                foreach (HashSet<string> goodsEpsData in ht.Values)
+                {
+                    goodsEpsHashSetDatas.UnionWith(goodsEpsData);
+                }
+                goodsBll.GetValidityGoodsDto(new GetGoodsApo { goodsEpsDatas = goodsEpsHashSetDatas }, out int totalCount);
+            }
+            else if (this.stock.IsChecked == true)
+            {
+
+            }
         }
 
         /// <summary>
@@ -122,8 +146,8 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void onStockDetailed(object sender, RoutedEventArgs e)
         {
-            string code = (string)((Button)sender).Tag;
-            EnterStockDetailedEvent(this,code);
+            GoodDto goodDto = (GoodDto)((Button)sender).Tag;
+            EnterStockDetailedEvent(this, goodDto);
         }
     }
 }
