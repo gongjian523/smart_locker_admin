@@ -1,11 +1,13 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:CFLMedCab.Controls.Styles">
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <SolidColorBrush x:Key="TipBgColor" Color="#FD854E" />
     <SolidColorBrush x:Key="AlternationColor" Color="#ECECEC" />
     <SolidColorBrush x:Key="SelectedColor" Color="#FFEAE4" />
     <SolidColorBrush x:Key="MouseOverColor" Color="#FFEAE4" />
     <SolidColorBrush x:Key="GListColor" Color="#D8E7FF" />
+
+    
+    <SolidColorBrush x:Key="TitleColor1" Color="#333333" />
 
 
     <GridLength x:Key="rowHeight25">25</GridLength>
