@@ -7,29 +7,98 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" Width="800" MinWidth ="800">
     <Grid Background="AliceBlue">
-        <Grid Margin="10,10,10,387" Background="White">
-            <RadioButton Content="手术单号" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="OperationNum"/>
-            <RadioButton Content="效期查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
-            <RadioButton Content="出入库记录查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
-        </Grid>
-        <Grid Background="White" x:Name="gChoice" RenderTransformOrigin="0.497,0.507" Margin="10,78,10,324">
-            <RadioButton  Content="库存快照" GroupName="Stock" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
-            <RadioButton  Content="条件查询" Name="rbQuery" GroupName="rbQuery" IsChecked="True" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top" Style="{DynamicResource CircularNavButton}"  Click="ConditionQuery" />
-            <RadioButton GroupName="single" Name="single1" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="129,-38,514,8" Content="效期小于1个月" />
-            <RadioButton GroupName="single" Name="single2" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="282,-38,341,8" Content="效期小于2个月" />
-            <RadioButton GroupName="single" Name="single3" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="444,-38,179,8" Content="效期小于3个月" />
-        </Grid>
-        <Grid Background="White" x:Name="gChoice1" RenderTransformOrigin="0.497,0.507" Margin="10,78,10,324" Visibility="Hidden">
-            <RadioButton GroupName="single" Name="out" Style="{DynamicResource SingleNavButton}" IsChecked="True"  Margin="-610,-38,0,0" Content="出库" />
-            <RadioButton GroupName="single" Name="in"  Style="{DynamicResource SingleNavButton}" Margin="-300,-38,0,0" Content="入库" />
-        </Grid>
-        <Grid Background="White" Name="gQuery" HorizontalAlignment="Left" Height="50" Margin="10,126,0,0" VerticalAlignment="Top" MinWidth="780" Visibility="Hidden" >
-            <TextBox HorizontalAlignment="Left" Height="30" Margin="20,10,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
-            <TextBox HorizontalAlignment="Left" Height="30" Margin="325,9,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
-            <Button Content="查询" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,6,0,0" VerticalAlignment="Top" MinWidth="111" Height="30"/>
-        </Grid>
-        <Grid Name="Content" HorizontalAlignment="Left" Height="259" Margin="10,146,0,0" VerticalAlignment="Top" MinWidth="780" Background="White">
-            <Label Content="累计库存数量：" Name="Tips" FontSize="15" HorizontalAlignment="Left" Margin="31,10,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Background="White" Padding="10" Grid.Row="0" CornerRadius="{DynamicResource GRadius}">
+                <Grid>
+                    <RadioButton Content="手术单号" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="OperationNum"/>
+                    <RadioButton Content="效期查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
+                    <RadioButton Content="出入库记录查询" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
+                </Grid>
+            </Border>
+            <Border Background="White" Padding="10" Grid.Row="1" CornerRadius="{DynamicResource GRadius}" x:Name="gChoice" RenderTransformOrigin="0.497,0.507">
+                <Grid>
+                    <RadioButton  Content="库存快照" GroupName="Stock" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
+                    <RadioButton  Content="条件查询" Name="rbQuery" GroupName="rbQuery" IsChecked="True" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top" Style="{DynamicResource CircularNavButton}"  Click="ConditionQuery" />
+                    <RadioButton GroupName="single" Name="single1" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="129,-38,514,8" Content="效期小于1个月" />
+                    <RadioButton GroupName="single" Name="single2" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="282,-38,341,8" Content="效期小于2个月" />
+                    <RadioButton GroupName="single" Name="single3" Visibility="Hidden" Style="{DynamicResource SingleNavButton}" Margin="444,-38,179,8" Content="效期小于3个月" />
+                </Grid>
+            </Border>
+            <Border Background="White" Padding="10" Grid.Row="1" CornerRadius="{DynamicResource GRadius}"  x:Name="gChoice1" RenderTransformOrigin="0.497,0.507" Visibility="Hidden">
+                <Grid>
+                    <RadioButton GroupName="single" Name="out" Style="{DynamicResource SingleNavButton}" IsChecked="True"  Margin="-610,-38,0,0" Content="出库" />
+                    <RadioButton GroupName="single" Name="in"  Style="{DynamicResource SingleNavButton}" Margin="-300,-38,0,0" Content="入库" />
+                </Grid>
+            </Border>
+            <Border Background="White" Padding="10" Grid.Row="1" CornerRadius="{DynamicResource GRadius}"  Name="gQuery" Visibility="Hidden" >
+                <Grid>
+                    <TextBox HorizontalAlignment="Left" Height="30" Margin="20,10,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
+                    <TextBox HorizontalAlignment="Left" Height="30" Margin="325,9,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
+                    <Button Content="查询" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,6,0,0" VerticalAlignment="Top" MinWidth="111" Height="30"/>
+                </Grid>
+            </Border>
+            <Border Background="White" Padding="10" Grid.Row="2" CornerRadius="{DynamicResource GRadius}" Name="Content">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid  x:Name="myGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" x:Name="column1"/>
+                        <Grid Grid.Column="1" x:Name="column2"/>
+                        <Grid Grid.Column="2" x:Name="column3"/>
+                        <Grid Grid.Column="3" x:Name="column4"/>
+                        <Grid Grid.Column="4" x:Name="column5"/>
+                        <Grid Grid.Column="5" x:Name="column6"/>
+                        <Grid Grid.Column="6" x:Name="column7"/>
+                        <Grid Grid.Column="7" x:Name="column8"/>
+                        <Grid Grid.Column="8" x:Name="column9"/>
+                    </Grid>
+                    <Border Grid.Row="0" Padding="5"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label Content="累计库存数量：" Name="Tips" FontSize="15" HorizontalAlignment="Left" Margin="31,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
+                            <Label Content="入库明细"/>
+                        </StackPanel>
+                    </Border>
+                    <ListView VerticalAlignment="Top" Grid.Row="1" Name="listView"
+                              HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                               Margin="0,10,0,0"
+                              Style="{StaticResource DefaultListView}"
+                              >
+                        <ListView.View>
+                            <GridView>
+
+                                <GridViewColumn Header="商品编码"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品名称" Width="{Binding ElementName=column2,Path=ActualWidth}" />
+                                <GridViewColumn Header="单品码"  Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="生产批号"  Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效日期" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作类型" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                <GridViewColumn Header="库存变化单号" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="业务类型" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作日"  Width="{Binding ElementName=column9,Path=ActualWidth}"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Border>
         </Grid>
     </Grid>
 </UserControl>
