@@ -18,7 +18,7 @@ namespace CFLMedCab.DTO.Replenish
 		/// <summary>
 		/// 派发时间，来源总工单创建时间
 		/// </summary>
-		public DateTime distribute_time;
+		public DateTime distribute_time { get; set; }
 
 	}
 }

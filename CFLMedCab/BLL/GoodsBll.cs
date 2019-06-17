@@ -11,62 +11,62 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.BLL
 {
-	public class GoodsBll
-	{
+    public class GoodsBll
+    {
 
-		private readonly GoodsDal GoodsDal;
+        private readonly GoodsDal GoodsDal;
 
-		public GoodsBll()
-		{
-			GoodsDal = GoodsDal.GetInstance();
-		}
+        public GoodsBll()
+        {
+            GoodsDal = GoodsDal.GetInstance();
+        }
 
-		/// <summary>
-		/// 获取商品库存变化
-		/// </summary>
-		/// <param name="preGoodsEpsCollect">之前商品集合</param>
-		/// <param name="afterGoodsEpsCollect">之后商品集合</param>
-		/// <returns></returns>
-		public List<GoodsDto> GetCompareSimpleGoodsDto(HashSet<string> preGoodsEpsCollect, HashSet<string> afterGoodsEpsCollect)
-		{
+        /// <summary>
+        /// 获取商品库存变化
+        /// </summary>
+        /// <param name="preGoodsEpsCollect">之前商品集合</param>
+        /// <param name="afterGoodsEpsCollect">之后商品集合</param>
+        /// <returns></returns>
+        public List<GoodsDto> GetCompareSimpleGoodsDto(HashSet<string> preGoodsEpsCollect, HashSet<string> afterGoodsEpsCollect)
+        {
 
-			var goodsDtos = new List<GoodsDto>();
+            var goodsDtos = new List<GoodsDto>();
 
-			foreach (string currentEps in afterGoodsEpsCollect)
-			{
-				if (!preGoodsEpsCollect.Contains(currentEps))
-				{
-					goodsDtos.Add(new GoodsDto
-					{
-						code = currentEps,
-						operate_type = 1,
-					});
-				}
-			}
+            foreach (string currentEps in afterGoodsEpsCollect)
+            {
+                if (!preGoodsEpsCollect.Contains(currentEps))
+                {
+                    goodsDtos.Add(new GoodsDto
+                    {
+                        code = currentEps,
+                        operate_type = 1,
+                    });
+                }
+            }
 
-			foreach (string currentEps in preGoodsEpsCollect)
-			{
-				if (!afterGoodsEpsCollect.Contains(currentEps))
-				{
-					goodsDtos.Add(new GoodsDto
-					{
-						code = currentEps,
-						operate_type = 0,
-					});
-				}
-			}
+            foreach (string currentEps in preGoodsEpsCollect)
+            {
+                if (!afterGoodsEpsCollect.Contains(currentEps))
+                {
+                    goodsDtos.Add(new GoodsDto
+                    {
+                        code = currentEps,
+                        operate_type = 0,
+                    });
+                }
+            }
 
-			return goodsDtos;
-		}
+            return goodsDtos;
+        }
 
-		/// <summary>
-		/// 获取商品库存变化
-		/// </summary>
-		/// <param name="preGoodsEpsCollect">之前商品集合</param>
-		/// <param name="afterGoodsEpsCollect">之后商品集合</param>
-		/// <returns></returns>
-		public List<GoodsDto> GetCompareSimpleGoodsDto(Hashtable preGoodsEpsCollect, Hashtable afterGoodsEpsCollect)
-		{
+        /// <summary>
+        /// 获取商品库存变化
+        /// </summary>
+        /// <param name="preGoodsEpsCollect">之前商品集合</param>
+        /// <param name="afterGoodsEpsCollect">之后商品集合</param>
+        /// <returns></returns>
+        public List<GoodsDto> GetCompareSimpleGoodsDto(Hashtable preGoodsEpsCollect, Hashtable afterGoodsEpsCollect)
+        {
 
             HashSet<string> preGoodsEpsHashSet = new HashSet<string>();
 
@@ -80,29 +80,29 @@ namespace CFLMedCab.BLL
             }
 
             foreach (HashSet<string> currentEps in afterGoodsEpsCollect.Values)
-			{
+            {
                 afterGoodsEpsHashSet.UnionWith(currentEps);
             }
 
-			return GetCompareSimpleGoodsDto(preGoodsEpsHashSet, afterGoodsEpsHashSet);
-		}
+            return GetCompareSimpleGoodsDto(preGoodsEpsHashSet, afterGoodsEpsHashSet);
+        }
 
-		/// <summary>
-		/// 获取商品库存变化
-		/// </summary>
-		/// <param name="preGoodsEpsCollect">之前商品集合</param>
-		/// <param name="afterGoodsEpsCollect">之后商品集合</param>
-		/// <returns></returns>
-		public List<GoodsDto> GetCompareGoodsDto(HashSet<string> preGoodsEpsCollect, HashSet<string> afterGoodsEpsCollect)
-		{
-			return GoodsDal.GetGoodsDto(GetCompareSimpleGoodsDto(preGoodsEpsCollect, afterGoodsEpsCollect));
-		}
+        /// <summary>
+        /// 获取商品库存变化
+        /// </summary>
+        /// <param name="preGoodsEpsCollect">之前商品集合</param>
+        /// <param name="afterGoodsEpsCollect">之后商品集合</param>
+        /// <returns></returns>
+        public List<GoodsDto> GetCompareGoodsDto(HashSet<string> preGoodsEpsCollect, HashSet<string> afterGoodsEpsCollect)
+        {
+            return GoodsDal.GetGoodsDto(GetCompareSimpleGoodsDto(preGoodsEpsCollect, afterGoodsEpsCollect));
+        }
 
 
-		public List<GoodsDto> GetCompareGoodsDto(Hashtable preGoodsEpsCollect, Hashtable afterGoodsEpsCollect)
-		{
-			return GoodsDal.GetGoodsDto(GetCompareSimpleGoodsDto(preGoodsEpsCollect, afterGoodsEpsCollect));
-		}
+        public List<GoodsDto> GetCompareGoodsDto(Hashtable preGoodsEpsCollect, Hashtable afterGoodsEpsCollect)
+        {
+            return GoodsDal.GetGoodsDto(GetCompareSimpleGoodsDto(preGoodsEpsCollect, afterGoodsEpsCollect));
+        }
 
         /// <summary>
         /// 获取盘点所有数据(Hashtable)
@@ -131,15 +131,29 @@ namespace CFLMedCab.BLL
         {
             HashSet<string> hs = new HashSet<string>();
             hs.Add(code);
-            return GoodsDal.GetGoodsDto(hs).Count> 0;
+            return GoodsDal.GetGoodsDto(hs).Count > 0;
         }
 
+        /// <summary>
+        /// 库存快照
         /// </summary>
+        /// <param name="getGoodApo"></param>
+        /// <param name="totalCount"></param>
         /// <returns></returns>
         public List<GoodDto> GetStockGoodsDto(GetGoodApo getGoodApo, out int totalCount)
         {
             return GoodsDal.GetGoodDto(getGoodApo, out totalCount);
         }
 
+        /// <summary>
+        /// 效期 查询
+        /// </summary>
+        /// <param name="getGoodApo"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public List<GoodsDto> GetValidityGoodsDto(GetGoodsApo getGoodApo, out int totalCount)
+        {
+            return GoodsDal.GetGoodsDto(getGoodApo, out totalCount);
+        }
     }
 }

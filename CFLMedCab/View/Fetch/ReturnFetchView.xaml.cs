@@ -60,13 +60,13 @@ namespace CFLMedCab.View.Fetch
                     fetch_type = 1,
                     goods_code = "fwe",
                     goods_id = 1,
-                    good_change_orderid = 1,
+                   
                     name = "测试数据",
                     operate_type = 0,
                     position = "1号柜",
                     related_order_id = 1,
                     remarks = "测试数据",
-                    status = 0,
+                    
                     valid_period = 4
                 };
                 goodsChageOrderdtls.Add(goodsChageOrderdtl);

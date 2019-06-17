@@ -78,7 +78,13 @@ namespace CFLMedCab.Model.Enum
 		/// 上架商品不在工单目录
 		/// </summary>
 		[Description("上架商品不在工单目录")]
-		上架商品不在工单目录 = 4
+		上架商品不在工单目录 = 4,
+
+		/// <summary>
+		/// 商品不在待领目录
+		/// </summary>
+		[Description("商品不在待领目录")]
+		商品不在待领目录 = 5
 	}
 
 	/// <summary>
@@ -94,16 +100,34 @@ namespace CFLMedCab.Model.Enum
 
 
 		/// <summary>
-		/// 手术领用
+		/// 手术领用（无单）
 		/// </summary>
-		[Description("手术领用")]
-		手术领用 = 2,
+		[Description("手术领用(无单)")]
+		无单手术领用 = 2,
+
+		/// <summary>
+		/// 手术领用（有单）
+		/// </summary>
+		[Description("手术领用(有单)")]
+		有单手术领用 = 3,
 
 		/// <summary>
 		/// 领用回退
 		/// </summary>
 		[Description("领用回退")]
-		领用回退 = 3,
+		领用回退 = 4,
+
+		/// <summary>
+		/// 退货出库
+		/// </summary>
+		[Description("退货出库")]
+		退货出库 = 5,
+
+		/// <summary>
+		/// 补货入库
+		/// </summary>
+		[Description("补货入库")]
+		补货入库 = 6
 	}
 
 	/// <summary>

@@ -18,16 +18,16 @@ namespace CFLMedCab.Model
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
-        /// <summary>
-        /// 库存变化单编号
-        /// </summary>
-        [SugarColumn(IsNullable = true)]
-        public int good_change_orderid { get; set; }
 
-        /// <summary>
-        /// 商品编号
-        /// </summary>
-        [SugarColumn(IsNullable = true)]
+		/// <summary>
+		/// 关联操作单据(库存变化单编号)
+		/// </summary>
+		public int related_order_id { get; set; }
+
+		/// <summary>
+		/// 商品编号
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
         public int goods_id { get; set; }
 
         /// <summary>
@@ -97,14 +97,11 @@ namespace CFLMedCab.Model
         /// </summary>
         public string remarks { get; set; }
 
-        /// <summary>
-        /// 业务确认状态 状态： 0  待确认；1 已确认
-        /// </summary>
-        public int status { get; set; }
+		
+		/// <summary>
+		/// 业务确认状态 状态： 0  待确认；1 已确认
+		/// </summary>
+		public int business_status { get; set; }
 
-        /// <summary>
-        /// 关联操作单据 1。标识非异常的商品，自动关联业务单号。
-        /// </summary>
-        public int related_order_id { get; set; }
-    }
+	}
 }

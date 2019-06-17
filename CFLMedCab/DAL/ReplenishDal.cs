@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.APO;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
@@ -65,20 +66,20 @@ namespace CFLMedCab.DAL
 			List<ReplenishSubOrderDto> data;
 
 			//查询语句
-			var queryable = Db.Queryable<ReplenishSubOrder>()
-				.Where(it => it.status == 0)
-				.OrderBy(it => it.create_time, OrderByType.Desc)
-				.Select(it => new ReplenishSubOrderDto
+			var queryable = Db.Queryable<ReplenishSubOrder,ReplenishOrder>((rso, ro) => new object[] {
+            JoinType.Left, rso.replenish_order_code == ro.code})
+				.Where((rso, ro) => rso.status == 0 && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.OrderBy(rso => rso.create_time, OrderByType.Desc)
+				.Select((rso, ro) => new ReplenishSubOrderDto
 				{
-					id = it.id,
-					code = it.code,
-					replenish_order_code = it.replenish_order_code,
-					create_time = it.create_time,
-					status = it.status,
-					distribute_time = SqlFunc.Subqueryable<ReplenishOrder>()
-													  .Where(itpo => itpo.code == it.replenish_order_code).Select(itpo => itpo.create_time),
+					id = rso.id,
+					code = rso.code,
+					replenish_order_code = rso.replenish_order_code,
+					create_time = rso.create_time,
+					status = rso.status,
+					distribute_time = DateTime.Now,
 					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
-													  .Where(itsub => itsub.replenish_sub_orderid == it.id && itsub.status == 0)
+													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == 0)
 													  .Count()
 				});
 

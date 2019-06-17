@@ -10,15 +10,20 @@ namespace CFLMedCab.Model
     public class FetchOrder
     {
         /// <summary>
-        /// 领用单号（主键ID）
+        /// 主键ID
         /// </summary>
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
-        /// <summary>
-        /// 领用时间
-        /// </summary>
-        [SugarColumn(IsNullable = true)]
+		/// <summary>
+		/// 领用单号（主键ID）
+		/// </summary>
+		public string code { get; set; }
+
+		/// <summary>
+		/// 领用时间
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
         public DateTime create_time { get; set; }
 
         /// <summary>
@@ -40,7 +45,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 业务单号
         /// </summary>
-        public int business_order_id { get; set; }
+        public string business_order_code { get; set; }
 
         /// <summary>
         /// 清台单编号

@@ -113,9 +113,9 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <Button x:Name="BtnConfirm" Content="确认"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
-                                                <Button x:Name="BtnDetail" Content="查看"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
-                                                <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}"   />
+                                                <!--<Button x:Name="BtnConfirm" Content="确认"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                                <Button x:Name="BtnDetail" Content="查看"  Width="50" Height="23"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>-->
+
                                             </StackPanel>
                                         </DataTemplate>
 

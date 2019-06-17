@@ -451,19 +451,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 						//记录这次时间
 						timerLastTime = currentTimerTime;
 						//语音播报
-						synth.Speak("你好！请关门！");
-						
+						synth.Speak("操作超时！请关门！");
 					}
-
 				}
-				
-				
 			}
-
 		}
-
 	}
-
-
-
 }

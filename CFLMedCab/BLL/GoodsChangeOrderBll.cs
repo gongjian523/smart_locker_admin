@@ -1,4 +1,6 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.APO.GoodsChange;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -10,11 +12,22 @@ namespace CFLMedCab.BLL
 {
     public class GoodsChangeOrderBll
     {
-        //GoodsChageOrderDal goodsChageOrderDal = new GoodsChageOrderDal();
+        private readonly GoodsChangeOrderDal goodsChageOrderDal;
 
-        //public int Add(GoodsChageOrder model)
-        //{
-        //    return goodsChageOrderDal.Insert(model);
-        //}
+        public GoodsChangeOrderBll()
+        {
+            goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
+        }
+
+        /// <summary>
+        /// 库存记录查询
+        /// </summary>
+        /// <param name="pageDataApo"></param>
+        /// <param name="totalCount"></param>
+        /// <returns></returns>
+        public List<GoodsChangeDto> GetGoodsChange(GoodsChangeApo pageDataApo, out int totalCount)
+        {
+            return goodsChageOrderDal.GetGoodsChange(pageDataApo,out totalCount);
+        }
     }
 }

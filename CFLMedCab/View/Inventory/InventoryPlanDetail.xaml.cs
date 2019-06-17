@@ -1,8 +1,11 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -23,6 +26,9 @@ namespace CFLMedCab.View.Inventory
         public delegate void HidePopInventoryPlanHandler(object sender, RoutedEventArgs e);
         public event HidePopInventoryPlanHandler HidePopInventoryPlanEvent;
 
+        InventoryBll inventoryBll = new InventoryBll();
+
+        List<InventoryPlan> list = new List<InventoryPlan>();
 
         public InventoryPlanDetail()
         {
@@ -30,6 +36,10 @@ namespace CFLMedCab.View.Inventory
             //listView.DataContext = inventoryPlanDal.GetAllInventoryPlan().DefaultView;
             //使用ItemsSource的形式
             //listBox1.ItemsSource = GetDataTable().DefaultView;
+
+            list = inventoryBll.GetInventoryPlan();
+
+            listView.DataContext = list;
             listView.SelectedIndex = 0;
         }
 
@@ -46,7 +56,7 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onSave(object sender, RoutedEventArgs e)
         {
-            
+            inventoryBll.UpdateInventoryPlan(list);
 
             HidePopInventoryPlanEvent(this, null);
         }
@@ -68,7 +78,33 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onAddPlan(object sender, RoutedEventArgs e)
         {
+            string inputstr = planInputTb.Text;
+            string pattenStr = "^(0\\d{1}|1\\d{1}|2[0-3]):([0-5]\\d{1})$";
+            var ran = new Random();
 
+
+            if(! Regex.IsMatch(inputstr, pattenStr))
+            {
+                planInputTb.Text = "请按照格式输入！";
+                return;
+            }
+
+            if(list.Where(item => item.inventorytime_str == inputstr).ToList().Count > 0)
+            {
+                planInputTb.Text = "这个时间已经被设置！";
+                return;
+            }
+
+
+            list.Add(new InventoryPlan
+            {
+                id = 0,
+                code = "P" + DateTime.Now.ToString("HHmmss") + ran.Next(9999),
+                inventorytime_str = inputstr,
+                status = 0
+            });
+
+            listView.Items.Refresh();
         }
     }
 }

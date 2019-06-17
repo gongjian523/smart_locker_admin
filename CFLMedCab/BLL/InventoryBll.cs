@@ -140,13 +140,23 @@ namespace CFLMedCab.BLL
         /// <returns></returns>
         public void UpdateInventoryDetails(List<InventoryOrderdtl> list)
         {
-            foreach(var item in list)
-            {
-                if (item.id == 0)
-                    inventoryDal.InsertInventoryDetails(item);
-                else
-                    inventoryDal.UpdateInventoryDetails(item);
-            }
+            //foreach(var item in list)
+            //{
+            //    if (item.id == 0)
+            //        inventoryDal.InsertInventoryDetails(item);
+            //    else
+            //        inventoryDal.UpdateInventoryDetails(item);
+            //}
+
+            //更新已有的计划
+            var oldlist = list.Where(item => item.id != 0).ToList();
+            if (oldlist.Count != 0)
+                inventoryDal.UpdateInventoryDetails(oldlist);
+
+            //新增计划
+            var newlist = list.Where(item => item.id == 0).ToList();
+            if (newlist.Count != 0)
+                inventoryDal.InsertInventoryDetails(newlist);
         }
 
         /// <summary>
@@ -164,7 +174,20 @@ namespace CFLMedCab.BLL
         /// <returns></returns>
         public void UpdateInventoryPlan(List<InventoryPlan> list)
         {
-            inventoryDal.UpdateInventoryPlan(list);
+            //更新已有的计划
+            var oldlist = list.Where(item => item.id != 0).ToList();
+            if(oldlist.Count != 0)
+                inventoryDal.UpdateInventoryPlan(oldlist);
+
+            //新增计划
+            var newlist = list.Where(item => item.id == 0).ToList();
+            if (newlist.Count != 0)
+                inventoryDal.InsertInventoryPlan(newlist);
+        }
+
+        public List<InventoryPlan> GetInventoryPlan()
+        {
+            return inventoryDal.GetInventoryPlan();
         }
 
 

@@ -29,7 +29,7 @@
                     <Label Content="业务类型" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
                     <Label Content="补货入库" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
                     <Label  Grid.Column="0" Grid.Row="2" Content="操作人" Foreground="#666666" HorizontalAlignment="Left"  VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                    <Label  Grid.Column="0" Grid.Row="3" Content="操作人" Name="operator" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label  Grid.Column="0" Grid.Row="3" Content="操作人" Name="operatorName" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                     <Label  Grid.Column="1" Grid.Row="2" Content="上架工单号" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                     <Label  Grid.Column="1" Grid.Row="3" Content="上架工单号" Name="orderNum" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
                 </Grid>
@@ -76,7 +76,7 @@
                                 <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
                                 <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
                                 <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
-                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy年MM月dd日}'}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                                 <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
                                 <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
                             </GridView>
