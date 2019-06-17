@@ -13,16 +13,21 @@ namespace CFLMedCab.Model
     public class SurgeryOrder
     {
         /// <summary>
-        /// 手术单编号
+        /// 手术单id
         /// </summary> 
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
 
-        /// <summary>
-        /// 手术时间
-        /// </summary>
-        [SugarColumn(IsNullable = true)]
-        public DateTime surgery_dateiime { get; set; }
+		/// <summary>
+		/// 手术单号
+		/// </summary>
+		public string code { get; set; }
 
-    }
+		/// <summary>
+		/// 手术时间
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+        public DateTime surgery_time { get; set; }
+
+	}
 }

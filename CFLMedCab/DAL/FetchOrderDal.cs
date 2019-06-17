@@ -1,5 +1,7 @@
 ﻿
+using CFLMedCab.APO.Surgery;
 using CFLMedCab.DTO.Goodss;
+using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
@@ -53,12 +55,14 @@ namespace CFLMedCab.DAL
 
 
 		/// <summary>
-		///  生成领用信息
+		///  生成领用信息(领用单号和领用详情)
 		/// </summary>
 		/// <param name="goodsDtos">正常数据</param>
 		/// <returns></returns>
-		public bool InsertFetchOrderInfo(List<GoodsDto> goodsDtos, RequisitionType requisitionType, RequisitionStatus requisitionStatus, ConsumablesStatus consumablesStatus)
+		public bool InsertFetchOrderInfo(List<GoodsDto> goodsDtos, GoodsChageAttribute goodsChageAttribute, string surgeryOrderCode, out string goodsChangeBusinessOrderCode)
 		{
+			goodsChangeBusinessOrderCode = null;
+
 			if (goodsDtos.Count <= 0)
 			{
 				return false;
@@ -70,36 +74,140 @@ namespace CFLMedCab.DAL
 				return false;
 			}
 
+			//生成领用单的业务单号，根据实际情况
+
+			string business_order_code;
+
+			switch (goodsChageAttribute.RequisitionType)
+			{
+				case RequisitionType.一般领用:
+					business_order_code = "-";
+					break;
+				case RequisitionType.无单手术领用:
+					business_order_code = "";
+					break;
+				case RequisitionType.有单手术领用:
+					business_order_code = surgeryOrderCode;
+					break;
+				default:
+					business_order_code = "";
+					break;
+			}
+
 			//事务防止多插入产生脏数据
 			var result = Db.Ado.UseTran(() =>
 			{
-			
-				//领用单id
-				int fetchOrderId = Db.Insertable(new FetchOrder
-				{
-					create_time = DateTime.Now,
-					operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
-					type = (int)requisitionType,
-					status = (int)requisitionStatus,
 
-				}).ExecuteReturnIdentity();
+				//领用单id
+				FetchOrder fetchOrder = Db.Insertable(new FetchOrder
+				{
+					//用uuid当作新生成的领用单单号
+					code = Guid.NewGuid().ToString("N"),
+					create_time = DateTime.Now,
+				    operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+					type = (int)goodsChageAttribute.RequisitionType,
+					status = (int)goodsChageAttribute.RequisitionStatus,
+					business_order_code = business_order_code
+
+				}).ExecuteReturnEntity();
 
 				List<FetchOrderdtl> fetchOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, FetchOrderdtl>();
-
-
 
 				fetchOrderdtls.ForEach(it =>
 				{
 					it.is_add = 0;
-					it.related_order_id = fetchOrderId;
-					it.status = (int)consumablesStatus;
+					it.related_order_id = fetchOrder.id;
+					it.status = (int)goodsChageAttribute.ConsumablesStatus;
 				});
 
 				Db.Insertable(fetchOrderdtls).ExecuteCommand();
 
+				return fetchOrder;
+
 			});
+
+			//返回用于生成库存变化单的业务单号
+			if (result.IsSuccess)
+			{
+				goodsChangeBusinessOrderCode = result.Data.code;
+			}
+
 
 			return result.IsSuccess;
 		}
+
+
+		/// <summary>
+		/// 根据手术单号查询对应手术单号
+		/// </summary>
+		/// <param name="pageDataApo">带分页的pageDataApo</param>
+		/// <param name="totalCount">返回的总数</param>
+		/// <returns></returns>
+		public List<SurgeryOrderDto> GetSurgeryOrderDto(SurgeryOrderApo pageDataApo, out int totalCount)
+		{
+
+			totalCount = 0;
+			List<SurgeryOrderDto> data;
+
+			//查询语句
+			var queryable = Db.Queryable<SurgeryOrder>()
+				.Where(it => it.code.StartsWith(pageDataApo.SurgeryOrderCode))
+				.Select<SurgeryOrderDto>();
+
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+		}
+
+		/// <summary>
+		/// 根据手术单号查询耗材详情
+		/// </summary>
+		/// <param name="surgeryOrderCode"></param>
+		/// <returns></returns>
+		public List<SurgeryOrderdtlDto> GetSurgeryOrderdtlDto(SurgeryOrderApo pageDataApo, out int totalCount)
+		{
+
+			totalCount = 0;
+			List<SurgeryOrderdtlDto> data;
+
+			//查询语句(查询出手术单待领用的耗材，已领用好的不显示)
+			var queryable = Db.Queryable<SurgeryOrderdtl>()
+				.Where(it => it.surgery_order_code == pageDataApo.SurgeryOrderCode && it.not_fetch_num > 0)
+				.Select<SurgeryOrderdtlDto>();
+
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+		}
+
+		/// <summary>
+		/// 确认时，修改手术领用详情数据
+		/// </summary>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdateSurgeryOrderdtl(List<SurgeryOrderdtlDto> datasDto)
+		{
+			return Db.Updateable(datasDto).ExecuteCommand() > 0;
+		}
+
+
 	}
 }

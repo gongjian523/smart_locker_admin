@@ -138,6 +138,7 @@
     <Compile Include="APO\Inventory\InventoryOrderApo.cs" />
     <Compile Include="APO\Picking\PickingSubOrderdtlApo.cs" />
     <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
+    <Compile Include="APO\Surgery\SurgeryOrderApo.cs" />
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
@@ -162,9 +163,6 @@
     <Compile Include="DAL\ReplenishDal.cs" />
     <Compile Include="DTO\BasePageDataDto.cs" />
     <Compile Include="DTO\Fetch\FetchOrderDto.cs" />
-    <Compile Include="DTO\Fetch\SurgeryFetchDto.cs" />
-    <Compile Include="DTO\Fetch\SurgeryFetchDetailsDto.cs" />
-    <Compile Include="DTO\Fetch\SurgeryOrderDto.cs" />
     <Compile Include="DTO\Goodss\GoodDto.cs" />
     <Compile Include="DTO\Goodss\GoodsChangeDto.cs" />
     <Compile Include="DTO\Goodss\GoodsDto.cs" />
@@ -174,6 +172,8 @@
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
     <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
+    <Compile Include="DTO\Surgery\SurgeryOrderdtlDto.cs" />
+    <Compile Include="DTO\Surgery\SurgeryOrderDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarHelper.cs" />
@@ -201,6 +201,7 @@
     <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />
@@ -219,6 +220,7 @@
     <Compile Include="Model\ReplenishSubOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\FetchOrderdtl.cs" />
+    <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Test\TestGoods.cs" />
     <Compile Include="View\CloseCabinet.xaml.cs">

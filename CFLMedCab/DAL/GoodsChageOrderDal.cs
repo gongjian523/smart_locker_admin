@@ -59,7 +59,7 @@ namespace CFLMedCab.DAL
             List<GoodsChangeDto> data;
 
             //查询语句
-            var queryable = Db.Queryable<GoodsChageOrderdtl, GoodsChageOrder>((ordtl, orl) => new object[] { JoinType.Left, ordtl.good_change_orderid == orl.id })
+            var queryable = Db.Queryable<GoodsChageOrderdtl, GoodsChageOrder>((ordtl, orl) => new object[] { JoinType.Left, ordtl.related_order_id == orl.id })
                 .Where((ordtl, orl) => ordtl.operate_type == pageDataApo.operate_type)
                 .WhereIF(pageDataApo.startTime.HasValue, (ordtl, orl) => orl.create_time >= pageDataApo.startTime)
                 .WhereIF(pageDataApo.endTime.HasValue, (ordtl, orl) => orl.create_time <= pageDataApo.endTime)
@@ -69,7 +69,7 @@ namespace CFLMedCab.DAL
                 .Select((ordtl, orl) => new GoodsChangeDto
                 {
                     id = ordtl.id,
-                    good_change_orderid = ordtl.good_change_orderid,
+					related_order_id = ordtl.related_order_id,
                     goods_id = ordtl.goods_id,
                     name = ordtl.name,
                     goods_code = ordtl.goods_code,
@@ -78,7 +78,7 @@ namespace CFLMedCab.DAL
                     birth_date = ordtl.birth_date,
                     expire_date = ordtl.expire_date,
                     create_time = orl.create_time,
-                    business_type=orl.type
+                    business_type=orl.business_type
                 });
 
 
@@ -95,18 +95,21 @@ namespace CFLMedCab.DAL
             return data;
         }
 
-        /// <summary>
-        ///  生成领用信息
-        /// </summary>
-        /// <param name="goodsDtos">正常数据</param>
-        /// <returns></returns>
-        public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, RequisitionType requisitionType, RequisitionStatus requisitionStatus, ConsumablesStatus consumablesStatus)
-        {
-            if (goodsDtos.Count <= 0)
-            {
-                return false;
-            }
-            List<GoodsDto> goodsDtosNotEx = goodsDtos.ToList();
+
+		/// <summary>
+		///  插入变化后的商品信息
+		/// </summary>
+		/// <param name="goodsDtos">所有数据</param>
+		/// <param name="businessOrderCode">关联业务单号</param>
+		/// <param name="requisitionType">业务类型</param>
+		/// <returns></returns>
+		public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, string businessOrderCode, RequisitionType requisitionType)
+		{
+			if (goodsDtos.Count <= 0)
+			{
+				return false;
+			}
+			List<GoodsDto> goodsDtosNotEx = goodsDtos.ToList();
 
             if (goodsDtosNotEx.Count <= 0)
             {
@@ -117,25 +120,23 @@ namespace CFLMedCab.DAL
             var result = Db.Ado.UseTran(() =>
             {
 
-                //领用单id
-                int goodsChageOrderId = Db.Insertable(new GoodsChageOrder
-                {
-                    create_time = DateTime.Now,
-                    operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
-                    type = (int)requisitionType,
-                    status = (int)requisitionStatus,
-
+				//领用单id
+				int goodsChageOrderId = Db.Insertable(new GoodsChageOrder
+				{
+					//用uuid当作新生成的领用单单号
+					code = Guid.NewGuid().ToString("N"),
+					create_time = DateTime.Now,
+					operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+					business_type = (int)requisitionType,
+					business_order_code = businessOrderCode
                 }).ExecuteReturnIdentity();
 
                 List<GoodsChageOrderdtl> goodsChageOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, GoodsChageOrderdtl>();
 
-
-
-                goodsChageOrderdtls.ForEach(it =>
-                {
-                    it.related_order_id = goodsChageOrderId;
-                    it.status = (int)consumablesStatus;
-                });
+				goodsChageOrderdtls.ForEach(it =>
+				{
+					it.related_order_id = goodsChageOrderId;
+				});
 
                 Db.Insertable(goodsChageOrderdtls).ExecuteCommand();
 
@@ -144,6 +145,7 @@ namespace CFLMedCab.DAL
             return result.IsSuccess;
         }
 
-    }
+
+	}
 
 }
