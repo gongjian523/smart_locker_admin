@@ -13,20 +13,19 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View.Fetch
+namespace CFLMedCab.View.Inventory
 {
     /// <summary>
-    /// GerFetchState.xaml 的交互逻辑
+    /// StockDetailed.xaml 的交互逻辑
     /// </summary>
-    public partial class GerFetchState : UserControl
-    {
-        public GerFetchState(int e)
+    public partial class StockDetailed : UserControl
+    {       
+        //返回列表页面
+        public delegate void EnterStockHandler(object sender, RoutedEventArgs e);
+        public event EnterStockHandler EnterStockEvent;
+        public StockDetailed(string code)
         {
             InitializeComponent();
-            if (e == 1)
-                attention.Content = "请拿取您需要的耗材，拿取完毕请关闭柜门";
-            else if(e==2)
-                attention.Content = "请放入您需要回退的的耗材，放回完毕请关闭柜门";
         }
     }
 }

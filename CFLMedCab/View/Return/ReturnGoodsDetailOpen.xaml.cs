@@ -33,7 +33,7 @@ namespace CFLMedCab.View.Return
             //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             orderNum.Content = model.id;
-            listView.DataContext = pickingBll.GetPickingSubOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id });
+            listView.DataContext = pickingBll.GetPickingSubOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id }).Data;
         }
     }
 }

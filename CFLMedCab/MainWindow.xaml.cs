@@ -89,7 +89,7 @@ namespace CFLMedCab
 			});
 
 
-            Test();
+            //Test();
 
             ConsoleManager.Show();
         }
@@ -202,7 +202,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState();
+            GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
@@ -244,7 +244,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNoNumOpen(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState();
+            GerFetchState gerFetchState = new GerFetchState(1);
             ContentFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
@@ -372,7 +372,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnFetch(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState();
+            GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
@@ -475,12 +475,10 @@ namespace CFLMedCab
 
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
             ReplenishSubOrderDto replenishSubOrderDto = (ReplenishSubOrderDto)delegateGetMsg.userData;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto, ht);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -559,11 +557,11 @@ namespace CFLMedCab
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingSubOrderDto)delegateGetMsg.userData);
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingSubOrderDto)delegateGetMsg.userData, ht);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -741,9 +739,23 @@ namespace CFLMedCab
             BtnEnterStock.IsChecked = true;
 
             Stock stock = new Stock();
+            stock.EnterStockDetailedEvent += new Stock.EnterStockDetailedHandler(onEnterStockDetailedEvent);
             ContentFrame.Navigate(stock);
         }
 
+        private void onEnterStockDetailedEvent(object sender, string e)
+        {
+            StockDetailed stockDetailed = new StockDetailed(e);
+            stockDetailed.EnterStockEvent += new StockDetailed.EnterStockHandler(onEnterStock);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(stockDetailed);
+            }));
+        }
         #endregion
 
 
@@ -804,7 +816,6 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-#if DEBUG
             this.WindowState = WindowState.Maximized;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.NoResize;
@@ -812,8 +823,7 @@ namespace CFLMedCab
             this.Left = 0.0;
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
-            this.Height = SystemParameters.PrimaryScreenHeight;
-#endif
+            this.Height = SystemParameters.PrimaryScreenHeight; 
         }
 
 

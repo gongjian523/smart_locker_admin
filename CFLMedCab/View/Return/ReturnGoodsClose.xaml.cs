@@ -1,8 +1,12 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Picking;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,17 +37,28 @@ namespace CFLMedCab.View.Return
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
         PickingBll pickingBll = new PickingBll();
+        GoodsBll goodsBll = new GoodsBll();
         private PickingSubOrderDto pickingSubOrderDto;
-        public ReturnGoodsClose(PickingSubOrderDto model)
+        private Hashtable after;
+        private List<GoodsDto> goodsDetails;
+        public ReturnGoodsClose(PickingSubOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
             pickingSubOrderDto = model;
             //操作人
-            //principal.Content = model.principal_id;
+            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             ////工单号
-            //workOrderNum.Content = model.id;
-            //lDate.Content= DateTime.Now.ToString("yyyy年MM月dd日");
-            //listView.DataContext = pickingSubOrderdtlDal.GetPickingSubOrderdtl(model.id);
+            orderNum.Content = model.id;
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
+            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            after = hashtable;
+            List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
+            goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            listView.DataContext = goodsDetails;
+            inNum.Content = operateGoodsNum;
+            abnormalInNum.Content = storageGoodsExNum;
+            abnormalOutNum.Content = outStorageGoodsExNum;
+            listView.DataContext = goodsDetails;
         }
 
         /// <summary>
@@ -53,6 +68,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            if (pickingBll.UpdatePickingStatus(pickingSubOrderDto.id, goodsDetails))
+                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
 
@@ -64,6 +81,7 @@ namespace CFLMedCab.View.Return
         private void onNotEndOperation(object sender, RoutedEventArgs e)
         {
             EnterReturnGoodsDetailOpenEvent(this, new PickingSubOrderDto());
+            return;
         }
     }
 }

@@ -44,8 +44,15 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <Label Content="手术单耗材明细" Margin="0,10" Grid.Row="0" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}"/>
-
+                <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <Label Content="当前领用了"/>
+                        <Label Content=" " Name="inNum"/>
+                        <Label Content="个商品，异常操作" />
+                        <Label Content=" " Name="abnormalInNum"/>
+                        <Label Content="个商品出库" />
+                    </StackPanel>
+                </Border>
                 <Grid Grid.Row="1">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />

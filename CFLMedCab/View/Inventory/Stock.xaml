@@ -82,21 +82,27 @@
                                Margin="0,10,0,0"
                               Style="{StaticResource DefaultListView}"
                               >
-                        <ListView.View>
-                            <GridView>
+                       <ListView  VerticalAlignment="Top"  Name="listView" ItemsSource="{Binding}" HorizontalAlignment="Left" Margin="69,44,0,0">
+                <ListView.View>
+                    <GridView AllowsColumnReorder="true">
+                        <GridViewColumn Header="商品编码" DisplayMemberBinding="{Binding goods_code}"   Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                        <GridViewColumn Header="库存数量" DisplayMemberBinding="{Binding amount}"   Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                        <GridViewColumn Header="最早失效期" DisplayMemberBinding="{Binding expire_time}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                        <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button x:Name="BtnConfirm" Content="库存明细" Click="onStockDetailed"  Width="75" Height="23" Tag="{Binding Path=goods_code}" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF0C80F3" BorderThickness="2,0,0,0"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
 
-                                <GridViewColumn Header="商品编码"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
-                                <GridViewColumn Header="商品名称" Width="{Binding ElementName=column2,Path=ActualWidth}" />
-                                <GridViewColumn Header="单品码"  Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="生产批号"  Width="{Binding ElementName=column4,Path=ActualWidth}"/>
-                                <GridViewColumn Header="失效日期" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作类型" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="库存变化单号" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                <GridViewColumn Header="业务类型" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作日"  Width="{Binding ElementName=column9,Path=ActualWidth}"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+                
                 </Grid>
             </Border>
         </Grid>

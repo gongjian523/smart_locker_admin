@@ -1,4 +1,8 @@
-﻿using System;
+﻿using CFLMedCab.APO.Inventory;
+using CFLMedCab.BLL;
+using CFLMedCab.Infrastructure;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +23,28 @@ namespace CFLMedCab.View
     /// Stock.xaml 的交互逻辑
     /// </summary>
     public partial class Stock : UserControl
-    {
+    {       
+        //跳出详情页面
+        public delegate void EnterStockDetailedHandler(object sender, string goodsCode);
+        public event EnterStockDetailedHandler EnterStockDetailedEvent;
+        GoodsBll goodsBll = new GoodsBll();
         public Stock()
         {
             InitializeComponent();
+            Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
+            foreach (HashSet<string> goodsEpsData in ht.Values)
+            {
+                goodsEpsHashSetDatas.UnionWith(goodsEpsData);
+            }
+            data(new GetGoodApo { goodsEpsDatas= goodsEpsHashSetDatas }, out int totalCount);
+
+        }
+
+        public void data(GetGoodApo getGoodApo,out int totalCount)
+        {
+            totalCount = 0;
+            listView.DataContext = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
         }
 
         /// <summary>
@@ -91,6 +113,17 @@ namespace CFLMedCab.View
         {
             gChoice.Visibility = Visibility.Hidden;
             gChoice1.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 库存明细
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onStockDetailed(object sender, RoutedEventArgs e)
+        {
+            string code = (string)((Button)sender).Tag;
+            EnterStockDetailedEvent(this,code);
         }
     }
 }

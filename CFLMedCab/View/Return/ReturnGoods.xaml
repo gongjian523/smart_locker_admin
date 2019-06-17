@@ -51,8 +51,8 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemTemplate="{StaticResource pickingOrderView}" ItemsSource="{Binding PickingOrderList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
-        <Grid x:Name="ContentView" Grid.RowSpan="2">
+        <!--<Grid x:Name="ContentView" Grid.RowSpan="2">
             <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-        </Grid>
+        </Grid>-->
     </Grid>
 </UserControl>

@@ -7,6 +7,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid  Background="AliceBlue">
-            
+        <Image Width="184" Height="120" HorizontalAlignment="Center" Margin="30,160,308,160" >
+            <Image.Source>
+                <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/CloseDoor.png" />
+            </Image.Source>
+        </Image>
+        <Label Content="柜门已开" Margin="435,180,178,211" FontSize="24"/>
+        <Label Content=" " Name="attention" Margin="435,230,178,170" FontSize="18"/>
     </Grid>
 </UserControl>
