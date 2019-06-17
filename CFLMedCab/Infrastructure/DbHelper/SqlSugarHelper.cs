@@ -64,17 +64,32 @@ namespace CFLMedCab.Infrastructure.DbHelper
                 Console.WriteLine();
             };
 
-			Db.CodeFirst.InitTables<ReplenishOrder>();
-			Db.CodeFirst.InitTables<ReplenishSubOrder>();
-			Db.CodeFirst.InitTables<ReplenishSubOrderdtl>();
-			Db.CodeFirst.InitTables<Goods>();
-			Db.CodeFirst.InitTables<GoodsChageOrder>();
-			Db.CodeFirst.InitTables<GoodsChageOrderdtl>();
+            //创建领用单表
+            Db.CodeFirst.InitTables<FetchOrder>();
+            Db.CodeFirst.InitTables<FetchOrderdtl>();
+
+            //创建物品和库存变化表
+            Db.CodeFirst.InitTables<Goods>();
+            Db.CodeFirst.InitTables<GoodsChageOrder>();
+            Db.CodeFirst.InitTables<GoodsChageOrderdtl>();
 
             //创建盘点数据表
             Db.CodeFirst.InitTables<InventoryOrder>();
             Db.CodeFirst.InitTables<InventoryOrderdtl>();
             Db.CodeFirst.InitTables<InventoryPlan>();
+
+
+            //创建补货入库表
+            Db.CodeFirst.InitTables<ReplenishOrder>();
+			Db.CodeFirst.InitTables<ReplenishSubOrder>();
+			Db.CodeFirst.InitTables<ReplenishSubOrderdtl>();
+
+            //创建拣货出库表
+            Db.CodeFirst.InitTables<InventoryOrder>();
+            Db.CodeFirst.InitTables<InventoryOrderdtl>();
+            Db.CodeFirst.InitTables<InventoryPlan>();
+
+
         }
 
         public static string GetCurrentProjectPath
