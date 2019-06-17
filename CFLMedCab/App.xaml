@@ -19,6 +19,22 @@
                 <ResourceDictionary Source="Controls/Styles/ToggleButtonStyle.xaml"/>
                 <ResourceDictionary Source="Controls/Styles/ListviewStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+
+            <Style TargetType="{x:Type TextBox}">
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type TextBox}">
+                            <Grid>
+                                <Rectangle RadiusX="3" RadiusY="3" Fill="{TemplateBinding Background}" Stroke="#D3D3D3"/>
+                                <ScrollViewer x:Name="PART_ContentHost" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Padding="{TemplateBinding Padding}" Focusable="false">
+                                </ScrollViewer>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
         </ResourceDictionary>
     </Application.Resources>
 </Application>

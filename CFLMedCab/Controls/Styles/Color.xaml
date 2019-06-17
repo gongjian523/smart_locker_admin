@@ -8,6 +8,7 @@
 
     
     <SolidColorBrush x:Key="TitleColor1" Color="#333333" />
+    <SolidColorBrush x:Key="TitleColor2" Color="#457eff" />
 
 
     <GridLength x:Key="rowHeight25">25</GridLength>
