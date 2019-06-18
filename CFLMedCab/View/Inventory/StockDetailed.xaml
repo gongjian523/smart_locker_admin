@@ -33,7 +33,7 @@
                 <Grid Grid.Column="6" x:Name="column7"/>
                 <Grid Grid.Column="7" x:Name="column8"/>
             </Grid>
-            <Label Height="34" Grid.Row="0" Content="库存"  Style="{StaticResource lblTitle1}"/>
+            <Label Height="34" Grid.Row="0" Content="库存"  Style="{StaticResource lblTitle5}"/>
             
             <ListView  Grid.Row="1"  ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView}">
                 <ListView.View>
