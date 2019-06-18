@@ -97,7 +97,11 @@ namespace CFLMedCab.Model
         /// </summary>
         public string remarks { get; set; }
 
-		
+		/// <summary>
+		/// 业务单号
+		/// </summary>
+		public string business_order_code { get; set; }
+
 		/// <summary>
 		/// 业务确认状态 状态： 0  待确认；1 已确认
 		/// </summary>

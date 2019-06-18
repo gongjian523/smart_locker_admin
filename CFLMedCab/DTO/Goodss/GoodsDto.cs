@@ -35,5 +35,11 @@ namespace CFLMedCab.DTO.Goodss
 		/// 异常说明
 		/// </summary>
 		public string exception_description { get; set; }
+
+		/// <summary>
+		/// 业务单号
+		/// </summary>
+		public string business_order_code { get; set; }
+
 	}
 }

@@ -39,13 +39,13 @@ namespace CFLMedCab.Model.Enum
 		/// 正常标识，不显示，所以为空字符串
 		/// </summary>
 		[Description("")]
-		正常 = 0,
+		正常 = 1,
 
 		/// <summary>
 		/// 异常标识
 		/// </summary>
 		[Description("异常")]
-		异常 = 1
+		异常 = 2
 
 	}
 
@@ -84,7 +84,13 @@ namespace CFLMedCab.Model.Enum
 		/// 商品不在待领目录
 		/// </summary>
 		[Description("商品不在待领目录")]
-		商品不在待领目录 = 5
+		商品不在待领目录 = 5,
+
+		/// <summary>
+		/// 未查到领用记录
+		/// </summary>
+		[Description("未查到领用记录")]
+		未查到领用记录 = 6
 	}
 
 	/// <summary>
@@ -189,6 +195,27 @@ namespace CFLMedCab.Model.Enum
 		已退回 = 2
 
 	}
+
+	/// <summary>
+	/// 清台状态
+	/// </summary>
+	public enum CleanTableStatus
+	{
+		
+		/// <summary>
+		/// 未清台
+		/// </summary>
+		[Description("未清台")]
+		未清台 = 0,
+
+		/// <summary>
+		/// 已清台
+		/// </summary>
+		[Description("已清台")]
+		已清台 = 1
+	
+	}
+
 
 
 }

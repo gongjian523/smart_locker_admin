@@ -3,8 +3,6 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
-using CFLMedCab.Infrastructure.ToolHelper;
-using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +14,21 @@ namespace CFLMedCab.BLL
 	/// </summary>
 	public class ReplenishBll
 	{
-		
+
 		/// <summary>
-		/// 获取操作实体
+		/// 获取操作类
 		/// </summary>
 		private readonly ReplenishDal replenishDal;
+
+		/// <summary>
+		/// 获取库存变化操作类
+		/// </summary>
+		private readonly GoodsChangeOrderDal goodsChageOrderDal;
 
 		public ReplenishBll()
 		{
 			replenishDal = ReplenishDal.GetInstance();
+			goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
 		}
 
 		/// <summary>
@@ -37,7 +41,7 @@ namespace CFLMedCab.BLL
 			{
 				PageIndex = basePageDataApo.PageIndex,
 				PageSize = basePageDataApo.PageSize,
-                Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList().Where(item => item.not_picked_goods_num > 0).ToList(),
+                Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).Where(item => item.not_picked_goods_num > 0).ToList(),
                 //Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList(),
                 TotalCount = totalCount
 			};
@@ -65,9 +69,8 @@ namespace CFLMedCab.BLL
 		/// <param name="replenishSubOrderid"></param>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+		public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, string replenishSubOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
-
 
 			//获取当前工单商品
 			var replenishSubOrderdtlDtos = replenishDal.GetReplenishSubOrderdtlDto(
@@ -79,6 +82,9 @@ namespace CFLMedCab.BLL
 
 			goodsDtos.ForEach(it =>
 			{
+
+				//获取业务单号
+				it.business_order_code = replenishSubOrderCode;
 
 				//入库
 				if (it.operate_type == (int)OperateType.入库)
@@ -143,8 +149,14 @@ namespace CFLMedCab.BLL
 				}
 			});
 
+			bool ret = replenishDal.UpdateReplenishStatus(replenishSubOrderid, replenishSubOrderdtlDtos);
 
-			return replenishDal.UpdateReplenishStatus(replenishSubOrderid, replenishSubOrderdtlDtos);
+			//生成库存变化信息
+			if (ret) {
+				goodsChageOrderDal.InsertGoodsChageOrderInfo(datasDto, RequisitionType.退货出库);
+			}
+
+			return ret;
 
 		}
 
