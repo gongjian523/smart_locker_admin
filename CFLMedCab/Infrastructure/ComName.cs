@@ -30,6 +30,14 @@ namespace CFLMedCab.Infrastructure
                 return "COM5";
         }
 
+        public static List<string> GetAllLockerCom()
+        {
+            return(new List<string> {
+                "COM2",
+                "COM5"
+            });
+        }
+
         public static string GetRfidCom(string pos)
         {
             //COM1  主柜rfid串口

@@ -19,7 +19,10 @@ namespace CFLMedCab.Converter
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException();
+            if ((bool)value == true)
+                return 0;
+            else
+                return 1;
         }
     }
 }

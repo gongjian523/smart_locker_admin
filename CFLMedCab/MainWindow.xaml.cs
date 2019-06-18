@@ -52,6 +52,8 @@ namespace CFLMedCab
         private InventoryBll inventoryBll = new InventoryBll();
         private GoodsBll goodsBll = new GoodsBll();
 
+        private int cabClosedNum;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -83,19 +85,15 @@ namespace CFLMedCab
 			//        LoginBkView.Visibility = Visibility.Hidden;
 			//}));
 
-
-
-
 			//bool isGetSuccess;
 
 			//Hashtable cur =  RfidHelper.GetEpcData(out isGetSuccess);
 			//ApplicationState.SetValue((int)ApplicationKey.CurGoods, cur);//读取机柜内当前的商品编码
 
-			var testData = new ReplenishBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
-				PageIndex = 1,
-				PageSize = 2
-			});
-
+			//var testData = new ReplenishBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
+			//	PageIndex = 1,
+			//	PageSize = 2
+			//});
 
             Test();
 
@@ -243,10 +241,22 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterGerFetch.IsChecked = true;
+
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+
+            List<string> com = ComName.GetAllLockerCom();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+
+            cabClosedNum = 0;
         }
 
         /// <summary>
@@ -258,6 +268,12 @@ namespace CFLMedCab
         {
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
+            if (cabClosedNum == 0)
+            {
+                cabClosedNum++;
+                return;
+            }
+    
             if (!isClose)
                 return;
             bool isGetSuccess;
@@ -289,7 +305,6 @@ namespace CFLMedCab
             ContentFrame.Navigate(gerFetchState);
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
-
         }
 
         /// <summary>
@@ -309,7 +324,6 @@ namespace CFLMedCab
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-
                 SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose();
                 surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
@@ -326,6 +340,10 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgery(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterSurgery.IsChecked = true;
+
             SurgeryQuery surgeryQuery = new SurgeryQuery();
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
@@ -413,10 +431,22 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnFetch(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterReturnFetch.IsChecked = true;
+
             GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+
+            List<string> com = ComName.GetAllLockerCom();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
+
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
+
+            cabClosedNum = 0;
         }
 
         /// <summary>
@@ -430,10 +460,17 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
+
+            if (cabClosedNum == 0)
+            {
+                cabClosedNum++;
+                return;
+            }
+
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -454,6 +491,10 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReplenishment(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterReplenishment.IsChecked = true;
+
             Replenishment replenishment = new Replenishment();
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
             replenishment.EnterReplenishmentDetailOpenEvent += new Replenishment.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
@@ -494,8 +535,7 @@ namespace CFLMedCab
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
 
-
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
             delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
         }
@@ -576,8 +616,8 @@ namespace CFLMedCab
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
 
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
-               delegateGetMsg.userData = e;
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
+            delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
         }
 
