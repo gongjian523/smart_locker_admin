@@ -1,7 +1,12 @@
-﻿using CFLMedCab.BLL;
+﻿using CFLMedCab.APO.Surgery;
+using CFLMedCab.BLL;
 using CFLMedCab.DTO.Fetch;
+using CFLMedCab.DTO.Goodss;
+using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Windows.Controls;
 
@@ -13,15 +18,18 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class SurgeryNumOpen : UserControl
     {
-        private FetchOrder fetchOrder;
-        //private SurgeryOrderBll surgeryOrderBll = new SurgeryOrderBll();
-        //private FetchOrderBll fetchOrderBll = new FetchOrderBll();
-        //private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
-        public SurgeryNumOpen(FetchOrder model)
+        private SurgeryOrderDto surgeryOrderDto;
+        private GoodsBll goodsBll = new GoodsBll();
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        public SurgeryNumOpen(SurgeryOrderDto model)
         {
             InitializeComponent();
-            fetchOrder = model;
-          
+            surgeryOrderDto = model;
+            surgeryNum.Content = model.code;
+            time.Content = model.surgery_time;
+            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);
+            listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }, out int stockGoodsNum, out int notStockGoodsNum).Data;
         }
         
     }

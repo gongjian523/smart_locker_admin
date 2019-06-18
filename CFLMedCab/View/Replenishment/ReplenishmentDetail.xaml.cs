@@ -26,10 +26,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class ReplenishmentDetail : UserControl
     {
-        //ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
-        //ReplenishOrder entity = new ReplenishOrder();
-        //public ReplenishmentDetail(ReplenishOrder model)
-
         //进入补货单详情开门状态页面
         public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubOrderDto e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;

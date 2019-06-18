@@ -30,7 +30,7 @@
                 <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
                 <Label Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
                 <Label Content="操作人" Grid.Row="2" Grid.Column="0" />
-                <Label Content="Label" Name="operator" Grid.Row="3" Grid.Column="0"  />
+                <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  />
                 <Label Content="手术单号" Grid.Row="2" Grid.Column="1" />
                 <Label Content="暂无" Name="surgeryNum"  Grid.Row="4" Grid.Column="1" />
                 <Label Content="操作日期" Grid.Row="2" Grid.Column="2" />

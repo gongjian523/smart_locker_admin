@@ -1,4 +1,7 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.APO.Surgery;
+using CFLMedCab.BLL;
+using CFLMedCab.DAL;
+using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -23,16 +26,18 @@ namespace CFLMedCab.View.Fetch
     public partial class SurgeryQuery : UserControl
     {
 
-        public delegate void EnterSurgeryDetailHandler(object sender, FetchOrder e);
+        public delegate void EnterSurgeryDetailHandler(object sender, SurgeryOrderDto surgeryOrderDto);
         public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
         
         public delegate void EnterSurgeryNoNumOpenHandler(object sender, RoutedEventArgs e);
         public event EnterSurgeryNoNumOpenHandler EnterSurgeryNoNumOpenEvent;
+        
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
         public SurgeryQuery()
         {
             InitializeComponent();
         }
-        //private FetchOrderDal fetchOrderDal = new FetchOrderDal();
+    
         /// <summary>
         /// 查看详情
         /// </summary>
@@ -46,25 +51,17 @@ namespace CFLMedCab.View.Fetch
                 MessageBox.Show("手术单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
-            EnterSurgeryDetailEvent(this, new FetchOrder
-            {
-                id = 1,
-                create_time = DateTime.Now,
-                operator_id=1,
-                status=0,
-                type=0
-            });
             //根据领用单查找手术单
-            //FetchOrder fetchOrder = fetchOrderDal.CurrentDb.GetById(Convert.ToInt32(value));
-            //if (fetchOrder.business_order_id > 0)
-            //{
-            //    EnterSurgeryDetailEvent(this, fetchOrder);
-            //}
-            //else
-            //{
-            //    MessageBox.Show("手术单号不存在！", "温馨提示", MessageBoxButton.OK);
-            //    return;
-            //}
+            List<SurgeryOrderDto> surgeryOrderDtos = fetchOrderBll.GetSurgeryOrderDto(new SurgeryOrderApo { SurgeryOrderCode= value }).Data;
+            if (surgeryOrderDtos .Count>0)
+            {
+                EnterSurgeryDetailEvent(this, surgeryOrderDtos.First());
+            }
+            else
+            {
+                MessageBox.Show("手术单号不存在！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
         }
         
         /// <summary>
@@ -76,7 +73,7 @@ namespace CFLMedCab.View.Fetch
         {
             if (e.Key == Key.Down)
             {
-                EnterSurgeryDetailEvent(this, new FetchOrder());
+                EnterDetail_Click(this, null);
             }
         }
 
