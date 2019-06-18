@@ -57,7 +57,7 @@
                         <Grid Grid.Column="5" x:Name="column6"/>
                         <Grid Grid.Column="6" x:Name="column7"/>
                     </Grid>
-                    <Label Content="本柜待拣货商品" Grid.Row="0" Padding="0 10" Style="{StaticResource lblTitle5}"/>
+                    <Label Content="本柜待拣货商品" Grid.Row="0" Padding="0 5" Style="{StaticResource lblTitle5}"/>
                     <ListView  Grid.Row="1" Grid.Column="1"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView>

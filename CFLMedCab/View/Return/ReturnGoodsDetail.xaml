@@ -59,9 +59,9 @@
                         <Grid Grid.Column="5" x:Name="column6"/>
                         <Grid Grid.Column="6" x:Name="column7"/>
                     </Grid>
-                    <Border Grid.Row="0" Padding="10 0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" CornerRadius="{DynamicResource GRadius}">
+                    <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" CornerRadius="{DynamicResource GRadius}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="本柜待拣货商品"/>
+                            <Label Content="本柜待拣货商品" Padding="0 5" Style="{StaticResource lblTitle5}"/>
                         </StackPanel>
                     </Border>
                     <ListView  Grid.Row="1"   ItemsSource="{Binding}" Name="listView" 
