@@ -88,7 +88,7 @@
                     </Grid>
                     <ListView  Margin="10,10,0,0" VerticalAlignment="Top"  AlternationCount="2" 
                                ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left"  
-                               Padding="20" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                               ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                              
                                Style="{StaticResource DefaultListView}" >
                         <ListView.View>
