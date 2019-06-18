@@ -38,13 +38,13 @@
             <ListView  Grid.Row="1"  ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView}">
                 <ListView.View>
                     <GridView>
-                        <GridViewColumn Header="商品编码" DisplayMemberBinding="{Binding Path=goods_name}" Width="{Binding ElementName=column1,Path=ActualWidth}"/>
-                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=goods_code}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
-                        <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                        <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=wait_num}"  Width="{Binding ElementName=column4,Path=ActualWidth}"/>
-                        <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                        <GridViewColumn Header="货位" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                        <GridViewColumn Header="商品编码" DisplayMemberBinding="{Binding Path=goods_code}" Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                        <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                        <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                        <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}"/>
+                        <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding Path=expire_date}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                        <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                        <GridViewColumn Header="货位" DisplayMemberBinding="{Binding Path=position}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
                         <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
                     </GridView>
                 </ListView.View>
