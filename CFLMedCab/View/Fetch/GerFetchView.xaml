@@ -112,13 +112,12 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"></RowDefinition>
-                        <RowDefinition Height="30"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Label Content="是否结束本次操作？" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <Button Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Width="75" Click="onEndOperation"/>
-                    <Button Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Width="75" Click="onNoEndOperation"/>
+
+                    <Label Style="{StaticResource lblTitle5}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button  Style="{StaticResource CommonYesButton}" Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  VerticalAlignment="Top" Click="onEndOperation"/>
+                        <Button Style="{StaticResource CommonNoButton}" Content="否" HorizontalAlignment="Left" Margin="20,0,0,0" VerticalAlignment="Top" Click="onNoEndOperation"/>
+                    </StackPanel>
                 </Grid>
             </Border>
             <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">

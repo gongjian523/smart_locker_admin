@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
-        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
+        <!--<cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>-->
     </UserControl.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
@@ -18,7 +18,7 @@
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="3*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Button Content="返回>>" Grid.Row="0" Click="Return" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" Height="30" Width="60"/>
+            <Button Style="{StaticResource ReturnButton}" Content="返回>" Grid.Row="0" Click="Return" />
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -67,7 +67,7 @@
                     </Grid>
                     <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="手术单耗材明细"/>
+                            <Label Content="手术单耗材明细" Style="{StaticResource lblTitle5}"/>
                         </StackPanel>
                     </Border>
                     <ListView VerticalAlignment="Top" Grid.Row="1" ItemsSource="{Binding}" Name="listView"

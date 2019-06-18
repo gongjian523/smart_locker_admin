@@ -31,8 +31,8 @@
                         <Label Content="{Binding distribute_time,StringFormat='{}{0:yyyy-MM-dd}'}" Style="{StaticResource Lable14BoldStyle}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                        <Button Content="查看详情" Name="Retract"  BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" Tag="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Height="32" Click="EnterDetail_Click"/>
-                        <Button Content="确认开柜" Name="Confirm"  BorderBrush="#619CF8" Foreground="#FFFFFF" Background="#619CF8" FontSize="15" Tag="{Binding}"  Margin="20,0,20,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Height="32" Click="EnterDetailOpen_Click"/>
+                        <Button Style="{StaticResource CommonNoButton}" Content="查看详情" Name="Retract"   Tag="{Binding}" HorizontalAlignment="Left"  Click="EnterDetail_Click"/>
+                        <Button Style="{StaticResource CommonYesButton}" Content="确认开柜" Name="Confirm"  Tag="{Binding}"  Margin="20,0,20,0" HorizontalAlignment="Left" Click="EnterDetailOpen_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
