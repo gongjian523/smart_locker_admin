@@ -23,7 +23,7 @@
                 <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <Label Content="盘点计划" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
+            <Label Style="{StaticResource lblTitle1}" Content="盘点计划" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Top"/>
             <Button Content="新增计划 " Grid.Column="1" Grid.Row="0"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75"  Click="onAddPlan" Margin="0,0,5,0" Visibility="Hidden"/>
 
             <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
@@ -64,18 +64,18 @@
             <Grid  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="auto" />
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="1*" />
                 </Grid.ColumnDefinitions>
-
-                <Label Content="盘点计划：" VerticalContentAlignment="Center" Grid.Column="0" />
-                <TextBox  x:Name="planInputTb"  Text="请输入盘点时间，如 19：00" Height="28" Grid.Column="1" />
-                <Button Content="新增盘点计划" Grid.Column="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="30 5" Click="onAddPlan"/>
+                <Grid Grid.Column="0" x:Name="Column1"/>
+                <Grid Grid.Column="1" x:Name="Column2"/>
+                <Grid Grid.Column="2" x:Name="Column3"/>
+                <Label Style="{StaticResource lblTitle1}" Content="盘点计划：" VerticalContentAlignment="Center" Grid.Column="0" />
+                <TextBox  x:Name="planInputTb"  Text="请输入盘点时间，如 19：00" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}" />
+                <Button Style="{StaticResource AddButton}" Content="新增盘点计划" Grid.Column="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="30 5" Click="onAddPlan"/>
             </Grid>
-
-
-            <Button Content="保存"  Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Click="onSave" Margin="0,5,30,5"/>
-            <Button Content="取消 " Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Click="onCancel" Margin="30,5,0,5"/>
+            <Button Style="{StaticResource CommonYesButton}" Content="保存"  Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" Click="onSave" Margin="0,5,30,5"/>
+            <Button Style="{StaticResource CommonNoButton}" Content="取消 " Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" Click="onCancel" Margin="30,5,0,5"/>
 
 
         </Grid>

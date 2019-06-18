@@ -31,8 +31,8 @@
                         <Label  Content="{Binding distribute_time}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" HorizontalAlignment="Right">
-                        <Button Content="查看详情" Name="Retract" BorderBrush="#619CF8" Foreground="#619CF8" Margin="20 0" Tag="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" RenderTransformOrigin="0.51,-0.507" Click="onEnterDetail"/>
-                        <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Margin="20 0" Tag="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="onEnterDetailOpen"/>
+                        <Button Style="{StaticResource CommonNoButton}" Content="查看详情" Name="Retract" Margin="20 0" Tag="{Binding}" HorizontalAlignment="Left"  RenderTransformOrigin="0.51,-0.507" Click="onEnterDetail"/>
+                        <Button Style="{StaticResource CommonYesButton}" Content="确认开柜" Name="Confirm"  Margin="20 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetailOpen"/>
                     </StackPanel>
                 </Grid>
             </Border>
