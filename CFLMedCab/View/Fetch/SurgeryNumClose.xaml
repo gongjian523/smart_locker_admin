@@ -168,13 +168,12 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="40"></RowDefinition>
-                        <RowDefinition Height="40"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <Label Content="是否结束本次操作？" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                    <Button Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
-                    <Button Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
+             
+                    <Label Style="{StaticResource lblTitle5}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                    <Button Style="{StaticResource CommonYesButton}" Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
+                    <Button Style="{StaticResource CommonNoButton}" Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
+                    </StackPanel>
                 </Grid>
             </Border>
         </Grid>
