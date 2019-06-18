@@ -46,8 +46,11 @@ namespace CFLMedCab
     public partial class MainWindow : MetroWindow
     {
         private DispatcherTimer ShowTimer;
+        private DispatcherTimer InventoryTimer;
         private VeinHelper vein;
 
+        private InventoryBll inventoryBll = new InventoryBll();
+        private GoodsBll goodsBll = new GoodsBll();
 
         public MainWindow()
         {
@@ -60,6 +63,11 @@ namespace CFLMedCab
             ShowTimer.Tick += new EventHandler(ShowCurTimer);//起个Timer一直获取当前时间
             ShowTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
             ShowTimer.Start();
+
+            InventoryTimer = new DispatcherTimer();
+            InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer一直获取当前时间
+            InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
+            InventoryTimer.Start();
 
             vein = new VeinHelper("COM9", 9600);
             vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
@@ -92,6 +100,39 @@ namespace CFLMedCab
             Test();
 
             ConsoleManager.Show();
+        }
+
+        
+        private void onInventoryTimer(object sender, EventArgs e)
+        {
+            List <InventoryPlan> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
+
+            foreach(var item in listPan)
+            {
+
+                DateTime date1 = DateTime.Now;
+                DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0,2)), int.Parse(item.inventorytime_str.Substring(3,2)), 0);
+
+                TimeSpan timeSpan = date2 - date1;
+
+                if (timeSpan.TotalMinutes < 1)
+                {
+                    bool isGetSuccess;
+                    Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+                    //Hashtable ht = new Hashtable();
+                    //HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
+                    //ht.Add("COM1", hs1);
+
+                    List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+                    int id = inventoryBll.NewInventory(InventoryType.Auto);
+                    inventoryBll.InsertInventoryDetails(list, id);
+
+                    return;
+                }
+
+                Console.WriteLine("onInventoryTimer:" + timeSpan.TotalMinutes);
+            }
         }
 
 

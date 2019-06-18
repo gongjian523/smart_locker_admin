@@ -51,8 +51,14 @@ namespace CFLMedCab.BLL
                 //获取当前用户
                 inventoryOrder.operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id;
                 inventoryOrder.operator_name = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-                inventoryOrder.code = System.Guid.NewGuid().ToString("N");
+                inventoryOrder.type = (int)InventoryType.Manual;
             }
+            else
+            {
+                inventoryOrder.type = (int)InventoryType.Auto;
+            }
+
+            inventoryOrder.code = System.Guid.NewGuid().ToString("N");
 
             //生成记录
 

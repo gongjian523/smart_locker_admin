@@ -37,8 +37,8 @@ namespace CFLMedCab.BLL
 			{
 				PageIndex = basePageDataApo.PageIndex,
 				PageSize = basePageDataApo.PageSize,
-                //Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList().Where(item => item.not_picked_goods_num > 0).ToList(),
-                Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList(),
+                Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList().Where(item => item.not_picked_goods_num > 0).ToList(),
+                //Data = replenishDal.GetReplenishSubOrderDto(basePageDataApo, out int totalCount).ToList(),
                 TotalCount = totalCount
 			};
 		}

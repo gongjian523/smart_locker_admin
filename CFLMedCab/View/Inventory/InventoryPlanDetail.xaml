@@ -4,8 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CFLMedCab.View"
+        xmlns:cvt="clr-namespace:CFLMedCab.Converter"
         mc:Ignorable="d"
         Height="350" Width="600" >
+    <Control.Resources>
+        <cvt:InventoryPlanSwitchStaConverter x:Key="InventoryPlanSwitchStaConverter"/>
+    </Control.Resources>
     <Border Background="White" Padding="25" CornerRadius="{DynamicResource GRadius}">
         <Grid>
             <Grid.ColumnDefinitions>
@@ -43,7 +47,7 @@
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
                                         <Grid  >
-                                            <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding status}"  HorizontalAlignment="Center"/>
+                                            <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding status,  Converter={StaticResource InventoryPlanSwitchStaConverter}}"  HorizontalAlignment="Center"/>
                                             <!--<CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}"   IsChecked="{Binding status}"  />-->
                                         </Grid>
                                     </DataTemplate>
