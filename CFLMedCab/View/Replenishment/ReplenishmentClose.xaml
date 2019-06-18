@@ -50,7 +50,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                    <Border Style="{StaticResource TipBorder}" Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="当前领入库了" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="inNum" Style="{StaticResource lblTitle6}"/>
@@ -61,7 +61,7 @@
                             <Label Content="个商品出库" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>
-                    <Border Grid.Row="1"  VerticalAlignment="Center">
+                    <Border Grid.Row="1">
                         <Label Content="本次操作明细" Height="30" Width="auto"  VerticalAlignment="Center" Style="{StaticResource lblTitle5}"/>
                     </Border>
                     <Grid Grid.Row="2">

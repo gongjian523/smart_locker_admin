@@ -11,173 +11,172 @@
         <cvt:FetchConverter x:Key="OperateTypeConverter"/>
         <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
     </UserControl.Resources>
-    <Grid Background="AliceBlue">
+  <Border Style="{StaticResource CommonBlueBorder}">
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <StackPanel Background="White" Grid.Row="0" Margin="20,20,20,10" >
-
-            <Grid Margin="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="28"></RowDefinition>
-                    <RowDefinition Height="50"></RowDefinition>
-                    <RowDefinition Height="28"></RowDefinition>
-                    <RowDefinition Height="28"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
-                <Label Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
-                <Label Content="操作人" Grid.Row="2" Grid.Column="0" />
-                <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  />
-                <Label Content="手术单号" Grid.Row="2" Grid.Column="1" />
-                <Label Content="Label" Name="surgeryNum"  Grid.Row="4" Grid.Column="1" />
-                <Label Content="操作日期" Grid.Row="2" Grid.Column="2" />
-                <Label Content="Label" Name="time" Grid.Row="4" Grid.Column="2" />
-            </Grid>
-        </StackPanel>
-        <StackPanel Background="White" Margin="20,10,20,20" Grid.Row="1">
-
-            <Grid Margin="20" x:Name="GridValue">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="1*" />
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="2*"/>
-                </Grid.RowDefinitions>
-                <Grid Grid.Row="0">
+            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
+                <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"  />
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="28"></RowDefinition>
+                        <RowDefinition Height="50"></RowDefinition>
+                        <RowDefinition Height="28"></RowDefinition>
+                        <RowDefinition Height="28"></RowDefinition>
                     </Grid.RowDefinitions>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" x:Name="gcolumn1"/>
-                        <Grid Grid.Column="1" x:Name="gcolumn2"/>
-                        <Grid Grid.Column="2" x:Name="gcolumn3"/>
-                        <Grid Grid.Column="3" x:Name="gcolumn4"/>
-                        <Grid Grid.Column="4" x:Name="gcolumn5"/>
-                        <Grid Grid.Column="5" x:Name="gcolumn6"/>
-                    </Grid>
-                    <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="当前领用了"/>
-                            <Label Content=" " Name="inNum"/>
-                            <Label Content="个商品，其中异常操作" />
-                            <Label Content=" " Name="abnormalInNum"/>
-                            <Label Content="个商品入库；异常操作" />
-                            <Label Content=" " Name="abnormalOutNum"/>
-                            <Label Content="个商品出库；有" />
-                            <Label Content=" " Name="waitNum"/>
-                            <Label Content="个商品待领用" />
-                        </StackPanel>
-                    </Border>
-                    <Label Content="本柜待领用商品" Grid.Row="1" Grid.Column="0" Height="30"  HorizontalAlignment="Left"  VerticalAlignment="Top" />
-                    <ListView  VerticalAlignment="Bottom" Grid.Row="2" Grid.Column="0" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center">
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=gcolumn1,Path=ActualWidth}"/>
-                                <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}" Width="{Binding ElementName=gcolumn2,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=gcolumn3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding Path=not_fetch_num}"  Width="{Binding ElementName=gcolumn4,Path=ActualWidth}"/>
-                                <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=gcolumn5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=gcolumn6,Path=ActualWidth}"/>
-
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
+                    <Label Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
+                    <Label Content="操作人" Grid.Row="2" Grid.Column="0" />
+                    <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  />
+                    <Label Content="手术单号" Grid.Row="2" Grid.Column="1" />
+                    <Label Content="Label" Name="surgeryNum"  Grid.Row="4" Grid.Column="1" />
+                    <Label Content="操作日期" Grid.Row="2" Grid.Column="2" />
+                    <Label Content="Label" Name="time" Grid.Row="4" Grid.Column="2" />
                 </Grid>
+            </Border>
+            <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="1">
 
-                <Separator Margin="0,10" Grid.Row="1" Background="{x:Null}"/>
-
-                <Grid Grid.Row="2">
+                <Grid x:Name="GridValue">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="2*"/>
                     </Grid.RowDefinitions>
-                    <Grid>
+                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition />
+
                         </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" x:Name="column1"/>
-                        <Grid Grid.Column="1" x:Name="column2"/>
-                        <Grid Grid.Column="2" x:Name="column3"/>
-                        <Grid Grid.Column="3" x:Name="column4"/>
-                        <Grid Grid.Column="4" x:Name="column5"/>
-                        <Grid Grid.Column="5" x:Name="column6"/>
-                        <Grid Grid.Column="6" x:Name="column7"/>
-                        <Grid Grid.Column="7" x:Name="column8"/>
-                        <Grid Grid.Column="8" x:Name="column9"/>
-                        <Grid Grid.Column="9" x:Name="column10"/>
-                        <Grid Grid.Column="10" x:Name="column11"/>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"  />
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" x:Name="gcolumn1"/>
+                            <Grid Grid.Column="1" x:Name="gcolumn2"/>
+                            <Grid Grid.Column="2" x:Name="gcolumn3"/>
+                            <Grid Grid.Column="3" x:Name="gcolumn4"/>
+                            <Grid Grid.Column="4" x:Name="gcolumn5"/>
+                            <Grid Grid.Column="5" x:Name="gcolumn6"/>
+                        </Grid>
+                        <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <Label Content="当前领用了"/>
+                                <Label Content=" " Name="inNum"/>
+                                <Label Content="个商品，其中异常操作" />
+                                <Label Content=" " Name="abnormalInNum"/>
+                                <Label Content="个商品入库；异常操作" />
+                                <Label Content=" " Name="abnormalOutNum"/>
+                                <Label Content="个商品出库；有" />
+                                <Label Content=" " Name="waitNum"/>
+                                <Label Content="个商品待领用" />
+                            </StackPanel>
+                        </Border>
+                        <Label Style="{StaticResource lblTitle5}" Content="本柜待领用商品" Grid.Row="1" Grid.Column="0"/>
+                        <ListView  Style="{StaticResource DefaultListView}"  Grid.Row="2" Grid.Column="0" ItemsSource="{Binding}" Name="listView">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=gcolumn1,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}" Width="{Binding ElementName=gcolumn2,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=gcolumn3,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding Path=not_fetch_num}"  Width="{Binding ElementName=gcolumn4,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=gcolumn5,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=gcolumn6,Path=ActualWidth}"/>
+
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
                     </Grid>
 
-                    <Label Content="本次操作明细" Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="12" Height="30" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                    <ListView  VerticalAlignment="Bottom" Grid.Row="1"  ItemsSource="{Binding}" Name="listView1" HorizontalAlignment="Center" >
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}" />
-                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
-                                <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
-                                <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date ,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date ,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
-                                <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
-                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
+                    <Separator Margin="0,10" Grid.Row="1" Background="{x:Null}"/>
 
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" x:Name="column1"/>
+                            <Grid Grid.Column="1" x:Name="column2"/>
+                            <Grid Grid.Column="2" x:Name="column3"/>
+                            <Grid Grid.Column="3" x:Name="column4"/>
+                            <Grid Grid.Column="4" x:Name="column5"/>
+                            <Grid Grid.Column="5" x:Name="column6"/>
+                            <Grid Grid.Column="6" x:Name="column7"/>
+                            <Grid Grid.Column="7" x:Name="column8"/>
+                            <Grid Grid.Column="8" x:Name="column9"/>
+                            <Grid Grid.Column="9" x:Name="column10"/>
+                            <Grid Grid.Column="10" x:Name="column11"/>
+                        </Grid>
+
+                        <Label Content="本次操作明细" Grid.Row="0" Style="{StaticResource lblTitle5}"/>
+                        <ListView Style="{StaticResource DefaultListView}" Grid.Row="1"  ItemsSource="{Binding}" Name="listView1" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}" />
+                                    <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
+                                    <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date ,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date ,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
+                                    <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
                 </Grid>
-            </Grid>
-        </StackPanel>
-        <StackPanel Background="White" Margin="20,10,20,20" Grid.Row="2" Height="100">
-            <Grid Margin="20,10">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="40"></RowDefinition>
-                    <RowDefinition Height="40"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Label Content="是否结束本次操作？" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
-                <Button Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
-            </Grid>
-        </StackPanel>
-    </Grid>
+            </Border>
+            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"></RowDefinition>
+                        <RowDefinition Height="40"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Content="是否结束本次操作？" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <Button Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
+                    <Button Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
 </UserControl>
