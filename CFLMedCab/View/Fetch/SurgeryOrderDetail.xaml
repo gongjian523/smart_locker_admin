@@ -7,6 +7,9 @@
              xmlns:local="clr-namespace:CFLMedCab.View.Fetch"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
+    </UserControl.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>
@@ -76,7 +79,7 @@
                             <GridView>
                                 <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                                 <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
                                 <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding not_fetch_num}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
                                 <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding stock_num}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                                 <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>

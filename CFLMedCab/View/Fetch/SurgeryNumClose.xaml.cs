@@ -39,7 +39,7 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
-        private SurgeryOrderDto model;
+        private SurgeryOrderDto surgeryOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsChageOrderdtls;
         private GoodsBll goodsBll = new GoodsBll();
@@ -49,11 +49,13 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             time.Content = DateTime.Now; Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            surgeryNum.Content = model.code;
             after = hashtable;
+            surgeryOrderDto = model;
             List<GoodsDto> goodDtos = goodsBll.GetInvetoryGoodsDto(hashtable);//盘点当前柜子里的商品
-            goodsChageOrderdtls = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);//库存变化信息
-            BasePageDataDto<SurgeryOrderdtlDto> surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo {GoodsDtos= goodDtos } , out int notFetchGoodsNum);
+            goodsChageOrderdtls = goodsBll.GetCompareGoodsDto(before, hashtable);//库存变化信息
             goodsChageOrderdtls = fetchOrderBll.GetSurgeryGoodsOperateDto(goodsChageOrderdtls, model.code, out int currentOperateNum, out int storageOperateExNum, out int notStorageOperateExNum);
+            List<SurgeryOrderdtlDto> surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode= model.code, OperateGoodsDtos= goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
             listView.DataContext = surgeryOrderdtlDtos;
             listView1.DataContext = goodsChageOrderdtls;
             inNum.Content = currentOperateNum;//领用数
@@ -69,7 +71,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param> 
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterSurgeryNumOpenEvent(this, null);
+            EnterSurgeryNumOpenEvent(this, surgeryOrderDto);
         }
 
         /// <summary>
@@ -79,7 +81,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if (fetchOrderBll.InsertFetchAndGoodsChangeInfo(goodsChageOrderdtls, RequisitionType.有单手术领用, model.code))
+            if (fetchOrderBll.InsertFetchAndGoodsChangeInfo(goodsChageOrderdtls, RequisitionType.有单手术领用, surgeryOrderDto.code))
                 ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
