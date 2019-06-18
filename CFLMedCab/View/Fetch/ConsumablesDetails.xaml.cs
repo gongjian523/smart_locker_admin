@@ -1,9 +1,13 @@
-﻿using CFLMedCab.BLL;
+﻿using CFLMedCab.APO.Surgery;
+using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Fetch;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,16 +29,21 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class ConsumablesDetails : UserControl
     {
-        private FetchOrder fetchOrder;
-        public delegate void EnterSurgeryDetailHandler(object sender, FetchOrder e);
+        public delegate void EnterSurgeryDetailHandler(object sender, SurgeryOrderDto e);
         public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
-        //private SurgeryOrderDal surgeryOrderDal = new SurgeryOrderDal();
-        //private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
-        public ConsumablesDetails(FetchOrder model)
+       
+        private SurgeryOrderDto surgeryOrderDto;
+        private GoodsBll goodsBll = new GoodsBll();
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        public ConsumablesDetails(SurgeryOrderDto model)
         {
             InitializeComponent();
-            fetchOrder = model;
-       
+            surgeryOrderDto = model;
+            surgeryNum.Content = model.code;
+            time.Content = model.surgery_time;
+            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);
+            listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }).Data;
         }
 
         /// <summary>
@@ -44,9 +53,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void Return(object sender, RoutedEventArgs e)
         {
-            EnterSurgeryDetailEvent(this, fetchOrder);
-            //SurgeryNumQuery surgeryNumQuery = new SurgeryNumQuery(fetchOrder.id);
-            //ContentFrame.Navigate(surgeryNumQuery);
+            EnterSurgeryDetailEvent(this, surgeryOrderDto);
 
         }
     }

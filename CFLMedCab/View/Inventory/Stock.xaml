@@ -32,9 +32,9 @@
             <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="1" CornerRadius="{DynamicResource GRadius}"  x:Name="gChoice1" RenderTransformOrigin="0.497,0.507" Visibility="Hidden">
                 <Grid>
                     <RadioButton GroupName="single" Content="全部" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top"/>
-                    <RadioButton GroupName="single" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="-240,-30,514,8" Content="效期小于1个月" />
-                    <RadioButton GroupName="single" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="-100,-30,341,8" Content="效期小于2个月" />
-                    <RadioButton GroupName="single" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="50,-30,179,8" Content="效期小于3个月" />
+                    <RadioButton GroupName="single" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="-200,-30,514,8" Content="效期小于1个月" />
+                    <RadioButton GroupName="single" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="-60,-30,341,8" Content="效期小于2个月" />
+                    <RadioButton GroupName="single" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="80,-30,179,8" Content="效期小于3个月" />
                     <TextBox HorizontalAlignment="Left" Name="goods_code1" Height="30" Margin="20,60,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
                     <TextBox HorizontalAlignment="Left" Name="goods_name1" Height="30" Margin="325,60,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
                     <Button Content="查询" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,60,0,0" VerticalAlignment="Top" MinWidth="111" Height="30" Click="queryData"/>

@@ -35,16 +35,12 @@ namespace CFLMedCab.View.Fetch
 
         public delegate void EnterReturnFetchHandler(object sender, RoutedEventArgs e);
         public event EnterReturnFetchHandler EnterReturnFetch;
-        //private FetchOrderBll fetchOrderBll = new FetchOrderBll();
-        //private FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
-        //private GoodsBll goodsBll = new GoodsBll();
-        //private UserBll userBll = new UserBll();
-        //private GoodsChangeOrderBll goodsChangeOrderBll = new GoodsChangeOrderBll();
-        //private GoodsChageOrderdtlBll goodsChageOrderdtlBll = new GoodsChageOrderdtlBll(); 
+   
         public ReturnFetchView()
         {
             InitializeComponent();
             time.Content = DateTime.Now;
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             List<GoodsChageOrderdtlDto> goodsChageOrderdtls = new List<GoodsChageOrderdtlDto>();
             for (int i = 5; i >= 0; i--)
             {

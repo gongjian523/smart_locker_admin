@@ -30,7 +30,7 @@
                     <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle1}" />
                     <Label Content="一般领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
                     <Label Content="操作人" Grid.Row="2" Grid.Column="0" Style="{StaticResource lblTitle3}" />
-                    <Label Content="Label" Name="operator" Grid.Row="3" Grid.Column="0"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  Style="{StaticResource lblTitle4_0}"/>
                     <Label Content="操作日期" Grid.Row="2" Grid.Column="2" Style="{StaticResource lblTitle3}"/>
                     <Label Content="Label" Name="time" Grid.Row="3" Grid.Column="2"  Style="{StaticResource lblTitle4_1}"/>
                 </Grid>
