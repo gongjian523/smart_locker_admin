@@ -309,4 +309,29 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="CommonButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid >
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  Background="{x:Null}">
+                            <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}" Style="{StaticResource lblTitle1}" Foreground="#457EFF"></Label>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="RightBorder" Property="Background" Value="{DynamicResource NavBgBlueBrush}" />
+                            <Setter TargetName="RightLabel" Property="Foreground" Value="White" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    
 </ResourceDictionary>
