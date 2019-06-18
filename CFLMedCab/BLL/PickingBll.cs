@@ -22,9 +22,15 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		private readonly PickingDal pickingDal;
 
+		/// <summary>
+		/// 获取库存变化操作类
+		/// </summary>
+		private readonly GoodsChangeOrderDal goodsChageOrderDal;
+
 		public PickingBll()
 		{
 			pickingDal = PickingDal.GetInstance();
+			goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
 		}
 
 		/// <summary>
@@ -64,7 +70,7 @@ namespace CFLMedCab.BLL
 		/// <param name="pickingSubOrderid"></param>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetPickingSubOrderdtlOperateDto(int pickingSubOrderid, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+		public List<GoodsDto> GetPickingSubOrderdtlOperateDto(int pickingSubOrderid, string pickingSubOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 	
@@ -77,7 +83,8 @@ namespace CFLMedCab.BLL
 
 			goodsDtos.ForEach(it =>
 			{
-
+				//获取业务单号
+				it.business_order_code = pickingSubOrderCode;
 				//入库
 				if (it.operate_type == (int)OperateType.入库)
 				{
@@ -139,8 +146,16 @@ namespace CFLMedCab.BLL
 				}
 			});
 
+			bool ret = pickingDal.UpdatePickingStatus(pickingSubOrderid, pickingSubOrderdtlDtos);
 
-			return pickingDal.UpdatePickingStatus(pickingSubOrderid, pickingSubOrderdtlDtos);
+			//生成库存变化信息
+			if (ret)
+			{
+				goodsChageOrderDal.InsertGoodsChageOrderInfo(datasDto, RequisitionType.退货出库);
+			}
+
+			return ret;
+
 
 		}
 

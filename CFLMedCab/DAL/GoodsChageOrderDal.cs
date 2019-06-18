@@ -103,39 +103,30 @@ namespace CFLMedCab.DAL
 		/// <param name="businessOrderCode">关联业务单号</param>
 		/// <param name="requisitionType">业务类型</param>
 		/// <returns></returns>
-		public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, string businessOrderCode, RequisitionType requisitionType)
+		public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, RequisitionType requisitionType)
 		{
-			if (goodsDtos.Count <= 0)
-			{
-				return false;
-			}
-			List<GoodsDto> goodsDtosNotEx = goodsDtos.ToList();
 
-            if (goodsDtosNotEx.Count <= 0)
-            {
-                return false;
-            }
-
+			if (goodsDtos == null || goodsDtos.Count <= 0) return false;
+			
             //事务防止多插入产生脏数据
             var result = Db.Ado.UseTran(() =>
             {
-
-				//领用单id
+				//库存变化单id
 				int goodsChageOrderId = Db.Insertable(new GoodsChageOrder
 				{
 					//用uuid当作新生成的领用单单号
 					code = Guid.NewGuid().ToString("N"),
 					create_time = DateTime.Now,
 					operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
-					business_type = (int)requisitionType,
-					business_order_code = businessOrderCode
+					business_type = (int)requisitionType
                 }).ExecuteReturnIdentity();
 
-                List<GoodsChageOrderdtl> goodsChageOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, GoodsChageOrderdtl>();
+                List<GoodsChageOrderdtl> goodsChageOrderdtls = goodsDtos.MapToListIgnoreId<GoodsDto, GoodsChageOrderdtl>();
 
 				goodsChageOrderdtls.ForEach(it =>
 				{
 					it.related_order_id = goodsChageOrderId;
+				
 				});
 
                 Db.Insertable(goodsChageOrderdtls).ExecuteCommand();
@@ -145,6 +136,26 @@ namespace CFLMedCab.DAL
             return result.IsSuccess;
         }
 
+		/// <summary>
+		///  插入变化后的商品信息
+		/// </summary>
+		/// <param name="goodsDtos">所有数据</param>
+		/// <param name="businessOrderCode">关联业务单号</param>
+		/// <param name="requisitionType">业务类型</param>
+		/// <returns></returns>
+		public bool InsertGoodsChageOrderInfo(List<GoodsDto> goodsDtos, string businessOrderCode, RequisitionType requisitionType)
+		{
+
+			if (goodsDtos == null || goodsDtos.Count <= 0) return false;
+
+			//若有业务单号，则一次操作商品集，拼接该业务单号
+			goodsDtos.ForEach(it=>{
+				it.business_order_code = businessOrderCode;
+			});
+
+			return InsertGoodsChageOrderInfo(goodsDtos, requisitionType);
+
+		}
 
 	}
 

@@ -24,11 +24,6 @@ namespace CFLMedCab.Model
 		public string code { get; set; }
 
 		/// <summary>
-		/// 业务单号
-		/// </summary>
-		public string business_order_code { get; set; }
-
-		/// <summary>
 		/// 操作人
 		/// </summary>
 		[SugarColumn(IsNullable = true)]
