@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View.Fetch"
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="900">
+    <UserControl.Resources>
+        <cvt:FetchConverter x:Key="OperateTypeConverter"/>
+        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
+    </UserControl.Resources>
     <Grid Background="AliceBlue">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"></RowDefinition>
@@ -92,7 +97,7 @@
                             <GridView>
                                 <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=gcolumn1,Path=ActualWidth}"/>
                                 <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}" Width="{Binding ElementName=gcolumn2,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=gcolumn3,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=gcolumn3,Path=ActualWidth}"/>
                                 <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding Path=not_fetch_num}"  Width="{Binding ElementName=gcolumn4,Path=ActualWidth}"/>
                                 <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=gcolumn5,Path=ActualWidth}"/>
                                 <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=gcolumn6,Path=ActualWidth}"/>
@@ -135,7 +140,6 @@
                         <Grid Grid.Column="8" x:Name="column9"/>
                         <Grid Grid.Column="9" x:Name="column10"/>
                         <Grid Grid.Column="10" x:Name="column11"/>
-                        <Grid Grid.Column="11" x:Name="column12"/>
                     </Grid>
 
                     <Label Content="本次操作明细" Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="12" Height="30" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -146,13 +150,13 @@
                                 <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                                 <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
                                 <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
-                                <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column9,Path=ActualWidth}"/>
-                                <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column10,Path=ActualWidth}" />
-                                <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
-                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column12,Path=ActualWidth}"/>
+                                <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date ,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date ,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
+                                <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
+                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
 
                             </GridView>
                         </ListView.View>

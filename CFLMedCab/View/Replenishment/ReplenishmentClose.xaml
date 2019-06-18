@@ -4,8 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View"
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
             d:DesignHeight="600" d:DesignWidth="900">
+    <UserControl.Resources>
+        <cvt:FetchConverter x:Key="OperateTypeConverter"/>
+        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
+    </UserControl.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>
@@ -100,10 +105,10 @@
                                     <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                                     <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
                                     <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
-                                    <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date,StringFormat='{}{0:yyyy年MM月dd日}'}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date,StringFormat='{}{0:yyyy年MM月dd日}'}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date,StringFormat='{}{0:yyyy-MM-dd}'}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date,StringFormat='{}{0:yyyy-MM-dd}'}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
                                     <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
                                     <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
                                     <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>

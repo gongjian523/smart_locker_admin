@@ -49,8 +49,10 @@ namespace CFLMedCab.View.Fetch
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
-            goodsChageOrderdtls = fetchOrderBll.GetGeneralFetchOrderdtlOperateDto(goodDtos);
+            goodsChageOrderdtls = fetchOrderBll.GetGeneralFetchOrderdtlOperateDto(goodDtos ,out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsChageOrderdtls;
+            normalNum.Content = operateGoodsNum;
+            abnormalNum.Content = storageGoodsExNum;
         }
 
         /// <summary>
