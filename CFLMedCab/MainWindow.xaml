@@ -53,22 +53,34 @@
             </Grid>
             <Grid x:Name="HomePageView" Grid.Row="1" Background="{StaticResource ContentBkBrush}" Panel.ZIndex="1">
                 <Border Margin="20"  Background="#FFFFFF" CornerRadius="3,3,3,3" Padding="10">
-                    <WrapPanel Orientation="Horizontal" >
-                        <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#7291FD"  Content="一般领用"
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="0" Margin="5,5,5,5"   Background="#7291FD"  Content="一般领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="onEnterGerFetch"/>
-                        <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#00C5CE"  Content="手术领用"
+                        <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="1"  Margin="5,5,5,5"   Background="#00C5CE"  Content="手术领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-SurFetch.png" Click="onEnterSurgery"/>
-                        <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#57A1FF"  Content="领用退回"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="2"  Margin="5,5,5,5"   Background="#57A1FF"  Content="领用退回"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Return.png" Click="onEnterReturnFetch"/>
-                        <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#FF8B50"  Content="补货入库"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="3"  Margin="5,5,5,5"   Background="#FF8B50"  Content="补货入库"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Replenish.png" Click="onEnterReplenishment"/>
-                        <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#14D59C"  Content="退货出库"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="0"  Margin="5,5,5,5"   Background="#14D59C"  Content="退货出库"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Picking.png" Click="onEnterReturnGoods"/>
-                        <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#9394FE"  Content="库存盘点"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="1"  Margin="5,5,5,5"   Background="#9394FE"  Content="库存盘点"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="onEnterInvtory"/>
-                        <Button  Style="{DynamicResource HPNavButton}"  Margin="5,5,5,5"   Background="#3174FF"  Content="库存查询"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="2"  Margin="5,5,5,5"   Background="#3174FF"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterStock"/>
-                    </WrapPanel>
+                    </Grid>
+
                 </Border>
             </Grid>
             <Grid Grid.Row="1" Panel.ZIndex="0" >
