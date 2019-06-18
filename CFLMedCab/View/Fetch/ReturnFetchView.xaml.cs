@@ -47,7 +47,7 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
             time.Content = DateTime.Now;
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-            List<GoodsDto> goodsChageOrderdtls = new List<GoodsChageOrderdtlDto>();
+            List<GoodsDto> goodsChageOrderdtls = new List<GoodsDto>();
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
 
             //for (int i = 5; i >= 0; i--)
@@ -78,7 +78,8 @@ namespace CFLMedCab.View.Fetch
 
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
-            goodsChageOrderdtls = fetchOrderBll.GetGoBackFetchOrderdtlOperateDto(goodDtos);
+            int operateGoodsNum = 0, storageGoodsExNum = 0, outStorageGoodsExNum = 0;
+            goodsChageOrderdtls = fetchOrderBll.GetGoBackFetchOrderdtlOperateDto(goodDtos, out operateGoodsNum, out storageGoodsExNum, out outStorageGoodsExNum);
 
             listView.DataContext = goodsChageOrderdtls;
         }

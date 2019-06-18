@@ -11,22 +11,19 @@
         <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
         <DataTemplate x:Key="replenishOrder">
             <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF">
-                <Grid Margin="10" Name="data" Height="100">
+                <Grid Margin="10" Name="data" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="*"/>
-                        <ColumnDefinition  Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
                         <Label Content="工单编号：" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource Lable14BoldStyle}"/>
-                        <Label Content="{Binding replenish_order_code}" Style="{StaticResource Lable14BoldStyle}" Margin="20,0,100,0" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
-                        <Label Content="本柜拣货商品数量：" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource Lable16BoldStyle}"/>
+                        <Label Content="{Binding replenish_order_code}" Style="{StaticResource Lable14BoldStyle}"  />
+                        <Label Content="本柜拣货商品数量："  Style="{StaticResource Lable16BoldStyle}" Margin="10 0"/>
                         <Label Content="{Binding not_picked_goods_num}" Style="{StaticResource Lable14BoldStyle}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">

@@ -47,7 +47,8 @@ namespace CFLMedCab.View.Fetch
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
-            goodsChageOrderdtls = fetchOrderBll.GetSurgeryFetchOrderdtlOperateDto(goodDtos);
+            int operateGoodsNum = 0, storageGoodsExNum = 0, outStorageGoodsExNum = 0;
+            goodsChageOrderdtls = fetchOrderBll.GetSurgeryFetchOrderdtlOperateDto(goodDtos, out operateGoodsNum, out storageGoodsExNum, out outStorageGoodsExNum);
             listView.DataContext = goodsChageOrderdtls;
         }
 

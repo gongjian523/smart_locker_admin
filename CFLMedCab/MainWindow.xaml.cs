@@ -476,7 +476,7 @@ namespace CFLMedCab
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnFetchView returnFetchView = new ReturnFetchView();
+                ReturnFetchView returnFetchView = new ReturnFetchView(ht);
                 returnFetchView.EnterPopCloseEvent += new ReturnFetchView.EnterPopCloseHandler(onEnterPopClose);
                 returnFetchView.EnterReturnFetch += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
                 FullFrame.Navigate(returnFetchView);

@@ -15,26 +15,22 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="*"/>
-                        <ColumnDefinition  Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
                         <Label Content="工单编号：" HorizontalAlignment="Left"/>
                         <Label  Content="{Binding picking_order_code}"/>
-                    </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-                        <Label Content="本柜拣货商品数量："  />
+                        <Label Content="本柜拣货商品数量："  Margin="10 0" />
                         <Label  Content="{Binding picked_goods_num}"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
                         <Label Content="派发时间：" />
                         <Label  Content="{Binding distribute_time}"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3" HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" HorizontalAlignment="Right">
                         <Button Content="查看详情" Name="Retract" BorderBrush="#619CF8" Foreground="#619CF8" Margin="20 0" Tag="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" RenderTransformOrigin="0.51,-0.507" Click="onEnterDetail"/>
                         <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Margin="20 0" Tag="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="onEnterDetailOpen"/>
                     </StackPanel>
