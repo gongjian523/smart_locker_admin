@@ -202,8 +202,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// </summary>
 		public static DelegateGetMsg GetLockerData(string com, out bool isGetSuccess)
 		{
-
-			isGetSuccess = true;
+            isGetSuccess = true;
 
 			SerialPort comClientConn = CreateClientConn(com, 115200, out bool isCom1Connect);
 			if (isCom1Connect)
