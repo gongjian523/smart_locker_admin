@@ -7,101 +7,102 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    <Grid Background="AliceBlue">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-        </Grid.RowDefinitions>
+    <Border Style="{StaticResource CommonBlueBorder}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <Border Background="White" Padding="10" CornerRadius="{DynamicResource GRadius}" Grid.Row="0" Margin="20,20,20,10" >
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition/>
-                    <ColumnDefinition/>
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
-                    <RowDefinition Height="{StaticResource rowHeight50}"></RowDefinition>
-                    <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
-                    <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
-                </Grid.RowDefinitions>
-                <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" />
-                <Label Content="一般领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
-                <Label Content="操作人" Grid.Row="2" Grid.Column="0" />
-                <Label Content="Label" Name="operator" Grid.Row="3" Grid.Column="0"  />
-                <Label Content="操作日期" Grid.Row="2" Grid.Column="2" />
-                <Label Content="Label" Name="time" Grid.Row="3" Grid.Column="2" />
-            </Grid>
-        </Border>
-        <Border Background="White" Padding="10" CornerRadius="{DynamicResource GRadius}" Margin="20,10,20,20" Grid.Row="1">
-            <Grid x:Name="GridValue">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Label Content="当前领用了"/>
-                        <Label Content=" " Name="normalNum"/>
-                        <Label Content="个商品，异常操作" />
-                        <Label Content=" " Name="abnormalNum"/>
-                        <Label Content="个商品入库" />
-                    </StackPanel>
-                </Border>
-                <Border Grid.Row="1"  VerticalAlignment="Center">
-                    <Label Content="本次操作明细" Height="30" Width="auto" HorizontalAlignment="Left"  VerticalAlignment="Center"/>
-                </Border>
-
-                <Grid Grid.Row="2">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" x:Name="column1"/>
-                        <Grid Grid.Column="1" x:Name="column2"/>
-                        <Grid Grid.Column="2" x:Name="column3"/>
-                        <Grid Grid.Column="3" x:Name="column4"/>
-                        <Grid Grid.Column="4" x:Name="column5"/>
-                        <Grid Grid.Column="5" x:Name="column6"/>
-                        <Grid Grid.Column="6" x:Name="column7"/>
-                        <Grid Grid.Column="7" x:Name="column8"/>
-                        <Grid Grid.Column="8" x:Name="column9"/>
-                        <Grid Grid.Column="9" x:Name="column10"/>
-                        <Grid Grid.Column="10" x:Name="column11"/>
-                    </Grid>
-                    <ListView Grid.Row="1"  ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView}" >
-                        <ListView.View>
-                            <GridView>
-                                <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}" />
-                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
-                                <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
-                                <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
-                                <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
-                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
+            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0" >
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle1}" />
+                    <Label Content="一般领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
+                    <Label Content="操作人" Grid.Row="2" Grid.Column="0" Style="{StaticResource lblTitle3}" />
+                    <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label Content="操作日期" Grid.Row="2" Grid.Column="2" Style="{StaticResource lblTitle3}"/>
+                    <Label Content="Label" Name="time" Grid.Row="3" Grid.Column="2"  Style="{StaticResource lblTitle4_1}"/>
                 </Grid>
-            </Grid>
-        </Border>
-        <Border Background="White" Padding="10" CornerRadius="{DynamicResource GRadius}" Grid.Row="2" Height="100">
+            </Border>
+            <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="1">
+                <Grid x:Name="GridValue">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Style="{StaticResource TipBorder}" Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" >
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Label Content="当前领用了"/>
+                            <Label Content=" " Name="normalNum"/>
+                            <Label Content="个商品，异常操作" />
+                            <Label Content=" " Name="abnormalNum"/>
+                            <Label Content="个商品入库" />
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Row="1"  VerticalAlignment="Center">
+                        <Label Content="本次操作明细" Height="30" Width="auto" HorizontalAlignment="Left"  VerticalAlignment="Center"/>
+                    </Border>
+
+                    <Grid Grid.Row="2">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0" x:Name="column1"/>
+                            <Grid Grid.Column="1" x:Name="column2"/>
+                            <Grid Grid.Column="2" x:Name="column3"/>
+                            <Grid Grid.Column="3" x:Name="column4"/>
+                            <Grid Grid.Column="4" x:Name="column5"/>
+                            <Grid Grid.Column="5" x:Name="column6"/>
+                            <Grid Grid.Column="6" x:Name="column7"/>
+                            <Grid Grid.Column="7" x:Name="column8"/>
+                            <Grid Grid.Column="8" x:Name="column9"/>
+                            <Grid Grid.Column="9" x:Name="column10"/>
+                            <Grid Grid.Column="10" x:Name="column11"/>
+                        </Grid>
+                        <ListView Grid.Row="1"  ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView}" >
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}" />
+                                    <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding Path=code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
+                                    <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
+                                    <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="2">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -119,5 +120,6 @@
             <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
                 <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
             </Grid>
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>

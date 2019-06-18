@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -26,10 +27,12 @@ namespace CFLMedCab.View.ReplenishmentOrder
         ReplenishBll replenishBll = new ReplenishBll();
         public ReplenishmentDetailOpen(ReplenishSubOrderDto model)
         {
-            InitializeComponent();    
-            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            InitializeComponent();
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             orderNum.Content = model.replenish_order_code;
             listView.DataContext = replenishBll.GetReplenishSubOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_sub_orderid = model.id }).Data;
+
+            
         }
     }
 }

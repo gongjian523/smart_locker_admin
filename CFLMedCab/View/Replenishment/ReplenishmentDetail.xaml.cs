@@ -26,10 +26,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class ReplenishmentDetail : UserControl
     {
-        //ReplenishSubOrderdtlDal replenishSubOrderdtlDal = new ReplenishSubOrderdtlDal();
-        //ReplenishOrder entity = new ReplenishOrder();
-        //public ReplenishmentDetail(ReplenishOrder model)
-
         //进入补货单详情开门状态页面
         public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubOrderDto e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
@@ -43,7 +39,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             InitializeComponent();
             entity = model;    
-            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             orderNum.Content = model.replenish_order_code;
             listView.DataContext = replenishBll.GetReplenishSubOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_sub_orderid = model.id }).Data;
         }

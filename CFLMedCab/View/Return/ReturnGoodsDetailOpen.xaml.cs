@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DTO.Picking;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace CFLMedCab.View.Return
             InitializeComponent();
             pickingSubOrderDto = model;
             //操作人
-            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             orderNum.Content = model.id;
             listView.DataContext = pickingBll.GetPickingSubOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id }).Data;

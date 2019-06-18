@@ -65,11 +65,13 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 盘点人
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int operator_id { get; set; }
 
         /// <summary>
         /// 盘点人姓名
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string operator_name { get; set; }
 
         /// <summary>
@@ -110,6 +112,11 @@ namespace CFLMedCab.Model
         /// 商品码
         /// </summary>
         public string code { get; set; }
+
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string title { get; set; }
     }
 
 }

@@ -8,6 +8,9 @@
 
     
     <SolidColorBrush x:Key="TitleColor1" Color="#333333" />
+    <SolidColorBrush x:Key="TitleColor2" Color="#457eff" />
+    <SolidColorBrush x:Key="TitleColor3" Color="#666666" /> 
+
 
 
     <GridLength x:Key="rowHeight25">25</GridLength>
@@ -15,6 +18,51 @@
     <GridLength x:Key="rowHeight50">50</GridLength>
     <GridLength x:Key="rowHeight60">60</GridLength>
 
-    <CornerRadius x:Key="GRadius">4</CornerRadius>
+    <CornerRadius x:Key="GRadius">5</CornerRadius>
+    <Thickness x:Key="GInterval">20</Thickness>
+    <Thickness x:Key="IntervalBottom">0,0,0,10</Thickness>
+    <Thickness x:Key="IntervalCenter">0,10</Thickness>
+    <Thickness x:Key="IntervalTop">0,10,0,0</Thickness>
+
+
+    <Style x:Key="CommonBlueBorder" TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="{StaticResource GInterval}"/>
+        <Setter Property="Background" Value="AliceBlue"/>
+    </Style>
+
+    <Style x:Key="TipBorder" TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="CornerRadius" Value="{StaticResource GRadius}"/>
+        <Setter Property="Background" Value="{StaticResource TipBgColor}"/>
+        <Setter Property="Opacity" Value="0.2"/>
+    </Style>
+
+    <Style x:Key="RadiusBorder" TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="{StaticResource GInterval}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource GRadius}"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
+    </Style>
+
+
+    <Style x:Key="TopRadiusBorder" TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="{StaticResource GInterval}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource GRadius}"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Margin" Value="{StaticResource IntervalBottom}"/>
+    </Style>
+
+    <Style x:Key="CenterRadiusBorder" TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="{StaticResource GInterval}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource GRadius}"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Margin" Value="{StaticResource IntervalCenter}"/>
+    </Style>
+
+    <Style x:Key="BottomRadiusBorder" TargetType="{x:Type Border}">
+        <Setter Property="Padding" Value="{StaticResource GInterval}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource GRadius}"/>
+        <Setter Property="Background" Value="#FFFFFF"/>
+        <Setter Property="Margin" Value="{StaticResource IntervalTop}"/>
+    </Style>
 
 </ResourceDictionary>

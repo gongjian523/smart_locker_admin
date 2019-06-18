@@ -46,7 +46,7 @@ namespace CFLMedCab.View.Return
             InitializeComponent();
             pickingSubOrderDto = model;
             //操作人
-            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             ////工单号
             orderNum.Content = model.id;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");

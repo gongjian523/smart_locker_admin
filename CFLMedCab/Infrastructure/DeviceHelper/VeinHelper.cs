@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO.Ports;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,8 +9,12 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 {
     public class VeinHelper : SerialPort
     {
+
         public VeinHelper(string portName, int baudRate)
         {
+            //主柜指静脉串口"COM9"
+            //副柜指静脉串口"COM8"
+
             PortName = portName;
             BaudRate = baudRate;
             DataBits = 8;
@@ -19,7 +22,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         public void ChekVein()
         {
-			return;
+            return;
             Console.WriteLine("checkVein");
             if (!IsOpen)
                 Open();

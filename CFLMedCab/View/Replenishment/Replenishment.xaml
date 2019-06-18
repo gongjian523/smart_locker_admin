@@ -19,41 +19,37 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="50"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="40"/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
-                        <Label Content="工单编号：" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Label Content="{Binding replenish_order_code}" Background="AliceBlue"/>
+                        <Label Content="工单编号：" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource Lable14BoldStyle}"/>
+                        <Label Content="{Binding replenish_order_code}" Style="{StaticResource Lable14BoldStyle}" Margin="20,0,100,0" />
                     </StackPanel>
-
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-                        <Label Content="本柜拣货商品数量：" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Label Content="{Binding not_picked_goods_num}"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Label Content="本柜拣货商品数量：" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource Lable16BoldStyle}"/>
+                        <Label Content="{Binding not_picked_goods_num}" Style="{StaticResource Lable14BoldStyle}"/>
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center">
-                        <Label Content="派发时间：" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                        <Label  Content="{Binding distribute_time}"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <Label Content="派发时间：" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource Lable16BoldStyle}"/>
+                        <Label Content="{Binding distribute_time,StringFormat='{}{0:yyyy-MM-dd}'}" Style="{StaticResource Lable14BoldStyle}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3" HorizontalAlignment="Right">
-                        <Button Content="查看详情" Name="Retract"  BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" Tag="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" RenderTransformOrigin="0.51,-0.507" Click="EnterDetail_Click"/>
-                        <Button Content="确认开柜" Name="Confirm"  Style="{DynamicResource RightAngleNavButton}" Tag="{Binding}" HorizontalAlignment="Left"  VerticalAlignment="Top"  Click="EnterDetailOpen_Click"/>
+                        <Button Content="查看详情" Name="Retract"  BorderBrush="#619CF8" Foreground="#619CF8" FontSize="15" Tag="{Binding}" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Height="32" Click="EnterDetail_Click"/>
+                        <Button Content="确认开柜" Name="Confirm"  BorderBrush="#619CF8" Foreground="#FFFFFF" Background="#619CF8" FontSize="15" Tag="{Binding}"  Margin="20,0,20,0" HorizontalAlignment="Left" VerticalAlignment="Top" Width="114" Height="32" Click="EnterDetailOpen_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid Margin="0,0,20,0"  Background="AliceBlue">
+    <Grid Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48"/>
+            <RowDefinition Height="57"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left" Margin="10,10,10,0" VerticalAlignment="Top" FontSize="16" />
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+        <Label Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center"  Margin="20,0,0,0" Style="{StaticResource Lable16BoldStyle}"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="20,0,20,20">
             <ItemsControl ItemTemplate="{StaticResource replenishOrder}" ItemsSource="{Binding ReplenishOrderViewList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
         <Grid />
-        <Grid x:Name="ContentView" Grid.RowSpan="2">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-        </Grid>
     </Grid>
 </UserControl>

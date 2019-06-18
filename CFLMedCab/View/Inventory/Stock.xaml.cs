@@ -68,6 +68,12 @@ namespace CFLMedCab.View
                 {
                     goodsEpsHashSetDatas.UnionWith(goodsEpsData);
                 }
+                if (single1.IsChecked == true)
+                    getGoodsApo.expire_date = DateTime.Now.AddMonths(1);
+                if (single2.IsChecked == true)
+                    getGoodsApo.expire_date = DateTime.Now.AddMonths(2);
+                if (single3.IsChecked == true)
+                    getGoodsApo.expire_date = DateTime.Now.AddMonths(3);
                 getGoodsApo.goodsEpsDatas = goodsEpsHashSetDatas;
                 getGoodsApo.name = goods_name1.Text ==  "输入商品名称" ? "" : goods_name1.Text;
                 getGoodsApo.code = goods_code1.Text == "输入商品编码" ? "" : goods_code1.Text;

@@ -30,7 +30,7 @@
                 <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
                 <Label Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
                 <Label Content="操作人" Grid.Row="2" Grid.Column="0" />
-                <Label Content="Label" Name="operator" Grid.Row="3" Grid.Column="0"  />
+                <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  />
                 <Label Content="手术单号" Grid.Row="2" Grid.Column="1" />
                 <Label Content="Label" Name="surgeryNum"  Grid.Row="4" Grid.Column="1" />
                 <Label Content="操作日期" Grid.Row="2" Grid.Column="2" />
@@ -90,10 +90,10 @@
                     <ListView  VerticalAlignment="Bottom" Grid.Row="2" Grid.Column="0" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Center">
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=goods_name}" Width="{Binding ElementName=gcolumn1,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=gcolumn1,Path=ActualWidth}"/>
                                 <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding Path=goods_code}" Width="{Binding ElementName=gcolumn2,Path=ActualWidth}"/>
                                 <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=gcolumn3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding Path=wait_num}"  Width="{Binding ElementName=gcolumn4,Path=ActualWidth}"/>
+                                <GridViewColumn Header="待领用数量" DisplayMemberBinding="{Binding Path=not_fetch_num}"  Width="{Binding ElementName=gcolumn4,Path=ActualWidth}"/>
                                 <GridViewColumn Header="本柜库存数量" DisplayMemberBinding="{Binding Path=stock_num}" Width="{Binding ElementName=gcolumn5,Path=ActualWidth}"/>
                                 <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=gcolumn6,Path=ActualWidth}"/>
 
@@ -171,9 +171,8 @@
                     <RowDefinition Height="40"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Label Content="是否结束本次操作？" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <Button Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" 
-                        Click="onEndOperation"/>
-                <Button Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Top"  Click="onNoEndOperation"/>
+                <Button Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
+                <Button Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Style="{DynamicResource RightAngleNavButton}"  Grid.Row="1" Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
             </Grid>
         </StackPanel>
     </Grid>

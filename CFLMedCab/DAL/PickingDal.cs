@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.APO;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Picking;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
@@ -65,20 +66,20 @@ namespace CFLMedCab.DAL
 			List<PickingSubOrderDto> data;
 
 			//查询语句
-			var queryable = Db.Queryable<PickingSubOrder>()
-				.Where(it => it.status == 0)
-				.OrderBy(it => it.create_time, OrderByType.Desc)
-				.Select(it => new PickingSubOrderDto
+			var queryable = Db.Queryable<PickingSubOrder, PickingOrder>((pso, po) =>new object[] {
+            JoinType.Left, pso.picking_order_code == po.code})
+				.Where((pso, po) => pso.status == 0 &&  po.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.OrderBy(pso => pso.create_time, OrderByType.Desc)
+				.Select((pso, po) => new PickingSubOrderDto
 				{
-					id = it.id,
-					code = it.code,
-					picking_order_code = it.picking_order_code,
-					create_time = it.create_time,
-					status = it.status,
-					distribute_time = SqlFunc.Subqueryable<PickingOrder>()
-													  .Where(itpo => itpo.code == it.picking_order_code).Select(itpo=>itpo.create_time),
+					id = pso.id,
+					code = pso.code,
+					picking_order_code = pso.picking_order_code,
+					create_time = pso.create_time,
+					status = pso.status,
+					distribute_time = po.create_time,
 					picked_goods_num = SqlFunc.Subqueryable<PickingSubOrderdtl>()
-													  .Where(itsub => itsub.picking_sub_orderid == it.id && itsub.status == 0)
+													  .Where(itsub => itsub.picking_sub_orderid == pso.id && itsub.status == 0)
 													  .Count()
 				});
 

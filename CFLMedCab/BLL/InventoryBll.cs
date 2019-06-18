@@ -51,8 +51,14 @@ namespace CFLMedCab.BLL
                 //获取当前用户
                 inventoryOrder.operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id;
                 inventoryOrder.operator_name = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-                inventoryOrder.code = System.Guid.NewGuid().ToString("N");
+                inventoryOrder.type = (int)InventoryType.Manual;
             }
+            else
+            {
+                inventoryOrder.type = (int)InventoryType.Auto;
+            }
+
+            inventoryOrder.code = System.Guid.NewGuid().ToString("N");
 
             //生成记录
 
@@ -140,13 +146,23 @@ namespace CFLMedCab.BLL
         /// <returns></returns>
         public void UpdateInventoryDetails(List<InventoryOrderdtl> list)
         {
-            foreach(var item in list)
-            {
-                if (item.id == 0)
-                    inventoryDal.InsertInventoryDetails(item);
-                else
-                    inventoryDal.UpdateInventoryDetails(item);
-            }
+            //foreach(var item in list)
+            //{
+            //    if (item.id == 0)
+            //        inventoryDal.InsertInventoryDetails(item);
+            //    else
+            //        inventoryDal.UpdateInventoryDetails(item);
+            //}
+
+            //更新已有的计划
+            var oldlist = list.Where(item => item.id != 0).ToList();
+            if (oldlist.Count != 0)
+                inventoryDal.UpdateInventoryDetails(oldlist);
+
+            //新增计划
+            var newlist = list.Where(item => item.id == 0).ToList();
+            if (newlist.Count != 0)
+                inventoryDal.InsertInventoryDetails(newlist);
         }
 
         /// <summary>
@@ -164,7 +180,20 @@ namespace CFLMedCab.BLL
         /// <returns></returns>
         public void UpdateInventoryPlan(List<InventoryPlan> list)
         {
-            inventoryDal.UpdateInventoryPlan(list);
+            //更新已有的计划
+            var oldlist = list.Where(item => item.id != 0).ToList();
+            if(oldlist.Count != 0)
+                inventoryDal.UpdateInventoryPlan(oldlist);
+
+            //新增计划
+            var newlist = list.Where(item => item.id == 0).ToList();
+            if (newlist.Count != 0)
+                inventoryDal.InsertInventoryPlan(newlist);
+        }
+
+        public List<InventoryPlan> GetInventoryPlan()
+        {
+            return inventoryDal.GetInventoryPlan();
         }
 
 
