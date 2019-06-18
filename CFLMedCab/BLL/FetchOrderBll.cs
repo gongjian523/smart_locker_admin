@@ -82,10 +82,6 @@ namespace CFLMedCab.BLL
 					break;
 			}
 
-			
-
-			
-
 			return ret;
 		}
 		#endregion
@@ -425,16 +421,16 @@ namespace CFLMedCab.BLL
 
 		}
 
-		#endregion
+        #endregion
 
-		#region 领用退回
+        #region 领用退回
 
-		/// <summary>
-		///  获取一般领用操作情况
-		/// </summary>
-		/// <param name="goodsDtos"></param>
-		/// <returns></returns>
-		public List<GoodsDto> GetGoBackFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos)
+        /// <summary>
+        ///  获取领用退回操作情况
+        /// </summary>
+        /// <param name="goodsDtos"></param>
+        /// <returns></returns>
+        public List<GoodsDto> GetGoBackFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos)
 		{
 
 			//组装当前状态

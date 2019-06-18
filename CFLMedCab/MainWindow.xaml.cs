@@ -250,6 +250,7 @@ namespace CFLMedCab
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
 
+#if RELEASE
             List<string> com = ComName.GetAllLockerCom();
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
@@ -259,6 +260,7 @@ namespace CFLMedCab
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
 
             cabClosedNum = 0;
+#endif
         }
 
         /// <summary>
@@ -289,11 +291,11 @@ namespace CFLMedCab
                 FullFrame.Navigate(gerFetchView);
             }));
         }
-        #endregion
+#endregion
 
-        #region 手术领用
+#region 手术领用
 
-        #region 无手术单领用
+#region 无手术单领用
         /// <summary>
         /// 进入手术无单领用-开门状态
         /// </summary>
@@ -303,8 +305,10 @@ namespace CFLMedCab
         {
             GerFetchState gerFetchState = new GerFetchState(1);
             ContentFrame.Navigate(gerFetchState);
+#if REALEASE
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+#endif
         }
 
         /// <summary>
@@ -328,9 +332,9 @@ namespace CFLMedCab
                 FullFrame.Navigate(surgeryNoNumClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region 有手术单领用
+#region 有手术单领用
         /// <summary>
         /// 手术领用
         /// </summary>
@@ -393,7 +397,6 @@ namespace CFLMedCab
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.userData = model;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-
         }
 
         /// <summary>
@@ -419,10 +422,10 @@ namespace CFLMedCab
                 FullFrame.Navigate(surgeryNumClose);
             }));
         }
-        #endregion
-        #endregion
+#endregion
+#endregion
 
-        #region 领用退回
+#region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -479,10 +482,10 @@ namespace CFLMedCab
                 FullFrame.Navigate(returnFetchView);
             }));
         }
-        #endregion
-        #endregion
+#endregion
+#endregion
 
-        #region Replenishment
+#region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -565,9 +568,9 @@ namespace CFLMedCab
                 FullFrame.Navigate(replenishmentClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region  ReturnGoods
+#region  ReturnGoods
         /// <summary>
         /// 进入退货出库页面
         /// </summary>
@@ -648,9 +651,9 @@ namespace CFLMedCab
                 FullFrame.Navigate(returnGoodsClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region Inventory
+#region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -845,7 +848,7 @@ namespace CFLMedCab
                 MaskView.Visibility = Visibility.Hidden;
             }));
         }
-        #endregion
+#endregion
 
 
         /// <summary>
@@ -916,7 +919,7 @@ namespace CFLMedCab
         }
 
 
-        #region test
+#region test
         private void Test()
         {
             TestGoods test = new TestGoods();
@@ -945,7 +948,7 @@ namespace CFLMedCab
             Console.WriteLine("返回开锁状态{0}", isClose);
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
         }
-        #endregion
+#endregion
 
     }
 }
