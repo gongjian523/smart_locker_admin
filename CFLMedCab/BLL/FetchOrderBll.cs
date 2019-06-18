@@ -97,7 +97,7 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetGeneralFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos)
+		public List<GoodsDto> GetGeneralFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//组装当前状态
@@ -131,6 +131,10 @@ namespace CFLMedCab.BLL
 				}
 			});
 
+			//统计数量
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列
 			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
@@ -145,7 +149,7 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetSurgeryFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos)
+		public List<GoodsDto> GetSurgeryFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//组装当前状态
@@ -178,6 +182,10 @@ namespace CFLMedCab.BLL
 				}
 			});
 
+			//统计数量
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列
 			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
@@ -434,7 +442,7 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetGoBackFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos)
+		public List<GoodsDto> GetGoBackFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//组装当前状态
@@ -480,6 +488,11 @@ namespace CFLMedCab.BLL
 
 				}
 			});
+
+			//统计数量
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列
 			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
