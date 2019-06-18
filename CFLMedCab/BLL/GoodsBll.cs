@@ -2,6 +2,7 @@
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Infrastructure.ToolHelper;
+using CFLMedCab.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -154,6 +155,20 @@ namespace CFLMedCab.BLL
         public List<GoodsDto> GetValidityGoodsDto(GetGoodsApo getGoodApo, out int totalCount)
         {
             return GoodsDal.GetGoodsDto(getGoodApo, out totalCount);
+        }
+
+        /// <summary>
+        /// 获取当前表中所有商品的种类
+        /// </summary>
+        /// <returns></returns>
+        public int GetGoodsTypeNum()
+        {
+            return GoodsDal.GetGoodsNum();
+        }
+
+        public void InsertGood(List<Goods> list)
+        {
+            GoodsDal.InsertGoods(list);
         }
     }
 }

@@ -60,7 +60,6 @@ namespace CFLMedCab.View.Fetch
             abnormalInNum.Content = storageOperateExNum;//异常入库
             abnormalOutNum.Content = notStorageOperateExNum;//异常出库
             waitNum.Content = notFetchGoodsNum;//待领用数
-
         }
 
         /// <summary>

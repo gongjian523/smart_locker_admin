@@ -102,13 +102,10 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-
-            
+            fetchOrderBll.UpdateGoBackFetchOrder(goodsChageOrderdtls);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
 
             EnterPopCloseEvent(this, null);
-
-
-            
         }
     }
 

@@ -25,7 +25,8 @@ namespace CFLMedCab.Model
         public string name { get; set; }
 
         /// <summary>
-        /// 角色
+        /// 角色  
+        /// 0 医生；1 护士；2 医院管理员；3 SPD交收员；4 SPD结算员；5 SPD经理
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public int role { get; set; }

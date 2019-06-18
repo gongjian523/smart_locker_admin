@@ -1,4 +1,5 @@
-﻿using CFLMedCab.DAL;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DAL;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -12,24 +13,51 @@ namespace CFLMedCab.Test
 {
     public class TestGoods
     {
-        private  readonly GoodsDal GoodsDal;
+        private GoodsBll goodsBll = new GoodsBll();
+        private UserBll userBll = new UserBll();
 
-        public TestGoods()
+
+        public Hashtable  GetCurrentRFid()
         {
-           GoodsDal = GoodsDal.GetInstance();
-        }
-
-        public void AddGoodTest()
-        {
-
             Hashtable ht = new Hashtable();
             HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
             ht.Add("COM1", hs1);
             HashSet<string> hs4 = new HashSet<string> { "E20000176012028219504DAD", "E20000176012026619504D8D", "E20000176012026319404F98", "E20000176012028019504DA0", "E20000176012026519504D85" };
             ht.Add("COM4", hs4);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            return ht;
+        }
 
-            if (GoodsDal.GetGoodsNum() > 0)
+
+        public void InitUsersInfo()
+        {
+            if (userBll.GetUserNum() > 0)
+                return;
+
+            List<User> users = new List<User> {
+                new User{
+                    name = "Nathan",
+                    role = 0,
+                    vein_id = 58046,
+                },
+                new User{
+                    name = "Will",
+                    role = 0,
+                    vein_id = 58268,
+                },
+                new User{
+                    name = "Kate",
+                    role = 0,
+                    vein_id = 12630,
+                },
+            };
+            userBll.InsetUsers(users);
+        }
+
+
+        public void InitGoodsInfo()
+        {
+            if (goodsBll.GetGoodsTypeNum() > 0)
                 return;
 
             List<Goods> goods = new List<Goods>{
@@ -155,7 +183,7 @@ namespace CFLMedCab.Test
                 },
             };
 
-            GoodsDal.InsertGoods(goods);
+            goodsBll.InsertGood(goods);
         }
     }
 }

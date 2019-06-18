@@ -1,4 +1,5 @@
-﻿using GDotnet.Reader.Api.DAL;
+﻿using CFLMedCab.Test;
+using GDotnet.Reader.Api.DAL;
 using GDotnet.Reader.Api.Protocol.Gx;
 using System;
 using System.Collections;
@@ -164,12 +165,20 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			
 		}
 
-		/// <summary>
-		/// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
-		/// </summary>
-		public static Hashtable GetEpcData(out bool isGetSuccess)
+        /// <summary>
+        /// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
+        /// </summary>
+#if TESTENV
+        public static Hashtable GetEpcData(out bool isGetSuccess)
+        {
+            isGetSuccess = true;
+            TestGoods testGoods = new TestGoods();
+
+            return testGoods.GetCurrentRFid(); 
+        }
+#else
+        public static Hashtable GetEpcData(out bool isGetSuccess)
 		{
-		
 			isGetSuccess = true;
 
 			string com1 = "COM1";
@@ -205,9 +214,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			return currentEpcDataHt;
 
 		}
+#endif
 
-
-		public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
+        public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
 		{
 			Console.ReadKey();
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
@@ -219,7 +228,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			Console.ReadKey();
 		}
 
-		#region
+#region
 		public static void TestRFID(object sender, ElapsedEventArgs elapsed)
 		{
 			GClient clientConn = new GClient();
@@ -314,7 +323,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 		}
 
-		#endregion
+#endregion
 
 		/// <summary>
 		/// 内部类，区分不同机柜（即不同com串口）的扫描消息
