@@ -34,7 +34,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Button Content="返回" HorizontalAlignment="Left"  Grid.Row="0" VerticalAlignment="Top"   Foreground="#619CF8" Click="onCancel"/>
+            <Button  Style="{StaticResource ReturnButton}" Content="返回>" Width="auto" Grid.Row="0" Click="onCancel"/>
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1" >
                 <Grid>
                     <Grid.RowDefinitions>
@@ -119,9 +119,9 @@
                             </ListView.View>
                         </ListView>
                     </Grid>
-                    <Button x:Name="btnAddProduct" Content="新增实际库存商品"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Width="150" Margin="0,5,20,5"  Click="onAddProduct" HorizontalAlignment="Right"/>
-                    <Button x:Name="btnConfirm" Content="盘点确认"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,30,0" VerticalAlignment="Center" Width="75" Click="onConfirm"/>
-                    <Button x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="75" Click="onCancel"/>
+                    <Button Style="{StaticResource AddButton}" x:Name="btnAddProduct" Content="新增实际库存商品"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Width="150" Margin="0,5,20,5"  Click="onAddProduct" HorizontalAlignment="Right"/>
+                    <Button Style="{StaticResource CommonYesButton}" x:Name="btnConfirm" Content="盘点确认"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,30,0" VerticalAlignment="Center" Width="113" Height="32" Click="onConfirm"/>
+                    <Button Style="{StaticResource CommonNoButton}" x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="113"  Height="32" Click="onCancel"/>
                 </Grid>
             </Border>
         </Grid>

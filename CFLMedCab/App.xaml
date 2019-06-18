@@ -18,6 +18,7 @@
                 <ResourceDictionary Source="Controls/Styles/ListviewStyles.xaml"/>
                 <ResourceDictionary Source="Controls/Styles/ToggleButtonStyle.xaml"/>
                 <ResourceDictionary Source="Controls/Styles/LabelStyle.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/CFLMedCab;component/Controls/Styles/BtnStyles.xaml"/>
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="{x:Type TextBox}">

@@ -310,28 +310,106 @@
         </Style.Triggers>
     </Style>
 
-    <Style x:Key="CommonButton" TargetType="{x:Type Button}">
+    <Style x:Key="ReturnButton" TargetType="{x:Type Button}">
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="0 5"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid >
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" Width="{TemplateBinding Width}"  Background="{x:Null}">
-                            <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}" Style="{StaticResource lblTitle1}" Foreground="#457EFF"></Label>
+                    <Grid HorizontalAlignment="Left">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" Width="auto"  Background="{x:Null}">
+                            <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}" Style="{StaticResource lblTitle6}" Foreground="#457EFF"></Label>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsMouseOver" Value="True">
-                            <Setter TargetName="RightBorder" Property="Background" Value="{DynamicResource NavBgBlueBrush}" />
-                            <Setter TargetName="RightLabel" Property="Foreground" Value="White" />
+                            <Setter TargetName="RightBorder" Property="Background" Value="{x:Null}" />
+                            <Setter TargetName="RightLabel" Property="Foreground" Value="#FD854E" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
-    
+
+    <Style x:Key="CommonYesButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="0 5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid HorizontalAlignment="Left">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="113" MinHeight="32" Width="{TemplateBinding Width}"  Background="#457EFF" CornerRadius="{StaticResource GRadius}">
+                            <Label x:Name="RightLabel" FontSize="15"  HorizontalAlignment="Center" Content="{TemplateBinding RadioButton.Content}"  Foreground="#FFFFFF"></Label>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="RightBorder" Property="Background" Value="#457EFF" />
+                            <Setter TargetName="RightLabel" Property="Foreground" Value="#FD854E" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="CommonNoButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="0 5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid HorizontalAlignment="Left">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="113" MinHeight="32"  Width="{TemplateBinding Width}" BorderThickness="1" BorderBrush="{StaticResource TitleColor2}"  Background="#FFFFFF"  CornerRadius="{StaticResource GRadius}">
+                            <Label x:Name="RightLabel" FontSize="15"  HorizontalAlignment="Center" Content="{TemplateBinding RadioButton.Content}"  Foreground="{StaticResource TitleColor2}"></Label>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="RightBorder" Property="Background" Value="#FFFFFF" />
+                            <Setter TargetName="RightLabel" Property="Foreground" Value="#FD854E" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="AddButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="0 5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid HorizontalAlignment="Left">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" Width="auto"  Background="{x:Null}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="/Resources/Images/add.png"/>
+                                <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}"  Foreground="#457EFF"></Label>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="RightBorder" Property="Background" Value="{x:Null}" />
+                            <Setter TargetName="RightLabel" Property="Foreground" Value="#FD854E" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
 </ResourceDictionary>
