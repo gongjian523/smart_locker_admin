@@ -37,6 +37,8 @@ using CFLMedCab.DTO.Replenish;
 using CFLMedCab.DTO.Picking;
 using CFLMedCab.Test;
 using CFLMedCab.DTO.Goodss;
+using CFLMedCab.APO.Surgery;
+using CFLMedCab.DTO.Surgery;
 
 namespace CFLMedCab
 {
@@ -46,8 +48,13 @@ namespace CFLMedCab
     public partial class MainWindow : MetroWindow
     {
         private DispatcherTimer ShowTimer;
+        private DispatcherTimer InventoryTimer;
         private VeinHelper vein;
 
+        private InventoryBll inventoryBll = new InventoryBll();
+        private GoodsBll goodsBll = new GoodsBll();
+
+        private int cabClosedNum;
 
         public MainWindow()
         {
@@ -60,6 +67,11 @@ namespace CFLMedCab
             ShowTimer.Tick += new EventHandler(ShowCurTimer);//起个Timer一直获取当前时间
             ShowTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
             ShowTimer.Start();
+
+            InventoryTimer = new DispatcherTimer();
+            InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer一直获取当前时间
+            InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
+            InventoryTimer.Start();
 
             vein = new VeinHelper("COM9", 9600);
             vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
@@ -75,23 +87,52 @@ namespace CFLMedCab
 			//        LoginBkView.Visibility = Visibility.Hidden;
 			//}));
 
-
-
-
 			//bool isGetSuccess;
 
 			//Hashtable cur =  RfidHelper.GetEpcData(out isGetSuccess);
 			//ApplicationState.SetValue((int)ApplicationKey.CurGoods, cur);//读取机柜内当前的商品编码
 
-			var testData = new ReplenishBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
-				PageIndex = 1,
-				PageSize = 2
-			});
-
+			//var testData = new ReplenishBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
+			//	PageIndex = 1,
+			//	PageSize = 2
+			//});
 
             Test();
 
             ConsoleManager.Show();
+        }
+
+        
+        private void onInventoryTimer(object sender, EventArgs e)
+        {
+            List <InventoryPlan> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
+
+            foreach(var item in listPan)
+            {
+
+                DateTime date1 = DateTime.Now;
+                DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0,2)), int.Parse(item.inventorytime_str.Substring(3,2)), 0);
+
+                TimeSpan timeSpan = date2 - date1;
+
+                if (timeSpan.TotalMinutes < 1)
+                {
+                    bool isGetSuccess;
+                    Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+                    //Hashtable ht = new Hashtable();
+                    //HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
+                    //ht.Add("COM1", hs1);
+
+                    List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+                    int id = inventoryBll.NewInventory(InventoryType.Auto);
+                    inventoryBll.InsertInventoryDetails(list, id);
+
+                    return;
+                }
+
+                Console.WriteLine("onInventoryTimer:" + timeSpan.TotalMinutes);
+            }
         }
 
 
@@ -202,10 +243,24 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterGerFetch.IsChecked = true;
+
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+
+#if RELEASE
+            List<string> com = ComName.GetAllLockerCom();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+
+            cabClosedNum = 0;
+#endif
         }
 
         /// <summary>
@@ -217,26 +272,30 @@ namespace CFLMedCab
         {
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
+            if (cabClosedNum == 0)
+            {
+                cabClosedNum++;
+                return;
+            }
+    
             if (!isClose)
                 return;
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
+            
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                GerFetchView gerFetchView = new GerFetchView();
+                GerFetchView gerFetchView = new GerFetchView(ht);
                 gerFetchView.EnterPopCloseEvent += new GerFetchView.EnterPopCloseHandler(onEnterPopClose);
                 gerFetchView.EnterGerFetch += new GerFetchView.EnterFetchOpenHandler(onEnterGerFetch);
                 FullFrame.Navigate(gerFetchView);
             }));
         }
-        #endregion
+#endregion
 
-        #region 手术领用
+#region 手术领用
 
-        #region 无手术单领用
+#region 无手术单领用
         /// <summary>
         /// 进入手术无单领用-开门状态
         /// </summary>
@@ -246,9 +305,10 @@ namespace CFLMedCab
         {
             GerFetchState gerFetchState = new GerFetchState(1);
             ContentFrame.Navigate(gerFetchState);
+#if REALEASE
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
-
+#endif
         }
 
         /// <summary>
@@ -263,21 +323,18 @@ namespace CFLMedCab
             if (!isClose)
                 return;
             Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
-
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
+            
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-
-                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose();
+                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose(ht);
                 surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
                 FullFrame.Navigate(surgeryNoNumClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region 有手术单领用
+#region 有手术单领用
         /// <summary>
         /// 手术领用
         /// </summary>
@@ -285,6 +342,10 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgery(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterSurgery.IsChecked = true;
+
             SurgeryQuery surgeryQuery = new SurgeryQuery();
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
@@ -295,9 +356,9 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fetchOrder"></param>
-        private void onEnterSurgeryDetail(object sender, FetchOrder fetchOrder)
+        private void onEnterSurgeryDetail(object sender, SurgeryOrderDto model)
         {
-            SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(fetchOrder);
+            SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(model);
             surgeryOrderDetail.EnterSurgeryNumOpenEvent += new SurgeryOrderDetail.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
             surgeryOrderDetail.EnterSurgeryConsumablesDetailEvent += new SurgeryOrderDetail.EnterSurgeryConsumablesDetailHandler(EnterSurgeryConsumablesDetailEvent);
             ContentFrame.Navigate(surgeryOrderDetail);
@@ -308,9 +369,9 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fetchOrder"></param>
-        public void EnterSurgeryConsumablesDetailEvent(object sender, FetchOrder fetchOrder)
+        public void EnterSurgeryConsumablesDetailEvent(object sender, SurgeryOrderDto model)
         {
-            ConsumablesDetails consumablesDetails = new ConsumablesDetails(fetchOrder);
+            ConsumablesDetails consumablesDetails = new ConsumablesDetails(model);
             consumablesDetails.EnterSurgeryDetailEvent += new ConsumablesDetails.EnterSurgeryDetailHandler(onEnterSurgeryDetail);
             ContentFrame.Navigate(consumablesDetails);
         }
@@ -320,11 +381,11 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterSurgeryNumOpenEvent(object sender, FetchOrder fetchOrder)
+        private void EnterSurgeryNumOpenEvent(object sender, SurgeryOrderDto model)
         {
             NaviView.Visibility = Visibility.Hidden;
 
-            SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(fetchOrder);
+            SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(model);
             FullFrame.Navigate(surgeryNumOpen);
 
             MaskView.Visibility = Visibility.Visible;
@@ -334,8 +395,8 @@ namespace CFLMedCab
             PopFrame.Navigate(openCabinet);
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.userData = model;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-
         }
 
         /// <summary>
@@ -345,26 +406,26 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNumLockerEvent(object sender, bool isClose)
         {
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
             if (!isClose)
                 return;
             Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
 
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
+            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(new FetchOrder());
+                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(surgeryOrderDto,ht);
                 surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
                 FullFrame.Navigate(surgeryNumClose);
             }));
         }
-        #endregion
-        #endregion
+#endregion
+#endregion
 
-        #region 领用退回
+#region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -372,10 +433,22 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnFetch(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterReturnFetch.IsChecked = true;
+
             GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+
+            List<string> com = ComName.GetAllLockerCom();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
+
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
+
+            cabClosedNum = 0;
         }
 
         /// <summary>
@@ -389,23 +462,30 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
+
+            if (cabClosedNum == 0)
+            {
+                cabClosedNum++;
+                return;
+            }
+
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnFetchView returnFetchView = new ReturnFetchView();
+                ReturnFetchView returnFetchView = new ReturnFetchView(ht);
                 returnFetchView.EnterPopCloseEvent += new ReturnFetchView.EnterPopCloseHandler(onEnterPopClose);
                 returnFetchView.EnterReturnFetch += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
                 FullFrame.Navigate(returnFetchView);
             }));
         }
-        #endregion
-        #endregion
+#endregion
+#endregion
 
-        #region Replenishment
+#region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -413,6 +493,10 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReplenishment(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterReplenishment.IsChecked = true;
+
             Replenishment replenishment = new Replenishment();
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
             replenishment.EnterReplenishmentDetailOpenEvent += new Replenishment.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
@@ -453,8 +537,7 @@ namespace CFLMedCab
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
 
-
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
             delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
         }
@@ -485,9 +568,9 @@ namespace CFLMedCab
                 FullFrame.Navigate(replenishmentClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region  ReturnGoods
+#region  ReturnGoods
         /// <summary>
         /// 进入退货出库页面
         /// </summary>
@@ -535,8 +618,8 @@ namespace CFLMedCab
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
 
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
-               delegateGetMsg.userData = e;
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
+            delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
         }
 
@@ -568,9 +651,9 @@ namespace CFLMedCab
                 FullFrame.Navigate(returnGoodsClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region Inventory
+#region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -765,7 +848,7 @@ namespace CFLMedCab
                 MaskView.Visibility = Visibility.Hidden;
             }));
         }
-        #endregion
+#endregion
 
 
         /// <summary>
@@ -836,7 +919,7 @@ namespace CFLMedCab
         }
 
 
-        #region test
+#region test
         private void Test()
         {
             TestGoods test = new TestGoods();
@@ -865,7 +948,7 @@ namespace CFLMedCab
             Console.WriteLine("返回开锁状态{0}", isClose);
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
         }
-        #endregion
+#endregion
 
     }
 }

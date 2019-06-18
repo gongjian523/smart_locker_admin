@@ -46,14 +46,14 @@ namespace CFLMedCab.View.Return
             InitializeComponent();
             pickingSubOrderDto = model;
             //操作人
-            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             ////工单号
             orderNum.Content = model.id;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
-            goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.id, model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsDetails;
             inNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;

@@ -1,10 +1,15 @@
-﻿using CFLMedCab.BLL;
+﻿using CFLMedCab.APO.Surgery;
+using CFLMedCab.BLL;
+using CFLMedCab.DTO;
 using CFLMedCab.DTO.Fetch;
+using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
+using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -28,42 +33,37 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class SurgeryNumClose : UserControl
     {
-        public delegate void EnterSurgeryNumOpenHandler(object sender, FetchOrder fetchOrder);
+        public delegate void EnterSurgeryNumOpenHandler(object sender, SurgeryOrderDto surgeryOrderDto);
         public event EnterSurgeryNumOpenHandler EnterSurgeryNumOpenEvent;
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
-        FetchOrder fetchOrder;
-        //FetchOrderdtlBll fetchOrderdtlBll = new FetchOrderdtlBll();
-        //SurgeryOrderBll surgeryOrderBll = new SurgeryOrderBll();
-        public SurgeryNumClose(FetchOrder model)
+
+        private SurgeryOrderDto surgeryOrderDto;
+        private Hashtable after;
+        private List<GoodsDto> goodsChageOrderdtls;
+        private GoodsBll goodsBll = new GoodsBll();
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        public SurgeryNumClose(SurgeryOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
-            fetchOrder = model;
-           
-        }
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            time.Content = DateTime.Now; Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            surgeryNum.Content = model.code;
+            after = hashtable;
+            surgeryOrderDto = model;
+            List<GoodsDto> goodDtos = goodsBll.GetInvetoryGoodsDto(hashtable);//盘点当前柜子里的商品
+            goodsChageOrderdtls = goodsBll.GetCompareGoodsDto(before, hashtable);//库存变化信息
+            goodsChageOrderdtls = fetchOrderBll.GetSurgeryGoodsOperateDto(goodsChageOrderdtls, model.code, out int currentOperateNum, out int storageOperateExNum, out int notStorageOperateExNum);
+            List<SurgeryOrderdtlDto> surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode= model.code, OperateGoodsDtos= goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
+            listView.DataContext = surgeryOrderdtlDtos;
+            listView1.DataContext = goodsChageOrderdtls;
+            inNum.Content = currentOperateNum;//领用数
+            abnormalInNum.Content = storageOperateExNum;//异常入库
+            abnormalOutNum.Content = notStorageOperateExNum;//异常出库
+            waitNum.Content = notFetchGoodsNum;//待领用数
 
-        /// <summary>
-        /// 根据关门数据组合展示数据
-        /// </summary>
-        /// <param name="inHashtable">入库数据</param>
-        /// <param name="outHashtable">出库 数据</param>
-        /// <param name="type">领用类型</param>
-        //public void data()
-        //{
-        //    bool isGetSuccess;
-        //    Hashtable befroe = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-        //    Hashtable after = RfidHelper.GetEpcData(out isGetSuccess);
-        //    HashSet<string> inHashtable;
-        //    HashSet<string> outHashtable;
-        //    CollectHelper.CompareCollect(befroe, after, out inHashtable, out outHashtable);
-        //    goodsChageOrderdtls = fetchOrderdtlBll.newGoodsChageOrderdtls(inHashtable, 1, 0, "操作与业务类型冲突", ref exception_flag);
-        //    foreach (GoodsChageOrderdtl item in fetchOrderdtlBll.newGoodsChageOrderdtls(outHashtable, 0, 0, "操作与业务类型冲突", ref exception_flag))
-        //    {
-        //        goodsChageOrderdtls.Add(item);
-        //    }
-        //    listView.DataContext = goodsChageOrderdtls.OrderBy(t => t.expire_date).OrderBy(t => t.exception_flag);
-        //}
+        }
 
         /// <summary>
         /// 不结束本次领用
@@ -72,7 +72,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param> 
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterSurgeryNumOpenEvent(this, null);
+            EnterSurgeryNumOpenEvent(this, surgeryOrderDto);
         }
 
         /// <summary>
@@ -82,6 +82,8 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            if (fetchOrderBll.InsertFetchAndGoodsChangeInfo(goodsChageOrderdtls, RequisitionType.有单手术领用, surgeryOrderDto.code))
+                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
     }

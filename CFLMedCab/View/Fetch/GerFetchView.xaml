@@ -7,6 +7,10 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
+    <UserControl.Resources>
+        <cvt:FetchConverter x:Key="OperateTypeConverter"/>
+        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
+    </UserControl.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>
@@ -30,7 +34,7 @@
                     <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle1}" />
                     <Label Content="一般领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
                     <Label Content="操作人" Grid.Row="2" Grid.Column="0" Style="{StaticResource lblTitle3}" />
-                    <Label Content="Label" Name="operator" Grid.Row="3" Grid.Column="0"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  Style="{StaticResource lblTitle4_0}"/>
                     <Label Content="操作日期" Grid.Row="2" Grid.Column="2" Style="{StaticResource lblTitle3}"/>
                     <Label Content="Label" Name="time" Grid.Row="3" Grid.Column="2"  Style="{StaticResource lblTitle4_1}"/>
                 </Grid>
@@ -42,7 +46,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Style="{StaticResource TipBorder}" Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" >
+                    <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="当前领用了"/>
                             <Label Content=" " Name="normalNum"/>
@@ -91,8 +95,8 @@
                                     <GridViewColumn Header="批号" DisplayMemberBinding="{Binding Path=batch_number}"  Width="{Binding ElementName=column4,Path=ActualWidth}" />
                                     <GridViewColumn Header="生产日期" DisplayMemberBinding="{Binding Path=birth_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
                                     <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date ,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                    <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
                                     <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
                                     <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
                                     <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>

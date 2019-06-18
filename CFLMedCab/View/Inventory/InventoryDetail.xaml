@@ -7,7 +7,7 @@
              mc:Ignorable="d" 
              xmlns:ctr="clr-namespace:CFLMedCab.Controls"
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
-             d:DesignHeight="450" d:DesignWidth="800">
+             d:DesignHeight="720" d:DesignWidth="800">
     <UserControl.Resources>
         <Style x:Key="{x:Type ctr:EditBox}" TargetType="{x:Type ctr:EditBox}" >
             <Setter Property="HorizontalAlignment" Value="Left"  />
@@ -25,8 +25,9 @@
         <cvt:InventoryStatusStrConverter x:Key="InventoryStatusStrConverter"/>
         <cvt:InventoryTypeStrConverter x:Key="InventoryTypeStrConverter"/>
     </UserControl.Resources>
-    <Grid  Background="AliceBlue">
-        <Grid Margin="20">
+    
+    <Border Style="{StaticResource CommonBlueBorder}">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -34,13 +35,13 @@
             </Grid.RowDefinitions>
 
             <Button Content="返回" HorizontalAlignment="Left"  Grid.Row="0" VerticalAlignment="Top"   Foreground="#619CF8" Click="onCancel"/>
-            <Border Background="White" Grid.Row="1" Margin="0,10,0,5" CornerRadius="{DynamicResource GRadius}">
-                <Grid Margin="10">
+            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1" >
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="{DynamicResource rowHeight25}"/>
-                        <RowDefinition Height="{DynamicResource rowHeight50}"/>
-                        <RowDefinition Height="{DynamicResource rowHeight25}"/>
-                        <RowDefinition Height="{DynamicResource rowHeight25}"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -48,19 +49,19 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
-                    <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3"  HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                    <Label Content="{Binding code}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
-                    <Label Content="盘点日期" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="盘点状态" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="盘点类型" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="{Binding create_time}" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="{Binding type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
-                    <Label Content="{Binding status, Converter= {StaticResource InventoryStatusStrConverter} }" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="9"/>
+                    <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle1}" />
+                    <Label Content="{Binding code}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" Style="{StaticResource lblTitle2}"/>
+                    <Label Content="盘点日期" Grid.Row="2" Grid.Column="0" Style="{StaticResource lblTitle3}"/>
+                    <Label Content="盘点状态" Grid.Row="2" Grid.Column="1" Style="{StaticResource lblTitle3}"/>
+                    <Label Content="盘点类型" Grid.Row="2" Grid.Column="2" Style="{StaticResource lblTitle3}"/>
+                    <Label Content="{Binding create_time}" Grid.Row="3" Grid.Column="0" Style="{StaticResource lblTitle4_0}"/>
+                    <Label Content="{Binding type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Grid.Row="3" Grid.Column="1" Style="{StaticResource lblTitle4_1}"/>
+                    <Label Content="{Binding status, Converter= {StaticResource InventoryStatusStrConverter} }" Grid.Row="3" Grid.Column="2" Style="{StaticResource lblTitle4_1}"/>
                 </Grid>
             </Border>
 
-            <Border Background="White" Grid.Row="2" Margin="0,5,0,10" CornerRadius="{DynamicResource GRadius}">
-                <Grid Margin="10">
+            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*" MinHeight="120"/>
                         <RowDefinition Height="auto"/>
@@ -123,7 +124,6 @@
                     <Button x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="75" Click="onCancel"/>
                 </Grid>
             </Border>
-            
         </Grid>
-    </Grid>
+    </Border>
 </UserControl>

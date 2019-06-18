@@ -2,6 +2,17 @@
 <ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+    <Style x:Key="Lable16BoldStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+    
+    <Style x:Key="Lable14BoldStyle" TargetType="Label">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+
     <Style x:Key="ExpandImageStyle" TargetType="{x:Type Image}">
         <Setter Property="LayoutTransform">
             <Setter.Value>

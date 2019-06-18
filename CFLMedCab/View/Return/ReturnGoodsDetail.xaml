@@ -4,37 +4,41 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View"
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="900">
-    <Grid Background="AliceBlue">
-        <Grid Margin="20">
+    <UserControl.Resources>
+        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
+    </UserControl.Resources>
+    <Border Style="{StaticResource CommonBlueBorder}">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
                 <RowDefinition Height="3*"></RowDefinition>
             </Grid.RowDefinitions>
             <Button Content="返回>>" Grid.Row="0" Click="onBackward" HorizontalAlignment="Left" RenderTransformOrigin="0.5,0.5" Height="30" Width="60"/>
-            <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF" Grid.Row="1" Margin="0,10,10,5" Padding="10" >
+            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
-                        <RowDefinition Height="{StaticResource rowHeight50}"></RowDefinition>
-                        <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
-                        <RowDefinition Height="{StaticResource rowHeight25}"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Label Content="业务类型" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
-                    <Label Content="退货出库" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
-                    <Label  Grid.Column="0" Grid.Row="2" Content="操作人" Foreground="#666666" HorizontalAlignment="Left"  VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                    <Label  Grid.Column="0" Grid.Row="3" Content="操作人" Name="operator" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                    <Label  Grid.Column="1" Grid.Row="2" Content="上架工单号" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                    <Label  Grid.Column="1" Grid.Row="3" Content="上架工单号" Name="orderNum" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <Label Content="业务类型" Grid.Column="0" Grid.Row="0" Style="{StaticResource lblTitle1}" />
+                    <Label Content="退货出库" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" Style="{StaticResource lblTitle2}" />
+                    <Label  Grid.Column="0" Grid.Row="2" Content="操作人" Style="{StaticResource lblTitle3}" />
+                    <Label  Grid.Column="0" Grid.Row="3" Content="操作人" Name="operatorName" Style="{StaticResource lblTitle4_0}" />
+                    <Label  Grid.Column="1" Grid.Row="2" Content="上架工单号"  Style="{StaticResource lblTitle3}" />
+                    <Label  Grid.Column="1" Grid.Row="3" Content="上架工单号" Name="orderNum" Style="{StaticResource lblTitle4_0}" />
                 </Grid>
             </Border>
-            <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF" Grid.Row="2" Margin="0,10,20,20" Padding="10">
+            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
@@ -59,12 +63,12 @@
                         <Grid Grid.Column="5" x:Name="column6"/>
                         <Grid Grid.Column="6" x:Name="column7"/>
                     </Grid>
-                    <Border Grid.Row="0" Padding="10"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" CornerRadius="{DynamicResource GRadius}">
+                    <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" CornerRadius="{DynamicResource GRadius}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="本柜待拣货商品"/>
+                            <Label Content="本柜待拣货商品" Padding="0 5" Style="{StaticResource lblTitle5}"/>
                         </StackPanel>
                     </Border>
-                    <ListView VerticalAlignment="Top" Grid.Row="1"   ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                    <ListView  Grid.Row="1"   ItemsSource="{Binding}" Name="listView" 
                               Style="{StaticResource DefaultListView }" Margin="0,10,0,0">
                         <ListView.View>
                             <GridView>
@@ -72,8 +76,8 @@
                                 <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
                                 <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
                                 <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
-                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy年MM月dd日}'}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
+                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy-MM-dd}'}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
+                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
                                 <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
                             </GridView>
                         </ListView.View>
@@ -86,5 +90,5 @@
                 </Grid>
             </Border>
         </Grid>
-    </Grid>
+    </Border>
 </UserControl>

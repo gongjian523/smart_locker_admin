@@ -1,5 +1,6 @@
 ﻿
 using CFLMedCab.APO.Surgery;
+using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Infrastructure;
@@ -57,7 +58,7 @@ namespace CFLMedCab.DAL
 		/// <summary>
 		///  生成领用信息(领用单号和领用详情)
 		/// </summary>
-		/// <param name="goodsDtos">正常数据</param>
+		/// <param name="goodsDtos">操作数据</param>
 		/// <returns></returns>
 		public bool InsertFetchOrderInfo(List<GoodsDto> goodsDtos, GoodsChageAttribute goodsChageAttribute, string surgeryOrderCode, out string goodsChangeBusinessOrderCode)
 		{
@@ -67,6 +68,17 @@ namespace CFLMedCab.DAL
 			{
 				return false;
 			}
+
+			//修改商品里的数据为有单领用
+			goodsDtos.ForEach(it => 
+			{
+				if (it.exception_flag == (int)ExceptionFlag.正常 && it.fetch_type == (int)RequisitionAttribute.无单领用)
+				{
+					it.fetch_type = (int)RequisitionAttribute.有单领用;
+				}
+			});
+			
+
 			List<GoodsDto> goodsDtosNotEx = goodsDtos.Where(it => it.exception_flag == (int)ExceptionFlag.正常).ToList();
 
 			if (goodsDtosNotEx.Count <= 0)
@@ -75,7 +87,6 @@ namespace CFLMedCab.DAL
 			}
 
 			//生成领用单的业务单号，根据实际情况
-
 			string business_order_code;
 
 			switch (goodsChageAttribute.RequisitionType)
@@ -108,8 +119,11 @@ namespace CFLMedCab.DAL
 					type = (int)goodsChageAttribute.RequisitionType,
 					status = (int)goodsChageAttribute.RequisitionStatus,
 					business_order_code = business_order_code
+					
 
 				}).ExecuteReturnEntity();
+
+				
 
 				List<FetchOrderdtl> fetchOrderdtls = goodsDtosNotEx.MapToListIgnoreId<GoodsDto, FetchOrderdtl>();
 
@@ -206,6 +220,41 @@ namespace CFLMedCab.DAL
 		public bool UpdateSurgeryOrderdtl(List<SurgeryOrderdtlDto> datasDto)
 		{
 			return Db.Updateable(datasDto).ExecuteCommand() > 0;
+		}
+
+		/// <summary>
+		/// 获取领取单信息，根据商品code
+		/// </summary>
+		/// <param name="code">商品的单品号</param>
+		/// <returns></returns>
+		public FetchOrderDto GetFetchOrderCode(string code)
+		{
+			return Db.Queryable<FetchOrderdtl, FetchOrder>((fod,fo) => new object[] { JoinType.Left,fod.related_order_id == fo.id})
+				.Where(fod=>fod.code == code)
+				.Select<FetchOrderDto>().First();
+		}
+
+		/// <summary>
+		/// 根据库存变化信息查询对应领用单里的详情
+		/// </summary>
+		/// <param name="goodsDtos"></param>
+		/// <returns></returns>
+		public List<FetchOrderdtl> GetFetchOrderDtlsByGoBackGoodsDtos(List<GoodsDto> goBackGoodsDtos)
+		{
+			var goodsCodes = goBackGoodsDtos.Where(it => it.exception_flag == (int)ExceptionFlag.正常).Select(it => it.code).ToArray();
+			return Db.Queryable<FetchOrderdtl>().Where(it => goodsCodes.Contains(it.code)).ToList();
+		}
+
+		/// <summary>
+		/// 更新领用单的详情的回退信息
+		/// </summary>
+		/// <param name="fetchOrderdtls">已修改的集合</param>
+		/// <returns></returns>
+		public bool UpdateGoBackFetchOrderdtls(List<FetchOrderdtl> fetchOrderdtls)
+		{
+			if (fetchOrderdtls == null) return false;
+			if (fetchOrderdtls.Count() <= 0) return false;
+			return Db.Updateable(fetchOrderdtls).ExecuteCommand() > 0;
 		}
 
 

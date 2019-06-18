@@ -5,22 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="900">
-    <Grid Background="AliceBlue">
-        <Grid Margin="20">
+             d:DesignHeight="600" d:DesignWidth="900">
+    <Border Style="{StaticResource CommonBlueBorder}">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Border Background="White" Padding="10" Margin="10 5" Grid.Row="0" CornerRadius="{DynamicResource GRadius}">
+            <Border  Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
                 <Grid>
                     <RadioButton Content="手术单号" Name="stockSnapshot" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="StockSnapshot"/>
                     <RadioButton Content="效期查询" Name="validity" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
                     <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
                 </Grid>
             </Border>
-            <Border Background="White" Padding="10" Margin="10 5" Grid.Row="1" CornerRadius="{DynamicResource GRadius}" x:Name="gChoice" RenderTransformOrigin="0.497,0.507">
+            <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice">
                 <Grid>
                     <RadioButton  Content="库存快照" GroupName="Stock" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
                     <RadioButton  Content="条件查询" GroupName="Stock" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top" Style="{DynamicResource CircularNavButton}"  Click="ConditionQuery" />
@@ -29,18 +29,18 @@
                     <Button Content="查询" Name="query" Visibility="Hidden" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,60,0,0" VerticalAlignment="Top" MinWidth="111" Height="30" Click="queryData"/>
                 </Grid>
             </Border>
-            <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="1" CornerRadius="{DynamicResource GRadius}"  x:Name="gChoice1" RenderTransformOrigin="0.497,0.507" Visibility="Hidden">
+            <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice1" Visibility="Hidden">
                 <Grid>
                     <RadioButton GroupName="single" Content="全部" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top"/>
-                    <RadioButton GroupName="single" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="-240,-30,514,8" Content="效期小于1个月" />
-                    <RadioButton GroupName="single" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="-100,-30,341,8" Content="效期小于2个月" />
-                    <RadioButton GroupName="single" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="50,-30,179,8" Content="效期小于3个月" />
+                    <RadioButton GroupName="single" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="-200,-30,514,8" Content="效期小于1个月" />
+                    <RadioButton GroupName="single" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="-60,-30,341,8" Content="效期小于2个月" />
+                    <RadioButton GroupName="single" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="80,-30,179,8" Content="效期小于3个月" />
                     <TextBox HorizontalAlignment="Left" Name="goods_code1" Height="30" Margin="20,60,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
                     <TextBox HorizontalAlignment="Left" Name="goods_name1" Height="30" Margin="325,60,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
                     <Button Content="查询" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,60,0,0" VerticalAlignment="Top" MinWidth="111" Height="30" Click="queryData"/>
                 </Grid>
             </Border>
-            <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="1" CornerRadius="{DynamicResource GRadius}"  Name="gChoice2" Visibility="Hidden" >
+            <Border   Style="{StaticResource CenterRadiusBorder}"  Grid.Row="1"  Name="gChoice2" Visibility="Hidden" >
                 <Grid>
                     <RadioButton GroupName="single" Name="outStock" Style="{DynamicResource SingleNavButton}" IsChecked="True"  Margin="-1000,-38,0,0" Content="出库" />
                     <RadioButton GroupName="single" Name="inStock"  Style="{DynamicResource SingleNavButton}" Margin="-700,-38,0,0" Content="入库" />
@@ -49,8 +49,8 @@
                     <Button Content="查询" BorderBrush="#619CF8" BorderThickness="2" Foreground="#619CF8" FontSize="13" HorizontalAlignment="Left" Margin="659,60,0,0" VerticalAlignment="Top" MinWidth="111" Height="30" Click="queryData"/>
                 </Grid>
             </Border>
-            
-            <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="2" CornerRadius="{DynamicResource GRadius}" Name="Content">
+
+            <Border Style="{StaticResource BottomRadiusBorder}"  Grid.Row="2"  Name="Content">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -73,8 +73,8 @@
                     </Grid>
                     <Border Grid.Row="0" Padding="5"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="累计库存数量：" Name="Tips" FontSize="15" HorizontalAlignment="Left" Margin="31,0,0,0" VerticalAlignment="Top" FontWeight="Bold"/>
-                            <Label Content="入库明细"/>
+                            <Label Content="累计库存数量：" Name="Tips" Style="{StaticResource lblTitle5}"/>
+                            <Label Content="入库明细" Style="{StaticResource lblTitle3}"/>
                         </StackPanel>
                     </Border>
                     <ListView  VerticalAlignment="Top" Grid.Row="1"  Name="listView" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -102,7 +102,7 @@
                 </Grid>
             </Border>
 
-            <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="2" CornerRadius="{DynamicResource GRadius}" Name="Content1" Visibility="Hidden" >
+            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2" Name="Content1" Visibility="Hidden" >
                 <Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -145,7 +145,7 @@
                 </Grid>
             </Border>
 
-            <Border Background="White" Padding="10" Margin="10 5"  Grid.Row="2" CornerRadius="{DynamicResource GRadius}" Name="Content2" Visibility="Hidden" >
+            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2" Name="Content2" Visibility="Hidden" >
                 <Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -195,5 +195,5 @@
             </Border>
 
         </Grid>
-    </Grid>
+    </Border>
 </UserControl>

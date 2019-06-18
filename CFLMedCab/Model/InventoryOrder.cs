@@ -65,11 +65,13 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 盘点人
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int operator_id { get; set; }
 
         /// <summary>
         /// 盘点人姓名
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string operator_name { get; set; }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace CFLMedCab.Model
         public int id { get; set; }
 
 		/// <summary>
-		/// 领用单号（主键ID）
+		/// 领用单号
 		/// </summary>
 		public string code { get; set; }
 

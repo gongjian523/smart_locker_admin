@@ -4,14 +4,9 @@ using CFLMedCab.DTO;
 using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
-using CFLMedCab.Infrastructure;
-using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CFLMedCab.BLL
 {
@@ -87,10 +82,6 @@ namespace CFLMedCab.BLL
 					break;
 			}
 
-			
-
-			
-
 			return ret;
 		}
 		#endregion
@@ -102,7 +93,7 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetGeneralFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos)
+		public List<GoodsDto> GetGeneralFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//组装当前状态
@@ -136,13 +127,16 @@ namespace CFLMedCab.BLL
 				}
 			});
 
+			//统计数量
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列
 			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
 		}
 
 		#endregion
-
 
 		#region 手术无单领用业务
 
@@ -151,7 +145,7 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetSurgeryFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos)
+		public List<GoodsDto> GetSurgeryFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//组装当前状态
@@ -184,6 +178,10 @@ namespace CFLMedCab.BLL
 				}
 			});
 
+			//统计数量
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列
 			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
@@ -431,9 +429,103 @@ namespace CFLMedCab.BLL
 
 		}
 
+        #endregion
+
+        #region 领用退回
+
+		/// <summary>
+		///  获取一般领用操作情况
+		/// </summary>
+		/// <param name="goodsDtos"></param>
+		/// <returns></returns>
+		public List<GoodsDto> GetGoBackFetchOrderdtlOperateDto(List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+		{
+
+			//组装当前状态
+			goodsDtos.ForEach(it =>
+			{
+				FetchOrderDto fetchOrderDto = FetchOrderDal.GetFetchOrderCode(it.code);
+
+				//入库
+				if (it.operate_type == (int)OperateType.入库)
+				{
+					it.operate_type_description = OperateType.入库.ToString();
+					//查到商品的对应的领用单号
+					if (fetchOrderDto != null)
+					{
+						it.business_order_code = fetchOrderDto.code;
+						it.fetch_type = (int)RequisitionAttribute.有单领用;
+						if (fetchOrderDto.type == (int)RequisitionType.无单手术领用 || fetchOrderDto.type == (int)RequisitionType.有单手术领用 || fetchOrderDto.type == (int)RequisitionType.一般领用)
+						{
+							it.exception_flag = (int)ExceptionFlag.正常;
+						}
+					}
+					else
+					{
+						it.exception_flag = (int)ExceptionFlag.异常;
+						it.exception_flag_description = ExceptionFlag.异常.ToString();
+						it.exception_description = ExceptionDescription.未查到领用记录.ToString();
+					}
+				}
+				//出库
+				else if (it.operate_type == (int)OperateType.出库)
+				{
+					it.operate_type_description = OperateType.出库.ToString();
+
+					//查到商品的对应的领用单号,改变领用属性
+					if (fetchOrderDto != null)
+					{
+						it.fetch_type = (int)RequisitionAttribute.有单领用;
+					}
+
+					it.exception_flag = (int)ExceptionFlag.异常;
+					it.exception_flag_description = ExceptionFlag.异常.ToString();
+					it.exception_description = ExceptionDescription.操作与业务类型冲突.ToString();
+
+				}
+			});
+
+			//统计数量
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+
+			//均升序排列
+			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
+		}
+
+		/// <summary>
+		/// 更新领用单的详情的回退信息(确定时)
+		/// </summary>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdateGoBackFetchOrder(List<GoodsDto> datasDto)
+		{
+			//获取对应领用单的详情数据
+			var fetchOrderDtls = FetchOrderDal.GetFetchOrderDtlsByGoBackGoodsDtos(datasDto);
+
+			if (fetchOrderDtls == null || fetchOrderDtls.Count() <= 0) return false;
+
+			fetchOrderDtls.ForEach(it=> 
+			{
+				it.status = (int)ConsumablesStatus.已退回;
+			});
+
+			bool ret = false;
+
+			ret = FetchOrderDal.UpdateGoBackFetchOrderdtls(fetchOrderDtls);
+
+			//如果成功，修改库存变化
+			if (ret)
+			{
+				GoodsChangeOrderDal.InsertGoodsChageOrderInfo(datasDto, RequisitionType.领用回退);
+			}
+
+			return ret; 
+
+		}
+
 		#endregion
-
-
 
 	}
 }

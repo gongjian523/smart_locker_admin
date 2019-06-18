@@ -1,5 +1,11 @@
-﻿using CFLMedCab.DTO.Stock;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DTO.Goodss;
+using CFLMedCab.DTO.Stock;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,37 +33,24 @@ namespace CFLMedCab.View.Fetch
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
-        public SurgeryNoNumClose(string OddNumbers = null)
+
+        private Hashtable after;
+        private List<GoodsDto> goodsChageOrderdtls;
+        private GoodsBll goodsBll = new GoodsBll();
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        public SurgeryNoNumClose(Hashtable hashtable)
         {
             InitializeComponent();
             time.Content = DateTime.Now;
-            List<GoodsChageOrderdtlDto> goodsChageOrderdtls = new List<GoodsChageOrderdtlDto>();
-            for (int i = 5; i >= 0; i--)
-            {
-                GoodsChageOrderdtlDto goodsChageOrderdtl = new GoodsChageOrderdtlDto
-                {
-                    id = i,
-                    batch_number = "feg",
-                    birth_date = DateTime.Now,
-                    code = "ewfw",
-                    exception_flag = 0,
-                    expire_date = DateTime.Now,
-                    exception_description = "测试数据",
-                    fetch_type = 1,
-                    goods_code = "fwe",
-                    goods_id = 1,
-                 
-                    name = "测试数据",
-                    operate_type = 0,
-                    position = "1号柜",
-                    related_order_id = 1,
-                    remarks = "测试数据",
-                    
-                    valid_period = 4
-                };
-                goodsChageOrderdtls.Add(goodsChageOrderdtl);
-            }
+            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            after = hashtable;
+            List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
+            goodsChageOrderdtls = fetchOrderBll.GetSurgeryFetchOrderdtlOperateDto(goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsChageOrderdtls;
+            inNum.Content = operateGoodsNum;
+            abnormalInNum.Content = outStorageGoodsExNum;
         }
 
         /// <summary>
@@ -67,6 +60,8 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            if (fetchOrderBll.InsertFetchAndGoodsChangeInfo(goodsChageOrderdtls, RequisitionType.无单手术领用, null))
+                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this,null);
         }
 

@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <SolidColorBrush x:Key="TipBgColor" Color="#FD854E" />
+    <SolidColorBrush x:Key="TipBgColor" Color="#FDC1A6" />
     <SolidColorBrush x:Key="AlternationColor" Color="#ECECEC" />
     <SolidColorBrush x:Key="SelectedColor" Color="#FFEAE4" />
     <SolidColorBrush x:Key="MouseOverColor" Color="#FFEAE4" />
@@ -9,7 +9,8 @@
     
     <SolidColorBrush x:Key="TitleColor1" Color="#333333" />
     <SolidColorBrush x:Key="TitleColor2" Color="#457eff" />
-    <SolidColorBrush x:Key="TitleColor3" Color="#666666" /> 
+    <SolidColorBrush x:Key="TitleColor3" Color="#666666" />
+    <SolidColorBrush x:Key="TitleColor4" Color="#FD854E" />
 
 
 
@@ -32,8 +33,10 @@
 
     <Style x:Key="TipBorder" TargetType="{x:Type Border}">
         <Setter Property="Padding" Value="10 5"/>
+        <Setter Property="Margin" Value="0 0 0 10"/>
         <Setter Property="CornerRadius" Value="{StaticResource GRadius}"/>
         <Setter Property="Background" Value="{StaticResource TipBgColor}"/>
+
     </Style>
 
     <Style x:Key="RadiusBorder" TargetType="{x:Type Border}">

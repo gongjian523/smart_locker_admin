@@ -45,7 +45,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             InitializeComponent();
             //操作人
-            //operator.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             orderNum.Content = model.id;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
@@ -53,7 +53,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
-            goodsDetails = replenishBll.GetReplenishSubOrderdtlOperateDto(model.id, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            goodsDetails = replenishBll.GetReplenishSubOrderdtlOperateDto(model.id, model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             inNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;
             abnormalOutNum.Content = outStorageGoodsExNum;
