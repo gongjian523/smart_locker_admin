@@ -153,7 +153,8 @@
     <Compile Include="Converter\InventoryPlanSwitchStaConverter.cs" />
     <Compile Include="Converter\InventoryStatusStrConverter.cs" />
     <Compile Include="Converter\InventoryTypeStrConverter.cs" />
-    <Compile Include="Converter\FetchConverter.cs" />
+    <Compile Include="Converter\OperateTypeConverter.cs" />
+    <Compile Include="Converter\RequisitionAttributeConverter.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />

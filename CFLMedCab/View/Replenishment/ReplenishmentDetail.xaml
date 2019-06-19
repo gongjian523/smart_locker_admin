@@ -9,8 +9,7 @@
              d:DesignHeight="600" d:DesignWidth="900">
     <UserControl.Resources>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
-    </UserControl.Resources>
-    <Border Style="{StaticResource CommonBlueBorder}">
+    </UserControl.Resources>    <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
@@ -84,7 +83,7 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-                    <Button Style="{StaticResource CommonYesButton}" Content="确认开柜"  Grid.Row="2" Click="EnterDetialOpen_Click"/>
+                    <Button Style="{StaticResource CommonYesButton}" Content="确认开柜"  Grid.Row="2" HorizontalAlignment="Center" Click="EnterDetialOpen_Click"/>
                     <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
                         <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-10,0,10"/>
                     </Grid>

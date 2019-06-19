@@ -8,11 +8,10 @@
              mc:Ignorable="d" 
             d:DesignHeight="600" d:DesignWidth="900">
     <UserControl.Resources>
-        <cvt:FetchConverter x:Key="OperateTypeConverter"/>
+        <cvt:OperateTypeConverter x:Key="OperateTypeConverter"/>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
         <cvt:ExceptionFlagStrConverter x:Key="ExceptionFlagStrConverter"/>
-    </UserControl.Resources>
-    <Border Style="{StaticResource CommonBlueBorder}">
+    </UserControl.Resources>    <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>

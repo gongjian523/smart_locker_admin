@@ -89,7 +89,6 @@
                     <ListView  Margin="10,10,0,0" VerticalAlignment="Top"  AlternationCount="2" 
                                ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left"  
                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                             
                                Style="{StaticResource DefaultListView}" >
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">

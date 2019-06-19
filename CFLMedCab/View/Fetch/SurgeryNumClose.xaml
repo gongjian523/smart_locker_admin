@@ -7,10 +7,10 @@
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="900">
-    <UserControl.Resources>
-        <cvt:FetchConverter x:Key="OperateTypeConverter"/>
-        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
-    </UserControl.Resources>
+    <Control.Resources>
+        <cvt:OperateTypeConverter x:Key="OperateTypeConverter"/>
+        <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
+    </Control.Resources>
   <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
         <Grid.RowDefinitions>
@@ -27,33 +27,32 @@
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="28"></RowDefinition>
-                        <RowDefinition Height="50"></RowDefinition>
-                        <RowDefinition Height="28"></RowDefinition>
-                        <RowDefinition Height="28"></RowDefinition>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
-                    <Label Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
-                    <Label Content="操作人" Grid.Row="2" Grid.Column="0" />
-                    <Label Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  />
-                    <Label Content="手术单号" Grid.Row="2" Grid.Column="1" />
-                    <Label Content="Label" Name="surgeryNum"  Grid.Row="4" Grid.Column="1" />
-                    <Label Content="操作日期" Grid.Row="2" Grid.Column="2" />
-                    <Label Content="Label" Name="time" Grid.Row="4" Grid.Column="2" />
+                    <Label Style="{StaticResource lblTitle1}" Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
+                    <Label Style="{StaticResource lblTitle2}"  Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
+                    <Label Style="{StaticResource lblTitle3}"  Content="操作人" Grid.Row="2" Grid.Column="0" />
+                    <Label Style="{StaticResource lblTitle4_0}"  Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  />
+                    <Label Style="{StaticResource lblTitle3}"  Content="手术单号" Grid.Row="2" Grid.Column="1" />
+                    <Label Style="{StaticResource lblTitle4_1}"  Content="Label" Name="surgeryNum"  Grid.Row="4" Grid.Column="1" />
+                    <Label Style="{StaticResource lblTitle3}"  Content="操作日期" Grid.Row="2" Grid.Column="2" />
+                    <Label Style="{StaticResource lblTitle4_1}"  Content="Label" Name="time" Grid.Row="4" Grid.Column="2" />
                 </Grid>
             </Border>
             <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="1">
 
                 <Grid x:Name="GridValue">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="1*" />
+                        <RowDefinition Height="*" />
                         <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="2*"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
-
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto"  />
@@ -80,15 +79,15 @@
                         </Grid>
                         <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Label Content="当前领用了"/>
-                                <Label Content=" " Name="inNum"/>
-                                <Label Content="个商品，其中异常操作" />
-                                <Label Content=" " Name="abnormalInNum"/>
-                                <Label Content="个商品入库；异常操作" />
-                                <Label Content=" " Name="abnormalOutNum"/>
-                                <Label Content="个商品出库；有" />
-                                <Label Content=" " Name="waitNum"/>
-                                <Label Content="个商品待领用" />
+                                <Label Content="当前领用了"  Style="{StaticResource lblTitle1}"/>
+                                <Label Content=" " Name="inNum"  Style="{StaticResource lblTitle6}"/>
+                                <Label Content="个商品，其中异常操作"  Style="{StaticResource lblTitle1}"/>
+                                <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitle6}"/>
+                                <Label Content="个商品入库；异常操作"  Style="{StaticResource lblTitle1}" />
+                                <Label Content=" " Name="abnormalOutNum"  Style="{StaticResource lblTitle6}"/>
+                                <Label Content="个商品出库；有"   Style="{StaticResource lblTitle1}"/>
+                                <Label Content=" " Name="waitNum"  Style="{StaticResource lblTitle6}"/>
+                                <Label Content="个商品待领用"  Style="{StaticResource lblTitle1}"/>
                             </StackPanel>
                         </Border>
                         <Label Style="{StaticResource lblTitle5}" Content="本柜待领用商品" Grid.Row="1" Grid.Column="0"/>
