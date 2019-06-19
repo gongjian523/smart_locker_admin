@@ -41,7 +41,12 @@ namespace CFLMedCab.View.Fetch
 
         private SurgeryOrderDto surgeryOrderDto;
         private Hashtable after;
+        //领用商品信息
         private List<GoodsDto> goodsChageOrderdtls;
+        //当前柜子里面的商品
+        private List<GoodsDto> goodDtos;
+        //手术领用详细单变化信息
+        private List<SurgeryOrderdtlDto> surgeryOrderdtlDtos;
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
         public SurgeryNumClose(SurgeryOrderDto model, Hashtable hashtable)
@@ -53,11 +58,15 @@ namespace CFLMedCab.View.Fetch
             surgeryNum.Content = model.code;
             after = hashtable;
             surgeryOrderDto = model;
-            List<GoodsDto> goodDtos = goodsBll.GetInvetoryGoodsDto(hashtable);//盘点当前柜子里的商品
-            goodsChageOrderdtls = goodsBll.GetCompareGoodsDto(before, hashtable);//库存变化信息
+            //盘点当前柜子里的商品
+            goodDtos = goodsBll.GetInvetoryGoodsDto(hashtable);
+            //获取库存变化信息
+            goodsChageOrderdtls = goodsBll.GetCompareGoodsDto(before, hashtable);
+            //组装变化信息的异常情况
             goodsChageOrderdtls = fetchOrderBll.GetSurgeryGoodsOperateDto(goodsChageOrderdtls, model.code, out int currentOperateNum, out int storageOperateExNum, out int notStorageOperateExNum);
-            List<SurgeryOrderdtlDto> surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode= model.code, OperateGoodsDtos= goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
-            listView.DataContext = surgeryOrderdtlDtos;
+            //手术领用详细单变化信息
+            surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode= model.code, OperateGoodsDtos= goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
+            listView.DataContext = surgeryOrderdtlDtos;//手术领用详细单变化信息绑定
             listView1.DataContext = goodsChageOrderdtls;
             inNum.Content = currentOperateNum;//领用数
             abnormalInNum.Content = storageOperateExNum;//异常入库
@@ -82,7 +91,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if (fetchOrderBll.InsertFetchAndGoodsChangeInfo(goodsChageOrderdtls, RequisitionType.有单手术领用, surgeryOrderDto.code))
+            if (fetchOrderBll.UpdateSurgeryOrderdtl(new SurgeryOrderApo { SurgeryOrderCode= surgeryOrderDto.code ,GoodsDtos= goodDtos,OperateGoodsDtos= goodsChageOrderdtls }, surgeryOrderdtlDtos))
                 ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }

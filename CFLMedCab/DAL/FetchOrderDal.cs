@@ -249,7 +249,7 @@ namespace CFLMedCab.DAL
 		/// <returns></returns>
 		public bool UpdateSurgeryOrderdtl(List<SurgeryOrderdtlDto> datasDto)
 		{
-			return Db.Updateable(datasDto).ExecuteCommand() > 0;
+            return Db.Updateable(datasDto.MapToList<SurgeryOrderdtlDto, SurgeryOrderdtl>()).ExecuteCommand() > 0;
 		}
 
 		/// <summary>
