@@ -48,7 +48,7 @@ namespace CFLMedCab.View.Return
             //操作人
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             ////工单号
-            orderNum.Content = model.id;
+            orderNum.Content = model.code;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;

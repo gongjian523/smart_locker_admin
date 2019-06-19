@@ -22,7 +22,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
                         <Label Content="工单编号：" HorizontalAlignment="Left"/>
-                        <Label  Content="{Binding picking_order_code}"/>
+                        <Label  Content="{Binding code}"/>
                         <Label Content="本柜拣货商品数量："  Margin="10 0" />
                         <Label  Content="{Binding picked_goods_num}"/>
                     </StackPanel>

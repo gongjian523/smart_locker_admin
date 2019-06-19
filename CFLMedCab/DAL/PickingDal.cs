@@ -79,7 +79,8 @@ namespace CFLMedCab.DAL
 					create_time = pso.create_time,
 					status = pso.status,
 					distribute_time = po.create_time,
-					picked_goods_num = SqlFunc.Subqueryable<PickingSubOrderdtl>()
+                    position = pso.position,
+                    picked_goods_num = SqlFunc.Subqueryable<PickingSubOrderdtl>()
 													  .Where(itsub => itsub.picking_sub_orderid == pso.id && itsub.status == (int)RPOStatusType.待完成)
 													  .Count()
 				});

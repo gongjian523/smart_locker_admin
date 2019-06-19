@@ -20,26 +20,26 @@ namespace CFLMedCab.Model
 		/// </summary>
 		public string code { get; set; }
 
-		/// <summary>
-		/// 领用时间
-		/// </summary>
+        /// <summary>
+        /// 领用时间
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime create_time { get; set; }
 
         /// <summary>
         /// 领用人
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int operator_id { get; set; }
 
         /// <summary>
         /// 领用类型
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int type { get; set; }
 
         /// <summary>
         /// 认领状态
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int status { get; set; }
 
         /// <summary>

@@ -104,7 +104,7 @@ namespace CFLMedCab.BLL
 				{
 					it.operate_type_description = OperateType.入库.ToString();
 					//当前入库操作的商品是否在工单中存在
-					if (!replenishSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code) && rsoDto.status == (int)RSOStatusType.已上架))
+					if (!replenishSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code) && rsoDto.status == (int)RSOStatusType.待上架))
 					{
 						it.exception_flag = (int)ExceptionFlag.异常;
 						it.exception_flag_description = ExceptionFlag.异常.ToString();

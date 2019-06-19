@@ -61,7 +61,8 @@ namespace CFLMedCab
 
 #if TESTENV
         private Timer testTimer;
-        private ReplenishSubOrderDto testPSOPara = new ReplenishSubOrderDto();
+        private ReplenishSubOrderDto testRSOPara = new ReplenishSubOrderDto();
+        private PickingSubOrderDto testPSOPara = new PickingSubOrderDto();
 #endif
 
         public MainWindow()
@@ -533,7 +534,7 @@ namespace CFLMedCab
             testTimer.AutoReset = false;
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onEnterReplenishmentCloseTestEvent);
-            testPSOPara = e;
+            testRSOPara = e;
 #else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
             delegateGetMsg.userData = e;
@@ -550,7 +551,7 @@ namespace CFLMedCab
         private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
         {
             Hashtable ht = new Hashtable();
-            ReplenishSubOrderDto replenishSubOrderDto = testPSOPara;
+            ReplenishSubOrderDto replenishSubOrderDto = testRSOPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto, ht);
@@ -600,7 +601,7 @@ namespace CFLMedCab
         {
             HomePageView.Visibility = Visibility.Hidden;
 
-            BtnEnterReplenishment.IsChecked = true;
+            BtnEnterReturnGoods.IsChecked = true;
 
             ReturnGoods returnGoods = new ReturnGoods();
             returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
@@ -644,13 +645,43 @@ namespace CFLMedCab
 
             SpeakerHelper.Sperker("柜门已开，请您按照要求拣货，拣货完毕请关闭柜门");
 
+#if TESTENV
+            testTimer = new Timer(10000);
+            testTimer.AutoReset = false;
+            testTimer.Enabled = true;
+            testTimer.Elapsed += new ElapsedEventHandler(onEnterReturnGoodsCloseTestEvent);
+            testPSOPara = e;
+#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
             delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
+#endif
         }
 
-
+#if TESTENV
         /// <summary>
+        /// 进入拣货单详情页-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnGoodsCloseTestEvent(object sender, EventArgs e)
+        {
+            bool isGetSuccess;
+            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            Hashtable ht = new Hashtable();
+            PickingSubOrderDto pickingSubOrderDto = testPSOPara;
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(pickingSubOrderDto, ht);
+                returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
+                returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
+
+                FullFrame.Navigate(returnGoodsClose);
+            }));
+        }
+#else
+                /// <summary>
         /// 进入拣货单详情页-关门状态
         /// </summary>
         /// <param name="sender"></param>
@@ -666,8 +697,6 @@ namespace CFLMedCab
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingSubOrderDto)delegateGetMsg.userData, ht);
@@ -677,9 +706,10 @@ namespace CFLMedCab
                 FullFrame.Navigate(returnGoodsClose);
             }));
         }
-#endregion
+#endif
+        #endregion
 
-#region Inventory
+        #region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>

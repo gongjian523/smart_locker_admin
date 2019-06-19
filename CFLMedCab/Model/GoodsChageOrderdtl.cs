@@ -58,13 +58,12 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 有效期
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public DateTime expire_date { get; set; }
 
         /// <summary>
         /// 有效期天数
         /// </summary>
-        [SugarColumn(IsNullable = true)]
+
         public int valid_period { get; set; }
 
         /// <summary>
@@ -82,7 +81,6 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 异常说明
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string exception_description { get; set; }
 
         /// <summary>
@@ -100,7 +98,6 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 备注
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string remarks { get; set; }
 
         /// <summary>

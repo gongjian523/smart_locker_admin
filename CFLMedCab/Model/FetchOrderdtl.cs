@@ -41,13 +41,11 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 生产批号
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string batch_number { get; set; }
 
         /// <summary>
         /// 生成日期
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public DateTime birth_date { get; set; }
 
         /// <summary>
@@ -65,13 +63,11 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 货位
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string position { get; set; }
 
         /// <summary>
         /// 领用属性
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int fetch_type { get; set; }
 
         /// <summary>
@@ -83,7 +79,6 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 耗材状态：0  待领用；1 已领用；2 已退回。
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int status { get; set; }
 
         /// <summary>
@@ -95,7 +90,6 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 是否临时新增 0: 否 1：是；一般领用单均为否。3。手术领用单，如标识异常为异常，且异常说明为“商品不在待领目录的”为是，其余为否。
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int is_add { get; set; }
 
         /// <summary>
