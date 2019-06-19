@@ -218,9 +218,8 @@ namespace CFLMedCab.BLL
         }
 
         /// <summary>
-        /// 模拟补货单 
+        ///获取拣货单号的个数
         /// </summary>
-        /// <param name="rfid">单品码的RFID</param>
         /// <returns></returns>
         public int GettReplenishOrderNum()
         {

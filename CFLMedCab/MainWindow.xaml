@@ -32,7 +32,7 @@
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
             </StackPanel>
         </Grid>
-        <Grid x:Name="NaviView" Visibility="Visible">
+        <Grid x:Name="NaviView" Visibility="Visible" Panel.ZIndex="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height ="43"/>
                 <RowDefinition Height="*"/>

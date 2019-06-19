@@ -187,7 +187,7 @@ namespace CFLMedCab.Test
             goodsBll.InsertGood(goods);
         }
 
-        public void InitReplenishOrders()
+        public void InitReplenishOrder()
         {
             if (replenishBll.GettReplenishOrderNum() > 0)
                 return;
@@ -208,6 +208,26 @@ namespace CFLMedCab.Test
             replenishBll.InitReplenshOrder("RO-TEST-002", "RO002-RSO-TEST-00", ro2);
         }
 
+        public void InitPickingOrder()
+        {
+            if (pickingBll.GettPickingOrderNum() > 0)
+                return;
 
+            Hashtable ro1 = new Hashtable();
+            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70" };
+            HashSet<string> hs2 = new HashSet<string> { "E20000176012028119504DA5", "E20000176012023919504D48", "E20000176012028219504DAD" };
+            ro1.Add("hs1", hs1);
+            ro1.Add("hs2", hs2);
+
+            pickingBll.InitPickingOrder("PO-TEST-001", "PO001-PSO-TEST-00", ro1);
+
+            Hashtable ro2 = new Hashtable();
+            HashSet<string> hs3 = new HashSet<string> { "E20000176012026619504D8D", "E20000176012026319404F98" };
+            HashSet<string> hs4 = new HashSet<string> { "E20000176012028019504DA0", "E20000176012026519504D85" };
+
+            ro2.Add("hs3", hs3);
+            ro2.Add("hs4", hs4);
+            pickingBll.InitPickingOrder("PO-TEST-002", "PO002-PSO-TEST-00", ro2);
+        }
     }
 }

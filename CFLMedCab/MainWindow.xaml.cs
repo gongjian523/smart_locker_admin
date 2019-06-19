@@ -549,8 +549,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
         {
-            //bool isGetSuccess;
-            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
             Hashtable ht = new Hashtable();
             ReplenishSubOrderDto replenishSubOrderDto = testPSOPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -600,6 +598,10 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnGoods(object sender, RoutedEventArgs e)
         {
+            HomePageView.Visibility = Visibility.Hidden;
+
+            BtnEnterReplenishment.IsChecked = true;
+
             ReturnGoods returnGoods = new ReturnGoods();
             returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
             returnGoods.EnterReturnGoodsDetailOpenEvent += new ReturnGoods.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
@@ -639,6 +641,8 @@ namespace CFLMedCab
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
+
+            SpeakerHelper.Sperker("柜门已开，请您按照要求拣货，拣货完毕请关闭柜门");
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
             delegateGetMsg.userData = e;
@@ -898,8 +902,12 @@ namespace CFLMedCab
             {
                 PopFrame.Visibility = Visibility.Hidden;
                 MaskView.Visibility = Visibility.Hidden;
+                NaviView.Visibility = Visibility.Visible;
 
+#if TESTENV
+#else
                 LoginBkView.Visibility = Visibility.Visible;
+#endif
 
                 vein.ChekVein();
             }));
@@ -952,7 +960,8 @@ namespace CFLMedCab
             testGoods.GetCurrentRFid();
 #endif
 
-            test.InitReplenishOrders();
+            test.InitReplenishOrder();
+            test.InitPickingOrder();
         }
 
 

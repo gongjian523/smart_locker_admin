@@ -29,10 +29,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             InitializeComponent();
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-            orderNum.Content = model.replenish_order_code;
+            orderNum.Content = model.code;
             listView.DataContext = replenishBll.GetReplenishSubOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_sub_orderid = model.id }).Data;
-
-            
         }
     }
 }
