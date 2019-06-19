@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2003
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29009.5
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CFLMedCab", "CFLMedCab\CFLMedCab.csproj", "{AC511DED-7D81-471D-BF0B-72172FD756BA}"
 EndProject
@@ -11,6 +11,8 @@ Global
 		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
 		Release|x86 = Release|x86
+		TESTENV|Any CPU = TESTENV|Any CPU
+		TESTENV|x86 = TESTENV|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{AC511DED-7D81-471D-BF0B-72172FD756BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{AC511DED-7D81-471D-BF0B-72172FD756BA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AC511DED-7D81-471D-BF0B-72172FD756BA}.Release|x86.ActiveCfg = Release|Any CPU
 		{AC511DED-7D81-471D-BF0B-72172FD756BA}.Release|x86.Build.0 = Release|Any CPU
+		{AC511DED-7D81-471D-BF0B-72172FD756BA}.TESTENV|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC511DED-7D81-471D-BF0B-72172FD756BA}.TESTENV|Any CPU.Build.0 = Debug|Any CPU
+		{AC511DED-7D81-471D-BF0B-72172FD756BA}.TESTENV|x86.ActiveCfg = Release|Any CPU
+		{AC511DED-7D81-471D-BF0B-72172FD756BA}.TESTENV|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
