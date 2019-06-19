@@ -208,11 +208,8 @@ namespace CFLMedCab.BLL
 		/// <returns></returns>
 		public BasePageDataDto<SurgeryOrderdtlDto> GetSurgeryOrderdtlDto(SurgeryOrderApo pageDataApo,  out int stockGoodsNum, out int notStockGoodsNum)
 		{
-			
-			BasePageDataDto<SurgeryOrderdtlDto> ret = GetSurgeryOrderdtlDto(pageDataApo);
 
-			List<SurgeryOrderdtlDto> surgeryOrderdtlDtos = ret.Data;
-		
+            List<SurgeryOrderdtlDto> surgeryOrderdtlDtos = FetchOrderDal.GetSurgeryOrderdtlDto(pageDataApo, out int totalCount);
 
 			//手术单耗材详情拼接当前柜子对应商品库存数量
 			surgeryOrderdtlDtos.ForEach(it => 
@@ -228,9 +225,15 @@ namespace CFLMedCab.BLL
 			//库存不满足满足的商品的数量
 			notStockGoodsNum = surgeryOrderdtlDtos.Count() - stockGoodsNum;
 
-			return ret;
+            return new BasePageDataDto<SurgeryOrderdtlDto>()
+            {
+                PageIndex = pageDataApo.PageIndex,
+                PageSize = pageDataApo.PageSize,
+                Data = surgeryOrderdtlDtos,
+                TotalCount = totalCount
+            };
 
-		}
+        }
 
 		/// <summary>
 		/// 根据手术单号查询耗材详情（全部显示）

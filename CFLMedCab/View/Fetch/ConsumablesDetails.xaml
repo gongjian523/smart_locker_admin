@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
     <UserControl.Resources>
-        <!--<cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>-->
+        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
     </UserControl.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
