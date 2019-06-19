@@ -1,4 +1,5 @@
-﻿using CFLMedCab.APO;
+﻿using AutoMapper;
+using CFLMedCab.APO;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Goodss;
@@ -175,28 +176,36 @@ namespace CFLMedCab.BLL
         /// </summary>
         /// <param name="rfid">单品码的RFID</param>
         /// <returns></returns>
-        public void InitReplenshOrder(Hashtable rfid)
+        public void InitReplenshOrder(string roCode, string rsoCode, Hashtable rfid)
         {
+
+            replenishDal.InsertReplenishOrder(new ReplenishOrder
+            {
+                code = roCode,
+                create_time = DateTime.Now,
+                principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+                status = (int)RPOStatusType.待完成
+            });
+
+            int i = 0;
             foreach(HashSet<string> list in rfid.Values)
             {
-                replenishDal.InsertReplenishOrder(new ReplenishOrder {
-                    code = "RO-TEST-001",
-                    create_time = DateTime.Now,
-                    principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
-                    status =(int)RPOStatusType.待完成
-                });
+                i++;
+
+                List<GoodsDto> goodsList = goodsDal.GetGoodsDto(list);
+                var config = new MapperConfiguration(x => x.CreateMap<GoodsDto, ReplenishSubOrderdtl>()
+                                            .ForMember(d => d.goods_id, o => o.MapFrom(s => s.id)));
+                IMapper mapper = new Mapper(config);
+                var rsoDtls = mapper.Map<List<ReplenishSubOrderdtl>>(goodsList);
 
                 int rsoId = replenishDal.InsertReplenishSubOrder(new ReplenishSubOrder
                 {
-                    code = "RSO-TEST-001",
+                    code = rsoCode + i.ToString(),
                     create_time = DateTime.Now,
-                    replenish_order_code = "RO-TEST-001",
+                    position = rsoDtls.First().position,
+                    replenish_order_code = roCode,
                     status = (int)RSOStatusType.待上架
                 });
-
-                List<GoodsDto> goodsList = goodsDal.GetGoodsDto(list);
-
-                List<ReplenishSubOrderdtl> rsoDtls = goodsList.MapToListIgnoreId<GoodsDto, ReplenishSubOrderdtl>();
 
                 rsoDtls.ForEach(item =>
                 {
@@ -206,6 +215,16 @@ namespace CFLMedCab.BLL
 
                 replenishDal.InsertReplenishSubOrderDetails(rsoDtls);
             }
+        }
+
+        /// <summary>
+        /// 模拟补货单 
+        /// </summary>
+        /// <param name="rfid">单品码的RFID</param>
+        /// <returns></returns>
+        public int GettReplenishOrderNum()
+        {
+            return replenishDal.GettReplenishOrderNum();
         }
     }
 }

@@ -59,6 +59,11 @@ namespace CFLMedCab
 
         private TestGoods test = new TestGoods();
 
+#if TESTENV
+        private Timer testTimer;
+        private ReplenishSubOrderDto testPSOPara = new ReplenishSubOrderDto();
+#endif
+
         public MainWindow()
         {
             InitializeComponent();
@@ -521,12 +526,43 @@ namespace CFLMedCab
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
 
+            SpeakerHelper.Sperker("柜门已开，请您按照要求上架，上架完毕请关闭柜门");
+
+#if TESTENV
+            testTimer = new Timer(10000);
+            testTimer.AutoReset = false;
+            testTimer.Enabled = true;
+            testTimer.Elapsed += new ElapsedEventHandler(onEnterReplenishmentCloseTestEvent);
+            testPSOPara = e;
+#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
             delegateGetMsg.userData = e;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
+#endif
         }
 
+#if TESTENV
+        /// <summary>
+        /// 进入上架单详情页-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
+        {
+            //bool isGetSuccess;
+            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            Hashtable ht = new Hashtable();
+            ReplenishSubOrderDto replenishSubOrderDto = testPSOPara;
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto, ht);
+                replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
+                replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
+                FullFrame.Navigate(replenishmentClose);
+            }));
+        }
+#else
         /// <summary>
         /// 进入上架单详情页-关门状态
         /// </summary>
@@ -552,6 +588,8 @@ namespace CFLMedCab
                 FullFrame.Navigate(replenishmentClose);
             }));
         }
+#endif
+
 #endregion
 
 #region  ReturnGoods
@@ -902,14 +940,19 @@ namespace CFLMedCab
         {
             test.InitGoodsInfo();
             test.InitUsersInfo();
-            test.InitReplenishOrders();
+
 
 #if TESTENV
             LoginBkView.Visibility = Visibility.Hidden;
         
             User user = userBll.GetTestUser();        
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
+
+            TestGoods testGoods = new TestGoods();
+            testGoods.GetCurrentRFid();
 #endif
+
+            test.InitReplenishOrders();
         }
 
 
