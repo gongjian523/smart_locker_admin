@@ -14,7 +14,7 @@ namespace CFLMedCab.BLL
 
         public UserBll()
         {
-            userDal = new UserDal();
+            userDal = UserDal.GetInstance();
         }
 
         public User  GetUserByVeinId(int veinId)

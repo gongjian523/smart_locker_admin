@@ -29,11 +29,20 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		private readonly GoodsChangeOrderDal goodsChageOrderDal;
 
-		public ReplenishBll()
+        /// <summary>
+        /// 获取库存变化操作类
+        /// </summary>
+        private readonly GoodsDal goodsDal;
+
+        private readonly UserDal userDal;
+
+
+       public ReplenishBll()
 		{
 			replenishDal = ReplenishDal.GetInstance();
 			goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
-		}
+            goodsDal = GoodsDal.GetInstance();
+        }
 
 		/// <summary>
 		/// 获取待完成上架工单
@@ -185,8 +194,8 @@ namespace CFLMedCab.BLL
                     replenish_order_code = "RO-TEST-001",
                     status = (int)RSOStatusType.待上架
                 });
-                
-                
+
+                //List<GoodsDto> goos
 
             }
         }

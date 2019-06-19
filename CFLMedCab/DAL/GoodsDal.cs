@@ -67,7 +67,7 @@ namespace CFLMedCab.DAL
         {
             //查询语句
             return Db.Queryable<Goods>()
-                .Where(it => goodsEpsDatas.Contains(it.goods_code))
+                .Where(it => goodsEpsDatas.Contains(it.code))
                 .OrderBy(it => it.expire_date, OrderByType.Asc)
                 .Select<GoodsDto>()
                 .ToList();
@@ -179,12 +179,6 @@ namespace CFLMedCab.DAL
                 totalCount = data.Count();
             }
             return data;
-
-
         }
-
-
-
-
     }
 }
