@@ -7,9 +7,9 @@
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="650" d:DesignWidth="800">
-    <UserControl.Resources>
-        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
-    </UserControl.Resources>
+    <Control.Resources>
+        <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
+    </Control.Resources>
        <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
         <Grid.RowDefinitions>

@@ -7,10 +7,10 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="500" d:DesignWidth="900">
-    <UserControl.Resources>
-        <cvt:FetchConverter x:Key="OperateTypeConverter"/>
-        <cvt:FetchConverter x:Key="RequisitionAttributeConverter"/>
-    </UserControl.Resources>
+    <Control.Resources>
+        <cvt:OperateTypeConverter x:Key="OperateTypeConverter"/>
+        <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
+    </Control.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>

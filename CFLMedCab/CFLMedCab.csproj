@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -152,7 +152,8 @@
     <Compile Include="Converter\InventoryPlanSwitchStaConverter.cs" />
     <Compile Include="Converter\InventoryStatusStrConverter.cs" />
     <Compile Include="Converter\InventoryTypeStrConverter.cs" />
-    <Compile Include="Converter\FetchConverter.cs" />
+    <Compile Include="Converter\OperateTypeConverter.cs" />
+    <Compile Include="Converter\RequisitionAttributeConverter.cs" />
     <Compile Include="Converter\SelectedItemIndexBkColorBrushConverter.cs" />
     <Compile Include="Converter\LoginInfoFGBrushConverter.cs" />
     <Compile Include="Converter\LoginStatusImgResConverter.cs" />
