@@ -251,7 +251,7 @@ namespace CFLMedCab.BLL
 		public BasePageDataDto<SurgeryOrderdtlDto> GetSurgeryOrderdtlDto(SurgeryOrderApo pageDataApo)
 		{
 
-			List<SurgeryOrderdtlDto> surgeryOrderdtlDtos = FetchOrderDal.GetSurgeryOrderdtlDto(pageDataApo, out int totalCount);
+			List<SurgeryOrderdtlDto> surgeryOrderdtlDtos = FetchOrderDal.GetSurgeryOrderdtlAllDto(pageDataApo, out int totalCount);
 
 			return new BasePageDataDto<SurgeryOrderdtlDto>()
 			{
