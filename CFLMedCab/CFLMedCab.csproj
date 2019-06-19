@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -144,12 +144,8 @@
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
     <Compile Include="BLL\PickingBll.cs" />
-    <Compile Include="BLL\SurgeryOrderdtlBll.cs" />
     <Compile Include="BLL\ReplenishBll.cs" />
     <Compile Include="BLL\UserBll.cs" />
-    <Compile Include="BLL\FetchOrderdtlBll.cs" />
-    <Compile Include="BLL\GoodsChageOrderdtlBll.cs" />
-    <Compile Include="BLL\SurgeryOrderBll.cs" />
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Controls\EditBox.cs" />
     <Compile Include="Controls\EditBoxAdorner.cs" />
@@ -177,25 +173,11 @@
     <Compile Include="DTO\Surgery\SurgeryOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderDto.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
-    <Compile Include="DAL\FetchOrderdtlDal.cs" />
     <Compile Include="Infrastructure\ComName.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarHelper.cs" />
-    <Compile Include="Infrastructure\DbHelper\SqlSugarContext.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
-    <Compile Include="DAL\GoodsChageOrderdtlDal.cs" />
     <Compile Include="DAL\GoodsDal.cs" />
-    <Compile Include="DAL\InventoryOrderDal.cs" />
-    <Compile Include="DAL\InventoryOrderdalDal.cs" />
-    <Compile Include="DAL\InventoryPlanDal.cs" />
-    <Compile Include="DAL\PickingOrderDal.cs" />
-    <Compile Include="DAL\PickingSubOrderDal.cs" />
-    <Compile Include="DAL\PickingSubOrderdtlDal.cs" />
-    <Compile Include="DAL\ReplenishOrderDal.cs" />
-    <Compile Include="DAL\ReplenishSubOrderDal.cs" />
-    <Compile Include="DAL\ReplenishSubOrderdtlDal.cs" />
-    <Compile Include="DAL\SurgeryOrderDal.cs" />
-    <Compile Include="DAL\SurgeryOrderdtlDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
     <Compile Include="Infrastructure\DeviceHelper\SpeakerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
@@ -524,7 +506,7 @@
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\Debug\" />
+    <Folder Include="bin\" />
     <Folder Include="Controls\Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

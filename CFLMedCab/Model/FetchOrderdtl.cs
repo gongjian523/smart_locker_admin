@@ -21,90 +21,99 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 商品编号
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int goods_id { get; set; }
 
         /// <summary>
         /// 商品名称
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string name { get; set; }
 
         /// <summary>
         /// 商品编码
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string goods_code { get; set; }
 
         /// <summary>
         /// 单品码
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string code { get; set; }
 
         /// <summary>
         /// 生产批号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string batch_number { get; set; }
 
         /// <summary>
         /// 生成日期
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime birth_date { get; set; }
 
         /// <summary>
         /// 有效期
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime expire_date { get; set; }
 
         /// <summary>
         /// 有效期天数
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int valid_period { get; set; }
 
         /// <summary>
         /// 货位
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string position { get; set; }
 
         /// <summary>
         /// 领用属性
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int fetch_type { get; set; }
 
         /// <summary>
         /// 备注
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string remarks { get; set; }
 
         /// <summary>
         /// 耗材状态：0  待领用；1 已领用；2 已退回。
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int status { get; set; }
 
         /// <summary>
         /// 关联操作单据
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int related_order_id { get; set; }
 
         /// <summary>
         /// 是否临时新增 0: 否 1：是；一般领用单均为否。3。手术领用单，如标识异常为异常，且异常说明为“商品不在待领目录的”为是，其余为否。
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int is_add { get; set; }
 
         /// <summary>
         /// 回退单号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int return_order_id { get; set; }
 
         /// <summary>
         /// 回退时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime return_time { get; set; }
 
         /// <summary>
         /// 回退人
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int operator_id { get; set; }
     }
 }

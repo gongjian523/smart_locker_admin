@@ -213,6 +213,36 @@ namespace CFLMedCab.DAL
 		}
 
 		/// <summary>
+		/// 根据手术单号查询耗材详情（全部）
+		/// </summary>
+		/// <param name="surgeryOrderCode"></param>
+		/// <returns></returns>
+		public List<SurgeryOrderdtlDto> GetSurgeryOrderdtlAllDto(SurgeryOrderApo pageDataApo, out int totalCount)
+		{
+
+			totalCount = 0;
+			List<SurgeryOrderdtlDto> data;
+
+			//查询语句(查询全部出手术单待领用的耗材)
+			var queryable = Db.Queryable<SurgeryOrderdtl>()
+				.Where(it => it.surgery_order_code == pageDataApo.SurgeryOrderCode)
+				.Select<SurgeryOrderdtlDto>();
+
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+		}
+
+		/// <summary>
 		/// 确认时，修改手术领用详情数据
 		/// </summary>
 		/// <param name="datasDto">当前操作数据dto</param>
