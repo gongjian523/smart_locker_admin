@@ -55,6 +55,16 @@ namespace CFLMedCab.Model
 		public int not_fetch_num { get; set; }
 
 		/// <summary>
+		/// 异常标识
+		/// </summary>
+		public string exception_flag_description { get; set; }
+
+		/// <summary>
+		/// 异常说明
+		/// </summary>
+		public string exception_description { get; set; }
+
+		/// <summary>
 		/// 备注
 		/// </summary>
 		public string remarks { get; set; }
