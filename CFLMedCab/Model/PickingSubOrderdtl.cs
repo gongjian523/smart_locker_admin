@@ -18,60 +18,63 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 商品编号
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int goods_id { get; set; }
 
         /// <summary>
         /// 商品名称
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string name { get; set; }
 
         /// <summary>
         /// 商品编码
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string goods_code { get; set; }
 
         /// <summary>
         /// 单品码
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string code { get; set; }
 
         /// <summary>
         /// 生产批号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string batch_number { get; set; }
 
         /// <summary>
         /// 生成日期
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime birth_date { get; set; }
 
         /// <summary>
         /// 有效期
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime expire_date { get; set; }
 
         /// <summary>
         /// 有效期天数
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int valid_period { get; set; }
 
         /// <summary>
         /// 货位
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string position { get; set; }
 
         /// <summary>
         /// 领用属性
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int fetch_type { get; set; }
 
         /// <summary>
         /// 备注
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string remarks { get; set; }
 
         /// <summary>

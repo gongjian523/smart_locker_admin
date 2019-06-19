@@ -17,8 +17,7 @@ namespace CFLMedCab.Model
         /// </summary>
         [SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
         public int id { get; set; }
-
-
+        
 		/// <summary>
 		/// 关联操作单据(库存变化单编号)
 		/// </summary>
@@ -27,19 +26,16 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 商品编号
 		/// </summary>
-		[SugarColumn(IsNullable = true)]
         public int goods_id { get; set; }
 
         /// <summary>
         /// 商品名称
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string name { get; set; }
 
         /// <summary>
         /// 商品编码
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string goods_code { get; set; }
 
         /// <summary>
@@ -50,57 +46,68 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 生产批号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string batch_number { get; set; }
 
         /// <summary>
         /// 生成日期
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime birth_date { get; set; }
 
         /// <summary>
         /// 有效期
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime expire_date { get; set; }
 
         /// <summary>
         /// 有效期天数
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int valid_period { get; set; }
 
         /// <summary>
         /// 操作类型 操作类型：0 出库；1 入库
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int operate_type { get; set; }
 
         /// <summary>
         /// 异常标识 异常标识：1 异常； 0  正常
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int exception_flag { get; set; }
 
         /// <summary>
         /// 异常说明
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string exception_description { get; set; }
 
         /// <summary>
         /// 货位
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string position { get; set; }
 
         /// <summary>
         /// 领用属性
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int fetch_type { get; set; }
 
         /// <summary>
         /// 备注
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string remarks { get; set; }
 
-		/// <summary>
-		/// 业务单号
-		/// </summary>
-		public string business_order_code { get; set; }
+        /// <summary>
+        /// 业务单号
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string business_order_code { get; set; }
 
 		/// <summary>
 		/// 业务确认状态 状态： 0  待确认；1 已确认

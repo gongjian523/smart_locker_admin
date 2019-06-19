@@ -52,7 +52,7 @@ namespace CFLMedCab.View.Return
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
-            List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
+            List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
             goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.id, model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsDetails;
             inNum.Content = operateGoodsNum;
