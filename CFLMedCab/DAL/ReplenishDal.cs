@@ -80,7 +80,7 @@ namespace CFLMedCab.DAL
 					status = rso.status,
 					distribute_time = DateTime.Now,
 					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
-													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RSOStatusType.待完成)
+													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
 													  .Count()
 				});
 
