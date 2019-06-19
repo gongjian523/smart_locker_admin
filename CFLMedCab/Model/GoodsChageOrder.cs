@@ -26,7 +26,8 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 操作人
 		/// </summary>
-        public int operator_id { get; set; }
+		[SugarColumn(IsNullable = true)]
+		public int operator_id { get; set; }
 
         /// <summary>
         /// 生成时间

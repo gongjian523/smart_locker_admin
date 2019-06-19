@@ -24,10 +24,11 @@ namespace CFLMedCab.Model
         [SugarColumn(IsNullable = true)]
         public int principal_id { get; set; }
 
-        /// <summary>
-        /// 派发时间
-        /// </summary>
-        public DateTime create_time { get; set; }
+		/// <summary>
+		/// 派发时间
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public DateTime create_time { get; set; }
 
         /// <summary>
         /// 工单状态 ：0  待完成；1 已完成。
@@ -39,10 +40,11 @@ namespace CFLMedCab.Model
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public DateTime end_time { get; set; }
-        /// <summary>
-        /// 上架工单号
-        /// </summary>
-        public string code { get; set; }
+		/// <summary>
+		/// 上架工单号
+		/// </summary>
+
+		public string code { get; set; }
     }
 
 }

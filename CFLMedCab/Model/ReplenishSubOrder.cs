@@ -21,13 +21,11 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 上架单编号
 		/// </summary>
-		[SugarColumn(IsNullable = false)]
 		public string code { get; set; }
 
 		/// <summary>
 		/// 上架工单号
 		/// </summary>
-		[SugarColumn(IsNullable = false)]
         public string replenish_order_code { get; set; }
 
         /// <summary>

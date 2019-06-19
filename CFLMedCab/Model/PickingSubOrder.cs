@@ -21,29 +21,30 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 拣货单编号
 		/// </summary>
-		[SugarColumn(IsNullable = false)]
 		public string code { get; set; }
 
 		/// <summary>
 		/// 拣货工单号
 		/// </summary>
-		[SugarColumn(IsNullable = true)]
         public string picking_order_code { get; set; }
 
-        /// <summary>
-        /// 生成时间
-        /// </summary>
-        public DateTime create_time { get; set; }
+		/// <summary>
+		/// 生成时间
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public DateTime create_time { get; set; }
 
-        /// <summary>
-        /// 完成时间
-        /// </summary>
-        public DateTime end_time { get; set; }
+		/// <summary>
+		/// 完成时间
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public DateTime end_time { get; set; }
 
-        /// <summary>
-        /// 货位
-        /// </summary>
-        public string position { get; set; }
+		/// <summary>
+		/// 货位
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string position { get; set; }
 
         /// <summary>
         /// 状态 状态：0 待拣货；2 部分拣货；1 已拣货。
@@ -57,22 +58,4 @@ namespace CFLMedCab.Model
         public int Inspection_order_id { get; set; }
     }
 
-
-    public class PickingSubShortOrder
-    {
-        /// <summary>
-        /// 拣货单号
-        /// </summary>
-        public int id { get; set; }
-
-        /// <summary>
-        /// 派发时间
-        /// </summary>
-        public DateTime create_time { get; set; }
-
-        /// <summary>
-        /// 待拣货数量
-        /// </summary>
-        public int unDoneNum { get; set; }
-    }
 }

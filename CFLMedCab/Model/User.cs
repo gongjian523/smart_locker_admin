@@ -21,7 +21,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 姓名
         /// </summary>
-        [SugarColumn(IsNullable = true, ColumnDataType = "varchar(255)")]
+        [SugarColumn(IsNullable = true)]
         public string name { get; set; }
 
         /// <summary>

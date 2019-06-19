@@ -43,7 +43,6 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 上架工单号
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public string code { get; set; }
 	}
 }

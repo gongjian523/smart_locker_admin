@@ -55,15 +55,16 @@ namespace CFLMedCab.Model
         [SugarColumn(IsNullable = true)]
         public DateTime birth_date { get; set; }
 
-        /// <summary>
-        /// 有效期
-        /// </summary>
-        public DateTime expire_date { get; set; }
+		/// <summary>
+		/// 有效期
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public DateTime expire_date { get; set; }
 
         /// <summary>
         /// 有效期天数
         /// </summary>
-
+		[SugarColumn(IsNullable = true)]
         public int valid_period { get; set; }
 
         /// <summary>
@@ -78,10 +79,11 @@ namespace CFLMedCab.Model
         [SugarColumn(IsNullable = true)]
         public int exception_flag { get; set; }
 
-        /// <summary>
-        /// 异常说明
-        /// </summary>
-        public string exception_description { get; set; }
+		/// <summary>
+		/// 异常说明
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string exception_description { get; set; }
 
         /// <summary>
         /// 货位
@@ -95,10 +97,11 @@ namespace CFLMedCab.Model
         [SugarColumn(IsNullable = true)]
         public int fetch_type { get; set; }
 
-        /// <summary>
-        /// 备注
-        /// </summary>
-        public string remarks { get; set; }
+		/// <summary>
+		/// 备注
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string remarks { get; set; }
 
         /// <summary>
         /// 业务单号
@@ -109,6 +112,7 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 业务确认状态 状态： 0  待确认；1 已确认
 		/// </summary>
+		[SugarColumn(IsNullable = true)]
 		public int business_status { get; set; }
 
 	}
