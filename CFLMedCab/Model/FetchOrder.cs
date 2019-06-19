@@ -45,6 +45,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 业务单号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string business_order_code { get; set; }
 
         /// <summary>

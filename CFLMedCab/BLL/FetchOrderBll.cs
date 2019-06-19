@@ -41,7 +41,7 @@ namespace CFLMedCab.BLL
 						RequisitionType = requisitionType,
 						RequisitionStatus = RequisitionStatus.已认领,
 						ConsumablesStatus = ConsumablesStatus.已领用,
-					}, surgeryOrderCode, out goodsChangeBusinessOrderCode);
+					}, null, out goodsChangeBusinessOrderCode);
 
 					//生成存库变化单
 					if (ret)
@@ -70,7 +70,7 @@ namespace CFLMedCab.BLL
 						RequisitionType = requisitionType,
 						RequisitionStatus = RequisitionStatus.已认领,
 						ConsumablesStatus = ConsumablesStatus.已领用,
-					}, null, out goodsChangeBusinessOrderCode);
+					}, surgeryOrderCode, out goodsChangeBusinessOrderCode);
 
 					//生成存库变化单
 					if (ret)
