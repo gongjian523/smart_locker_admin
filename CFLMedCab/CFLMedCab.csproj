@@ -506,7 +506,7 @@
     <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="bin\Debug\" />
+    <Folder Include="bin\" />
     <Folder Include="Controls\Controls\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
