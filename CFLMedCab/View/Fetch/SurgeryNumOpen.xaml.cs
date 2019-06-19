@@ -26,7 +26,7 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
             surgeryOrderDto = model;
             surgeryNum.Content = model.code;
-            time.Content = model.surgery_time;
+            time.Content = model.surgery_time.ToString("yyyy年MM月dd日");
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);
             listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }, out int stockGoodsNum, out int notStockGoodsNum).Data;

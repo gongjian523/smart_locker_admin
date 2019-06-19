@@ -45,43 +45,17 @@ namespace CFLMedCab.View.Fetch
         public ReturnFetchView(Hashtable hashtable)
         {
             InitializeComponent();
-            time.Content = DateTime.Now;
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             List<GoodsDto> goodsChageOrderdtls = new List<GoodsDto>();
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-
-            //for (int i = 5; i >= 0; i--)
-            //{
-            //    GoodsChageOrderdtlDto goodsChageOrderdtl = new GoodsChageOrderdtlDto
-            //    {
-            //        id = i,
-            //        batch_number = "feg",
-            //        birth_date = DateTime.Now,
-            //        code = "ewfw",
-            //        exception_flag = 0,
-            //        expire_date = DateTime.Now,
-            //        exception_description = "测试数据",
-            //        fetch_type = 1,
-            //        goods_code = "fwe",
-            //        goods_id = 1,
-
-            //        name = "测试数据",
-            //        operate_type = 0,
-            //        position = "1号柜",
-            //        related_order_id = 1,
-            //        remarks = "测试数据",
-
-            //        valid_period = 4
-            //    };
-            //    goodsChageOrderdtls.Add(goodsChageOrderdtl);
-            //}
-
             after = hashtable;
-            List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
-            int operateGoodsNum = 0, storageGoodsExNum = 0, outStorageGoodsExNum = 0;
-            goodsChageOrderdtls = fetchOrderBll.GetGoBackFetchOrderdtlOperateDto(goodDtos, out operateGoodsNum, out storageGoodsExNum, out outStorageGoodsExNum);
-
+            List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);//获取关柜之后的库存变化信息
+            goodsChageOrderdtls = fetchOrderBll.GetGoBackFetchOrderdtlOperateDto(goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsChageOrderdtls;
+            returnNum.Content = operateGoodsNum;
+            abnormalInNum.Content = storageGoodsExNum;
+            abnormalOutNum.Content = outStorageGoodsExNum;
         }
 
 
