@@ -362,4 +362,13 @@
             </Trigger>
         </Style.Triggers>
     </Style>
+
+    <Style x:Key="TextBlockCommon" TargetType="{x:Type TextBlock}">
+        <Setter Property="TextAlignment" Value="Center"/>
+    </Style>
+    
+    <Style x:Key="TextBlockRed" TargetType="{x:Type TextBlock}">
+        <Setter Property="TextAlignment" Value="Center"/>
+        <Setter Property="Foreground" Value="Red"/>
+    </Style>
 </ResourceDictionary>

@@ -96,35 +96,35 @@
                                 <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding code}"   Width="{Binding ElementName=column1,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock  Text="{Binding code}" TextAlignment="Center"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time}"    Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock  Text="{Binding create_time}" TextAlignment="Center"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="盘点类型" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock  Text="{Binding type, Converter={StaticResource InventoryTypeStrConverter}}" TextAlignment="Center"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding type, Converter={StaticResource InventoryTypeStrConverter}}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="盘点单状态"  Width="{Binding ElementName=column4,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock  Text="{Binding status,  Converter= {StaticResource InventoryStatusStrConverter}}" TextAlignment="Center"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding status,  Converter= {StaticResource InventoryStatusStrConverter}}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="盘点人"  Width="{Binding ElementName=column5,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock  Text="{Binding operator_name}" TextAlignment="Center"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding operator_name}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
