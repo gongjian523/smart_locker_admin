@@ -215,5 +215,4 @@ namespace CFLMedCab.Model.Enum
 		已清台 = 1
 	
 	}
-
 }
