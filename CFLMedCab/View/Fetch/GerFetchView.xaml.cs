@@ -44,11 +44,11 @@ namespace CFLMedCab.View.Fetch
         public GerFetchView(Hashtable hashtable)
         {
             InitializeComponent();
-            time.Content = DateTime.Now;
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
-            List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);
+            List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
             goodsChageOrderdtls = fetchOrderBll.GetGeneralFetchOrderdtlOperateDto(goodDtos ,out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsChageOrderdtls;
             normalNum.Content = operateGoodsNum;

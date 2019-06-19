@@ -41,7 +41,7 @@ namespace CFLMedCab.View.Fetch
         public SurgeryNoNumClose(Hashtable hashtable)
         {
             InitializeComponent();
-            time.Content = DateTime.Now;
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
 
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;

@@ -90,7 +90,13 @@ namespace CFLMedCab.Model.Enum
 		/// 未查到领用记录
 		/// </summary>
 		[Description("未查到领用记录")]
-		未查到领用记录 = 6
+		未查到领用记录 = 6,
+
+		/// <summary>
+		/// 该商品已经超过待领数量
+		/// </summary>
+		[Description("该商品已经超过待领数量")]
+		该商品已经超过待领数量 = 7
 	}
 
 	/// <summary>
@@ -215,7 +221,4 @@ namespace CFLMedCab.Model.Enum
 		已清台 = 1
 	
 	}
-
-
-
 }

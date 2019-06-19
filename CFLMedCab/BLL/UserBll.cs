@@ -10,16 +10,31 @@ namespace CFLMedCab.BLL
 {
     class UserBll
     {
-        private UserDal userDal;
+        private readonly UserDal userDal;
 
         public UserBll()
         {
-            userDal = new UserDal();
+            userDal = UserDal.GetInstance();
         }
 
         public User  GetUserByVeinId(int veinId)
         {
             return userDal.GetUserByVeinId(veinId);
+        }
+
+        public int GetUserNum()
+        {
+            return userDal.GetUserNum();
+        }
+
+        public void InsetUsers(List<User> list)
+        {
+            userDal.InsertUser(list);
+        }
+
+        public User GetTestUser()
+        {
+            return userDal.GetUser().First();
         }
 
     }

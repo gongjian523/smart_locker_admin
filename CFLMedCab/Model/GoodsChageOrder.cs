@@ -26,7 +26,6 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 操作人
 		/// </summary>
-		[SugarColumn(IsNullable = true)]
         public int operator_id { get; set; }
 
         /// <summary>

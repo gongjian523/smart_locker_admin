@@ -22,7 +22,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         public void ChekVein()
         {
+            Close();
+#if TESTENV
             return;
+#endif
             Console.WriteLine("checkVein");
             if (!IsOpen)
                 Open();

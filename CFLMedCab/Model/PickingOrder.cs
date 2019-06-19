@@ -21,7 +21,6 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 工单负责人
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int principal_id { get; set; }
 
         /// <summary>
@@ -38,11 +37,13 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 完成时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime end_time { get; set; }
 
-		/// <summary>
-		/// 上架工单号
-		/// </summary>
-		public string code { get; set; }
+        /// <summary>
+        /// 上架工单号
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string code { get; set; }
 	}
 }

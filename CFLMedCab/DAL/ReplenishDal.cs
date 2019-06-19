@@ -5,6 +5,7 @@ using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,7 @@ namespace CFLMedCab.DAL
 					status = rso.status,
 					distribute_time = DateTime.Now,
 					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
-													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == 0)
+													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
 													  .Count()
 				});
 
@@ -142,20 +143,62 @@ namespace CFLMedCab.DAL
 			{
 
 				Db.Updateable(replenishSubOrderdtlDtos.MapToList<ReplenishSubOrderdtlDto, ReplenishSubOrderdtl>()).ExecuteCommand();
-				if (!replenishSubOrderdtlDtos.Exists(it => it.status == 0))
+
+				int currentStatus;
+
+				if (!replenishSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.待完成 ))
 				{
-					Db.Updateable<ReplenishSubOrder>()
-					.SetColumns(it => new ReplenishSubOrder() { status = 1 })
-					.Where(it => it.id == replenishSubOrderid)
-					.ExecuteCommand();
+					currentStatus = (int)RSOStatusType.已上架;
 				}
-				
+				if (!replenishSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.已完成))
+				{
+					currentStatus = (int)RSOStatusType.待上架;
+				}
+				else
+				{
+					currentStatus = (int)RSOStatusType.部分上架;
+				}
+
+				Db.Updateable<ReplenishSubOrder>()
+				.SetColumns(it => new ReplenishSubOrder() { status = currentStatus })
+				.Where(it => it.id == replenishSubOrderid)
+				.ExecuteCommand();
+
 			});
 
 			return result.IsSuccess;
 
 		}
-		
 
-	}
+        /// <summary>
+        /// 生成上架单号
+        /// </summary>
+        /// <param name="po">上架单</param>
+        /// <returns></returns>
+        public string InsertReplenishOrder(ReplenishOrder ro)
+        {
+            return Db.Insertable(ro).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成上架单工号
+        /// </summary>
+        /// <param name="po">上架工单</param>
+        /// <returns></returns>
+        public string InsertReplenishSubOrder(ReplenishSubOrder rso)
+        {
+            return Db.Insertable(rso).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成上架单号详情
+        /// </summary>
+        /// <param name="psodtlList">上架工单</param>
+        /// <returns></returns>
+        public void InsertReplenishSubOrderDetails(List<ReplenishSubOrderdtl> rsodtlList)
+        {
+            Db.Insertable(rsodtlList).ExecuteCommand();
+        }
+
+    }
 }

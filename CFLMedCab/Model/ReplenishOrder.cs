@@ -32,12 +32,12 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 工单状态 ：0  待完成；1 已完成。
         /// </summary>
-        [SugarColumn(IsNullable = true)]
         public int status { get; set; }
 
         /// <summary>
         /// 完成时间
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public DateTime end_time { get; set; }
         /// <summary>
         /// 上架工单号

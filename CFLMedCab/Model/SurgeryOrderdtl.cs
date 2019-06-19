@@ -39,25 +39,41 @@ namespace CFLMedCab.Model
 		/// </summary>
 		public int fetch_type { get; set; }
 
-		/// <summary>
-		/// 需要领用数量
-		/// </summary>
-		public int fetch_num { get; set; }
+        /// <summary>
+        /// 需要领用数量
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public int fetch_num { get; set; }
 
-		/// <summary>
-		/// 已经领用数量
-		/// </summary>
-		public int already_fetch_num { get; set; }
+        /// <summary>
+        /// 已经领用数量
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public int already_fetch_num { get; set; }
 
-		/// <summary>
-		/// 待领用数量
-		/// </summary>		
-		public int not_fetch_num { get; set; }
+        /// <summary>
+        /// 待领用数量
+        /// </summary>		
+        [SugarColumn(IsNullable = true)]
+        public int not_fetch_num { get; set; }
 
-		/// <summary>
-		/// 备注
-		/// </summary>
-		public string remarks { get; set; }
+        /// <summary>
+        /// 异常标识
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string exception_flag_description { get; set; }
+
+        /// <summary>
+        /// 异常说明
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string exception_description { get; set; }
+
+        /// <summary>
+        /// 备注
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string remarks { get; set; }
 
 
 	}

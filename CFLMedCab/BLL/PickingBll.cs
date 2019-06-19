@@ -98,7 +98,7 @@ namespace CFLMedCab.BLL
 				{
 					it.operate_type_description = OperateType.入库.ToString();
 					//当前出库操作的商品是否在工单中存在
-					if (!pickingSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code)))
+					if (!pickingSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code) && rsoDto.status == (int)PSOStatusType.已拣货))
 					{
 						it.exception_flag = (int)ExceptionFlag.异常;
 						it.exception_flag_description = ExceptionFlag.异常.ToString();
@@ -142,7 +142,7 @@ namespace CFLMedCab.BLL
 			{
 				if (datasDto.Exists(dataDto => dataDto.exception_flag == (int)ExceptionFlag.正常 && it.code.Equals(dataDto.code)))
 				{
-					it.status = 1;
+					it.status = (int)RPOStatusType.已完成;
 				}
 			});
 

@@ -3,7 +3,11 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,11 +29,20 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		private readonly GoodsChangeOrderDal goodsChageOrderDal;
 
-		public ReplenishBll()
+        /// <summary>
+        /// 获取库存变化操作类
+        /// </summary>
+        private readonly GoodsDal goodsDal;
+
+        private readonly UserDal userDal;
+
+
+       public ReplenishBll()
 		{
 			replenishDal = ReplenishDal.GetInstance();
 			goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
-		}
+            goodsDal = GoodsDal.GetInstance();
+        }
 
 		/// <summary>
 		/// 获取待完成上架工单
@@ -91,7 +104,7 @@ namespace CFLMedCab.BLL
 				{
 					it.operate_type_description = OperateType.入库.ToString();
 					//当前入库操作的商品是否在工单中存在
-					if (!replenishSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code)))
+					if (!replenishSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code) && rsoDto.status == (int)RSOStatusType.已上架))
 					{
 						it.exception_flag = (int)ExceptionFlag.异常;
 						it.exception_flag_description = ExceptionFlag.异常.ToString();
@@ -121,8 +134,6 @@ namespace CFLMedCab.BLL
 			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
 		}
 
-
-
 		/// <summary>
 		/// 确认时，修改工单数据
 		/// </summary>
@@ -145,7 +156,7 @@ namespace CFLMedCab.BLL
 			{
 				if (datasDto.Exists(dataDto => dataDto.exception_flag == (int)ExceptionFlag.正常 && it.code.Equals(dataDto.code)))
 				{
-					it.status = 1;
+					it.status = (int)RPOStatusType.已完成;
 				}
 			});
 
@@ -160,5 +171,34 @@ namespace CFLMedCab.BLL
 
 		}
 
-	}
+        /// <summary>
+        /// 模拟补货单 
+        /// </summary>
+        /// <param name="rfid">单品码的RFID</param>
+        /// <returns></returns>
+        public void InitReplenshOrder(Hashtable rfid)
+        {
+            foreach(HashSet<string> list in rfid.Values)
+            {
+                replenishDal.InsertReplenishOrder(new ReplenishOrder {
+                    code = "RO-TEST-001",
+                    create_time = DateTime.Now,
+                    principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+                    status =(int)RPOStatusType.待完成
+                });
+
+                replenishDal.InsertReplenishSubOrder(new ReplenishSubOrder
+                {
+                    code = "RSO-TEST-001",
+                    create_time = DateTime.Now,
+                    replenish_order_code = "RO-TEST-001",
+                    status = (int)RSOStatusType.待上架
+                });
+
+                //List<GoodsDto> goos
+
+            }
+        }
+
+    }
 }
