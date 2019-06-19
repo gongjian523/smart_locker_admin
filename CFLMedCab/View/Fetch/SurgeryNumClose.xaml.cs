@@ -48,7 +48,8 @@ namespace CFLMedCab.View.Fetch
         {
             InitializeComponent();
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-            time.Content = DateTime.Now; Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
+            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             surgeryNum.Content = model.code;
             after = hashtable;
             surgeryOrderDto = model;

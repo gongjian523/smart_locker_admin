@@ -40,9 +40,9 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
             surgeryOrderDto = model;
             surgeryNum.Content = model.code;
-            time.Content = model.surgery_time;
+            time.Content = model.surgery_time.ToString("yyyy年MM月dd日"); ;
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);
+            List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);//盘点所有数据
             listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }).Data;
         }
 

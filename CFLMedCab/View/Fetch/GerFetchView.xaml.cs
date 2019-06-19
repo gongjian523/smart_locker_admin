@@ -44,7 +44,7 @@ namespace CFLMedCab.View.Fetch
         public GerFetchView(Hashtable hashtable)
         {
             InitializeComponent();
-            time.Content = DateTime.Now;
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
