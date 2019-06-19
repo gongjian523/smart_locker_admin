@@ -78,7 +78,7 @@ namespace CFLMedCab.DAL
 					replenish_order_code = rso.replenish_order_code,
 					create_time = rso.create_time,
 					status = rso.status,
-					distribute_time = DateTime.Now,
+					distribute_time = ro.create_time,
 					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
 													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
 													  .Count()
@@ -185,9 +185,9 @@ namespace CFLMedCab.DAL
         /// </summary>
         /// <param name="po">上架工单</param>
         /// <returns></returns>
-        public string InsertReplenishSubOrder(ReplenishSubOrder rso)
+        public int InsertReplenishSubOrder(ReplenishSubOrder rso)
         {
-            return Db.Insertable(rso).ExecuteReturnEntity().code;
+            return Db.Insertable<ReplenishSubOrder>(rso).ExecuteReturnEntity().id;
         }
 
         /// <summary>
@@ -200,5 +200,13 @@ namespace CFLMedCab.DAL
             Db.Insertable(rsodtlList).ExecuteCommand();
         }
 
+        /// <summary>
+        /// 获得所有上架单的个数
+        /// </summary>
+        /// <returns></returns>
+        public int GettReplenishOrderNum()
+        {
+            return Db.Queryable<ReplenishOrder>().ToList().Count; 
+        }
     }
 }

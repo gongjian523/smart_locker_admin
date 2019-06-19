@@ -1,11 +1,15 @@
-﻿using CFLMedCab.APO;
+﻿using AutoMapper;
+using CFLMedCab.APO;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Picking;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,12 +30,14 @@ namespace CFLMedCab.BLL
 		/// 获取库存变化操作类
 		/// </summary>
 		private readonly GoodsChangeOrderDal goodsChageOrderDal;
+        private readonly GoodsDal  goodsDal;
 
-		public PickingBll()
+        public PickingBll()
 		{
 			pickingDal = PickingDal.GetInstance();
 			goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
-		}
+            goodsDal = GoodsDal.GetInstance();
+        }
 
 		/// <summary>
 		/// 获取待完成拣货工单
@@ -155,9 +161,62 @@ namespace CFLMedCab.BLL
 			}
 
 			return ret;
-
-
 		}
 
-	}
+        /// <summary>
+        /// 模拟补货单 
+        /// </summary>
+        /// <param name="rfid">单品码的RFID</param>
+        /// <returns></returns>
+        public void InitPickingOrder(string poCode, string psoCode, Hashtable rfid)
+        {
+            pickingDal.InsertPickingOrder(new PickingOrder
+            {
+                code = poCode,
+                create_time = DateTime.Now,
+                principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+                status = (int)RPOStatusType.待完成
+            });
+
+            int i = 0;
+            foreach (HashSet<string> list in rfid.Values)
+            {
+                i++;
+
+                List<GoodsDto> goodsList = goodsDal.GetGoodsDto(list);
+
+                var config = new MapperConfiguration(x => x.CreateMap<GoodsDto, PickingSubOrderdtl>()
+                                            .ForMember(d => d.goods_id, o => o.MapFrom(s => s.id)));
+                IMapper mapper = new Mapper(config);
+                var psoDtls = mapper.Map<List<PickingSubOrderdtl>>(goodsList);
+
+                int psoId = pickingDal.InsertPickingSubOrder(new PickingSubOrder
+                {
+                    code = psoCode + i.ToString(),
+                    create_time = DateTime.Now,
+                    position = psoDtls.First().position,
+                    picking_order_code = poCode,
+                    status = (int)PSOStatusType.待拣货,
+                });
+
+                psoDtls.ForEach(item =>
+                {
+                    item.picking_sub_orderid = psoId;
+                    item.status = (int)PSOStatusType.待拣货;
+                });
+
+                pickingDal.InsertPickingSubOrderDetails(psoDtls);
+            }
+        }
+
+        /// <summary>
+        ///获取拣货单号的个数
+        /// </summary>
+        /// <returns></returns>
+        public int GettPickingOrderNum()
+        {
+            return pickingDal.GetPickingOrderNum();
+        }
+
+    }
 }

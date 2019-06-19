@@ -185,9 +185,9 @@ namespace CFLMedCab.DAL
         /// </summary>
         /// <param name="po">拣货工单</param>
         /// <returns></returns>
-        public string InsertPickingSubOrder(PickingSubOrder po)
+        public int InsertPickingSubOrder(PickingSubOrder po)
         {
-            return Db.Insertable(po).ExecuteReturnEntity().code;
+            return Db.Insertable(po).ExecuteReturnEntity().id;
         }
 
         /// <summary>
@@ -198,6 +198,15 @@ namespace CFLMedCab.DAL
         public void InsertPickingSubOrderDetails(List<PickingSubOrderdtl> psodtlList)
         {
             Db.Insertable(psodtlList).ExecuteCommand();
+        }
+
+        /// <summary>
+        /// 获得所有上架单的个数
+        /// </summary>
+        /// <returns></returns>
+        public int GetPickingOrderNum()
+        {
+            return Db.Queryable<PickingOrder>().ToList().Count;
         }
 
     }

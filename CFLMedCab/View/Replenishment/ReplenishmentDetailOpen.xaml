@@ -7,10 +7,9 @@
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Control.Resources>
+    <UserControl.Resources>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
-    </Control.Resources>
-    <Border Style="{StaticResource CommonBlueBorder}">
+    </UserControl.Resources>    <Border Style="{StaticResource CommonBlueBorder}">
         <Grid Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
@@ -72,7 +71,7 @@
                         <ListView.View>
                             <GridView>
                             <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
-                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding goods_name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
+                            <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
                             <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}"    Width="{Binding ElementName=column2,Path=ActualWidth}"/>
                             <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}"   Width="{Binding ElementName=column3,Path=ActualWidth}"/>
                             <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy-MM-dd}'}"   Width="{Binding ElementName=column4,Path=ActualWidth}" />

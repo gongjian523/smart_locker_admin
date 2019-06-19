@@ -22,7 +22,7 @@
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
                         <Label Content="工单编号：" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource Lable14BoldStyle}"/>
-                        <Label Content="{Binding replenish_order_code}" Style="{StaticResource Lable14BoldStyle}"  />
+                        <Label Content="{Binding code}" Style="{StaticResource Lable14BoldStyle}"  />
                         <Label Content="本柜拣货商品数量："  Style="{StaticResource Lable16BoldStyle}" Margin="10 0"/>
                         <Label Content="{Binding not_picked_goods_num}" Style="{StaticResource Lable14BoldStyle}"/>
                     </StackPanel>

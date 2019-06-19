@@ -17,9 +17,9 @@
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
     </Control.Resources>
     <Grid>
-        <Frame x:Name="PopFrame" Panel.ZIndex="4" Visibility="Hidden"/>
+        <Frame x:Name="PopFrame" Panel.ZIndex="4"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
-        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" >
+        <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Hidden" >
             <Image Height="Auto" Width="Auto" Margin="-100" Name="logImg">
                 <Image.Source>
                     <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/login.png" />
@@ -32,7 +32,7 @@
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
             </StackPanel>
         </Grid>
-        <Grid x:Name="NaviView" Visibility="Visible">
+        <Grid x:Name="NaviView" Visibility="Visible" Panel.ZIndex="1">
             <Grid.RowDefinitions>
                 <RowDefinition Height ="43"/>
                 <RowDefinition Height="*"/>

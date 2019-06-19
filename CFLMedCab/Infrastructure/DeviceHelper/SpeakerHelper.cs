@@ -11,17 +11,21 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
     {
         public static void Sperker(string str)
         {
-			SpeechSynthesizer synth = new SpeechSynthesizer
+            Task speakerTask = new Task(() =>
             {
-                Rate = 3,
-                Volume = 100
-            };
+                SpeechSynthesizer synth = new SpeechSynthesizer
+                {
+                    Rate = 3,
+                    Volume = 100
+                };
 
-            //配置和声音输出  
-            synth.SetOutputToDefaultAudioDevice();
+                //配置和声音输出  
+                synth.SetOutputToDefaultAudioDevice();
 
-            synth.Speak(str);
-            synth.Dispose();
+                synth.Speak(str);
+                synth.Dispose();
+            });
+            speakerTask.Start();
         }
     }
 }

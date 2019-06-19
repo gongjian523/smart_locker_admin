@@ -149,6 +149,7 @@
     <Compile Include="ConsoleManager.cs" />
     <Compile Include="Controls\EditBox.cs" />
     <Compile Include="Controls\EditBoxAdorner.cs" />
+    <Compile Include="Converter\ExceptionFlagStrConverter.cs" />
     <Compile Include="Converter\InventoryPlanSwitchStaConverter.cs" />
     <Compile Include="Converter\InventoryStatusStrConverter.cs" />
     <Compile Include="Converter\InventoryTypeStrConverter.cs" />

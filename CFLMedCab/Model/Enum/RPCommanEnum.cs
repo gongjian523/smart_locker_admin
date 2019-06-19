@@ -77,4 +77,5 @@ namespace CFLMedCab.Model.Enum
         [Description("部分拣货")]
         部分拣货 = 2
     }
+
 }

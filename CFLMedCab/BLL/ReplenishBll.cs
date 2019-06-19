@@ -1,9 +1,11 @@
-﻿using CFLMedCab.APO;
+﻿using AutoMapper;
+using CFLMedCab.APO;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
 using System;
@@ -34,10 +36,8 @@ namespace CFLMedCab.BLL
         /// </summary>
         private readonly GoodsDal goodsDal;
 
-        private readonly UserDal userDal;
 
-
-       public ReplenishBll()
+        public ReplenishBll()
 		{
 			replenishDal = ReplenishDal.GetInstance();
 			goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
@@ -176,29 +176,54 @@ namespace CFLMedCab.BLL
         /// </summary>
         /// <param name="rfid">单品码的RFID</param>
         /// <returns></returns>
-        public void InitReplenshOrder(Hashtable rfid)
+        public void InitReplenshOrder(string roCode, string rsoCode, Hashtable rfid)
         {
+
+            replenishDal.InsertReplenishOrder(new ReplenishOrder
+            {
+                code = roCode,
+                create_time = DateTime.Now,
+                principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+                status = (int)RPOStatusType.待完成
+            });
+
+            int i = 0;
             foreach(HashSet<string> list in rfid.Values)
             {
-                replenishDal.InsertReplenishOrder(new ReplenishOrder {
-                    code = "RO-TEST-001",
-                    create_time = DateTime.Now,
-                    principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
-                    status =(int)RPOStatusType.待完成
-                });
+                i++;
 
-                replenishDal.InsertReplenishSubOrder(new ReplenishSubOrder
+                List<GoodsDto> goodsList = goodsDal.GetGoodsDto(list);
+                var config = new MapperConfiguration(x => x.CreateMap<GoodsDto, ReplenishSubOrderdtl>()
+                                            .ForMember(d => d.goods_id, o => o.MapFrom(s => s.id)));
+                IMapper mapper = new Mapper(config);
+                var rsoDtls = mapper.Map<List<ReplenishSubOrderdtl>>(goodsList);
+
+                int rsoId = replenishDal.InsertReplenishSubOrder(new ReplenishSubOrder
                 {
-                    code = "RSO-TEST-001",
+                    code = rsoCode + i.ToString(),
                     create_time = DateTime.Now,
-                    replenish_order_code = "RO-TEST-001",
+                    position = rsoDtls.First().position,
+                    replenish_order_code = roCode,
                     status = (int)RSOStatusType.待上架
                 });
 
-                //List<GoodsDto> goos
+                rsoDtls.ForEach(item =>
+                {
+                    item.replenish_sub_orderid = rsoId;
+                    item.status = (int)RSOStatusType.待上架;
+                });
 
+                replenishDal.InsertReplenishSubOrderDetails(rsoDtls);
             }
         }
 
+        /// <summary>
+        ///获取拣货单号的个数
+        /// </summary>
+        /// <returns></returns>
+        public int GettReplenishOrderNum()
+        {
+            return replenishDal.GettReplenishOrderNum();
+        }
     }
 }
