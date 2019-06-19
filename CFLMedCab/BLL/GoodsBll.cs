@@ -124,6 +124,17 @@ namespace CFLMedCab.BLL
             return GoodsDal.GetGoodsDto(goodsEpsCollect);
         }
 
+
+        /// <summary>
+        /// 根据商品码集合获取完整商品属性集合
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsDto> GetGoodsDto(string goodsCode)
+        {
+            //查询语句
+            return GoodsDal.GetGoodsDto(goodsCode);
+        }
+
         /// <summary>
         /// 通过单品码查询商品信息是否存在
         /// </summary>

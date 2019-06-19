@@ -15,15 +15,15 @@
             </Grid.RowDefinitions>
             <Border  Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
                 <Grid>
-                    <RadioButton Content="手术单号" Name="stockSnapshot" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="StockSnapshot"/>
+                    <RadioButton Content="库存查询"  Name="stockSnapshot" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="StockSnapshot"/>
                     <RadioButton Content="效期查询" Name="validity" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
                     <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
                 </Grid>
             </Border>
             <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice">
                 <Grid>
-                    <RadioButton  Content="库存快照" GroupName="Stock" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
-                    <RadioButton  Content="条件查询" GroupName="Stock" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top" Style="{DynamicResource CircularNavButton}"  Click="ConditionQuery" />
+                    <RadioButton Name="stockquery" Content="库存快照" GroupName="stockquery" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
+                    <RadioButton Name="condition" Content="条件查询" GroupName="condition" IsChecked="True" Style="{DynamicResource CircularNavButton}" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top"  Click="ConditionQuery" />
                     <TextBox HorizontalAlignment="Left" Name="goods_code" Visibility="Hidden" Height="30" Margin="20,60,0,-24" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
                     <TextBox HorizontalAlignment="Left" Name="goods_name" Visibility="Hidden" Height="30" Margin="325,60,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
                     <Button Style="{StaticResource CommonNoButton}" Content="查询" Name="query" Visibility="Hidden" HorizontalAlignment="Left" Margin="659,60,0,0" VerticalAlignment="Top" Click="queryData"/>
@@ -31,10 +31,10 @@
             </Border>
             <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice1" Visibility="Hidden">
                 <Grid>
-                    <RadioButton GroupName="single" Content="全部" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top"/>
-                    <RadioButton GroupName="single" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="-200,-30,514,8" Content="效期小于1个月" />
-                    <RadioButton GroupName="single" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="-60,-30,341,8" Content="效期小于2个月" />
-                    <RadioButton GroupName="single" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="80,-30,179,8" Content="效期小于3个月" />
+                    <RadioButton GroupName="single" Name="All" Content="全部" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left"  Margin="20,10,0,0" VerticalAlignment="Top"/>
+                    <RadioButton GroupName="single" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="-200,-32,514,8" Content="效期小于1个月" />
+                    <RadioButton GroupName="single" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="-60,-32,341,8" Content="效期小于2个月" />
+                    <RadioButton GroupName="single" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="80,-32,179,8" Content="效期小于3个月" />
                     <TextBox HorizontalAlignment="Left" Name="goods_code1" Height="30" Margin="20,60,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
                     <TextBox HorizontalAlignment="Left" Name="goods_name1" Height="30" Margin="325,60,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
                     <Button Style="{StaticResource CommonNoButton}" Content="查询" HorizontalAlignment="Left" Margin="659,60,0,0" Click="queryData"/>
@@ -73,8 +73,9 @@
                     </Grid>
                     <Border Grid.Row="0" Padding="5"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="累计库存数量：" Name="Tips" Style="{StaticResource lblTitle5}"/>
-                            <Label Content="入库明细" Style="{StaticResource lblTitle3}"/>
+                            <Label Content="累计库存数量：" Style="{StaticResource lblTitle5}"/>
+                            <Label Name="totalNum" Content="入库明细" Style="{StaticResource lblTitle3}"/>
+                            <Label Content="个" Style="{StaticResource lblTitle5}"/>
                         </StackPanel>
                     </Border>
                     <ListView  VerticalAlignment="Top" Grid.Row="1"  Name="listView" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
