@@ -4,6 +4,7 @@ using CFLMedCab.DTO;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
 using System;
@@ -34,10 +35,8 @@ namespace CFLMedCab.BLL
         /// </summary>
         private readonly GoodsDal goodsDal;
 
-        private readonly UserDal userDal;
 
-
-       public ReplenishBll()
+        public ReplenishBll()
 		{
 			replenishDal = ReplenishDal.GetInstance();
 			goodsChageOrderDal = GoodsChangeOrderDal.GetInstance();
@@ -187,7 +186,7 @@ namespace CFLMedCab.BLL
                     status =(int)RPOStatusType.待完成
                 });
 
-                replenishDal.InsertReplenishSubOrder(new ReplenishSubOrder
+                int rsoId = replenishDal.InsertReplenishSubOrder(new ReplenishSubOrder
                 {
                     code = "RSO-TEST-001",
                     create_time = DateTime.Now,
@@ -195,10 +194,18 @@ namespace CFLMedCab.BLL
                     status = (int)RSOStatusType.待上架
                 });
 
-                //List<GoodsDto> goos
+                List<GoodsDto> goodsList = goodsDal.GetGoodsDto(list);
 
+                List<ReplenishSubOrderdtl> rsoDtls = goodsList.MapToListIgnoreId<GoodsDto, ReplenishSubOrderdtl>();
+
+                rsoDtls.ForEach(item =>
+                {
+                    item.replenish_sub_orderid = rsoId;
+                    item.status = (int)RSOStatusType.待上架;
+                });
+
+                replenishDal.InsertReplenishSubOrderDetails(rsoDtls);
             }
         }
-
     }
 }

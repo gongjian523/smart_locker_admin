@@ -171,9 +171,9 @@ namespace CFLMedCab.DAL
         /// </summary>
         /// <param name="po">上架工单</param>
         /// <returns></returns>
-        public string InsertReplenishSubOrder(ReplenishSubOrder rso)
+        public int InsertReplenishSubOrder(ReplenishSubOrder rso)
         {
-            return Db.Insertable<ReplenishSubOrder>(rso).ExecuteReturnEntity().code;
+            return Db.Insertable<ReplenishSubOrder>(rso).ExecuteReturnEntity().id;
         }
 
         /// <summary>

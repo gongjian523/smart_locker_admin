@@ -902,6 +902,7 @@ namespace CFLMedCab
         {
             test.InitGoodsInfo();
             test.InitUsersInfo();
+            test.InitReplenishOrders();
 
 #if TESTENV
             LoginBkView.Visibility = Visibility.Hidden;
