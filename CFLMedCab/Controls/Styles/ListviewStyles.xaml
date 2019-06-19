@@ -36,12 +36,20 @@
         <Setter Property="ScrollViewer.PanningMode" Value="Both"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
         <Setter Property="AlternationCount" Value="2"/>
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="OverridesDefaultStyle" Value="True"/>
+        <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListView}">
-                    <ScrollViewer Padding="{TemplateBinding Padding}" Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
+                    <Border Name="Border" BorderThickness="1"  CornerRadius="{StaticResource GRadius}">
+                        <Border.BorderBrush>
+                            <SolidColorBrush Color="#C1C1C1" />
+                        </Border.BorderBrush>
+                        <ScrollViewer Padding="{TemplateBinding Padding}" Style="{DynamicResource {x:Static GridView.GridViewScrollViewerStyleKey}}">
                         <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
                     </ScrollViewer>
+                    </Border>
                     <ControlTemplate.Triggers>
                         <MultiTrigger>
                             <MultiTrigger.Conditions>
@@ -50,18 +58,18 @@
                             </MultiTrigger.Conditions>
                             <Setter Property="ScrollViewer.CanContentScroll" Value="false"/>
                         </MultiTrigger>
-                        
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
     <Style TargetType="{x:Type ListViewItem}">
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="Template" >
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                    <Border x:Name="Bd" BorderBrush="{StaticResource AlternationColor}"  BorderThickness="1,0,1,1" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
-                        <GridViewRowPresenter VerticalAlignment="Center"  Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                    <Border x:Name="Bd" BorderBrush="{StaticResource AlternationColor}"  BorderThickness="0,0,0,1" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="True">
+                        <GridViewRowPresenter VerticalAlignment="Center"  Content="{TemplateBinding Content}" HorizontalAlignment="Center" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="ListBox.AlternationIndex" Value="1">
@@ -69,13 +77,9 @@
                         </Trigger>
                         <Trigger Property="IsSelected" Value="True">
                             <Setter Property="Background" Value="{StaticResource SelectedColor}"/>
-                            <!--<Setter Property="BorderThickness" TargetName="Bd" Value="2"></Setter>-->
-                            <!--<Setter Property="BorderBrush" TargetName="Bd" Value="#FF866C"></Setter>-->
                         </Trigger>
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter Property="Background" Value="{StaticResource MouseOverColor}"/>
-                            <!--<Setter Property="BorderThickness" TargetName="Bd" Value="2"></Setter>
-                            <Setter Property="BorderBrush" TargetName="Bd" Value="#FFEAE4"></Setter>-->
                         </Trigger>
                         <Trigger Property="Height" Value="Auto">
                             <Setter Property="MinHeight" Value="35" />
@@ -358,5 +362,4 @@
             </Trigger>
         </Style.Triggers>
     </Style>
-
 </ResourceDictionary>
