@@ -13,7 +13,7 @@ namespace CFLMedCab.Converter
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if ((InventoryType)value == InventoryType.Auto)
-                return "手工盘点";
+                return "自动盘点";
             else
                 return "人工盘点";
         }

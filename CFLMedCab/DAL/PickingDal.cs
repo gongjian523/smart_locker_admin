@@ -5,6 +5,7 @@ using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -79,7 +80,7 @@ namespace CFLMedCab.DAL
 					status = pso.status,
 					distribute_time = po.create_time,
 					picked_goods_num = SqlFunc.Subqueryable<PickingSubOrderdtl>()
-													  .Where(itsub => itsub.picking_sub_orderid == pso.id && itsub.status == 0)
+													  .Where(itsub => itsub.picking_sub_orderid == pso.id && itsub.status == (int)RPOStatusType.待完成)
 													  .Count()
 				});
 
@@ -141,13 +142,26 @@ namespace CFLMedCab.DAL
 			var result = Db.Ado.UseTran(() =>
 			{
 				Db.Updateable(pickingSubOrderdtlDtos.MapToList<PickingSubOrderdtlDto, PickingSubOrderdtl>()).ExecuteCommand();
-				if (!pickingSubOrderdtlDtos.Exists(it => it.status == 0))
+			
+				int currentStatus;
+
+				if (!pickingSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.待完成))
 				{
-					Db.Updateable<ReplenishSubOrder>()
-					.SetColumns(it => new ReplenishSubOrder() { status = 1 })
+					currentStatus = (int)PSOStatusType.已拣货;
+				}
+				if (!pickingSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.已完成))
+				{
+					currentStatus = (int)PSOStatusType.待拣货;
+				}
+				else
+				{
+					currentStatus = (int)PSOStatusType.部分拣货;
+				}
+
+				Db.Updateable<ReplenishSubOrder>()
+					.SetColumns(it => new ReplenishSubOrder() { status = currentStatus })
 					.Where(it => it.id == pickingSubOrderid)
 					.ExecuteCommand();
-				}
 
 			});
 
@@ -156,5 +170,35 @@ namespace CFLMedCab.DAL
 		}
 
 
-	}
+        /// <summary>
+        /// 生成拣货单号
+        /// </summary>
+        /// <param name="po">拣货单</param>
+        /// <returns></returns>
+        public string InsertPickingOrder(PickingOrder po)
+        {
+            return Db.Insertable(po).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成拣货单工号
+        /// </summary>
+        /// <param name="po">拣货工单</param>
+        /// <returns></returns>
+        public string InsertPickingSubOrder(PickingSubOrder po)
+        {
+            return Db.Insertable(po).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成拣货单号详情
+        /// </summary>
+        /// <param name="psodtlList">拣货工单</param>
+        /// <returns></returns>
+        public void InsertPickingSubOrderDetails(List<PickingSubOrderdtl> psodtlList)
+        {
+            Db.Insertable(psodtlList).ExecuteCommand();
+        }
+
+    }
 }

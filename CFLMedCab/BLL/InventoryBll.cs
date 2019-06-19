@@ -35,7 +35,7 @@ namespace CFLMedCab.BLL
         /// <summary>
 		/// 新增盘点记录
 		/// </summary>
-        public int NewInventory(InventoryType type)
+        public void NewInventory(List<GoodsDto> list,  InventoryType type)
         {
 
             InventoryOrder inventoryOrder = new InventoryOrder();
@@ -62,7 +62,9 @@ namespace CFLMedCab.BLL
 
             //生成记录
 
-            return inventoryDal.NewInventory(inventoryOrder);
+            int id =  inventoryDal.NewInventory(inventoryOrder);
+
+            InsertInventoryDetails(list, id);
         }
 
         /// <summary>

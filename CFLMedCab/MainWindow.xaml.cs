@@ -53,12 +53,17 @@ namespace CFLMedCab
 
         private InventoryBll inventoryBll = new InventoryBll();
         private GoodsBll goodsBll = new GoodsBll();
+        private UserBll userBll = new UserBll();
 
         private int cabClosedNum;
+
+        private TestGoods test = new TestGoods();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            MockData();
 
             DataContext = this;
 
@@ -78,31 +83,9 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 
-
-			//App.Current.Dispatcher.Invoke((Action)(() =>
-			//{
-			//    PopFrame.Visibility = Visibility.Hidden;
-			//    MaskView.Visibility = Visibility.Hidden;
-
-			//        LoginBkView.Visibility = Visibility.Hidden;
-			//}));
-
-			//bool isGetSuccess;
-
-			//Hashtable cur =  RfidHelper.GetEpcData(out isGetSuccess);
-			//ApplicationState.SetValue((int)ApplicationKey.CurGoods, cur);//读取机柜内当前的商品编码
-
-			//var testData = new ReplenishBll().GetReplenishSubOrderDto(new APO.BasePageDataApo {
-			//	PageIndex = 1,
-			//	PageSize = 2
-			//});
-
-            Test();
-
             ConsoleManager.Show();
         }
 
-        
         private void onInventoryTimer(object sender, EventArgs e)
         {
             List <InventoryPlan> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
@@ -115,18 +98,13 @@ namespace CFLMedCab
 
                 TimeSpan timeSpan = date2 - date1;
 
-                if (timeSpan.TotalMinutes < 1)
+                if (timeSpan.TotalMinutes < 1 && timeSpan.TotalMinutes > 0 )
                 {
                     bool isGetSuccess;
                     Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-                    //Hashtable ht = new Hashtable();
-                    //HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
-                    //ht.Add("COM1", hs1);
-
                     List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
-                    int id = inventoryBll.NewInventory(InventoryType.Auto);
-                    inventoryBll.InsertInventoryDetails(list, id);
+                    inventoryBll.NewInventory(list,InventoryType.Auto);
 
                     return;
                 }
@@ -150,7 +128,6 @@ namespace CFLMedCab
             if (e.LoginState == 0)
             {
                 Console.WriteLine("onLoginInfoHidenEvent");
-                vein.Close();
                 vein.ChekVein();
             }
         }
@@ -175,10 +152,7 @@ namespace CFLMedCab
                 }
                 else
                 {
-                    //UserBll userBll = new UserBll();
-                    //User user = userBll.GetUserByVeinId(id);
-                    UserDal userDal = new UserDal();
-                    User user = userDal.GetUserByVeinId(id);
+                    User user = userBll.GetUserByVeinId(id);
 
                     //本地数据库中没有查询到此次指静脉信息
                     if (user == null)
@@ -214,9 +188,7 @@ namespace CFLMedCab
             else
             {
                 Console.WriteLine("onReceivedDataVein");
-                vein.Close();
                 vein.ChekVein();
-
             }
 
         }
@@ -250,7 +222,6 @@ namespace CFLMedCab
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
 
-#if RELEASE
             List<string> com = ComName.GetAllLockerCom();
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
@@ -260,7 +231,6 @@ namespace CFLMedCab
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
 
             cabClosedNum = 0;
-#endif
         }
 
         /// <summary>
@@ -305,10 +275,17 @@ namespace CFLMedCab
         {
             GerFetchState gerFetchState = new GerFetchState(1);
             ContentFrame.Navigate(gerFetchState);
-#if REALEASE
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+
+
+            List<string> com = ComName.GetAllLockerCom();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
-#endif
+
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+
+            cabClosedNum = 0;
         }
 
         /// <summary>
@@ -322,6 +299,13 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
+
+            if (cabClosedNum == 0)
+            {
+                cabClosedNum++;
+                return;
+            }
+
             Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
             
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -700,22 +684,16 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopInventory(object sender, System.EventArgs e)
         {
-            //bool isGetSuccess;
-            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            //Hashtable ht = new Hashtable();
-            //HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
-            //ht.Add("COM1", hs1);
-            //HashSet<string> hs4 = new HashSet<string> { "E20000176012028219504DAD", "E20000176012026619504D8D", "E20000176012026319404F98", "E20000176012028019504DA0", "E20000176012026519504D85" };
-            //ht.Add("COM4", hs4);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
-            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            inventoryBll = new InventoryBll();
+            goodsBll = new GoodsBll();
 
-            //InventoryBll inventoryBll = new InventoryBll();
-            //GoodsBll goodsBll = new GoodsBll();
-            //List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
-            //int id = inventoryBll.NewInventory(InventoryType.Manual);
-            //inventoryBll.InsertInventoryDetails(list, id);
+            List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+            inventoryBll.NewInventory(list, InventoryType.Manual);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -885,7 +863,6 @@ namespace CFLMedCab
 
                 LoginBkView.Visibility = Visibility.Visible;
 
-                vein.Close();
                 vein.ChekVein();
             }));
         }
@@ -920,21 +897,20 @@ namespace CFLMedCab
 
 
 #region test
-        private void Test()
-        {
-            TestGoods test = new TestGoods();
-            test.AddGoodTest();
- 
-            User user = new User
-            {
-                id = 1111,
-                name = "Nathan",
-                vein_id = 12323,
-            };
-            ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
 
+        private void MockData()
+        {
+            test.InitGoodsInfo();
+            test.InitUsersInfo();
+
+#if TESTENV
+            LoginBkView.Visibility = Visibility.Hidden;
+        
+            User user = userBll.GetTestUser();        
+            ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
+#endif
         }
- 
+
 
         private void TestLocker(object sender, ElapsedEventArgs e)
         {

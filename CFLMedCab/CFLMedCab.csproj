@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
@@ -207,6 +207,7 @@
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
+    <Compile Include="Model\Enum\RPCommanEnum.cs" />
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />
     <Compile Include="Model\LoginStatus.cs" />
