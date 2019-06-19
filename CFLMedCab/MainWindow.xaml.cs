@@ -80,7 +80,7 @@ namespace CFLMedCab
             ShowTimer.Start();
 
             InventoryTimer = new DispatcherTimer();
-            InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer一直获取当前时间
+            InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer, 每分钟检查是否有扫描计划
             InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
             InventoryTimer.Start();
 
@@ -550,7 +550,8 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
         {
-            Hashtable ht = new Hashtable();
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
             ReplenishSubOrderDto replenishSubOrderDto = testRSOPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -988,12 +989,24 @@ namespace CFLMedCab
 
             TestGoods testGoods = new TestGoods();
             testGoods.GetCurrentRFid();
+#else
+            Timer iniGoodstimer = new Timer(1000);
+            iniGoodstimer.AutoReset = false;
+            iniGoodstimer.Enabled = true;
+            iniGoodstimer.Elapsed += new ElapsedEventHandler(onInitGoods);
 #endif
-
             test.InitReplenishOrder();
             test.InitPickingOrder();
         }
 
+
+        private void onInitGoods(object sender, EventArgs e)
+        {
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            Console.WriteLine("1111111111");
+        }
 
         private void TestLocker(object sender, ElapsedEventArgs e)
         {
