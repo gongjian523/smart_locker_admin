@@ -223,7 +223,7 @@ namespace CFLMedCab.DAL
 			totalCount = 0;
 			List<SurgeryOrderdtlDto> data;
 
-			//查询语句(查询出手术单待领用的耗材，已领用好的不显示)
+			//查询语句(查询全部出手术单待领用的耗材)
 			var queryable = Db.Queryable<SurgeryOrderdtl>()
 				.Where(it => it.surgery_order_code == pageDataApo.SurgeryOrderCode)
 				.Select<SurgeryOrderdtlDto>();
