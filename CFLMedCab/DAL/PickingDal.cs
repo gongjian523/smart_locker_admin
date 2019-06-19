@@ -156,5 +156,35 @@ namespace CFLMedCab.DAL
 		}
 
 
-	}
+        /// <summary>
+        /// 生成拣货单号
+        /// </summary>
+        /// <param name="po">拣货单</param>
+        /// <returns></returns>
+        public string InsertPickingOrder(PickingOrder po)
+        {
+            return Db.Insertable<PickingOrder>(po).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成拣货单工号
+        /// </summary>
+        /// <param name="po">拣货工单</param>
+        /// <returns></returns>
+        public string InsertPickingSubOrder(PickingSubOrder po)
+        {
+            return Db.Insertable<PickingSubOrder>(po).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成拣货单号详情
+        /// </summary>
+        /// <param name="psodtlList">拣货工单</param>
+        /// <returns></returns>
+        public void InsertPickingSubOrderDetails(List<PickingSubOrderdtl> psodtlList)
+        {
+            Db.Insertable<PickingSubOrderdtl>(psodtlList).ExecuteCommand();
+        }
+
+    }
 }

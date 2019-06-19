@@ -207,6 +207,7 @@
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
+    <Compile Include="Model\Enum\RPCommanEnum.cs" />
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />
     <Compile Include="Model\LoginStatus.cs" />

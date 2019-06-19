@@ -216,6 +216,4 @@ namespace CFLMedCab.Model.Enum
 	
 	}
 
-
-
 }

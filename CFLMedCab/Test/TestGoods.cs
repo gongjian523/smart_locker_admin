@@ -15,7 +15,8 @@ namespace CFLMedCab.Test
     {
         private GoodsBll goodsBll = new GoodsBll();
         private UserBll userBll = new UserBll();
-
+        private ReplenishBll replenishBll = new ReplenishBll();
+        private PickingBll pickingBll = new PickingBll();
 
         public Hashtable  GetCurrentRFid()
         {
@@ -70,7 +71,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 1, 2),
                     valid_period = 180,
                     expire_date = new DateTime(2019, 7, 2),
-                    position = "Z1",
+                    position = "CAB1-1",
                     remarks = ""
                 },
                 new Goods
@@ -82,7 +83,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 2, 2),
                     valid_period = 180,
                     expire_date = new DateTime(2019, 8, 2),
-                    position = "Z1",
+                    position = "CAB1-1",
                     remarks = ""
                 },
                 new Goods
@@ -94,7 +95,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 3, 2),
                     valid_period = 180,
                     expire_date = new DateTime(2019, 9, 2),
-                    position = "Z1",
+                    position = "CAB1-1",
                     remarks = ""
                 },
                 new Goods
@@ -106,7 +107,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 2, 12),
                     valid_period = 90,
                     expire_date = new DateTime(2019, 5, 12),
-                    position = "Z1",
+                    position = "CAB1-2",
                     remarks = ""
                 },
                 new Goods
@@ -118,7 +119,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 3, 12),
                     valid_period = 90,
                     expire_date = new DateTime(2019, 6, 12),
-                    position = "Z1",
+                    position = "CAB1-2",
                     remarks = ""
                 },
                 new Goods
@@ -130,7 +131,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 4, 12),
                     valid_period = 90,
                     expire_date = new DateTime(2019, 7, 12),
-                    position = "Z1",
+                    position = "CAB1-2",
                     remarks = ""
                 },
                 new Goods
@@ -142,7 +143,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 1, 2),
                     valid_period = 30,
                     expire_date = new DateTime(2019, 2, 2),
-                    position = "Z1",
+                    position = "CAB2-1",
                     remarks = ""
                 },
                 new Goods
@@ -154,7 +155,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 1, 12),
                     valid_period = 30,
                     expire_date = new DateTime(2019,2, 12),
-                    position = "Z1",
+                    position = "2-1",
                     remarks = ""
                 },
                 new Goods
@@ -166,7 +167,7 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 2, 2),
                     valid_period = 60,
                     expire_date = new DateTime(2019, 4, 2),
-                    position = "Z1",
+                    position = "CAB2-2",
                     remarks = ""
                 },
                  new Goods
@@ -178,12 +179,32 @@ namespace CFLMedCab.Test
                     birth_date = new DateTime(2019, 3, 2),
                     valid_period = 60,
                     expire_date = new DateTime(2019, 4, 2),
-                    position = "Z1",
+                    position = "CAB2-2",
                     remarks = ""
                 },
             };
 
             goodsBll.InsertGood(goods);
         }
+
+        public void InitReplenishOrders()
+        {
+            Hashtable ro1 = new Hashtable();
+            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70"};
+            HashSet<string> hs2 = new HashSet<string> { "E20000176012028119504DA5", "E20000176012023919504D48", "E20000176012028219504DAD" };
+            ro1.Add("RO-TEST-001", hs1);
+            ro1.Add("RO-TEST-001", hs2);
+            replenishBll.InitReplenshOrder(ro1);
+
+            Hashtable ro2 = new Hashtable();
+            HashSet<string> hs3 = new HashSet<string> { "E20000176012026619504D8D", "E20000176012026319404F98"};
+            HashSet<string> hs4 = new HashSet<string> { "E20000176012028019504DA0", "E20000176012026519504D85"};
+
+            ro2.Add("RO-TEST-002", hs3);
+            ro2.Add("RO-TEST-002", hs4);
+            replenishBll.InitReplenshOrder(ro2);
+        }
+
+
     }
 }

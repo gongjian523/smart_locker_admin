@@ -3,7 +3,11 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -121,8 +125,6 @@ namespace CFLMedCab.BLL
 			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
 		}
 
-
-
 		/// <summary>
 		/// 确认时，修改工单数据
 		/// </summary>
@@ -160,5 +162,34 @@ namespace CFLMedCab.BLL
 
 		}
 
-	}
+        /// <summary>
+        /// 模拟补货单 
+        /// </summary>
+        /// <param name="rfid">单品码的RFID</param>
+        /// <returns></returns>
+        public void InitReplenshOrder(Hashtable rfid)
+        {
+            foreach(HashSet<string> list in rfid.Values)
+            {
+                replenishDal.InsertReplenishOrder(new ReplenishOrder {
+                    code = "RO-TEST-001",
+                    create_time = DateTime.Now,
+                    principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+                    status =(int)RPOStatusType.待完成
+                });
+
+                replenishDal.InsertReplenishSubOrder(new ReplenishSubOrder
+                {
+                    code = "RSO-TEST-001",
+                    create_time = DateTime.Now,
+                    replenish_order_code = "RO-TEST-001",
+                    status = (int)RSOStatusType.待上架
+                });
+                
+                
+
+            }
+        }
+
+    }
 }

@@ -155,7 +155,36 @@ namespace CFLMedCab.DAL
 			return result.IsSuccess;
 
 		}
-		
 
-	}
+        /// <summary>
+        /// 生成上架单号
+        /// </summary>
+        /// <param name="po">上架单</param>
+        /// <returns></returns>
+        public string InsertReplenishOrder(ReplenishOrder ro)
+        {
+            return Db.Insertable<ReplenishOrder>(ro).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成上架单工号
+        /// </summary>
+        /// <param name="po">上架工单</param>
+        /// <returns></returns>
+        public string InsertReplenishSubOrder(ReplenishSubOrder rso)
+        {
+            return Db.Insertable<ReplenishSubOrder>(rso).ExecuteReturnEntity().code;
+        }
+
+        /// <summary>
+        /// 生成上架单号详情
+        /// </summary>
+        /// <param name="psodtlList">上架工单</param>
+        /// <returns></returns>
+        public void InsertReplenishSubOrderDetails(List<ReplenishSubOrderdtl> rsodtlList)
+        {
+            Db.Insertable<ReplenishSubOrderdtl>(rsodtlList).ExecuteCommand();
+        }
+
+    }
 }
