@@ -72,7 +72,7 @@
                 <Grid Grid.Column="2" x:Name="Column3"/>
                 <Label Style="{StaticResource lblTitle1}" Content="盘点计划：" VerticalContentAlignment="Center" Grid.Column="0" />
                 <TextBox  x:Name="planInputTb"  Text="请输入盘点时间，如 19：00" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}" />
-                <Button Style="{StaticResource AddButton}" Content="新增盘点计划" Grid.Column="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Width="75" Margin="30 5" Click="onAddPlan"/>
+                <Button Style="{StaticResource AddButton}" Content="新增盘点计划" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Top" Click="onAddPlan"/>
             </Grid>
             <Button Style="{StaticResource CommonYesButton}" Content="保存"  Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" Click="onSave" Margin="0,5,30,5"/>
             <Button Style="{StaticResource CommonNoButton}" Content="取消 " Grid.Column="1" Grid.Row="3" HorizontalAlignment="Left" Click="onCancel" Margin="30,5,0,5"/>
