@@ -69,7 +69,7 @@
                         </StackPanel>
                     </Border>
                     <ListView  Grid.Row="1"   ItemsSource="{Binding}" Name="listView" 
-                              Style="{StaticResource DefaultListView }" Margin="0,10,0,0">
+                              Style="{StaticResource DefaultListView }">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="商品码"  Width="{Binding ElementName=column1,Path=ActualWidth}">
