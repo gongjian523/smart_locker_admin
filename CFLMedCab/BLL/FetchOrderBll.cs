@@ -164,17 +164,8 @@ namespace CFLMedCab.BLL
 				else if (it.operate_type == (int)OperateType.出库)
 				{
 					it.operate_type_description = OperateType.出库.ToString();
-
-					if (it.fetch_type == (int)RequisitionAttribute.无单领用)
-					{
-						it.exception_flag = (int)ExceptionFlag.正常;
-					}
-					else
-					{
-						it.exception_flag = (int)ExceptionFlag.异常;
-						it.exception_flag_description = ExceptionFlag.异常.ToString();
-						it.exception_description = ExceptionDescription.领用属性与业务类型冲突.ToString();
-					}
+					//手术领用，均是正常
+					it.exception_flag = (int)ExceptionFlag.正常;
 				}
 			});
 
@@ -189,7 +180,7 @@ namespace CFLMedCab.BLL
 
 		#endregion
 
-		#region 手术领用有单业务
+		#region 手术有单领用业务
 
 		/// <summary>
 		/// 根据手术单号查询对应手术单号
