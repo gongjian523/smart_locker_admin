@@ -80,7 +80,7 @@
                                 <GridViewColumn Header="商品名称" Width="{Binding ElementName=column1,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding name}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=name}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -88,7 +88,7 @@
                                 <GridViewColumn Header="商品码" Width="{Binding ElementName=column2,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding goods_code}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=goods_code}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -102,28 +102,28 @@
                                 <GridViewColumn Header="需求数量"  Width="{Binding ElementName=column4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_num}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=fetch_num}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="待领用数量"  Width="{Binding ElementName=column5,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding not_fetch_num}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=not_fetch_num}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stock_num}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=stock_num}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="备注" Width="{Binding ElementName=column7,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding remarks}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=remarks}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
