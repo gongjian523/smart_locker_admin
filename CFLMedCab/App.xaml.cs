@@ -20,6 +20,13 @@ namespace CFLMedCab
         protected override void OnStartup(StartupEventArgs e)
         {
             base.OnStartup(e);
+            User user = new User
+            {
+                id = 1111,
+                name = "Nathan",
+                vein_id = 12323,
+            };
+            ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
         }
     }
 }

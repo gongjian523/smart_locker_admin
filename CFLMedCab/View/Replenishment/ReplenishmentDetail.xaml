@@ -9,7 +9,8 @@
              d:DesignHeight="600" d:DesignWidth="900">
     <UserControl.Resources>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
-    </UserControl.Resources>    <Border Style="{StaticResource CommonBlueBorder}">
+    </UserControl.Resources>
+    <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
@@ -69,17 +70,58 @@
                     <ListView Grid.Row="1" ItemsSource="{Binding}" Name="listView"
                               Style="{StaticResource DefaultListView}"
                               ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                              Margin="0,10,0,0"
                               >
                         <ListView.View>
                             <GridView>
-                                <GridViewColumn Header="商品码" DisplayMemberBinding="{Binding goods_code}"  Width="{Binding ElementName=column1,Path=ActualWidth}"/>
-                                <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding name}"  Width="{Binding ElementName=column2,Path=ActualWidth}" />
-                                <GridViewColumn Header="单品码" DisplayMemberBinding="{Binding code}" Width="{Binding ElementName=column3,Path=ActualWidth}"/>
-                                <GridViewColumn Header="货位" DisplayMemberBinding="{Binding position}" Width="{Binding ElementName=column4,Path=ActualWidth}"/>
-                                <GridViewColumn Header="失效期" DisplayMemberBinding="{Binding expire_date,StringFormat='{}{0:yyyy-MM-dd}'}" Width="{Binding ElementName=column5,Path=ActualWidth}"/>
-                                <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
-                                <GridViewColumn Header="备注" DisplayMemberBinding="{Binding remarks}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="商品码" Width="{Binding ElementName=column1,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding goods_code}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column2,Path=ActualWidth}" >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding name}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="单品码"  Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="货位" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding position}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="失效期"  Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_date,StringFormat='{}{0:yyyy-MM-dd}'}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="领用属性"  Width="{Binding ElementName=column6,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="备注" Width="{Binding ElementName=column7,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=remarks}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>

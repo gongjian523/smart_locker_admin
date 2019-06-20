@@ -50,7 +50,7 @@ namespace CFLMedCab.View.Fetch
             List<GoodsDto> goodsChageOrderdtls = new List<GoodsDto>();
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
-            List<GoodsDto> goodDtos = goodsBll.GetCompareSimpleGoodsDto(before, hashtable);//获取关柜之后的库存变化信息
+            List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);//获取关柜之后的库存变化信息
             goodsChageOrderdtls = fetchOrderBll.GetGoBackFetchOrderdtlOperateDto(goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsChageOrderdtls;
             returnNum.Content = operateGoodsNum;

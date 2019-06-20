@@ -73,6 +73,22 @@ namespace CFLMedCab.DAL
                 .ToList();
         }
 
+
+        /// <summary>
+        /// 根据商品码集合获取完整商品属性集合
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodsDto> GetGoodsDto(string goodsCode)
+        {
+            //查询语句
+            return Db.Queryable<Goods>()
+                .Where(it => it.goods_code==goodsCode)
+                .OrderBy(it => it.expire_date, OrderByType.Asc)
+                .Select<GoodsDto>()
+                .ToList();
+        }
+
+
         /// <summary>
         /// 根据集合获取符合条件的商品属性集合
         /// </summary>

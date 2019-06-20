@@ -65,8 +65,8 @@ namespace CFLMedCab.View.Fetch
             //组装变化信息的异常情况
             goodsChageOrderdtls = fetchOrderBll.GetSurgeryGoodsOperateDto(goodsChageOrderdtls, model.code, out int currentOperateNum, out int storageOperateExNum, out int notStorageOperateExNum);
             //手术领用详细单变化信息
-            surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode= model.code, OperateGoodsDtos= goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
-            listView.DataContext = surgeryOrderdtlDtos;//手术领用详细单变化信息绑定
+            surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode = model.code, OperateGoodsDtos = goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
+            listView.DataContext = surgeryOrderdtlDtos.Where(it => it.not_fetch_num > 0);//手术领用详细单变化信息绑定
             listView1.DataContext = goodsChageOrderdtls;
             inNum.Content = currentOperateNum;//领用数
             abnormalInNum.Content = storageOperateExNum;//异常入库

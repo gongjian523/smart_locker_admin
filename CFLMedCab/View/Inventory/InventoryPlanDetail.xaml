@@ -40,13 +40,25 @@
                 <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                     <ListView.View>
                         <GridView>
-                            <GridViewColumn Header="编号" DisplayMemberBinding="{Binding Path=code}"  Width="{Binding ElementName=column1,Path=ActualWidth}" />
-                            <GridViewColumn Header="盘点时间" DisplayMemberBinding="{Binding Path=inventorytime_str}" Width="{Binding ElementName=column2,Path=ActualWidth}"/>
+                            <GridViewColumn Header="编号"  Width="{Binding ElementName=column1,Path=ActualWidth}" >
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=code}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="盘点时间" Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=inventorytime_str}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                             <GridViewColumn Header="状态"  Width="{Binding ElementName=column3,Path=ActualWidth}" >
 
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
-                                        <Grid  >
+                                        <Grid HorizontalAlignment="Center">
                                             <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding status,  Converter={StaticResource InventoryPlanSwitchStaConverter}}"  HorizontalAlignment="Center"/>
                                             <!--<CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}" Content="{Binding ElementName=Checker1,Path=IsChecked}"   IsChecked="{Binding status}"  />-->
                                         </Grid>

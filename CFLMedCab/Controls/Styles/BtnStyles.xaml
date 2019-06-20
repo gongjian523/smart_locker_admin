@@ -218,7 +218,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Grid >
-                        <Border x:Name="RightBorder" Grid.Column="1" CornerRadius="15" Height="30" Width="88">
+                        <Border x:Name="RightBorder" Grid.Column="1" CornerRadius="15" Height="30" Width="88" Background="#E1E1E1">
                             <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="Black"></Label>
                         </Border>
                     </Grid>
@@ -248,7 +248,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="RadioButton">
                     <Grid >
-                        <Border x:Name="RightBorder" Grid.Column="1" CornerRadius="15" Height="30" Width="123" Background="#E1E1E1">
+                        <Border x:Name="RightBorder" Grid.Column="1" CornerRadius="15" Height="30" Width="130" Background="#E1E1E1">
                             <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Foreground="Black"></Label>
                         </Border>
                     </Grid>
@@ -406,6 +406,31 @@
                         <Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="RightBorder" Property="Background" Value="{x:Null}" />
                             <Setter TargetName="RightLabel" Property="Foreground" Value="#FD854E" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="ListButton" TargetType="{x:Type Button}">
+        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="VerticalAlignment" Value="Stretch"/>
+        <Setter Property="Margin" Value="0 5"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid HorizontalAlignment="Left">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" Width="auto"  Background="{x:Null}">
+                            <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}"  Foreground="#FF0C80F3"></Label>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="RightBorder" Property="Background" Value="{x:Null}" />
+                            <Setter TargetName="RightLabel" Property="Foreground" Value="#FF0C80F3" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

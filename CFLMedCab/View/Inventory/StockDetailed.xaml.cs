@@ -30,9 +30,7 @@ namespace CFLMedCab.View.Inventory
         public StockDetailed(GoodDto goodDto)
         {
             InitializeComponent();
-            HashSet<string> code = new HashSet<string>();
-            code.Add(goodDto.goods_code);
-            listView.DataContext= goodsBll.GetInvetoryGoodsDto(code);
+            listView.DataContext= goodsBll.GetGoodsDto(goodDto.goods_code);
         }
 
         /// <summary>

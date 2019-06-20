@@ -34,6 +34,8 @@ namespace CFLMedCab.View
         public Stock()
         {
             InitializeComponent();
+            stockquery.IsChecked = true;
+            condition.IsChecked = true;
             queryData(this, null);
         }
 
@@ -44,7 +46,6 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void queryData(object sender, RoutedEventArgs e)
         {
-            int totalCount;
             if (this.stockSnapshot.IsChecked == true)
             {
                 GetGoodApo getGoodApo = new GetGoodApo();
@@ -57,7 +58,8 @@ namespace CFLMedCab.View
                 getGoodApo.goodsEpsDatas = goodsEpsHashSetDatas;
                 getGoodApo.code = goods_code.Text == "输入商品编码" ? "" : goods_code.Text;
                 getGoodApo.name = goods_name.Text == "输入商品名称" ? "" : goods_name.Text;
-                listView.DataContext = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
+                listView.DataContext = goodsBll.GetStockGoodsDto(getGoodApo, out int totalCount);
+                totalNum.Content = goodsEpsHashSetDatas.Count;
             }
             if (this.validity.IsChecked == true)
             {
@@ -75,9 +77,9 @@ namespace CFLMedCab.View
                 if (single3.IsChecked == true)
                     getGoodsApo.expire_date = DateTime.Now.AddMonths(3);
                 getGoodsApo.goodsEpsDatas = goodsEpsHashSetDatas;
-                getGoodsApo.name = goods_name1.Text ==  "输入商品名称" ? "" : goods_name1.Text;
+                getGoodsApo.name = goods_name1.Text == "输入商品名称" ? "" : goods_name1.Text;
                 getGoodsApo.code = goods_code1.Text == "输入商品编码" ? "" : goods_code1.Text;
-                listView1.DataContext = goodsBll.GetValidityGoodsDto(getGoodsApo, out totalCount);
+                listView1.DataContext = goodsBll.GetValidityGoodsDto(getGoodsApo, out int totalCount);
             }
             else if (this.stock.IsChecked == true)
             {
@@ -87,7 +89,7 @@ namespace CFLMedCab.View
                 else if (this.inStock.IsChecked == true)
                     goodsChangeApo.operate_type = 1;
                 goodsChangeApo.name = goods_name2.Text == "输入商品名称" ? "" : goods_name2.Text;
-                listView2.DataContext = goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out totalCount);
+                listView2.DataContext = goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out int totalCount);
             }
         }
 
@@ -138,6 +140,8 @@ namespace CFLMedCab.View
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Visible;
             Content2.Visibility = Visibility.Hidden;
+
+            All.IsChecked = true;
             queryData(this, null);
         }
 
@@ -156,6 +160,8 @@ namespace CFLMedCab.View
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Hidden;
             Content2.Visibility = Visibility.Visible;
+
+            outStock.IsChecked = true;
             queryData(this, null);
         }
 
