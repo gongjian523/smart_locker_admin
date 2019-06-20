@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              xmlns:local="clr-namespace:CFLMedCab.View.Inventory"
-             mc:Ignorable="d" Width="720" Height="540" >
+             mc:Ignorable="d" Width="1200" Height="600" >
     <UserControl.Resources>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
     </UserControl.Resources>

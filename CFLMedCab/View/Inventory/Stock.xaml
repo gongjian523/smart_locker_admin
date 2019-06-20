@@ -28,12 +28,12 @@
             <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
-                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Name="stockSnapshotQuery">
                         <RadioButton Name="stockquery"  Content="库存快照" FontSize="22" GroupName="stockquery" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" VerticalAlignment="Top" Click="StockSnapshot"/>
-                        <RadioButton Name="condition"  Margin="120 -30" FontSize="22" Content="条件查询" GroupName="condition" IsChecked="True" Style="{DynamicResource CircularNavButton}" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="ConditionQuery" />
+                        <RadioButton Name="condition"  Margin="120 -30" FontSize="22" Content="条件查询" GroupName="condition" IsChecked="True" Style="{DynamicResource SingleNavButton}" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="ConditionQuery" />
                     </StackPanel>
                     <StackPanel Grid.Row="0" Name="validityQuery" Visibility="Hidden">
                         <RadioButton GroupName="single" Grid.Row="0" Name="All" Content="全部" FontSize="22" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" VerticalAlignment="Top"/>
@@ -45,8 +45,8 @@
                         <RadioButton GroupName="single" Grid.Row="0" Name="outStock" Style="{DynamicResource SingleNavButton}" IsChecked="True" HorizontalAlignment="Left" VerticalAlignment="Top" Content="出库" FontSize="22"/>
                         <RadioButton GroupName="single" Grid.Row="0" Name="inStock"  Style="{DynamicResource SingleNavButton}" Margin="160 -30" HorizontalAlignment="Left" VerticalAlignment="Top" Content="入库" FontSize="22"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Name="goodsCode" Visibility="Hidden" Height="30" Width="255" HorizontalAlignment="Left" VerticalAlignment="Center" >
-                        <ComboBox x:Name="goods_code">
+                    <StackPanel Grid.Row="1" Name="goodsCode" Visibility="Hidden" Width="255" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                        <ComboBox x:Name="goods_code" Height="30" >
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -59,13 +59,14 @@
                     </StackPanel>
                     <!--<TextBox Grid.Row="1" HorizontalAlignment="Left" Name="operating_time" Visibility="Hidden" Width="255"  TextWrapping="Wrap" Text="操作时间" VerticalAlignment="Top" Foreground="#999999" FontWeight="Bold" FontSize="14"/>-->
                     <!--<Calendar  HorizontalAlignment="Left" VerticalAlignment="Top" Name="operating_time" Visibility="Hidden" DisplayMode="Month" SelectionMode="SingleRange"/>-->
-                    <StackPanel Grid.Row="1" Name="operating_time" Visibility="Hidden">
+                    <StackPanel Grid.Row="1" Name="operating_time" Visibility="Hidden" Height="40">
+                        
                         <DatePicker Height="30" Name="startTime" Margin="0 4" HorizontalAlignment="Left" VerticalAlignment="Top" Width="115"/>
                         <Label Content="至"  Margin="122 -34" ></Label>
                         <DatePicker Height="30" Name="endTime" Margin="150 -34" HorizontalAlignment="Left" VerticalAlignment="Top" Width="115"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Margin="300 0" Name="goodsName" Visibility="Hidden" Height="30" Width="255" HorizontalAlignment="Left" VerticalAlignment="Center" >
-                        <ComboBox x:Name="goods_name">
+                    <StackPanel Grid.Row="1" Margin="300 0" Name="goodsName" Visibility="Hidden" Width="255" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                        <ComboBox x:Name="goods_name" Height="30" >
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
@@ -76,7 +77,7 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
-                    <Button Grid.Row="1" Margin="280 2" Style="{StaticResource CommonNoButton}" Content="查询" FontSize="22" Name="query" Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Top" Click="queryData" />
+                    <Button Grid.Row="1" Margin="280 2" Style="{StaticResource CommonNoButton}" Content="查询" Name="query" Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Top" Click="queryData" />
                 </Grid>
             </Border>
 
