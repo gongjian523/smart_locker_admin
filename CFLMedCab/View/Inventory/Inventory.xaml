@@ -98,7 +98,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time}"    Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}"    Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"/>
@@ -135,7 +135,7 @@
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
 
-                                <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
+                                <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
 
                                 <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>

@@ -55,7 +55,7 @@ namespace CFLMedCab.Test
                 new User{
                     name = "ZHIWEN",
                     role = 0,
-                    vein_id = 62500,
+                    vein_id = 62800,
                 },
             };
             userBll.InsetUsers(users);

@@ -3,9 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              xmlns:local="clr-namespace:CFLMedCab.View.Inventory"
              mc:Ignorable="d" Width="720" Height="540" >
-
+    <UserControl.Resources>
+        <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
+    </UserControl.Resources>
     <Border Style="{StaticResource RadiusBorder}" CornerRadius="{StaticResource GRadius}">
         <Grid>
             <Grid.RowDefinitions>
@@ -69,14 +72,14 @@
                         <GridViewColumn Header="失效期" Width="{Binding ElementName=column5,Path=ActualWidth}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=expire_date}"/>
+                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=expire_date,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN }"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
                         <GridViewColumn Header="领用属性" Width="{Binding ElementName=column6,Path=ActualWidth}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=fetch_type}"/>
+                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=fetch_type,Converter={StaticResource RequisitionAttributeConverter}}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

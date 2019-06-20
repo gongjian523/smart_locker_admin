@@ -126,7 +126,7 @@ namespace CFLMedCab.BLL
 
 
         /// <summary>
-        /// 根据商品码集合获取完整商品属性集合
+        /// 根据商品码获取完整商品属性集合
         /// </summary>
         /// <returns></returns>
         public List<GoodsDto> GetGoodsDto(string goodsCode)
