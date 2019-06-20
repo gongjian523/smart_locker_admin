@@ -46,25 +46,31 @@ namespace CFLMedCab.View.Inventory
             InitializeComponent();
 
             GetInventoryList();
-            
-            //List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
-            //for(int i = 5; i > 0; i--)
-            //{
-            //    InventoryOrderDto inventoryOrderDto = new InventoryOrderDto
-            //    {
-            //        id = i,
-            //        code = "dff12412",
-            //        confirm_time=DateTime.Now,
-            //        create_time=DateTime.Now,
-            //        inspector_id=2,
-            //        inspector_name="何海霞",
-            //        operator_id=1,
-            //        operator_name="何海霞",
-            //        status=0,
-            //        type=1
-            //    };
-            //    inventoryOrderDtos.Add(inventoryOrderDto);
-            //}
+
+            List<InventoryPlan> inventoryPlans = inventoryBll.GetInventoryPlan().Where(it=>it.status==0).ToList();
+
+            TimeSpan timeSpan=new TimeSpan();
+
+            DateTime date1 = DateTime.Now;
+            DateTime date=DateTime.Now;
+
+            foreach (var item in inventoryPlans)
+            {
+                DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0, 2)), int.Parse(item.inventorytime_str.Substring(3, 2)), 0);
+                if (date2 < date1)
+                    date2 = date2.AddDays(1);
+                TimeSpan timeSpan1 = date2 - date1;
+               
+                if (timeSpan > timeSpan1|| timeSpan==new TimeSpan())
+                {
+                    timeSpan = timeSpan1;
+                    date = date2;
+                }
+            }
+            if(timeSpan != new TimeSpan())
+            {
+                inventoryTime.Content = date.ToString("yyyy-MM-dd HH:mm");
+            }
         }
 
         /// <summary>

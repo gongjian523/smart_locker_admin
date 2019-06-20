@@ -99,7 +99,7 @@ namespace CFLMedCab.View
                     goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
                 if (!string.IsNullOrEmpty(endTime.Text) && !string.IsNullOrWhiteSpace(endTime.Text))
                 {
-                    DateTime time = Convert.ToDateTime(endTime.Text.Replace("0:00:00", "24:59:59"));
+                    DateTime time = Convert.ToDateTime(endTime.Text.Replace("0:00:00", "23:59:59"));
                     goodsChangeApo.endTime= new DateTime(time.Year, time.Month, time.Day, 23, 59, 59);
                 }
                 goodsChangeApo.name = goods_name.SelectedValue == null ? "" : ((GoodDto)goods_name.SelectedValue).name;
