@@ -174,7 +174,8 @@ namespace CFLMedCab.BLL
             {
                 code = poCode,
                 create_time = DateTime.Now,
-                principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+				end_time = DateTime.Now.AddDays(25),
+				principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
                 status = (int)RPOStatusType.待完成
             });
 
@@ -194,7 +195,8 @@ namespace CFLMedCab.BLL
                 {
                     code = psoCode + i.ToString(),
                     create_time = DateTime.Now,
-                    position = psoDtls.First().position,
+					end_time = DateTime.Now.AddDays(25),
+					position = psoDtls.First().position,
                     picking_order_code = poCode,
                     status = (int)PSOStatusType.待拣货,
                 });
