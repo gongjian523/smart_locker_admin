@@ -183,7 +183,8 @@ namespace CFLMedCab.BLL
             {
                 code = roCode,
                 create_time = DateTime.Now,
-                principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+				end_time = DateTime.Now.AddDays(25),
+				principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
                 status = (int)RPOStatusType.待完成
             });
 
@@ -202,7 +203,8 @@ namespace CFLMedCab.BLL
                 {
                     code = rsoCode + i.ToString(),
                     create_time = DateTime.Now,
-                    position = rsoDtls.First().position,
+					end_time = DateTime.Now.AddDays(25),
+					position = rsoDtls.First().position,
                     replenish_order_code = roCode,
                     status = (int)RSOStatusType.待上架
                 });

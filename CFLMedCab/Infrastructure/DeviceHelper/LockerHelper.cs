@@ -412,6 +412,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 						DelegateGetMsgEvent(this, true);
 						//释放语音资源
 						synth.Dispose();
+						synth = null;
 					}
 				}
 				else
@@ -449,8 +450,12 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 					{
 						//记录这次时间
 						timerLastTime = currentTimerTime;
+
 						//语音播报
-						synth.Speak("操作超时！请关门！");
+						if (synth != null) {
+							synth.SpeakAsync("操作超时！请关门！");
+						}
+						
 					}
 				}
 			}

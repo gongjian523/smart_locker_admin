@@ -11,14 +11,14 @@
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
     </UserControl.Resources>
 
-    <Grid Height="260" Width="355">
-        <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
+    <Grid Height="520" Width="710">
+        <Border  CornerRadius="6,6,6,6" Background="{StaticResource LoginBkBrush}">
                 <StackPanel>
-                <Image  Width="194" Height="110" HorizontalAlignment="Center" Margin="0,39,0,0" 
+                <Image  Width="384" Height="220" HorizontalAlignment="Center" Margin="0,95,0,0" 
                             Source="{Binding LoginState, Converter={StaticResource LoginStatusImgResConverter}}"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,17,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="17" 
+                <TextBlock HorizontalAlignment="Center" Margin="0,16,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="34" 
                                Foreground="{Binding LoginState, Converter= {StaticResource LoginInfoFGBrushConverter}}" Text= "{Binding LoginString }"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,17,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="18" 
+                <TextBlock HorizontalAlignment="Center" Margin="0,33,0,0" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="36" 
                                Foreground="#333333" Text="{Binding LoginString2}"/>
             </StackPanel>
         </Border>

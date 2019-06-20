@@ -39,20 +39,20 @@
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
-                    <Grid Width="157" Height="158">
+                    <Grid Width="314" Height="316">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="115"/>
-                            <RowDefinition Height="43"/>
+                            <RowDefinition Height="230"/>
+                            <RowDefinition Height="86"/>
                         </Grid.RowDefinitions>
                         <Border Background="{TemplateBinding Background}" CornerRadius="5,5,5,5">
-                            <Image Width="94" Height="65" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Width="188" Height="130" HorizontalAlignment="Center" VerticalAlignment="Center">
                                 <Image.Source>
                                     <BitmapImage UriSource="{Binding Path=Tag, RelativeSource={RelativeSource TemplatedParent}}" />
                                 </Image.Source>
                             </Image>
                         </Border>
                         <Grid Grid.Row="1">
-                            <Label VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="20" FontWeight="Regular" Foreground="#333333"  Content="{TemplateBinding Content}"/>
+                            <Label VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="41" FontWeight="Regular" Foreground="#333333"  Content="{TemplateBinding Content}"/>
                         </Grid>
                     </Grid>
                 </ControlTemplate>
@@ -92,7 +92,7 @@
     </Style>-->
 
     <Style x:Key="MainNavButton" TargetType="RadioButton">
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="28"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>

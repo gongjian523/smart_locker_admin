@@ -11,7 +11,7 @@
         <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
         <DataTemplate x:Key="replenishOrder">
             <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF">
-                <Grid Margin="20" Name="data" >
+                <Grid Margin="40" Name="data" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="*"/>
@@ -23,7 +23,7 @@
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
                         <Label Content="工单编号：" HorizontalAlignment="Left" VerticalAlignment="Top" Style="{StaticResource Lable14BoldStyle}"/>
                         <Label Content="{Binding code}" Style="{StaticResource Lable14BoldStyle}"  />
-                        <Label Content="本柜拣货商品数量："  Style="{StaticResource Lable16BoldStyle}" Margin="10 0"/>
+                        <Label Content="本柜拣货商品数量："  Style="{StaticResource Lable16BoldStyle}" Margin="20 0"/>
                         <Label Content="{Binding not_picked_goods_num}" Style="{StaticResource Lable14BoldStyle}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
@@ -32,7 +32,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3" HorizontalAlignment="Right">
                         <Button Style="{StaticResource CommonNoButton}" Content="查看详情" Name="Retract"   Tag="{Binding}" HorizontalAlignment="Left"  Click="EnterDetail_Click"/>
-                        <Button Style="{StaticResource CommonYesButton}" Content="确认开柜" Name="Confirm"  Tag="{Binding}"  Margin="20,0,20,0" HorizontalAlignment="Left" Click="EnterDetailOpen_Click"/>
+                        <Button Style="{StaticResource CommonYesButton}" Content="确认开柜" Name="Confirm"  Tag="{Binding}"  Margin="40,0,40,0" HorizontalAlignment="Left" Click="EnterDetailOpen_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -43,8 +43,8 @@
             <RowDefinition Height="57"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center"  Margin="20,0,0,0" Style="{StaticResource Lable16BoldStyle}"/>
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="20,0,20,20">
+        <Label Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center"  Margin="40,0,0,0" Style="{StaticResource Lable16BoldStyle}"/>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="40,0,40,40">
             <ItemsControl ItemTemplate="{StaticResource replenishOrder}" ItemsSource="{Binding ReplenishOrderViewList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
         <Grid />

@@ -4,16 +4,16 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CFLMedCab.View"
-        mc:Ignorable="d"
-        Width="960"   Height="540" >
-    <Grid Height="245" Width="390">
-        <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
+        mc:Ignorable="d">
+    <Grid Height="489" Width="780">
+        <Border  CornerRadius="6,6,6,6" Background="{StaticResource LoginBkBrush}">
             <StackPanel>
-                <Image Width="194" Height="128" HorizontalAlignment="Center" Margin="0,48,0,0" >
+                <Image Width="387" Height="255" HorizontalAlignment="Center" Margin="0,96,0,0" >
                     <Image.Source>
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/Inventorying.png" />
                     </Image.Source>
                 </Image>
+                <Label  HorizontalAlignment="Center" Margin="0,25,0,0"  FontSize="40" Foreground="#619CF8"/>
             </StackPanel>
         </Border>
     </Grid>

@@ -8,8 +8,8 @@
         xmlns:cvt="clr-namespace:CFLMedCab.Converter"
         mc:Ignorable="d"
         Title="MainWindow"
-        MinHeight="540"
-        MinWidth ="960"
+        Height="1080"
+        Width ="1920"
         WindowStyle="None"
         AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" WindowState="Maximized" >
     <Control.Resources>
@@ -26,19 +26,19 @@
                 </Image.Source>
             </Image>
             <StackPanel>
-                <TextBlock HorizontalAlignment="Center" Margin="0,230,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="28" 
+                <TextBlock HorizontalAlignment="Center" Margin="0,460,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="55" 
                        Foreground="#FFFFFF" Text="欢迎使用乘法云链耗材管理系统"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,31,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="23" 
+                <TextBlock HorizontalAlignment="Center" Margin="0,61,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="46" 
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
             </StackPanel>
         </Grid>
         <Grid x:Name="NaviView" Visibility="Visible" Panel.ZIndex="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height ="43"/>
+                <RowDefinition Height ="86"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid>
-                <Image Width="101" Height="20" HorizontalAlignment="Left" Margin="10,0,0,0" >
+                <Image Width="201" Height="39" HorizontalAlignment="Left" Margin="20,0,0,0" >
                     <Image.Source>
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" />
                     </Image.Source>
@@ -49,10 +49,10 @@
                     Foreground="Black"
                     FontWeight="Bold"
                     FontFamily="Arial"
-                    FontSize="15" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                    FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
             </Grid>
             <Grid x:Name="HomePageView" Grid.Row="1" Background="{StaticResource ContentBkBrush}" Panel.ZIndex="1">
-                <Border Margin="20"  Background="#FFFFFF" CornerRadius="3,3,3,3" Padding="10">
+                <Border Margin="40"  Background="#FFFFFF" CornerRadius="6,6,6,6" Padding="10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -61,23 +61,23 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition />
+                            <RowDefinition />
+
                         </Grid.RowDefinitions>
-                        <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="0" Margin="5,5,5,5"   Background="#7291FD"  Content="一般领用"
+                        <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="0" Margin="10,10,10,10"   Background="#7291FD"  Content="一般领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="onEnterGerFetch"/>
-                        <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="1"  Margin="5,5,5,5"   Background="#00C5CE"  Content="手术领用"
+                        <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="1"  Margin="10,10,10,10"   Background="#00C5CE"  Content="手术领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-SurFetch.png" Click="onEnterSurgery"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="2"  Margin="5,5,5,5"   Background="#57A1FF"  Content="领用退回"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="2"  Margin="10,10,10,10"   Background="#57A1FF"  Content="领用退回"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Return.png" Click="onEnterReturnFetch"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="3"  Margin="5,5,5,5"   Background="#FF8B50"  Content="补货入库"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="3"  Margin="10,10,10,10"   Background="#FF8B50"  Content="补货入库"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Replenish.png" Click="onEnterReplenishment"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="0"  Margin="5,5,5,5"   Background="#14D59C"  Content="退货出库"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="0"  Margin="10,10,10,10"   Background="#14D59C"  Content="退货出库"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Picking.png" Click="onEnterReturnGoods"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="1"  Margin="5,5,5,5"   Background="#9394FE"  Content="库存盘点"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="1"  Margin="10,10,10,10"   Background="#9394FE"  Content="库存盘点"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="onEnterInvtory"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="2"  Margin="5,5,5,5"   Background="#3174FF"  Content="库存查询"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="2"  Margin="10,10,10,10"   Background="#3174FF"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterStock"/>
                     </Grid>
 
@@ -85,18 +85,18 @@
             </Grid>
             <Grid Grid.Row="1" Panel.ZIndex="0" >
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"/>
+                    <ColumnDefinition Width="240"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid x:Name="NavBar" Background="{StaticResource NavBgGreyBrush}">
                     <Grid VerticalAlignment="Top">
-                        <RadioButton x:Name="BtnEnterGerFetch" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,14,0,0" VerticalAlignment="Top" Foreground="White" Content="一般领用"  Click="onEnterGerFetch"  IsChecked="True"/>
-                        <RadioButton x:Name="BtnEnterSurgery" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,64,0,0" VerticalAlignment="Top"  Foreground="White" Content="手术领用" Click="onEnterSurgery" />
-                        <RadioButton x:Name="BtnEnterReturnFetch" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,114,0,0" VerticalAlignment="Top"  Foreground="White" Content="领用退回" Click="onEnterReturnFetch"/>
-                        <RadioButton x:Name="BtnEnterReplenishment" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,164,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" Click="onEnterReplenishment" />
-                        <RadioButton x:Name="BtnEnterReturnGoods" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,214,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" Click="onEnterReturnGoods" />
-                        <RadioButton x:Name="BtnEnterInventory" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,264,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" Click="onEnterInvtory"/>
-                        <RadioButton x:Name="BtnEnterStock" Style="{DynamicResource MainNavButton}" Height="50"  Margin="0,314,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="onEnterStock" />
+                        <RadioButton x:Name="BtnEnterGerFetch" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,28,0,0" VerticalAlignment="Top" Foreground="White" Content="一般领用"  Click="onEnterGerFetch"  IsChecked="True"/>
+                        <RadioButton x:Name="BtnEnterSurgery" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,128,0,0" VerticalAlignment="Top"  Foreground="White" Content="手术领用" Click="onEnterSurgery" />
+                        <RadioButton x:Name="BtnEnterReturnFetch" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,228,0,0" VerticalAlignment="Top"  Foreground="White" Content="领用退回" Click="onEnterReturnFetch"/>
+                        <RadioButton x:Name="BtnEnterReplenishment" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,328,0,0" VerticalAlignment="Top"  Foreground="White" Content="补货入库" Click="onEnterReplenishment" />
+                        <RadioButton x:Name="BtnEnterReturnGoods" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,428,0,0" VerticalAlignment="Top"  Foreground="White" Content="退货出库" Click="onEnterReturnGoods" />
+                        <RadioButton x:Name="BtnEnterInventory" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,528,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存盘点" Click="onEnterInvtory"/>
+                        <RadioButton x:Name="BtnEnterStock" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,628,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="onEnterStock" />
                     </Grid>
                 </Grid>
                 <Grid Grid.Column="1"  x:Name="ContentView">

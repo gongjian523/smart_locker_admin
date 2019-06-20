@@ -192,8 +192,8 @@
                     
                     <Label Style="{StaticResource lblTitle1}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <Button Style="{StaticResource CommonYesButton}" Content="是" HorizontalAlignment="Right" Margin="0,0,20,0" Click="onEndOperation"/>
-                    <Button Style="{StaticResource CommonNoButton}" Content="否" HorizontalAlignment="Left" Margin="20,0,0,0" Click="onNotEndOperation"/>
+                    <Button Style="{StaticResource CommonYesButton}" Content="是" HorizontalAlignment="Right" Margin="0,0,40,0" Click="onEndOperation"/>
+                    <Button Style="{StaticResource CommonNoButton}" Content="否" HorizontalAlignment="Left" Margin="40,0,0,0" Click="onNotEndOperation"/>
                     </StackPanel>
                 </Grid>
             </Border>

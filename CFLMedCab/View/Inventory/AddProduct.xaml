@@ -13,7 +13,7 @@
             <Setter Property="FrameworkElement.Visibility" Value="Hidden"/>
         </Style>
     </UserControl.Resources>-->
-    <Border Background="White" Padding="25" CornerRadius="{DynamicResource GRadius}">
+    <Border Background="White" Padding="50" CornerRadius="{DynamicResource GRadius}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -34,7 +34,7 @@
                     <Grid Grid.Column="0" x:Name="column1"/>
                     <Grid Grid.Column="1" x:Name="column2"/>
                 </Grid>
-                <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListView   VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}" ScrollViewer.HorizontalScrollBarVisibility="Disabled" FontSize="24">
                     <ListView.Resources>
                         <Style TargetType="GridViewColumnHeader">
                             <Setter Property="Visibility" Value="Collapsed" />
@@ -50,8 +50,6 @@
             </Grid>
 
             <Grid  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                
-                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="2*" />
@@ -60,14 +58,13 @@
                 <Grid Grid.Column="0" x:Name="Column1"/>
                 <Grid Grid.Column="1" x:Name="Column2"/>
                 <Grid Grid.Column="2" x:Name="Column3"/>
-
                 <Label Content="单品码：" VerticalContentAlignment="Center" Grid.Column="0" />
                 <TextBox  x:Name="codeInputTb"  Height="28" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}"/>
                 <Button Style="{StaticResource AddButton}" Content="新增单品码" Grid.Column="2"  HorizontalAlignment="Right" VerticalAlignment="Top"  Click="onAddProduct"/>
             </Grid>
 
-            <Button Style="{StaticResource CommonYesButton}" Content="保存" Grid.Column="0" Grid.Row="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Click="onSave" Margin="0,5,30,5"/>
-            <Button Style="{StaticResource CommonNoButton}" Content="取消" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="onCancel" Margin="30,5,0,5" />
+            <Button Style="{StaticResource CommonYesButton}" Content="保存" Grid.Column="0" Grid.Row="2"  HorizontalAlignment="Right" VerticalAlignment="Top" Click="onSave" Margin="0,5,30,5"  Height="64" Width="226" FontSize="28"/>
+            <Button Style="{StaticResource CommonNoButton}" Content="取消" Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="onCancel" Margin="30,5,0,5"  Height="64" Width="226" FontSize="28"/>
 
         </Grid>
     </Border>
