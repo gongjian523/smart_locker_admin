@@ -4,7 +4,9 @@ using CFLMedCab.DTO;
 using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -532,5 +534,34 @@ namespace CFLMedCab.BLL
 
 		#endregion
 
-	}
+        public void InitSurgerOrder(List<SurgeryOrderdtl> surgeryOrderdtls)
+        {
+            List<SurgeryOrder> surgeryOrders = new List<SurgeryOrder>();
+            string code = null;
+            foreach (SurgeryOrderdtl item in surgeryOrderdtls)
+            {
+                if (code != item.surgery_order_code)
+                {
+                    surgeryOrders.Add(new SurgeryOrder
+                    {
+                        code = item.surgery_order_code,
+                        surgery_time = DateTime.Now
+                    });
+                    code = item.surgery_order_code;
+                }
+            }
+            FetchOrderDal.AddSurgeryOrder(surgeryOrders);
+            FetchOrderDal.AddSurgeryOrderDtl(surgeryOrderdtls);
+        }
+
+        /// <summary>
+        /// 获取手术单数据量
+        /// </summary>
+        /// <returns></returns>
+        public int GettSurgerOrderNum()
+        {
+            return FetchOrderDal.GettSurgerOrderNum();
+        }
+
+    }
 }

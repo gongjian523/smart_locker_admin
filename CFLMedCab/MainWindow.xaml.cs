@@ -997,6 +997,7 @@ namespace CFLMedCab
 #endif
             test.InitReplenishOrder();
             test.InitPickingOrder();
+            test.InitSurgerOrder();
         }
 
 

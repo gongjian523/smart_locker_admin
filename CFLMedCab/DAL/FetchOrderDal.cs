@@ -287,6 +287,33 @@ namespace CFLMedCab.DAL
 			return Db.Updateable(fetchOrderdtls).ExecuteCommand() > 0;
 		}
 
+        /// <summary>
+        /// 添加手术单号
+        /// </summary>
+        /// <param name="surgeryOrder"></param>
+        /// <returns></returns>
+        public void AddSurgeryOrder(List<SurgeryOrder> surgeryOrder)
+        {
+             Db.Insertable(surgeryOrder).ExecuteCommand();
+        }
 
-	}
+        /// <summary>
+        /// 添加手术详情单号
+        /// </summary>
+        /// <param name="surgeryOrder"></param>
+        /// <returns></returns>
+        public void AddSurgeryOrderDtl(List<SurgeryOrderdtl> surgeryOrderdtls)
+        {
+             Db.Insertable(surgeryOrderdtls).ExecuteCommand();
+        }
+
+        /// <summary>
+        /// 获取手术单数据量
+        /// </summary>
+        /// <returns></returns>
+        public int GettSurgerOrderNum()
+        {
+            return Db.Queryable<SurgeryOrder>().ToList().Count;
+        }
+    }
 }

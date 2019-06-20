@@ -17,6 +17,7 @@ namespace CFLMedCab.Test
         private UserBll userBll = new UserBll();
         private ReplenishBll replenishBll = new ReplenishBll();
         private PickingBll pickingBll = new PickingBll();
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
 
         public Hashtable  GetCurrentRFid()
         {
@@ -228,6 +229,37 @@ namespace CFLMedCab.Test
             ro2.Add("hs3", hs3);
             ro2.Add("hs4", hs4);
             pickingBll.InitPickingOrder("PO-TEST-002", "PO002-PSO-TEST-00", ro2);
+        }
+
+        public void InitSurgerOrder()
+        {
+            if (fetchOrderBll.GettSurgerOrderNum() > 0)
+                return;
+
+            List<SurgeryOrderdtl> surgeryOrders = new List<SurgeryOrderdtl>
+            {
+                new SurgeryOrderdtl
+                {
+                    surgery_order_code="sh12",
+                    goods_code="B20001",
+                    name="一次性输液器",
+                    fetch_type=1,
+                    fetch_num=2,
+                    already_fetch_num=1,
+                    not_fetch_num=1,
+                }  , new SurgeryOrderdtl
+                {
+                    surgery_order_code="sh12",
+                    goods_code="B30001",
+                    name="医用胶布卷",
+                    fetch_type=1,
+                    fetch_num=2,
+                    already_fetch_num=1,
+                    not_fetch_num=1,
+                }
+            };
+            fetchOrderBll.InitSurgerOrder(surgeryOrders);
+
         }
     }
 }
