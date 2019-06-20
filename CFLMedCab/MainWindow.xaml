@@ -17,7 +17,7 @@
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
     </Control.Resources>
     <Grid>
-        <Frame x:Name="PopFrame" Panel.ZIndex="4"/>
+        <Frame x:Name="PopFrame" Panel.ZIndex="4" NavigationUIVisibility ="Visible"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
         <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Visible" >
             <Image Height="Auto" Width="Auto" Margin="-100" Name="logImg">
@@ -63,7 +63,6 @@
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
-
                         </Grid.RowDefinitions>
                         <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="0" Margin="10,10,10,10"   Background="#7291FD"  Content="一般领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="onEnterGerFetch"/>
@@ -107,7 +106,7 @@
 
         </Grid>
         <Grid x:Name="FullView">
-            <Frame x:Name="FullFrame"/>
+            <Frame x:Name="FullFrame" NavigationUIVisibility ="Visible"/>
         </Grid>
     </Grid>
 </Controls:MetroWindow>

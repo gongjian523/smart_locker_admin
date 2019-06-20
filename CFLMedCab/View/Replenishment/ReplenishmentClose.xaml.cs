@@ -79,7 +79,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterReplenishmentDetailOpenEvent(this, new ReplenishSubOrderDto());
+            EnterReplenishmentDetailOpenEvent(this, replenishSubOrderDto);
             return;
         }
     }

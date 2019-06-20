@@ -80,7 +80,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNotEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsDetailOpenEvent(this, new PickingSubOrderDto());
+            EnterReturnGoodsDetailOpenEvent(this, pickingSubOrderDto);
             return;
         }
     }
