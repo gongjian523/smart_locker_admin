@@ -361,7 +361,7 @@ namespace CFLMedCab.BLL
 				int real_not_fetch_num = it.not_fetch_num - it.already_fetch_num;
 
 				//根据操作的商品数据临时调整代取数量(会有多取的，所以默认多取，也满足正常取)
-				it.not_fetch_num = real_not_fetch_num >= 0 ? real_not_fetch_num - it.already_fetch_num : 0;
+				it.not_fetch_num = real_not_fetch_num >= 0 ? real_not_fetch_num : 0;
 
 				//如果取多了，则显示这类商品异常(此异常应该为警告，所以默认不操作，就是正确的)
 				if (real_not_fetch_num < 0)

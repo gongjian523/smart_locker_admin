@@ -383,10 +383,19 @@ namespace CFLMedCab
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
+            List<string> com = ComName.GetAllLockerCom();
 
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
-            delegateGetMsg.userData = model;
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
+
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
+
+            cabClosedNum = 0;
+           // LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.userData = model;
+            delegateGetMsg2.userData = model;
+            //delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
         }
 
         /// <summary>
@@ -397,13 +406,17 @@ namespace CFLMedCab
         private void onEnterSurgeryNumLockerEvent(object sender, bool isClose)
         {
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
-
+            if (cabClosedNum == 0)
+            {
+                cabClosedNum++;
+                return;
+            }
             if (!isClose)
                 return;
             Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
 
-            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 SurgeryNumClose surgeryNumClose = new SurgeryNumClose(surgeryOrderDto,ht);
