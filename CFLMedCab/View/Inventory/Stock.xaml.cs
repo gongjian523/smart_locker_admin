@@ -58,9 +58,9 @@ namespace CFLMedCab.View
                     goodsEpsHashSetDatas.UnionWith(goodsEpsData);
                 }
                 getGoodApo.goodsEpsDatas = goodsEpsHashSetDatas;
-                getGoodApo.code = goods_code.SelectedValue == null ? "": ((GoodDto)goods_code.SelectedValue).goods_code;
+                getGoodApo.code = goods_code.SelectedValue == null ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
                 getGoodApo.name = goods_name.SelectedValue == null ? "" : ((GoodDto)goods_name.SelectedValue).name;
-      
+
                 List<GoodDto> goodDtos = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
                 listView.DataContext = goodDtos;
                 goods_code.ItemsSource = goodDtos;
@@ -95,6 +95,13 @@ namespace CFLMedCab.View
                     goodsChangeApo.operate_type = 0;
                 else if (this.inStock.IsChecked == true)
                     goodsChangeApo.operate_type = 1;
+                if (!string.IsNullOrEmpty(startTime.Text)&& !string.IsNullOrWhiteSpace(startTime.Text))
+                    goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
+                if (!string.IsNullOrEmpty(endTime.Text) && !string.IsNullOrWhiteSpace(endTime.Text))
+                {
+                    DateTime time = Convert.ToDateTime(endTime.Text.Replace("0:00:00", "24:59:59"));
+                    goodsChangeApo.endTime= new DateTime(time.Year, time.Month, time.Day, 23, 59, 59);
+                }
                 goodsChangeApo.name = goods_name.SelectedValue == null ? "" : ((GoodDto)goods_name.SelectedValue).name;
                 List<GoodsChangeDto> goodsChangeDtos = goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out totalCount);
                 listView2.DataContext = goodsChangeDtos;
@@ -111,7 +118,7 @@ namespace CFLMedCab.View
             goodsCode.Visibility = Visibility.Hidden;
             goodsName.Visibility = Visibility.Hidden;
             query.Visibility = Visibility.Hidden;
-            
+
             stockSnapshotQuery.Visibility = Visibility.Visible;
             validityQuery.Visibility = Visibility.Hidden;
             stockQuery.Visibility = Visibility.Hidden;
@@ -146,9 +153,10 @@ namespace CFLMedCab.View
             validityQuery.Visibility = Visibility.Visible;
             stockQuery.Visibility = Visibility.Hidden;
             operating_time.Visibility = Visibility.Hidden;
-            
+
             goodsCode.Visibility = Visibility.Visible;
             goodsName.Visibility = Visibility.Visible;
+            query.Visibility = Visibility.Visible;
 
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Visible;
@@ -169,9 +177,11 @@ namespace CFLMedCab.View
             stockSnapshotQuery.Visibility = Visibility.Hidden;
             validityQuery.Visibility = Visibility.Hidden;
             stockQuery.Visibility = Visibility.Visible;
+
             operating_time.Visibility = Visibility.Visible;
-            
             goodsName.Visibility = Visibility.Visible;
+            goodsCode.Visibility = Visibility.Hidden;
+            query.Visibility = Visibility.Visible;
 
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Hidden;
