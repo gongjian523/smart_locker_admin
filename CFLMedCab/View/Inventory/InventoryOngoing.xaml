@@ -13,7 +13,7 @@
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/Inventorying.png" />
                     </Image.Source>
                 </Image>
-                <Label  HorizontalAlignment="Center" Margin="0,25,0,0"  FontSize="40" Foreground="#619CF8"/>
+                <Label  HorizontalAlignment="Center" Margin="0,25,0,0" Content="智能柜盘点中" FontSize="40" Foreground="#619CF8"/>
             </StackPanel>
         </Border>
     </Grid>

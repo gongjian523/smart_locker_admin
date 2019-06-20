@@ -57,7 +57,9 @@
                             </ComboBox.ItemTemplate>
                         </ComboBox>
                     </StackPanel>
-                    <TextBox Grid.Row="1" HorizontalAlignment="Left" Name="operating_time" Visibility="Hidden" Width="255"  TextWrapping="Wrap" Text="操作时间" VerticalAlignment="Top" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
+                    <!--<TextBox Grid.Row="1" HorizontalAlignment="Left" Name="operating_time" Visibility="Hidden" Width="255"  TextWrapping="Wrap" Text="操作时间" VerticalAlignment="Top" Foreground="#999999" FontWeight="Bold" FontSize="14"/>-->
+                    <Calendar Grid.Row="1" HorizontalAlignment="Left" VerticalAlignment="Top" Name="operating_time" Visibility="Hidden" DisplayMode="Month" SelectionMode="SingleRange"/>
+                    
                     <StackPanel Grid.Row="1" Margin="300 0" Name="goodsName" Visibility="Hidden" Height="30" Width="255" HorizontalAlignment="Left" VerticalAlignment="Center" >
                         <ComboBox x:Name="goods_name">
                             <ComboBox.ItemTemplate>
