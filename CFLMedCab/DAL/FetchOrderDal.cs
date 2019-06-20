@@ -242,12 +242,32 @@ namespace CFLMedCab.DAL
 			return data;
 		}
 
-		/// <summary>
-		/// 确认时，修改手术领用详情数据
-		/// </summary>
-		/// <param name="datasDto">当前操作数据dto</param>
-		/// <returns></returns>
-		public bool UpdateSurgeryOrderdtl(List<SurgeryOrderdtlDto> datasDto)
+        /// <summary>
+        /// 根据手术单号查询上面物品柜门
+        /// </summary>
+        /// <param name="surgeryOrderCode"></param>
+        /// <returns></returns>
+        public List<String> GetSurgeryOrderdtlPosition(string surgeryOrderCode)
+        {
+            List<string> data;
+
+            //查询语句(查询出手术单待领用的耗材，已领用好的不显示)
+
+            data = Db.Queryable<SurgeryOrderdtl, Goods>((sodtl, gs) => new object[] { JoinType.Left, sodtl.goods_code == gs.goods_code })
+                .Where((sodtl, gs) => sodtl.surgery_order_code == surgeryOrderCode && sodtl.not_fetch_num > 0)
+                .GroupBy((sodtl, gs) => gs.position)
+                .Select((sodtl, gs) => gs.position).ToList();
+
+            return data;
+        }
+
+
+        /// <summary>
+        /// 确认时，修改手术领用详情数据
+        /// </summary>
+        /// <param name="datasDto">当前操作数据dto</param>
+        /// <returns></returns>
+        public bool UpdateSurgeryOrderdtl(List<SurgeryOrderdtlDto> datasDto)
 		{
             return Db.Updateable(datasDto.MapToList<SurgeryOrderdtlDto, SurgeryOrderdtl>()).ExecuteCommand() > 0;
 		}
@@ -315,5 +335,6 @@ namespace CFLMedCab.DAL
         {
             return Db.Queryable<SurgeryOrder>().ToList().Count;
         }
+
     }
 }

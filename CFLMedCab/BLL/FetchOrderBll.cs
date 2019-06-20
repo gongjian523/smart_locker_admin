@@ -4,6 +4,7 @@ using CFLMedCab.DTO;
 using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
 using System;
@@ -536,6 +537,16 @@ namespace CFLMedCab.BLL
 		}
 
 		#endregion
+
+        public List<string> GetSurgeryOrderdtlPosition(string surgeryOrderCode)
+        {
+            HashSet<string> listCom = new HashSet<string>();
+
+            List<string> listPos =  FetchOrderDal.GetSurgeryOrderdtlPosition(surgeryOrderCode);
+            listPos.ForEach(item => listCom.Add(ComName.GetLockerCom(item)));
+
+            return listCom.ToList();
+        }
 
         public void InitSurgerOrder(List<SurgeryOrderdtl> surgeryOrderdtls)
         {

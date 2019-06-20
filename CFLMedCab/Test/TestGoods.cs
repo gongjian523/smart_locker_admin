@@ -143,7 +143,7 @@ namespace CFLMedCab.Test
                 {
                     code = "E20000176012026619504D8D",
                     name = "手术刀片",
-                    goods_code = "B30001",
+                    goods_code = "B30002",
                     batch_number = "D1111",
                     birth_date = new DateTime(2019, 1, 2),
                     valid_period = 30,
@@ -155,7 +155,7 @@ namespace CFLMedCab.Test
                 {
                     code = "E20000176012026319404F98",
                     name = "手术刀片",
-                    goods_code = "B30001",
+                    goods_code = "B30002",
                     batch_number = "D1112",
                     birth_date = new DateTime(2019, 1, 12),
                     valid_period = 30,

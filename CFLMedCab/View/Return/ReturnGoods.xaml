@@ -38,7 +38,7 @@
             </Border>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid  Background="AliceBlue">
+    <Grid  Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="96"/>
             <RowDefinition Height="*"/>
@@ -47,8 +47,5 @@
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemTemplate="{StaticResource pickingOrderView}" ItemsSource="{Binding PickingOrderList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
-        <!--<Grid x:Name="ContentView" Grid.RowSpan="2">
-            <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-        </Grid>-->
     </Grid>
 </UserControl>

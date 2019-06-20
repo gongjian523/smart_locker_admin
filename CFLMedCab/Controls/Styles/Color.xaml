@@ -28,7 +28,7 @@
 
     <Style x:Key="CommonBlueBorder" TargetType="{x:Type Border}">
         <Setter Property="Padding" Value="{StaticResource GInterval}"/>
-        <Setter Property="Background" Value="AliceBlue"/>
+        <Setter Property="Background" Value="{StaticResource ContentBkBrush}"/>
     </Style>
 
     <Style x:Key="TipBorder" TargetType="{x:Type Border}">

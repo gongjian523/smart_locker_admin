@@ -11,13 +11,13 @@
         Height="1080"
         Width ="1920"
         WindowStyle="None"
-        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" WindowState="Maximized" >
+        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" WindowState="Maximized"  ShowTitleBar="False">
     <Control.Resources>
         <cvt:LoginInfoFGBrushConverter x:Key="LoginInfoFGBrushConverter"/>
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
     </Control.Resources>
     <Grid>
-        <Frame x:Name="PopFrame" Panel.ZIndex="4" NavigationUIVisibility ="Visible"/>
+        <Frame x:Name="PopFrame" Panel.ZIndex="4" NavigationUIVisibility ="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
         <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Visible" >
             <Image Height="Auto" Width="Auto" Margin="-100" Name="logImg">
@@ -37,19 +37,27 @@
                 <RowDefinition Height ="86"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <Grid>
+            <Grid  >
                 <Image Width="201" Height="39" HorizontalAlignment="Left" Margin="20,0,0,0" >
                     <Image.Source>
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" />
                     </Image.Source>
                 </Image>
                 <TextBlock Height="Auto"
-                    Margin="0,0,20,0"
+                    Margin="0,0,150,0"
                     x:Name="tbDateText"
                     Foreground="Black"
                     FontWeight="Bold"
                     FontFamily="Arial"
                     FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <TextBlock Height="Auto"
+                    Margin="0,0,30,0"
+                    x:Name="tbNameText"
+                    Foreground="Black"
+                    FontWeight="Bold"
+                    FontFamily="Arial"
+                    FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
+
             </Grid>
             <Grid x:Name="HomePageView" Grid.Row="1" Background="{StaticResource ContentBkBrush}" Panel.ZIndex="1">
                 <Border Margin="40"  Background="#FFFFFF" CornerRadius="6,6,6,6" Padding="10">
@@ -98,15 +106,15 @@
                         <RadioButton x:Name="BtnEnterStock" Style="{DynamicResource MainNavButton}" Height="100"  Margin="0,628,0,0" VerticalAlignment="Top"  Foreground="White" Content="库存查询" Click="onEnterStock" />
                     </Grid>
                 </Grid>
-                <Grid Grid.Column="1"  x:Name="ContentView">
+                <Grid Grid.Column="1"  x:Name="ContentView" >
                     <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
                 </Grid>
 
-        </Grid>
+            </Grid>
 
         </Grid>
         <Grid x:Name="FullView">
-            <Frame x:Name="FullFrame" NavigationUIVisibility ="Visible"/>
+            <Frame x:Name="FullFrame" NavigationUIVisibility ="Hidden"/>
         </Grid>
     </Grid>
 </Controls:MetroWindow>

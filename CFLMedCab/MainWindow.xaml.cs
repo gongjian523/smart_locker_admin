@@ -54,6 +54,7 @@ namespace CFLMedCab
         private InventoryBll inventoryBll = new InventoryBll();
         private GoodsBll goodsBll = new GoodsBll();
         private UserBll userBll = new UserBll();
+        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
 
         private int cabClosedNum;
 
@@ -72,6 +73,8 @@ namespace CFLMedCab
             MockData();
 
             DataContext = this;
+
+            this.tbNameText.Text = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
 
             ShowTime();
             ShowTimer = new DispatcherTimer();
@@ -251,14 +254,21 @@ namespace CFLMedCab
         {
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
+            if (!isClose)
+                return;
+
             if (cabClosedNum == 0)
             {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    GerFetchState gerFetchState = new GerFetchState(3);
+                    FullFrame.Navigate(gerFetchState);
+                }));
+
                 cabClosedNum++;
                 return;
             }
     
-            if (!isClose)
-                return;
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
             
@@ -313,6 +323,12 @@ namespace CFLMedCab
 
             if (cabClosedNum == 0)
             {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    GerFetchState gerFetchState = new GerFetchState(3);
+                    FullFrame.Navigate(gerFetchState);
+                }));
+
                 cabClosedNum++;
                 return;
             }
@@ -388,19 +404,23 @@ namespace CFLMedCab
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
-            List<string> com = ComName.GetAllLockerCom();
 
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
+            List<string> listCom = fetchOrderBll.GetSurgeryOrderdtlPosition(model.code);
+            if (listCom.Count == 0)
+                return;
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-
-            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
-            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-
-            cabClosedNum = 0;
-           // LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.userData = model;
-            delegateGetMsg2.userData = model;
-            //delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
+            cabClosedNum = 1;
+
+            if (listCom.Count == 2)
+            {
+                LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
+                delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
+                delegateGetMsg2.userData = model;
+                cabClosedNum = 2;
+            }
 
             SpeakerHelper.Sperker("柜门已开，请按照领用单拿取耗材，拿取完毕请关闭柜门");
         }
@@ -412,16 +432,26 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNumLockerEvent(object sender, bool isClose)
         {
-            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
-            if (cabClosedNum == 0)
-            {
-                cabClosedNum++;
-                return;
-            }
+
             if (!isClose)
                 return;
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            cabClosedNum--;
+
+            if (cabClosedNum == 1)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    GerFetchState gerFetchState = new GerFetchState(3);
+                    FullFrame.Navigate(gerFetchState);
+                }));
+                return;
+            }
+
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
+
             Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -478,6 +508,13 @@ namespace CFLMedCab
 
             if (cabClosedNum == 0)
             {
+
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    GerFetchState gerFetchState = new GerFetchState(3);
+                    FullFrame.Navigate(gerFetchState);
+                }));
+
                 cabClosedNum++;
                 return;
             }
