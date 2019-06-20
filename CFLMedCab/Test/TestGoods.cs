@@ -51,10 +51,14 @@ namespace CFLMedCab.Test
                     role = 0,
                     vein_id = 12630,
                 },
+                new User{
+                    name = "ZHIWEN",
+                    role = 0,
+                    vein_id = 62500,
+                },
             };
             userBll.InsetUsers(users);
         }
-
 
         public void InitGoodsInfo()
         {
