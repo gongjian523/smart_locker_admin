@@ -6,8 +6,7 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              xmlns:ctr="clr-namespace:CFLMedCab.Controls"
-             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
-             d:DesignHeight="720" d:DesignWidth="800">
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter">
     <UserControl.Resources>
         <Style x:Key="{x:Type ctr:EditBox}" TargetType="{x:Type ctr:EditBox}" >
             <Setter Property="HorizontalAlignment" Value="Left"  />
@@ -34,7 +33,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Button  Style="{StaticResource ReturnButton}" Content="返回>" Width="auto" Grid.Row="0" Click="onCancel"/>
+            <Button  Style="{StaticResource ReturnButton}" Content="返回>" Width="auto" Grid.Row="0" Click="onCancel" FontSize="31"/>
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1" >
                 <Grid>
                     <Grid.RowDefinitions>
@@ -63,7 +62,7 @@
             <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" MinHeight="120"/>
+                        <RowDefinition Height="*" MinHeight="240"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
@@ -175,7 +174,7 @@
                     </Grid>
                     <Button Style="{StaticResource AddButton}" x:Name="btnAddProduct" Content="新增实际库存商品"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Width="150" Margin="0,5,20,5"  Click="onAddProduct" HorizontalAlignment="Right"/>
                     <Button Style="{StaticResource CommonYesButton}" x:Name="btnConfirm" Content="盘点确认"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Right" Margin="0,0,30,0" VerticalAlignment="Center" Width="113" Height="32" Click="onConfirm"/>
-                    <Button Style="{StaticResource CommonNoButton}" x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="113"  Height="32" Click="onCancel"/>
+                    <Button Style="{StaticResource CommonNoButton}" x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Width="113"  Height="32" Click="onCancel" Visibility="Hidden"/>
                 </Grid>
             </Border>
         </Grid>

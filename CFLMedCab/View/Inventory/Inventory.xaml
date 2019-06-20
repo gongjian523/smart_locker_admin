@@ -6,9 +6,7 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              xmlns:l="clr-namespace:CFLMedCab.Controls"
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-
+             mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="{x:Type l:EditBox}" TargetType="{x:Type l:EditBox}" >
             <Setter Property="HorizontalAlignment" Value="Left"  />
@@ -28,45 +26,45 @@
     </UserControl.Resources>
     <Grid Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="149"/>
+            <RowDefinition Height="298"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Border Background="#29A8EF" Margin="20,20,10,0" CornerRadius="2,2,2,2">
+        <Border Background="#29A8EF" Margin="40,40,20,0" CornerRadius="4,4,4,4">
             <Grid>
-                <Label HorizontalAlignment="Center" Margin="0,34,0,0" FontSize="19" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
-                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,75,0,0" BorderThickness="0"  Width="113"  Height="32"  
-                        Background="#FFFFFF"  Foreground="#29A8EF" FontSize="14" Content="盘点"  Click="onEnterPopInventory" />
+                <Label HorizontalAlignment="Center" Margin="0,68,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
+                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,150,0,0" BorderThickness="0"  Width="226"  Height="64"  
+                        Background="#FFFFFF"  Foreground="#29A8EF" FontSize="28" Content="盘点"  Click="onEnterPopInventory" />
             </Grid>
         </Border>
-        <Border Grid.Column="1" Background="#27CDCB" Margin="10,20,20,0" CornerRadius="2,2,2,2">
+        <Border Grid.Column="1" Background="#27CDCB" Margin="20,40,40,0" CornerRadius="4,4,4,4">
             <Grid>
-                <Label HorizontalAlignment="Center" Margin="0,24,0,0" FontSize="19" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
-                <Label HorizontalAlignment="Center" Margin="0,55,0,0" FontSize="13" FontWeight="Regular" Foreground="#FFFFFF" Content="下一次自动盘点时间："   />
-                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,75,0,0" BorderThickness="0"  Width="113"  Height="32"  
-                        Background="#FFFFFF"  Foreground="#27CDCB" FontSize="14" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
+                <Label HorizontalAlignment="Center" Margin="0,48,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
+                <Label HorizontalAlignment="Center" Margin="0,110,0,0" FontSize="25" FontWeight="Regular" Foreground="#FFFFFF" Content="下一次自动盘点时间："   />
+                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,75,0,0" BorderThickness="0"  Width="226"  Height="64"  
+                        Background="#FFFFFF"  Foreground="#27CDCB" FontSize="28" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="20,20,20,20" CornerRadius="2,2,2,2">
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="40,40,40,40" CornerRadius="4,4,4,4">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="50"/>
+                    <RowDefinition Height="100"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid>
-                    <StackPanel Orientation="Horizontal" Margin="20,5,20,0">
-                        <RadioButton x:Name="BtnUnconfirmed" Style="{StaticResource TabButton}"  Width="70"  Content="待确认"  FontSize="16"  IsChecked="True" Click="onLoadInventory"/>
-                        <RadioButton x:Name="BtnConfirmed"  Style="{StaticResource TabButton}"  Width="70"  Content="已确认"  FontSize="16" Click="onLoadInventory"/>
-                        <RadioButton x:Name="BtnAll" Style="{StaticResource TabButton}"  Width="70"  Content="全部"  FontSize="16" Click="onLoadInventory"/>
+                    <StackPanel Orientation="Horizontal" Margin="80,20,80,0">
+                        <RadioButton x:Name="BtnUnconfirmed" Style="{StaticResource TabButton}"  Width="140"  Content="待确认"  FontSize="16"  IsChecked="True" Click="onLoadInventory"/>
+                        <RadioButton x:Name="BtnConfirmed"  Style="{StaticResource TabButton}"  Width="140"  Content="已确认"  FontSize="16" Click="onLoadInventory"/>
+                        <RadioButton x:Name="BtnAll" Style="{StaticResource TabButton}"  Width="140"  Content="全部"  FontSize="16" Click="onLoadInventory" Visibility="Hidden"/>
                     </StackPanel>
-                    <Label Margin="20,49,20,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="1"/>
+                    <Label Margin="40,98,40,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="2"/>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="ContentView">
-                    <Grid Margin="20">
+                    <Grid Margin="40">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -75,7 +73,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="181"/>
+                            <ColumnDefinition Width="362"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>

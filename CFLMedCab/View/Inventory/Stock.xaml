@@ -15,29 +15,29 @@
             </Grid.RowDefinitions>
             <Border  Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
                 <Grid>
-                    <RadioButton Content="库存查询"  Name="stockSnapshot" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="20,18,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="StockSnapshot"/>
-                    <RadioButton Content="效期查询" Name="validity" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="130,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
-                    <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="17" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="240,18,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
+                    <RadioButton Content="库存查询"  Name="stockSnapshot" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="40,36,0,0" VerticalAlignment="Top" IsChecked="True" Height="35" FontWeight="Bold" Click="StockSnapshot"/>
+                    <RadioButton Content="效期查询" Name="validity" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="260,36,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="EffectivePeriod"/>
+                    <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" Height="35" FontWeight="Bold" Click="StockQuery" />
                 </Grid>
             </Border>
             <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice">
                 <Grid>
-                    <RadioButton Name="stockquery" Content="库存快照" GroupName="stockquery" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="20,10,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
-                    <RadioButton Name="condition" Content="条件查询" GroupName="condition" IsChecked="True" Style="{DynamicResource CircularNavButton}" HorizontalAlignment="Left" Margin="139,10,0,0" VerticalAlignment="Top"  Click="ConditionQuery" />
-                    <TextBox HorizontalAlignment="Left" Name="goods_code" Visibility="Hidden" Height="30" Margin="20,60,0,-24" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
-                    <TextBox HorizontalAlignment="Left" Name="goods_name" Visibility="Hidden" Height="30" Margin="325,60,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
-                    <Button Style="{StaticResource CommonNoButton}" Content="查询" Name="query" Visibility="Hidden" HorizontalAlignment="Left" Margin="659,60,0,0" VerticalAlignment="Top" Click="queryData"/>
+                    <RadioButton Name="stockquery" Content="库存快照" GroupName="stockquery" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" Margin="40,20,0,0" VerticalAlignment="Top" Click="StockSnapshot"/>
+                    <RadioButton Name="condition" Content="条件查询" GroupName="condition" IsChecked="True" Style="{DynamicResource CircularNavButton}" HorizontalAlignment="Left" Margin="278,20,0,0" VerticalAlignment="Top"  Click="ConditionQuery" />
+                    <TextBox HorizontalAlignment="Left" Name="goods_code" Visibility="Hidden" Height="51" Margin="40,120,0,-48" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="22"/>
+                    <TextBox HorizontalAlignment="Left" Name="goods_name" Visibility="Hidden" Height="51" Margin="650,120,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="22" FontWeight="Bold"/>
+                    <Button Style="{StaticResource CommonNoButton}" Content="查询" Name="query" Visibility="Hidden" HorizontalAlignment="Left" Margin="1318,120,0,0" VerticalAlignment="Top" Click="queryData"/>
                 </Grid>
             </Border>
             <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice1" Visibility="Hidden">
                 <Grid>
-                    <RadioButton GroupName="single" Name="All" Content="全部" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left"  Margin="20,10,0,0" VerticalAlignment="Top"/>
+                    <RadioButton GroupName="single" Name="All" Content="全部" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left"  Margin="40,20,0,0" VerticalAlignment="Top"/>
                     <RadioButton GroupName="single" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="-200,-32,514,8" Content="效期小于1个月" />
                     <RadioButton GroupName="single" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="-60,-32,341,8" Content="效期小于2个月" />
                     <RadioButton GroupName="single" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="80,-32,179,8" Content="效期小于3个月" />
-                    <TextBox HorizontalAlignment="Left" Name="goods_code1" Height="30" Margin="20,60,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="14"/>
-                    <TextBox HorizontalAlignment="Left" Name="goods_name1" Height="30" Margin="325,60,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontSize="14" FontWeight="Bold"/>
-                    <Button Style="{StaticResource CommonNoButton}" Content="查询" HorizontalAlignment="Left" Margin="659,60,0,0" Click="queryData"/>
+                    <TextBox HorizontalAlignment="Left" Name="goods_code1" Height="30" Margin="20,60,0,-24" Grid.Row="1" TextWrapping="Wrap" Text="输入商品编码" VerticalAlignment="Top" MinWidth="275" Foreground="#999999" FontWeight="Bold" FontSize="22"/>
+                    <TextBox HorizontalAlignment="Left" Name="goods_name1" Height="30" Margin="325,60,0,0" TextWrapping="Wrap" Text="输入商品名称" VerticalAlignment="Top" MinWidth="275" Foreground="#999999"  FontWeight="Bold" FontSize="22"/>
+                    <Button Style="{StaticResource CommonNoButton}" Content="查询" HorizontalAlignment="Left" Margin="659,60,0,0" Click="queryData" Height="51" Width="222"/>
                 </Grid>
             </Border>
             <Border   Style="{StaticResource CenterRadiusBorder}"  Grid.Row="1"  Name="gChoice2" Visibility="Hidden" >
