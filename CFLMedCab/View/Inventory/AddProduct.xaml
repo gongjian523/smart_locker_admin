@@ -50,8 +50,6 @@
             </Grid>
 
             <Grid  Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                
-                
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="2*" />
@@ -60,7 +58,6 @@
                 <Grid Grid.Column="0" x:Name="Column1"/>
                 <Grid Grid.Column="1" x:Name="Column2"/>
                 <Grid Grid.Column="2" x:Name="Column3"/>
-
                 <Label Content="单品码：" VerticalContentAlignment="Center" Grid.Column="0" />
                 <TextBox  x:Name="codeInputTb"  Height="28" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}"/>
                 <Button Style="{StaticResource AddButton}" Content="新增单品码" Grid.Column="2"  HorizontalAlignment="Right" VerticalAlignment="Top"  Click="onAddProduct"/>

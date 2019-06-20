@@ -6,15 +6,15 @@
       xmlns:local="clr-namespace:CFLMedCab.View"
       xmlns:cvt="clr-namespace:CFLMedCab.Converter"
       mc:Ignorable="d">
-    <Grid Height="260" Width="355">
+    <Grid Height="489" Width="780">
         <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
             <StackPanel>
-                <Image Width="194" Height="126" HorizontalAlignment="Center" Margin="0,45,0,0" >
+                <Image Width="387" Height="252" HorizontalAlignment="Center" Margin="0,89,0,0" >
                     <Image.Source>
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png" />
                     </Image.Source>
                 </Image>
-                <Label Content="柜门已开"  HorizontalAlignment="Center" Margin="0,18,0,0" FontSize="20" Foreground="#619CF8"/>
+                <Label Content="柜门已开"  HorizontalAlignment="Center" Margin="0,35,0,0" FontSize="40" Foreground="#619CF8"/>
             </StackPanel>
         </Border>
     </Grid>
