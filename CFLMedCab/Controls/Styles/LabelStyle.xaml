@@ -54,7 +54,17 @@
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="Opacity" Value="1"/>
     </Style>
-
+    
+    <Style x:Key="lblTitle7" TargetType="{x:Type Label}">
+        <Setter Property="FontFamily" Value="Microsoft YaHei" />
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="Foreground" Value="{StaticResource TitleColor1}" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Opacity" Value="1"/>
+    </Style>
+    
 
     <Style x:Key="lblTitle6" TargetType="{x:Type Label}">
         <Setter Property="FontFamily" Value="Microsoft YaHei" />

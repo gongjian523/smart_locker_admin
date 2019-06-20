@@ -10,37 +10,39 @@
     <UserControl.Resources>
         <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
         <DataTemplate x:Key="pickingOrderView">
-            <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF">
-                <Grid Margin="20" Name="data">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition  Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
-                        <Label Content="工单编号：" HorizontalAlignment="Left" Style="{StaticResource Lable14BoldStyle}"/>
-                        <Label  Content="{Binding code}"  Style="{StaticResource Lable14BoldStyle}"/>
-                        <Label Content="本柜拣货商品数量："  Margin="20 0"  Style="{StaticResource Lable14BoldStyle}" />
-                        <Label  Content="{Binding picked_goods_num}"  Style="{StaticResource Lable14BoldStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
-                        <Label Content="派发时间：" Style="{StaticResource Lable14BoldStyle}" />
-                        <Label  Content="{Binding distribute_time}"  Style="{StaticResource Lable14BoldStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" HorizontalAlignment="Right">
-                        <Button Style="{StaticResource CommonNoButton}" Content="查看详情" Name="Retract" Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  RenderTransformOrigin="0.51,-0.507" Click="onEnterDetail"/>
-                        <Button Style="{StaticResource CommonYesButton}" Content="确认开柜" Name="Confirm"  Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetailOpen"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+            <Grid Margin="20 0">
+                <Border Style="{StaticResource CenterRadiusBorder}">
+                    <Grid  Name="data">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition  Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
+                            <Label Content="工单编号：" HorizontalAlignment="Left" Style="{StaticResource lblTitle7}"/>
+                            <Label  Content="{Binding code}"  Style="{StaticResource lblTitle7}"/>
+                            <Label Content="本柜拣货商品数量："  Margin="20 0"  Style="{StaticResource lblTitle7}" />
+                            <Label  Content="{Binding picked_goods_num}"  Style="{StaticResource lblTitle7}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center">
+                            <Label Content="派发时间：" Style="{StaticResource lblTitle7}" />
+                            <Label  Content="{Binding distribute_time}"  Style="{StaticResource lblTitle7}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0 10 0 0">
+                            <Button Style="{StaticResource CommonNoButton}" Content="查看详情" Name="Retract" Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  RenderTransformOrigin="0.51,-0.507" Click="onEnterDetail"/>
+                            <Button Style="{StaticResource CommonYesButton}" Content="确认开柜" Name="Confirm"  Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetailOpen"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
         </DataTemplate>
     </UserControl.Resources>
     <Grid  Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="96"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Label Content="待完成拣货工单"  Grid.Row="0" HorizontalAlignment="Left" Margin="20,20,20,0" VerticalAlignment="Top" FontSize="32" />
