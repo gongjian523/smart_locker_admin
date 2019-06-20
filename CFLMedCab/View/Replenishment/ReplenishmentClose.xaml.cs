@@ -67,8 +67,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if (replenishBll.UpdateReplenishStatus(replenishSubOrderDto.id, goodsDetails))
-                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            replenishBll.UpdateReplenishStatus(replenishSubOrderDto.id, goodsDetails);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
 

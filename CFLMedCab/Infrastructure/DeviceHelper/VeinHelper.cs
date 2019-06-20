@@ -4,7 +4,6 @@ using System.IO.Ports;
 using System.Text;
 using System.Threading.Tasks;
 
-
 namespace CFLMedCab.Infrastructure.DeviceHelper
 {
     public class VeinHelper : SerialPort

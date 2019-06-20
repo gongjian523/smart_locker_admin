@@ -68,8 +68,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if (pickingBll.UpdatePickingStatus(pickingSubOrderDto.id, goodsDetails))
-                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            pickingBll.UpdatePickingStatus(pickingSubOrderDto.id, goodsDetails);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
 

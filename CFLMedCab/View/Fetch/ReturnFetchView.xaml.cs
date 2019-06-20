@@ -37,8 +37,8 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterReturnFetchHandler(object sender, RoutedEventArgs e);
         public event EnterReturnFetchHandler EnterReturnFetch;
 
-        private Hashtable after;
-        private List<GoodsDto> goodsChageOrderdtls;
+        private Hashtable after = new Hashtable();
+        private List<GoodsDto> goodsChageOrderdtls= new List<GoodsDto>();
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
 

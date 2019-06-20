@@ -506,6 +506,9 @@ namespace CFLMedCab.BLL
 		/// <returns></returns>
 		public bool UpdateGoBackFetchOrder(List<GoodsDto> datasDto)
 		{
+            //if (datasDto.Count == 0)
+            //    return true;
+
 			//获取对应领用单的详情数据
 			var fetchOrderDtls = FetchOrderDal.GetFetchOrderDtlsByGoBackGoodsDtos(datasDto);
 

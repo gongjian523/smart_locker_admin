@@ -10,6 +10,7 @@
     <Control.Resources>
         <cvt:OperateTypeConverter x:Key="OperateTypeConverter"/>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
+        <cvt:ExceptionFlagStrConverter x:Key="ExceptionFlagStrConverter"/>
     </Control.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
@@ -106,7 +107,7 @@
                                     <GridViewColumn Header="有效期至" DisplayMemberBinding="{Binding Path=expire_date,StringFormat='{}{0:yyyy-MM-dd}'}" Width="{Binding ElementName=column6,Path=ActualWidth}"/>
                                     <GridViewColumn Header="操作类型" DisplayMemberBinding="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}" Width="{Binding ElementName=column7,Path=ActualWidth}"/>
                                     <GridViewColumn Header="领用属性" DisplayMemberBinding="{Binding Path=fetch_type, Converter={StaticResource RequisitionAttributeConverter}}" Width="{Binding ElementName=column8,Path=ActualWidth}"/>
-                                    <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
+                                    <GridViewColumn Header="异常标识" DisplayMemberBinding="{Binding Path=exception_flag, Converter={StaticResource ExceptionFlagStrConverter}}"  Width="{Binding ElementName=column9,Path=ActualWidth}" />
                                     <GridViewColumn Header="异常说明" DisplayMemberBinding="{Binding Path=exception_description}" Width="{Binding ElementName=column10,Path=ActualWidth}"/>
                                     <GridViewColumn Header="备注" DisplayMemberBinding="{Binding Path=remarks}" Width="{Binding ElementName=column11,Path=ActualWidth}"/>
 

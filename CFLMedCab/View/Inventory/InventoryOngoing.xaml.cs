@@ -1,4 +1,10 @@
-﻿using System;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.DTO.Goodss;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Model;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -42,6 +48,17 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         public void onPopInventory(object sender, EventArgs e)
         {
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            InventoryBll inventoryBll = new InventoryBll();
+            GoodsBll goodsBll = new GoodsBll();
+
+            List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+            inventoryBll.NewInventory(list, InventoryType.Manual);
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 HidePopInventoryEvent(this, null);

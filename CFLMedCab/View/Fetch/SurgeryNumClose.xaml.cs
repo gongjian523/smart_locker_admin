@@ -91,8 +91,8 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if (fetchOrderBll.UpdateSurgeryOrderdtl(new SurgeryOrderApo { SurgeryOrderCode= surgeryOrderDto.code ,GoodsDtos= goodDtos,OperateGoodsDtos= goodsChageOrderdtls }, surgeryOrderdtlDtos))
-                ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            fetchOrderBll.UpdateSurgeryOrderdtl(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodDtos, OperateGoodsDtos = goodsChageOrderdtls }, surgeryOrderdtlDtos);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
     }

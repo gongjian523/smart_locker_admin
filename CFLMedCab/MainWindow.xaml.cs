@@ -209,9 +209,9 @@ namespace CFLMedCab
         {
             //获得年月日
             this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
-            //获得时分秒
-            // this.tbTimeText.Text = DateTime.Now.ToString("HH:mm:ss");
         }
+        
+        
         #region 领用
         #region 一般领用
         /// <summary>
@@ -222,6 +222,7 @@ namespace CFLMedCab
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            NaviView.Visibility = Visibility.Hidden;
 
             BtnEnterGerFetch.IsChecked = true;
 
@@ -237,6 +238,8 @@ namespace CFLMedCab
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
 
             cabClosedNum = 0;
+
+            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
         }
 
         /// <summary>
@@ -292,6 +295,8 @@ namespace CFLMedCab
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
 
             cabClosedNum = 0;
+
+            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
         }
 
         /// <summary>
@@ -387,6 +392,8 @@ namespace CFLMedCab
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.userData = model;
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
+
+            SpeakerHelper.Sperker("柜门已开，请按照领用单拿取耗材，拿取完毕请关闭柜门");
         }
 
         /// <summary>
@@ -424,6 +431,7 @@ namespace CFLMedCab
         private void onEnterReturnFetch(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            NaviView.Visibility = Visibility.Hidden;
 
             BtnEnterReturnFetch.IsChecked = true;
 
@@ -439,6 +447,8 @@ namespace CFLMedCab
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
 
             cabClosedNum = 0;
+
+            SpeakerHelper.Sperker("柜门已开，请放入您需要回退的耗材，放回完毕请关闭柜门");
         }
 
         /// <summary>
@@ -461,8 +471,6 @@ namespace CFLMedCab
 
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -757,16 +765,16 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopInventory(object sender, System.EventArgs e)
         {
-            bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            //bool isGetSuccess;
+            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
 
-            inventoryBll = new InventoryBll();
-            goodsBll = new GoodsBll();
+            //inventoryBll = new InventoryBll();
+            //goodsBll = new GoodsBll();
 
-            List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
-            inventoryBll.NewInventory(list, InventoryType.Manual);
+            //List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+            //inventoryBll.NewInventory(list, InventoryType.Manual);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -934,6 +942,7 @@ namespace CFLMedCab
                 PopFrame.Visibility = Visibility.Hidden;
                 MaskView.Visibility = Visibility.Hidden;
                 NaviView.Visibility = Visibility.Visible;
+                HomePageView.Visibility = Visibility.Visible;
 
 #if TESTENV
 #else
@@ -1005,7 +1014,6 @@ namespace CFLMedCab
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-            Console.WriteLine("1111111111");
         }
 
         private void TestLocker(object sender, ElapsedEventArgs e)

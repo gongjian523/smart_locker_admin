@@ -14,6 +14,7 @@
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png" />
                     </Image.Source>
                 </Image>
+                <Label Content="柜门已开"  HorizontalAlignment="Center" Margin="0,18,0,0" FontSize="20" Foreground="#619CF8"/>
             </StackPanel>
         </Border>
     </Grid>

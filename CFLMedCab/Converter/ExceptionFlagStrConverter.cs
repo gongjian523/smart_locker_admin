@@ -13,7 +13,7 @@ namespace CFLMedCab.Converter
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if ((ExceptionFlag)value == ExceptionFlag.正常)
-                return "正常";
+                return "";
             else
                 return "异常";
         }
