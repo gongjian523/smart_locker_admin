@@ -53,11 +53,11 @@
                     <Border Style="{StaticResource TipBorder}" Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="当前领入库了" Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="inNum" Style="{StaticResource lblTitle6}"/>
+                            <Label Content=" " Name="inNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品，其中异常操作"  Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitle6}"/>
+                            <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品入库；异常操作" Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="abnormalOutNum" Style="{StaticResource lblTitle6}"/>
+                            <Label Content=" " Name="abnormalOutNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品出库" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>

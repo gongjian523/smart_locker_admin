@@ -52,9 +52,9 @@
                     <Border Style="{StaticResource TipBorder}" Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="当前领用了" Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="inNum" Style="{StaticResource lblTitle6}"/>
+                            <Label Content=" " Name="inNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品，异常操作"  Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitle6}"/>
+                            <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品出库" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>

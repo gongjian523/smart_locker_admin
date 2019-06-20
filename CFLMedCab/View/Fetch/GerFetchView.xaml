@@ -47,13 +47,13 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}" >
+                    <Border Grid.Row="0" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="当前领用了"/>
-                            <Label Content=" " Name="normalNum"/>
-                            <Label Content="个商品，异常操作" />
-                            <Label Content=" " Name="abnormalNum"/>
-                            <Label Content="个商品入库" />
+                            <Label Content="当前领用了" Style="{StaticResource lblTitle1}"/>
+                            <Label Content=" " Name="normalNum" Style="{StaticResource lblTitleRed}"/>
+                            <Label Content="个商品，异常操作" Style="{StaticResource lblTitle1}"/>
+                            <Label Content=" " Name="abnormalNum" Style="{StaticResource lblTitleRed}"/>
+                            <Label Content="个商品入库" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>
                     <Border Grid.Row="1"  VerticalAlignment="Center">

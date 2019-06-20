@@ -81,13 +81,13 @@
                         <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Label Content="当前领用了"  Style="{StaticResource lblTitle1}"/>
-                                <Label Content=" " Name="inNum"  Style="{StaticResource lblTitle6}"/>
+                                <Label Content=" " Name="inNum" Style="{StaticResource lblTitleRed}"/>
                                 <Label Content="个商品，其中异常操作"  Style="{StaticResource lblTitle1}"/>
-                                <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitle6}"/>
+                                <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
                                 <Label Content="个商品入库；异常操作"  Style="{StaticResource lblTitle1}" />
-                                <Label Content=" " Name="abnormalOutNum"  Style="{StaticResource lblTitle6}"/>
+                                <Label Content=" " Name="abnormalOutNum"  Style="{StaticResource lblTitleRed}"/>
                                 <Label Content="个商品出库；有"   Style="{StaticResource lblTitle1}"/>
-                                <Label Content=" " Name="waitNum"  Style="{StaticResource lblTitle6}"/>
+                                <Label Content=" " Name="waitNum"  Style="{StaticResource lblTitleRed}"/>
                                 <Label Content="个商品待领用"  Style="{StaticResource lblTitle1}"/>
                             </StackPanel>
                         </Border>
@@ -154,7 +154,7 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -240,7 +240,7 @@
                                     <GridViewColumn Header="异常标识"  Width="{Binding ElementName=column9,Path=ActualWidth}" >
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=exception_flag}"/>
+                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=exception_flag,Converter={StaticResource ExceptionFlagStrConverter}}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
