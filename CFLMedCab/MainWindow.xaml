@@ -52,7 +52,7 @@
                     FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
             </Grid>
             <Grid x:Name="HomePageView" Grid.Row="1" Background="{StaticResource ContentBkBrush}" Panel.ZIndex="1">
-                <Border Margin="40"  Background="#FFFFFF" CornerRadius="3,3,3,3" Padding="10">
+                <Border Margin="40"  Background="#FFFFFF" CornerRadius="6,6,6,6" Padding="10">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
@@ -61,9 +61,9 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition />
+                            <RowDefinition />
+
                         </Grid.RowDefinitions>
                         <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="0" Margin="10,10,10,10"   Background="#7291FD"  Content="一般领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="onEnterGerFetch"/>
