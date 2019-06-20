@@ -311,7 +311,7 @@
     </Style>
 
     <Style x:Key="ReturnButton" TargetType="{x:Type Button}">
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="28"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -336,7 +336,7 @@
     </Style>
 
     <Style x:Key="CommonYesButton" TargetType="{x:Type Button}">
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="22"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -345,8 +345,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="113" MinHeight="32" Width="{TemplateBinding Width}"  Background="#457EFF" CornerRadius="{StaticResource GRadius}">
-                            <Label x:Name="RightLabel" FontSize="15"  HorizontalAlignment="Center" Content="{TemplateBinding RadioButton.Content}"  Foreground="#FFFFFF"></Label>
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="150" Padding="5" MinHeight="48" Width="{TemplateBinding Width}"  Background="#457EFF" CornerRadius="{StaticResource GRadius}">
+                            <TextBlock x:Name="RightLabel" FontSize="22"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#FFFFFF"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -361,7 +361,7 @@
     </Style>
 
     <Style x:Key="CommonNoButton" TargetType="{x:Type Button}">
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="22"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -370,8 +370,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="113" MinHeight="32"  Width="{TemplateBinding Width}" BorderThickness="1" BorderBrush="{StaticResource TitleColor2}"  Background="#FFFFFF"  CornerRadius="{StaticResource GRadius}">
-                            <Label x:Name="RightLabel" FontSize="15"  HorizontalAlignment="Center" Content="{TemplateBinding RadioButton.Content}"  Foreground="{StaticResource TitleColor2}"></Label>
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="150" MinHeight="48" Padding="5"  Width="{TemplateBinding Width}" BorderThickness="1" BorderBrush="{StaticResource TitleColor2}"  Background="#FFFFFF"  CornerRadius="{StaticResource GRadius}">
+                            <TextBlock x:Name="RightLabel" FontSize="22"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="{StaticResource TitleColor2}"></TextBlock>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -386,7 +386,7 @@
     </Style>
 
     <Style x:Key="AddButton" TargetType="{x:Type Button}">
-        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="FontSize" Value="24"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -398,7 +398,7 @@
                         <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" Width="auto"  Background="{x:Null}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Resources/Images/add.png"/>
-                                <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}"  Foreground="#457EFF"></Label>
+                                <TextBlock x:Name="RightLabel" FontSize="22"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#457EFF"/>
                             </StackPanel>
                         </Border>
                     </Grid>
@@ -414,7 +414,7 @@
     </Style>
 
     <Style x:Key="ListButton" TargetType="{x:Type Button}">
-        <Setter Property="FontSize" Value="11"/>
+        <Setter Property="FontSize" Value="18"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
@@ -424,7 +424,7 @@
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
                         <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" Width="auto"  Background="{x:Null}">
-                            <Label x:Name="RightLabel" FontSize="15" Content="{TemplateBinding RadioButton.Content}"  Foreground="#FF0C80F3"></Label>
+                            <TextBlock x:Name="RightLabel" FontSize="18"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#FF0C80F3"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>

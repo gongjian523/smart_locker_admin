@@ -10,8 +10,8 @@
     <UserControl.Resources>
         <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
         <DataTemplate x:Key="replenishOrder">
-            <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF">
-                <Grid Margin="40" Name="data" >
+            <Border CornerRadius="{DynamicResource GRadius}" Background="#FFFFFF" Margin="0 10">
+                <Grid Name="data" >
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition  Width="*"/>
@@ -40,10 +40,10 @@
     </UserControl.Resources>
     <Grid Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="57"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center"  Margin="40,0,0,0" Style="{StaticResource Lable16BoldStyle}"/>
+        <Label  Style="{StaticResource lblTitle5}" Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center" />
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="40,0,40,40">
             <ItemsControl ItemTemplate="{StaticResource replenishOrder}" ItemsSource="{Binding ReplenishOrderViewList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
