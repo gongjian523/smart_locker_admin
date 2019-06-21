@@ -69,7 +69,7 @@ namespace CFLMedCab.DAL
 			//查询语句
 			var queryable = Db.Queryable<ReplenishSubOrder,ReplenishOrder>((rso, ro) => new object[] {
             JoinType.Left, rso.replenish_order_code == ro.code})
-				.Where((rso, ro) => rso.status == 0 && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.Where((rso, ro) => (rso.status == (int)RSOStatusType.待上架 || rso.status == (int)RSOStatusType.部分上架) && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
 				.OrderBy(rso => rso.create_time, OrderByType.Desc)
 				.Select((rso, ro) => new ReplenishSubOrderDto
 				{
@@ -143,27 +143,32 @@ namespace CFLMedCab.DAL
 			var result = Db.Ado.UseTran(() =>
 			{
 
-				Db.Updateable(replenishSubOrderdtlDtos.MapToList<ReplenishSubOrderdtlDto, ReplenishSubOrderdtl>()).ExecuteCommand();
+				bool isSuccess = Db.Updateable(replenishSubOrderdtlDtos.MapToList<ReplenishSubOrderdtlDto, ReplenishSubOrderdtl>()).ExecuteCommand() > 0;
 
-				int currentStatus;
+				if (isSuccess)
+				{
+					int currentStatus;
 
-				if (!replenishSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.待完成 ))
-				{
-					currentStatus = (int)RSOStatusType.已上架;
-				}
-				if (!replenishSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.已完成))
-				{
-					currentStatus = (int)RSOStatusType.待上架;
-				}
-				else
-				{
-					currentStatus = (int)RSOStatusType.部分上架;
+					if (!replenishSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.待完成))
+					{
+						currentStatus = (int)RSOStatusType.已上架;
+					}
+					if (!replenishSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.已完成))
+					{
+						currentStatus = (int)RSOStatusType.待上架;
+					}
+					else
+					{
+						currentStatus = (int)RSOStatusType.部分上架;
+					}
+
+					Db.Updateable<ReplenishSubOrder>()
+					.SetColumns(it => new ReplenishSubOrder() { status = currentStatus })
+					.Where(it => it.id == replenishSubOrderid)
+					.ExecuteCommand();
 				}
 
-				Db.Updateable<ReplenishSubOrder>()
-				.SetColumns(it => new ReplenishSubOrder() { status = currentStatus })
-				.Where(it => it.id == replenishSubOrderid)
-				.ExecuteCommand();
+				
 
 			});
 

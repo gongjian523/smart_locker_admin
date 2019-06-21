@@ -69,7 +69,7 @@ namespace CFLMedCab.DAL
 			//查询语句
 			var queryable = Db.Queryable<PickingSubOrder, PickingOrder>((pso, po) =>new object[] {
             JoinType.Left, pso.picking_order_code == po.code})
-				.Where((pso, po) => pso.status == 0 &&  po.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.Where((pso, po) => (pso.status == (int)PSOStatusType.待拣货 || pso.status == (int)PSOStatusType.部分拣货)  &&  po.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
 				.OrderBy(pso => pso.create_time, OrderByType.Desc)
 				.Select((pso, po) => new PickingSubOrderDto
 				{
@@ -142,27 +142,32 @@ namespace CFLMedCab.DAL
 			//事务防止多修改产生脏数据
 			var result = Db.Ado.UseTran(() =>
 			{
-				Db.Updateable(pickingSubOrderdtlDtos.MapToList<PickingSubOrderdtlDto, PickingSubOrderdtl>()).ExecuteCommand();
+
 			
-				int currentStatus;
+				bool isSuccess = Db.Updateable(pickingSubOrderdtlDtos.MapToList<PickingSubOrderdtlDto, PickingSubOrderdtl>()).ExecuteCommand() > 0;
 
-				if (!pickingSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.待完成))
+				if (isSuccess)
 				{
-					currentStatus = (int)PSOStatusType.已拣货;
-				}
-				if (!pickingSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.已完成))
-				{
-					currentStatus = (int)PSOStatusType.待拣货;
-				}
-				else
-				{
-					currentStatus = (int)PSOStatusType.部分拣货;
-				}
+					int currentStatus;
 
-				Db.Updateable<ReplenishSubOrder>()
-					.SetColumns(it => new ReplenishSubOrder() { status = currentStatus })
-					.Where(it => it.id == pickingSubOrderid)
-					.ExecuteCommand();
+					if (!pickingSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.待完成))
+					{
+						currentStatus = (int)PSOStatusType.已拣货;
+					}
+					if (!pickingSubOrderdtlDtos.Exists(it => it.status == (int)RPOStatusType.已完成))
+					{
+						currentStatus = (int)PSOStatusType.待拣货;
+					}
+					else
+					{
+						currentStatus = (int)PSOStatusType.部分拣货;
+					}
+
+					Db.Updateable<ReplenishSubOrder>()
+						.SetColumns(it => new ReplenishSubOrder() { status = currentStatus })
+						.Where(it => it.id == pickingSubOrderid)
+						.ExecuteCommand();
+				}
 
 			});
 
