@@ -75,7 +75,7 @@ namespace CFLMedCab
             InitializeComponent();
             foreach (Screen scr in Screen.AllScreens)
             {
-                if (!scr.Primary)
+                if (scr.Primary)
                 {
                     //设置窗体位置
                     WindowStartupLocation = WindowStartupLocation.Manual;
@@ -1059,17 +1059,6 @@ namespace CFLMedCab
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Taskbar.HideTask(true);
-            //WindowStartupLocation = WindowStartupLocation.Manual;
-            //Left = scr.WorkingArea.Left;
-            //Top = scr.WorkingArea.Top;
-            //Width = scr.Bounds.Width;
-            //Height = scr.Bounds.Height;
-            //Topmost = true;
-            //WindowState = WindowState.Maximized;
-            //ResizeMode = ResizeMode.NoResize;
-            //WindowStyle = WindowStyle.None;
-            //WindowState = WindowState.Normal;
-            //ShowInTaskbar = false;
         }
 
 
@@ -1124,7 +1113,7 @@ namespace CFLMedCab
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
-            //Taskbar.HideTask(false);
+            Taskbar.HideTask(false);
         }
     }
 }
