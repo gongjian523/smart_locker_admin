@@ -320,7 +320,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinHeight="150" MinWidth="48"  Background="{x:Null}">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinHeight="60" MinWidth="48"  Background="{x:Null}">
                             <Label x:Name="RightLabel" Content="{TemplateBinding RadioButton.Content}" Style="{StaticResource lblTitle6}" Foreground="#457EFF"></Label>
                         </Border>
                     </Grid>
