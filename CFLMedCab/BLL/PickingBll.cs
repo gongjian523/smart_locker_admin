@@ -49,7 +49,7 @@ namespace CFLMedCab.BLL
 			{
 				PageIndex = basePageDataApo.PageIndex,
 				PageSize = basePageDataApo.PageSize,
-				Data = pickingDal.GetPickingSubOrderDto(basePageDataApo, out int totalCount),
+				Data = pickingDal.GetPickingSubOrderDto(basePageDataApo, out int totalCount).Where(item => item.picked_goods_num > 0).ToList(),
 				TotalCount = totalCount
 			};
 		}
