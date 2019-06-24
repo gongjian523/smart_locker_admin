@@ -262,6 +262,7 @@ namespace CFLMedCab
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Hidden;
 
             GerFetchState gerFetchState = new GerFetchState(1);
@@ -389,6 +390,7 @@ namespace CFLMedCab
         private void onEnterSurgery(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
 
             SurgeryQuery surgeryQuery = new SurgeryQuery();
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
@@ -507,6 +509,7 @@ namespace CFLMedCab
         private void onEnterReturnFetch(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Hidden;
 
             GerFetchState gerFetchState = new GerFetchState(2);
@@ -573,6 +576,7 @@ namespace CFLMedCab
         private void onEnterReplenishment(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
 
             Replenishment replenishment = new Replenishment();
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
@@ -688,6 +692,7 @@ namespace CFLMedCab
         private void onEnterReturnGoods(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
 
             ReturnGoods returnGoods = new ReturnGoods();
             returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
@@ -804,6 +809,7 @@ namespace CFLMedCab
         private void onEnterInvtory(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
 
             Inventory inventory = new Inventory();
             inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
@@ -942,6 +948,7 @@ namespace CFLMedCab
         private void onEnterStock(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
 
             Stock stock = new Stock();
             stock.EnterStockDetailedEvent += new Stock.EnterStockDetailedHandler(onEnterStockDetailedEvent);
@@ -1006,6 +1013,7 @@ namespace CFLMedCab
                 MaskView.Visibility = Visibility.Hidden;
                 NaviView.Visibility = Visibility.Visible;
                 HomePageView.Visibility = Visibility.Visible;
+                btnBackHP.Visibility = Visibility.Hidden;
 
 #if TESTENV
 #else
@@ -1031,14 +1039,43 @@ namespace CFLMedCab
             }));
         }
 
-
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Taskbar.HideTask(true);
         }
 
 
-#region test
+        /// <summary>
+        /// 退出按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onExit(object sender, RoutedEventArgs e)
+        {
+
+            NaviView.Visibility = Visibility.Visible;
+            HomePageView.Visibility = Visibility.Visible;
+            btnBackHP.Visibility = Visibility.Hidden;
+#if TESTENV
+#else
+            LoginBkView.Visibility = Visibility.Visible;
+#endif
+            vein.ChekVein();
+        }
+
+        /// <summary>
+        /// 返回首页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onBackToHP(object sender, RoutedEventArgs e)
+        {
+            NaviView.Visibility = Visibility.Visible;
+            HomePageView.Visibility = Visibility.Visible;
+            btnBackHP.Visibility = Visibility.Hidden;
+        }
+
+        #region test
 
         private void MockData()
         {

@@ -43,6 +43,10 @@
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" />
                     </Image.Source>
                 </Image>
+
+                <Button Style="{StaticResource CommonYesButton}" Content="退出"     Name="btnExit" Margin="400,5,0,5" HorizontalAlignment="Left"   Click="onExit"/>
+                <Button Style="{StaticResource CommonYesButton}" Content="回到首页" Name="btnBackHP"  Margin="600,5,0,5" HorizontalAlignment="Left"  Click="onBackToHP" Visibility="Hidden"/>
+
                 <TextBlock Height="Auto"
                     Margin="0,0,150,0"
                     x:Name="tbDateText"
