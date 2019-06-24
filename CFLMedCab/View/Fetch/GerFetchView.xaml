@@ -56,9 +56,6 @@
                             <Label Content="个商品入库" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>
-                    <Border Grid.Row="1"  VerticalAlignment="Center">
-                        <Label Content="本次操作明细" Height="30" Width="auto" HorizontalAlignment="Left"  VerticalAlignment="Center"/>
-                    </Border>
 
                     <Grid Grid.Row="2">
                         <Grid>

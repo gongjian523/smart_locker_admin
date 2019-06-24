@@ -14,8 +14,8 @@
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/CloseDoor.png" />
                     </Image.Source>
                 </Image>
-                <Label Content="本次操作完成"  HorizontalAlignment="Center" Margin="0,46,0,0" FontSize="34" Foreground="#619CF8"/>
-                <Label Content="欢迎您继续使用乘法云链耗材管理系统"  HorizontalAlignment="Center" Margin="0,0,0,74" FontSize="18" Foreground="#333333"/>
+                <Label Content="本次操作完成"  HorizontalAlignment="Center" Margin="0,46,0,0" FontSize="36" Foreground="#619CF8"/>
+                <Label Content="欢迎您继续使用乘法云链耗材管理系统"  HorizontalAlignment="Center" Margin="0,0,0,74" FontSize="28" Foreground="#333333"/>
             </StackPanel>
         </Border>
     </Grid>

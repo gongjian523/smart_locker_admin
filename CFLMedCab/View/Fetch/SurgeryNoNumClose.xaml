@@ -82,7 +82,6 @@
                             <Grid Grid.Column="6" x:Name="column7"/>
                         </Grid>
 
-                        <Label Content="本次操作明细" Grid.Row="0" Height="30" Style="{StaticResource lblTitle5 }"/>
                         <ListView Style="{StaticResource DefaultListView}" Grid.Row="1"  ItemsSource="{Binding}" Name="listView">
                             <ListView.View>
                                 <GridView>
