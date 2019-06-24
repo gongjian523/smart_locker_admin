@@ -40,6 +40,8 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.APO.Surgery;
 using CFLMedCab.DTO.Surgery;
 using System.Runtime.InteropServices;
+using CFLMedCab.Controls;
+using static CFLMedCab.Controls.Taskbar;
 
 namespace CFLMedCab
 {
@@ -66,12 +68,6 @@ namespace CFLMedCab
         private ReplenishSubOrderDto testRSOPara = new ReplenishSubOrderDto();
         private PickingSubOrderDto testPSOPara = new PickingSubOrderDto();
 #endif
-        [DllImport("user32.dll")]
-        public static extern IntPtr FindWindow(String className, String captionName);
-
-        [DllImport("user32.dll")]
-        public static extern bool ShowWindow(IntPtr hwnd, uint nCmdShow);
-
 
         public MainWindow()
         {
@@ -1028,10 +1024,7 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            var rwl = FindWindow("Shell_TrayWnd", null);
-            ShowWindow(rwl, 0);
-            var rwl2 = FindWindow("Button", null);
-            ShowWindow(rwl2, 0);
+            Taskbar.HideTask(true);
             this.WindowState = WindowState.Maximized;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.NoResize;
@@ -1094,10 +1087,7 @@ namespace CFLMedCab
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
-            var rwl = FindWindow("Shell_TrayWnd", null);
-            var rwl2 = FindWindow("Button", null);
-            ShowWindow(rwl, 1);
-            ShowWindow(rwl2, 1);
+            Taskbar.HideTask(false);
         }
     }
 }
