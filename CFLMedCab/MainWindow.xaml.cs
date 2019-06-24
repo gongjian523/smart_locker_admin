@@ -782,6 +782,7 @@ namespace CFLMedCab
 
             Inventory inventory = new Inventory();
             inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
+            inventory.HidePopInventoryEvent += new Inventory.HidePopInventoryHandler(onHidePopInventory);
             inventory.EnterPopInventoryPlanEvent += new Inventory.EnterPopInventoryPlanHandler(onEnterPopInventoryPlan);
             inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
 
@@ -797,7 +798,6 @@ namespace CFLMedCab
         private void onEnterPopInventory(object sender, System.EventArgs e)
         {
             InventoryOngoing inventoryOngoing = new InventoryOngoing();
-            inventoryOngoing.HidePopInventoryEvent += new InventoryOngoing.HidePopInventoryHandler(onHidePopInventory);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -815,21 +815,10 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopInventory(object sender, System.EventArgs e)
         {
-            //bool isGetSuccess;
-            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-
-            //ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
-            //inventoryBll = new InventoryBll();
-            //goodsBll = new GoodsBll();
-
-            //List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
-            //inventoryBll.NewInventory(list, InventoryType.Manual);
-
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 PopFrame.Visibility = Visibility.Hidden;
-                MaskView.Visibility = Visibility.Hidden;
+                MaskView.Visibility = Visibility.Hidden;        
             }));            
         }
 
@@ -845,7 +834,6 @@ namespace CFLMedCab
             inventoryDetail.EnterInventoryEvent += new InventoryDetail.EnterInventoryHandler(onEnterInvtory);
 
             ContentFrame.Navigate(inventoryDetail);
-
         }
 
 
@@ -879,6 +867,7 @@ namespace CFLMedCab
             {
                 PopFrame.Visibility = Visibility.Hidden;
                 MaskView.Visibility = Visibility.Hidden;
+                
             }));
         }
 
@@ -1024,7 +1013,7 @@ namespace CFLMedCab
             this.WindowState = WindowState.Maximized;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.NoResize;
-           // this.Topmost = true;
+            this.Topmost = true;
             this.Left = 0.0;
             this.Top = 0.0;
             this.Width = SystemParameters.PrimaryScreenWidth;
@@ -1038,7 +1027,6 @@ namespace CFLMedCab
         {
             test.InitGoodsInfo();
             test.InitUsersInfo();
-
 
 #if TESTENV
             LoginBkView.Visibility = Visibility.Hidden;

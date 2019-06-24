@@ -26,43 +26,9 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class InventoryOngoing : UserControl
     {
-        private Timer timer;
-
-        public delegate void HidePopInventoryHandler(object sender, RoutedEventArgs e);
-        public event HidePopInventoryHandler HidePopInventoryEvent;
-
         public InventoryOngoing()
         {
             InitializeComponent();
-
-            timer = new Timer(3000);
-            timer.AutoReset = false;
-            timer.Enabled = true;
-            timer.Elapsed += new ElapsedEventHandler(onPopInventory);
-        }
-
-        /// <summary>
-        /// 三秒之后显示提示消息
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void onPopInventory(object sender, EventArgs e)
-        {
-            bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
-            InventoryBll inventoryBll = new InventoryBll();
-            GoodsBll goodsBll = new GoodsBll();
-
-            List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
-            inventoryBll.NewInventory(list, InventoryType.Manual);
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                HidePopInventoryEvent(this, null);
-            }));
         }
     }
 }

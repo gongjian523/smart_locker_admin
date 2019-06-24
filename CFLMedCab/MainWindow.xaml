@@ -26,9 +26,9 @@
                 </Image.Source>
             </Image>
             <StackPanel>
-                <TextBlock HorizontalAlignment="Center" Margin="0,460,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="55" 
+                <TextBlock HorizontalAlignment="Center" Margin="0,460,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="60" 
                        Foreground="#FFFFFF" Text="欢迎使用乘法云链耗材管理系统"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,61,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="46" 
+                <TextBlock HorizontalAlignment="Center" Margin="0,61,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="55" 
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
             </StackPanel>
         </Grid>

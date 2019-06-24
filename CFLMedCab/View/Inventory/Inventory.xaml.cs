@@ -32,6 +32,9 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryHandler EnterPopInventoryEvent;
 
+        public delegate void HidePopInventoryHandler(object sender, System.EventArgs e);
+        public event HidePopInventoryHandler HidePopInventoryEvent;
+
         public delegate void EnterPopInventoryPlanHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryPlanHandler EnterPopInventoryPlanEvent;
 
@@ -47,30 +50,7 @@ namespace CFLMedCab.View.Inventory
 
             GetInventoryList();
 
-            List<InventoryPlan> inventoryPlans = inventoryBll.GetInventoryPlan().Where(it=>it.status==0).ToList();
-
-            TimeSpan timeSpan=new TimeSpan();
-
-            DateTime date1 = DateTime.Now;
-            DateTime date=DateTime.Now;
-
-            foreach (var item in inventoryPlans)
-            {
-                DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0, 2)), int.Parse(item.inventorytime_str.Substring(3, 2)), 0);
-                if (date2 < date1)
-                    date2 = date2.AddDays(1);
-                TimeSpan timeSpan1 = date2 - date1;
-               
-                if (timeSpan > timeSpan1|| timeSpan==new TimeSpan())
-                {
-                    timeSpan = timeSpan1;
-                    date = date2;
-                }
-            }
-            if(timeSpan != new TimeSpan())
-            {
-                inventoryTime.Content = date.ToString("yyyy-MM-dd HH:mm");
-            }
+            SetNextAutoInvTime();
         }
 
         /// <summary>
@@ -83,18 +63,32 @@ namespace CFLMedCab.View.Inventory
 
             EnterPopInventoryEvent(this, null);
 
-            Timer invTimer = new Timer(1000);
+            Timer invTimer = new Timer(3000);
             invTimer.AutoReset = false;
             invTimer.Enabled = true;
-            invTimer.Elapsed += new ElapsedEventHandler(onStartInventory);
+            invTimer.Elapsed += new ElapsedEventHandler(onEndInventory);
         }
 
-        public void onStartInventory(object sender, EventArgs e)
+        public void onEndInventory(object sender, EventArgs e)
         {
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            InventoryBll inventoryBll = new InventoryBll();
+            GoodsBll goodsBll = new GoodsBll();
+
+            List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
+            inventoryBll.NewInventory(list, InventoryType.Manual);
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 GetInventoryList();
             }));
+
+            HidePopInventoryEvent(this, null);
+
         }
 
         /// <summary>
@@ -118,9 +112,6 @@ namespace CFLMedCab.View.Inventory
             para.btnType = btnItem.Name == "BtnDetail" ? 1 : 0;
 
             EnterInventoryDetailEvent(this, para);
-
-            this.listView.Items.Refresh();
-
         }
 
         private void onLoadInventory(object sender, RoutedEventArgs e)
@@ -147,8 +138,44 @@ namespace CFLMedCab.View.Inventory
                 }).Data;
             }
 
-            listView.DataContext = inventoryOrderDtos;
+            inventoryListView.DataContext = inventoryOrderDtos;
+            inventoryListView.Items.Refresh();
         }
 
+
+        private void SetNextAutoInvTime()
+        {
+            List<InventoryPlan> inventoryPlans = inventoryBll.GetInventoryPlan().Where(it => it.status == 0).ToList();
+
+            if(inventoryPlans.Count == 0)
+            {
+                inventoryTime.Content = "暂无盘点计划"; 
+                return;
+            }
+
+            TimeSpan timeSpan = new TimeSpan();
+
+            DateTime date1 = DateTime.Now;
+            DateTime date = DateTime.Now;
+
+            foreach (var item in inventoryPlans)
+            {
+                DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0, 2)), int.Parse(item.inventorytime_str.Substring(3, 2)), 0);
+                if (date2 < date1)
+                    date2 = date2.AddDays(1);
+                TimeSpan timeSpan1 = date2 - date1;
+
+                if (timeSpan > timeSpan1 || timeSpan == new TimeSpan())
+                {
+                    timeSpan = timeSpan1;
+                    date = date2;
+                }
+            }
+            if (timeSpan != new TimeSpan())
+                inventoryTime.Content = "下一次自动盘点时间" + date.ToString("yyyy-MM-dd HH:mm");
+            else
+                inventoryTime.Content = "暂无盘点计划";
+        }
     }
+    
 }

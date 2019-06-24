@@ -37,6 +37,11 @@ namespace CFLMedCab.Test
                 return;
 
             List<User> users = new List<User> {
+                 new User{
+                    name = "郭颖",
+                    role = 0,
+                    vein_id = 57688,
+                },
                 new User{
                     name = "Nathan",
                     role = 0,

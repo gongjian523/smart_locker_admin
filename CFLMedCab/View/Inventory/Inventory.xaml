@@ -33,20 +33,19 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Border Background="#29A8EF" Margin="40,40,20,0" CornerRadius="4,4,4,4">
+        <Border Background="{StaticResource ManuInvBrush}" Margin="40,40,20,0" CornerRadius="4,4,4,4">
             <Grid>
                 <Label HorizontalAlignment="Center" Margin="0,68,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
                 <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,150,0,0" BorderThickness="0"  Width="226"  Height="64"  
-                        Background="#FFFFFF"  Foreground="#29A8EF" FontSize="28" Content="盘点"  Click="onEnterPopInventory" />
+                        Background="#FFFFFF"  Foreground="{StaticResource ManuInvBrush}" FontSize="28" Content="盘点"  Click="onEnterPopInventory" />
             </Grid>
         </Border>
-        <Border Grid.Column="1" Background="#27CDCB" Margin="20,40,40,0" CornerRadius="4,4,4,4">
+        <Border Grid.Column="1" Background="{StaticResource AutoInvBrush}" Margin="20,40,40,0" CornerRadius="4,4,4,4">
             <Grid>
                 <Label HorizontalAlignment="Center" Margin="0,48,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
-                <Label HorizontalAlignment="Center" Margin="0,110,0,0" FontSize="20" FontWeight="Regular" Foreground="#FFFFFF" Content="下一次自动盘点时间："   />
-                <Label Name="inventoryTime" Margin="0,130,0,0" HorizontalAlignment="Center"  FontSize="20" Foreground="White" Content="暂无盘点计划"/>
+                <Label Name="inventoryTime" HorizontalAlignment="Center" Margin="0,110,0,0" FontSize="20" FontWeight="Regular" Foreground="#FFFFFF"/>
                 <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,145,0,0" BorderThickness="0"  Width="226"  Height="64"  
-                        Background="#FFFFFF"  Foreground="#27CDCB" FontSize="28" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
+                        Background="#FFFFFF"  Foreground="{StaticResource AutoInvBrush}" FontSize="28" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
             </Grid>
         </Border>
 
@@ -85,8 +84,8 @@
                         <Grid Grid.Column="6" x:Name="column7"/>
                         <Grid Grid.Column="7" x:Name="column8"/>
                     </Grid>
-                    <ListView  Margin="10,10,0,0" VerticalAlignment="Top"  AlternationCount="2" 
-                               ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left"  
+                    <ListView  x:Name="inventoryListView" Margin="10,10,0,0" VerticalAlignment="Top"  AlternationCount="2" 
+                               ItemsSource="{Binding}"  HorizontalAlignment="Left"  
                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                                Style="{StaticResource DefaultListView}"
                                >
