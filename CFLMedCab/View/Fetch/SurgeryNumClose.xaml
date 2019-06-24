@@ -12,13 +12,13 @@
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
         <cvt:ExceptionFlagStrConverter x:Key="ExceptionFlagStrConverter"/>
     </Control.Resources>
-  <Border Style="{StaticResource CommonBlueBorder}">
+    <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
 
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
                 <Grid>
@@ -31,16 +31,21 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Label Style="{StaticResource lblTitle1}" Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" />
                     <Label Style="{StaticResource lblTitle2}"  Content="手术领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" />
-                    <Label Style="{StaticResource lblTitle3}"  Content="操作人" Grid.Row="2" Grid.Column="0" />
-                    <Label Style="{StaticResource lblTitle4_0}"  Content="Label" Name="operatorName" Grid.Row="3" Grid.Column="0"  />
-                    <Label Style="{StaticResource lblTitle3}"  Content="手术单号" Grid.Row="2" Grid.Column="1" />
-                    <Label Style="{StaticResource lblTitle4_1}"  Content="Label" Name="surgeryNum"  Grid.Row="4" Grid.Column="1" />
-                    <Label Style="{StaticResource lblTitle3}"  Content="操作日期" Grid.Row="2" Grid.Column="2" />
-                    <Label Style="{StaticResource lblTitle4_1}"  Content="Label" Name="time" Grid.Row="4" Grid.Column="2" />
+                    <StackPanel  Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
+                        <Label Style="{StaticResource lblTitle3}"  Content="操作人"/>
+                            <Label Style="{StaticResource lblTitle4_0}"  Content="Label" Name="operatorName" />
+                    </StackPanel>
+                    <StackPanel  Grid.Column="1" Grid.Row="2"  Orientation="Horizontal">
+                        <Label Style="{StaticResource lblTitle3}"  Content="手术单号"/>
+                            <Label Style="{StaticResource lblTitle4_1}"  Content="Label" Name="surgeryNum"/>
+                    </StackPanel>
+                    <StackPanel  Grid.Column="2" Grid.Row="2"  Orientation="Horizontal">
+                        <Label Style="{StaticResource lblTitle3}"  Content="操作日期"/>
+                        <Label Style="{StaticResource lblTitle4_1}"  Content="Label" Name="time"/>
+                    </StackPanel>
                 </Grid>
             </Border>
             <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="1">
@@ -215,11 +220,11 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-             
+
                     <Label Style="{StaticResource lblTitle5}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Grid.Column="1">
-                    <Button Style="{StaticResource CommonYesButton}" Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
-                    <Button Style="{StaticResource CommonNoButton}" Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
+                        <Button Style="{StaticResource CommonYesButton}" Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
+                        <Button Style="{StaticResource CommonNoButton}" Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
                     </StackPanel>
                 </Grid>
             </Border>

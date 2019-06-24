@@ -6,7 +6,8 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              xmlns:ctr="clr-namespace:CFLMedCab.Controls"
-             xmlns:cvt="clr-namespace:CFLMedCab.Converter">
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
+             >
     <UserControl.Resources>
         <Style x:Key="{x:Type ctr:EditBox}" TargetType="{x:Type ctr:EditBox}" >
             <Setter Property="HorizontalAlignment" Value="Left"  />
@@ -24,7 +25,7 @@
         <cvt:InventoryStatusStrConverter x:Key="InventoryStatusStrConverter"/>
         <cvt:InventoryTypeStrConverter x:Key="InventoryTypeStrConverter"/>
     </UserControl.Resources>
-    
+
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
             <Grid.RowDefinitions>
@@ -40,7 +41,6 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
@@ -50,12 +50,18 @@
 
                     <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle1}" />
                     <Label Content="{Binding code}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" Style="{StaticResource lblTitle2}"/>
-                    <Label Content="盘点日期" Grid.Row="2" Grid.Column="0" Style="{StaticResource lblTitle3}"/>
-                    <Label Content="盘点状态" Grid.Row="2" Grid.Column="1" Style="{StaticResource lblTitle3}"/>
-                    <Label Content="盘点类型" Grid.Row="2" Grid.Column="2" Style="{StaticResource lblTitle3}"/>
-                    <Label Content="{Binding create_time}" Grid.Row="3" Grid.Column="0" Style="{StaticResource lblTitle4_0}"/>
-                    <Label Content="{Binding type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Grid.Row="3" Grid.Column="1" Style="{StaticResource lblTitle4_1}"/>
-                    <Label Content="{Binding status, Converter= {StaticResource InventoryStatusStrConverter} }" Grid.Row="3" Grid.Column="2" Style="{StaticResource lblTitle4_1}"/>
+                    <StackPanel  Grid.Column="0" Grid.Row="2"  Orientation="Horizontal">
+                        <Label Content="盘点日期" Style="{StaticResource lblTitle3}"/>
+                        <Label Content="{Binding create_time}" Style="{StaticResource lblTitle4_0}"/>
+                    </StackPanel>
+                    <StackPanel  Grid.Column="1" Grid.Row="2"  Orientation="Horizontal">
+                        <Label Content="盘点状态" Style="{StaticResource lblTitle3}"/>
+                        <Label Content="{Binding type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Style="{StaticResource lblTitle4_1}"/>
+                    </StackPanel>
+                    <StackPanel  Grid.Column="2" Grid.Row="2"  Orientation="Horizontal">
+                        <Label Content="盘点类型" Style="{StaticResource lblTitle3}"/>
+                        <Label Content="{Binding status, Converter= {StaticResource InventoryStatusStrConverter} }" Style="{StaticResource lblTitle4_1}"/>
+                    </StackPanel>
                 </Grid>
             </Border>
 

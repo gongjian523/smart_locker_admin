@@ -10,33 +10,35 @@
     <Control.Resources>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
     </Control.Resources>
-       <Border Style="{StaticResource CommonBlueBorder}">
+    <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"></RowDefinition>
-            <RowDefinition Height="auto"></RowDefinition>
-        </Grid.RowDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="auto"></RowDefinition>
+            </Grid.RowDefinitions>
 
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
-                <Grid Margin="20">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="30"></RowDefinition>
-                        <RowDefinition Height="60"></RowDefinition>
-                        <RowDefinition Height="30"></RowDefinition>
-                        <RowDefinition Height="30"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                   
                     <Label Content="手术领用单号" Grid.Column="0" Grid.Row="0" HorizontalAlignment="Left" VerticalAlignment="Top" FontSize="14" FontWeight="Bold"/>
                     <Label Content="Label" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" HorizontalAlignment="Left" VerticalAlignment="Center" FontSize="18" Foreground="#619CF8"/>
-                    <Label  Grid.Column="0" Grid.Row="2" Content="使用状态" Foreground="#666666" HorizontalAlignment="Left"  VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                    <Label  Grid.Column="0" Grid.Row="3" Content="领用中" Name="state" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                    <Label  Grid.Column="1" Grid.Row="2" Content="手术时间" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
-                    <Label  Grid.Column="1" Grid.Row="3" Content="手术时间" Name="time" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    <StackPanel  Grid.Column="0" Grid.Row="2"  Orientation="Horizontal">
+                        <Label  Content="使用状态" Foreground="#666666" HorizontalAlignment="Left"  VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                        <Label   Content="领用中" Name="state" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    </StackPanel>
+                    <StackPanel  Grid.Column="1" Grid.Row="2"  Orientation="Horizontal">
+                        <Label  Content="手术时间" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                        <Label  Content="手术时间" Name="time" Foreground="#666666" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="-2.093,5.415" FontSize="14"/>
+                    </StackPanel>
                 </Grid>
             </Border>
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1">
@@ -70,7 +72,7 @@
                             <Label Content="种本柜无库存" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>
-                    
+
                     <ListView Style="{StaticResource DefaultListView}" Grid.Row="1" Grid.Column="1" ItemsSource="{Binding}" Name="listView">
                         <ListView.View>
                             <GridView>
