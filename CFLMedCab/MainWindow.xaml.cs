@@ -1030,6 +1030,8 @@ namespace CFLMedCab
         {
             var rwl = FindWindow("Shell_TrayWnd", null);
             ShowWindow(rwl, 0);
+            var rwl2 = FindWindow("Button", null);
+            ShowWindow(rwl2, 0);
             this.WindowState = WindowState.Maximized;
             this.WindowStyle = WindowStyle.None;
             this.ResizeMode = ResizeMode.NoResize;
@@ -1093,7 +1095,9 @@ namespace CFLMedCab
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
             var rwl = FindWindow("Shell_TrayWnd", null);
+            var rwl2 = FindWindow("Button", null);
             ShowWindow(rwl, 1);
+            ShowWindow(rwl2, 1);
         }
     }
 }
