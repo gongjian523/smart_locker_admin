@@ -508,7 +508,6 @@
     <Resource Include="Resources\Images\CloseDoor.png" />
     <Resource Include="Resources\Images\Inventorying.png" />
     <Resource Include="Resources\Images\add.png" />
-    <Content Include="Resources\Medias\Open-GerFetch.wav" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="bin\" />

@@ -264,8 +264,6 @@ namespace CFLMedCab
             HomePageView.Visibility = Visibility.Hidden;
             NaviView.Visibility = Visibility.Hidden;
 
-            BtnEnterGerFetch.IsChecked = true;
-
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
 
@@ -392,8 +390,6 @@ namespace CFLMedCab
         {
             HomePageView.Visibility = Visibility.Hidden;
 
-            BtnEnterSurgery.IsChecked = true;
-
             SurgeryQuery surgeryQuery = new SurgeryQuery();
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
@@ -513,8 +509,6 @@ namespace CFLMedCab
             HomePageView.Visibility = Visibility.Hidden;
             NaviView.Visibility = Visibility.Hidden;
 
-            BtnEnterReturnFetch.IsChecked = true;
-
             GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
 
@@ -579,8 +573,6 @@ namespace CFLMedCab
         private void onEnterReplenishment(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
-
-            BtnEnterReplenishment.IsChecked = true;
 
             Replenishment replenishment = new Replenishment();
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
@@ -697,8 +689,6 @@ namespace CFLMedCab
         {
             HomePageView.Visibility = Visibility.Hidden;
 
-            BtnEnterReturnGoods.IsChecked = true;
-
             ReturnGoods returnGoods = new ReturnGoods();
             returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
             returnGoods.EnterReturnGoodsDetailOpenEvent += new ReturnGoods.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
@@ -814,8 +804,6 @@ namespace CFLMedCab
         private void onEnterInvtory(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
-
-            BtnEnterInventory.IsChecked = true;
 
             Inventory inventory = new Inventory();
             inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
@@ -954,7 +942,6 @@ namespace CFLMedCab
         private void onEnterStock(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
-            BtnEnterStock.IsChecked = true;
 
             Stock stock = new Stock();
             stock.EnterStockDetailedEvent += new Stock.EnterStockDetailedHandler(onEnterStockDetailedEvent);

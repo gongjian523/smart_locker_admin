@@ -172,7 +172,7 @@ namespace CFLMedCab.View.Inventory
                 }
             }
             if (timeSpan != new TimeSpan())
-                inventoryTime.Content = "下一次自动盘点时间" + date.ToString("yyyy-MM-dd HH:mm");
+                inventoryTime.Content = "下一次自动盘点时间:" + date.ToString("yyyy-MM-dd HH:mm");
             else
                 inventoryTime.Content = "暂无盘点计划";
         }

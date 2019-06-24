@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CFLMedCab.View"
         xmlns:cvt="clr-namespace:CFLMedCab.Converter"
         mc:Ignorable="d"
-        Height="1020" Width="646" >
+        Height="510" Width="646" >
     <Control.Resources>
         <cvt:InventoryPlanSwitchStaConverter x:Key="InventoryPlanSwitchStaConverter"/>
     </Control.Resources>
