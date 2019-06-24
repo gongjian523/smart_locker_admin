@@ -13,8 +13,8 @@
                     <BitmapImage x:Name="infoImage" UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png"/>
                 </Image.Source>
             </Image>
-            <Label Content="柜门已开"  HorizontalAlignment="Center" Margin="0,18,0,0" FontSize="20" Foreground="#619CF8"/>
-            <Label x:Name="attention"  Content=""  HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="18" Foreground="#333333"/>
+            <Label Content="柜门已开"  HorizontalAlignment="Center" Margin="0,18,0,0" FontSize="40" Foreground="#619CF8"/>
+            <Label x:Name="attention"  Content=""  HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="28" Foreground="#333333"/>
         </StackPanel>
     </Grid>
 </UserControl>

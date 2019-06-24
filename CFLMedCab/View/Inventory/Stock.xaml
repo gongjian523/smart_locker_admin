@@ -65,7 +65,7 @@
                         <Label Content="至" MinHeight="48" FontSize="22" Margin="122 -68" ></Label>
                         <DatePicker MinHeight="48" Name="endTime" Margin="150 -68" HorizontalAlignment="Left" SelectedDateFormat="Long" VerticalAlignment="Top" Width="130"  Focusable="False"/>
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Margin="300 0" Name="goodsName" Visibility="Hidden" MinWidth="255"  MinHeight="48" HorizontalAlignment="Left" VerticalAlignment="Center" >
+                    <StackPanel Grid.Row="1" Margin="300 0" Name="goodsName" Visibility="Hidden" MinWidth="255"  MinHeight="48" HorizontalAlignment="Left" VerticalAlignment="Center" Language="zh-CN">
                         <ComboBox x:Name="goods_name" MinHeight="48" >
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>

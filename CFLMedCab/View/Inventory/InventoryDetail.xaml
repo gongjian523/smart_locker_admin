@@ -109,7 +109,7 @@
                                     <GridViewColumn Header="失效期" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_date}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_date,StringFormat='{}{0:yyyy-MM-dd}'}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
