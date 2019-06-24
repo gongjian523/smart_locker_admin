@@ -38,6 +38,7 @@ namespace CFLMedCab.View
             stockquery.IsChecked = true;
             condition.IsChecked = true;
             queryData(this, null);
+            queryCriteria();
         }
 
         /// <summary>
@@ -58,13 +59,11 @@ namespace CFLMedCab.View
                     goodsEpsHashSetDatas.UnionWith(goodsEpsData);
                 }
                 getGoodApo.goodsEpsDatas = goodsEpsHashSetDatas;
-                getGoodApo.code = goods_code.SelectedValue == null ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
-                getGoodApo.name = goods_name.SelectedValue == null ? "" : ((GoodDto)goods_name.SelectedValue).name;
+                getGoodApo.code = goods_code.SelectedValue == null || ((GoodDto)goods_code.SelectedValue).goods_code == "全部" ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
+                getGoodApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
 
-                List<GoodDto> goodDtos = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
+                goodDtos = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
                 listView.DataContext = goodDtos;
-                goods_code.ItemsSource = goodDtos;
-                goods_name.ItemsSource = goodDtos;
                 totalNum.Content = goodsEpsHashSetDatas.Count;
             }
             if (this.validity.IsChecked == true)//效期查询
@@ -83,8 +82,8 @@ namespace CFLMedCab.View
                 if (single3.IsChecked == true)
                     getGoodsApo.expire_date = DateTime.Now.AddMonths(3);
                 getGoodsApo.goodsEpsDatas = goodsEpsHashSetDatas;
-                getGoodsApo.code = goods_code.SelectedValue == null ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
-                getGoodsApo.name = goods_name.SelectedValue == null ? "" : ((GoodDto)goods_name.SelectedValue).name;
+                getGoodsApo.code = goods_code.SelectedValue == null || ((GoodDto)goods_code.SelectedValue).goods_code == "全部" ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
+                getGoodsApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
                 List<GoodsDto> goodDtos = goodsBll.GetValidityGoodsDto(getGoodsApo, out totalCount);
                 listView1.DataContext = goodDtos;
             }
@@ -95,17 +94,27 @@ namespace CFLMedCab.View
                     goodsChangeApo.operate_type = 0;
                 else if (this.inStock.IsChecked == true)
                     goodsChangeApo.operate_type = 1;
-                if (!string.IsNullOrEmpty(startTime.Text)&& !string.IsNullOrWhiteSpace(startTime.Text))
+                if (!string.IsNullOrEmpty(startTime.Text) && !string.IsNullOrWhiteSpace(startTime.Text))
                     goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
                 if (!string.IsNullOrEmpty(endTime.Text) && !string.IsNullOrWhiteSpace(endTime.Text))
                 {
                     DateTime time = Convert.ToDateTime(endTime.Text.Replace("0:00:00", "23:59:59"));
-                    goodsChangeApo.endTime= new DateTime(time.Year, time.Month, time.Day, 23, 59, 59);
+                    goodsChangeApo.endTime = new DateTime(time.Year, time.Month, time.Day, 23, 59, 59);
                 }
-                goodsChangeApo.name = goods_name.SelectedValue == null ? "" : ((GoodDto)goods_name.SelectedValue).name;
+                goodsChangeApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
                 List<GoodsChangeDto> goodsChangeDtos = goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out totalCount);
                 listView2.DataContext = goodsChangeDtos;
             }
+        }
+
+        public void queryCriteria()
+        {
+            if (goodDtos.Where(it => it.name == "全部").ToList().Count <=0)
+                goodDtos.Add(new GoodDto { name = "全部", goods_code = "全部" });
+            goods_name.ItemsSource = goodDtos.OrderByDescending(it => it.goods_code);
+            goods_code.ItemsSource = goodDtos.OrderByDescending(it => it.goods_code);
+            goods_name.SelectedItem = goodDtos.Where(it => it.goods_code == "全部").First();
+            goods_code.SelectedItem = goodDtos.Where(it => it.goods_code == "全部").First();
         }
 
         /// <summary>
@@ -140,6 +149,7 @@ namespace CFLMedCab.View
             goodsCode.Visibility = Visibility.Visible;
             goodsName.Visibility = Visibility.Visible;
             query.Visibility = Visibility.Visible;
+            queryCriteria();
         }
 
         /// <summary>
@@ -161,7 +171,7 @@ namespace CFLMedCab.View
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Visible;
             Content2.Visibility = Visibility.Hidden;
-
+            queryCriteria();
             All.IsChecked = true;
             queryData(this, null);
         }
@@ -186,7 +196,7 @@ namespace CFLMedCab.View
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Hidden;
             Content2.Visibility = Visibility.Visible;
-
+            queryCriteria();
             outStock.IsChecked = true;
             queryData(this, null);
         }
