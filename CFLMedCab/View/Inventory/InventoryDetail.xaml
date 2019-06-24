@@ -74,10 +74,7 @@
                         <Grid  x:Name="myGrid">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="2*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*" />
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -91,9 +88,6 @@
                             <Grid Grid.Column="4" x:Name="column5"/>
                             <Grid Grid.Column="5" x:Name="column6"/>
                             <Grid Grid.Column="6" x:Name="column7"/>
-                            <Grid Grid.Column="7" x:Name="column8"/>
-                            <Grid Grid.Column="8" x:Name="column9"/>
-                            <Grid Grid.Column="9" x:Name="column10"/>
                         </Grid>
                         <ListView VerticalAlignment="Top" Grid.Row="1"  ItemsSource="{Binding}"  Name="goodsDtllistView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource DefaultListView}" >
                             <ListView.View>
@@ -105,66 +99,45 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="商品码"   Width="{Binding ElementName=column2,Path=ActualWidth}" >
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding goods_code}"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="单品码" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn Header="单品码" Width="{Binding ElementName=column2,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="批号"   Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn Header="失效期" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding batch_number}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_date,StringFormat='{}{0:yyyy-MM-dd}'}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="失效期" Width="{Binding ElementName=column5,Path=ActualWidth}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_date}"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="领用属性" Width="{Binding ElementName=column6,Path=ActualWidth}">
+                                    <GridViewColumn Header="领用属性" Width="{Binding ElementName=column4,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_type}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="货位" Width="{Binding ElementName=column7,Path=ActualWidth}">
+                                    <GridViewColumn Header="货位" Width="{Binding ElementName=column5,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding position}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="账面库存" Width="{Binding ElementName=column8,Path=ActualWidth}">
+                                    <GridViewColumn Header="账面库存" Width="{Binding ElementName=column6,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding book_inventory}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="实际库存"  Width="{Binding ElementName=column9,Path=ActualWidth}">
+                                    <GridViewColumn Header="实际库存"  Width="{Binding ElementName=column7,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <ctr:EditBox Height="25" Value="{Binding Path=actual_inventory}" />
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="备注"  Width="{Binding ElementName=column10,Path=ActualWidth}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding remarks}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

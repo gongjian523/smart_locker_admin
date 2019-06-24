@@ -52,23 +52,19 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
                         <Grid Grid.Column="2" x:Name="column3"/>
                         <Grid Grid.Column="3" x:Name="column4"/>
-                        <Grid Grid.Column="4" x:Name="column5"/>
-                        <Grid Grid.Column="5" x:Name="column6"/>
                     </Grid>
                     <Border Grid.Row="0"  Style="{StaticResource TipBorder}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="该手术领用单待领用耗材如下，其中"/>
+                            <Label Content="该手术领用单待领用耗材如下，其中" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="inStock" Style="{StaticResource lblTitleRed}"/>
-                            <Label Content="种商品有库存，" />
+                            <Label Content="种商品有库存，"  Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="noStock" Style="{StaticResource lblTitleRed}"/>
-                            <Label Content="种本柜无库存" />
+                            <Label Content="种本柜无库存" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>
                     <ListView  Grid.Row="1" ItemsSource="{Binding}" Name="listView" 
@@ -84,38 +80,24 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="商品码" Width="{Binding ElementName=column2,Path=ActualWidth}" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding goods_code}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="领用属性" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                <GridViewColumn Header="领用属性" Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="待领用数量" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                <GridViewColumn Header="待领用数量" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding not_fetch_num}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stock_num}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="备注" Width="{Binding ElementName=column6,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding remarks}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

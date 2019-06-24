@@ -78,7 +78,8 @@ namespace CFLMedCab.DAL
                     birth_date = ordtl.birth_date,
                     expire_date = ordtl.expire_date,
                     create_time = orl.create_time,
-                    business_type=orl.business_type
+                    business_type=orl.business_type,
+                    operate_type= ordtl.operate_type
                 });
 
 

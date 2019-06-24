@@ -39,6 +39,10 @@ using CFLMedCab.Test;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.APO.Surgery;
 using CFLMedCab.DTO.Surgery;
+using System.Runtime.InteropServices;
+using CFLMedCab.Controls;
+using static CFLMedCab.Controls.Taskbar;
+using System.Windows.Forms;
 
 namespace CFLMedCab
 {
@@ -61,7 +65,7 @@ namespace CFLMedCab
         private TestGoods test = new TestGoods();
 
 #if TESTENV
-        private Timer testTimer;
+        private System.Timers.Timer testTimer;
         private ReplenishSubOrderDto testRSOPara = new ReplenishSubOrderDto();
         private PickingSubOrderDto testPSOPara = new PickingSubOrderDto();
 #endif
@@ -69,6 +73,29 @@ namespace CFLMedCab
         public MainWindow()
         {
             InitializeComponent();
+            foreach (Screen scr in Screen.AllScreens)
+            {
+                if (scr.Primary)
+                {
+                    //设置窗体位置
+                    WindowStartupLocation = WindowStartupLocation.Manual;
+                    Left = scr.WorkingArea.Left;
+                    Top = scr.WorkingArea.Top;
+                    Width = scr.Bounds.Width;
+                    Height = scr.Bounds.Height;
+                    Topmost = true;
+                    WindowState = WindowState.Maximized;
+                    ResizeMode = ResizeMode.NoResize;
+                    WindowStyle = WindowStyle.None;
+                    WindowState = WindowState.Normal;
+                    ShowInTaskbar = false;
+
+                    break;
+                }
+            }
+            //this.Loaded += MetroWindow_Loaded;
+            //this.Deactivated += MainWindow_Deactivated;
+            //this.StateChanged += MainWindow_StateChanged;
 
             MockData();
 
@@ -93,6 +120,16 @@ namespace CFLMedCab
             vein.ChekVein();
 
             ConsoleManager.Show();
+        }
+
+        private void MainWindow_StateChanged(object sender, EventArgs e)
+        {
+            this.WindowState = WindowState.Maximized;
+        }
+
+        private void MainWindow_Deactivated(object sender, EventArgs e)
+        {
+            this.Topmost = true;
         }
 
         private void onInventoryTimer(object sender, EventArgs e)
@@ -588,7 +625,7 @@ namespace CFLMedCab
             SpeakerHelper.Sperker("柜门已开，请您按照要求上架，上架完毕请关闭柜门");
 
 #if TESTENV
-            testTimer = new Timer(10000);
+            testTimer = new System.Timers.Timer(10000);
             testTimer.AutoReset = false;
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onEnterReplenishmentCloseTestEvent);
@@ -705,7 +742,7 @@ namespace CFLMedCab
             SpeakerHelper.Sperker("柜门已开，请您按照要求拣货，拣货完毕请关闭柜门");
 
 #if TESTENV
-            testTimer = new Timer(10000);
+            testTimer = new System.Timers.Timer(10000);
             testTimer.AutoReset = false;
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onEnterReturnGoodsCloseTestEvent);
@@ -1010,14 +1047,7 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.WindowState = WindowState.Maximized;
-            this.WindowStyle = WindowStyle.None;
-            this.ResizeMode = ResizeMode.NoResize;
-            this.Topmost = true;
-            this.Left = 0.0;
-            this.Top = 0.0;
-            this.Width = SystemParameters.PrimaryScreenWidth;
-            this.Height = SystemParameters.PrimaryScreenHeight; 
+            Taskbar.HideTask(true);
         }
 
 
@@ -1067,7 +1097,11 @@ namespace CFLMedCab
             Console.WriteLine("返回开锁状态{0}", isClose);
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
         }
-#endregion
+        #endregion
 
+        private void MetroWindow_Closed(object sender, EventArgs e)
+        {
+            Taskbar.HideTask(false);
+        }
     }
 }
