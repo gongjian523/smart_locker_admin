@@ -11,7 +11,7 @@
         Height="1080"
         Width ="1920"
         WindowStyle="None"
-        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" WindowState="Maximized"  ShowTitleBar="False">
+        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" WindowState="Maximized"  ShowTitleBar="False" Closed="MetroWindow_Closed">
     <Control.Resources>
         <cvt:LoginInfoFGBrushConverter x:Key="LoginInfoFGBrushConverter"/>
         <cvt:LoginStatusImgResConverter x:Key="LoginStatusImgResConverter"/>
