@@ -43,6 +43,7 @@ using System.Runtime.InteropServices;
 using CFLMedCab.Controls;
 using static CFLMedCab.Controls.Taskbar;
 using System.Windows.Forms;
+using static CFLMedCab.Model.Enum.UserIdEnum;
 
 namespace CFLMedCab
 {
@@ -63,6 +64,16 @@ namespace CFLMedCab
         private int cabClosedNum;
 
         private TestGoods test = new TestGoods();
+
+        private User _curUser;
+        public User CurUser { get {
+                return _curUser;
+            }
+            set {
+                _curUser = value;
+            }
+        }
+
 
 #if TESTENV
         private System.Timers.Timer testTimer;
@@ -206,6 +217,20 @@ namespace CFLMedCab
                         sta.LoginState = 0;
                         sta.LoginString = "登录失败";
                         sta.LoginString2 = "请再次进行验证";
+
+                        App.Current.Dispatcher.Invoke((Action)(() =>
+                        {
+                            LoginInfo loginInfo = new LoginInfo(sta);
+
+                            PopFrame.Visibility = Visibility.Visible;
+                            MaskView.Visibility = Visibility.Visible;
+
+                            loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
+
+                            PopFrame.Navigate(loginInfo);
+
+                        }));
+
                     }
                     //验证成功
                     else
@@ -215,21 +240,14 @@ namespace CFLMedCab
                         sta.LoginString2 = "欢迎" + user.name + "登录";
 
                         ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
+
+                        App.Current.Dispatcher.Invoke((Action)(() =>
+                        {
+                            LoginBkView.Visibility = Visibility.Hidden;
+                            SetNavBtnVisiblity(user.role);
+                        }));
                     }
                 }
-
-                App.Current.Dispatcher.Invoke((Action)(() =>
-                {
-                    LoginInfo loginInfo = new LoginInfo(sta);
-
-                    PopFrame.Visibility = Visibility.Visible;
-                    MaskView.Visibility = Visibility.Visible;
-
-                    loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
-
-                    PopFrame.Navigate(loginInfo);
-
-                }));
             }
             else
             {
@@ -237,6 +255,19 @@ namespace CFLMedCab
                 vein.ChekVein();
             }
 
+        }
+
+        private void SetNavBtnVisiblity(int role)
+        {
+            bool isMedicalStuff = ((UserIdType)role == UserIdType.医生 || (UserIdType)role == UserIdType.护士 || (UserIdType)role == UserIdType.医院管理员) ? true : false;
+
+            NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterReplenishment.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterInvtory.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterStock.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void ShowCurTimer(object sender, EventArgs e)
@@ -1091,7 +1122,7 @@ namespace CFLMedCab
             TestGoods testGoods = new TestGoods();
             testGoods.GetCurrentRFid();
 #else
-            Timer iniGoodstimer = new Timer(1000);
+            System.Timers.Timer iniGoodstimer = new System.Timers.Timer(1000);
             iniGoodstimer.AutoReset = false;
             iniGoodstimer.Enabled = true;
             iniGoodstimer.Elapsed += new ElapsedEventHandler(onInitGoods);
