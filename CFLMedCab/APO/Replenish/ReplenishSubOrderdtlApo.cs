@@ -16,5 +16,10 @@ namespace CFLMedCab.DTO.Replenish
 		/// </summary>
 		public int replenish_sub_orderid { get; set; }
 
+		/// <summary>
+		/// 上架单单号
+		/// </summary>
+		public string replenish_order_code { get; set; }
+
 	}
 }

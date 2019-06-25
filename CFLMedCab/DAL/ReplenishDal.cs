@@ -55,11 +55,13 @@ namespace CFLMedCab.DAL
 			Db = SqlSugarHelper.GetInstance().Db;
 		}
 
+		
 
 		/// <summary>
-		/// 获取待完成上架工单
+		/// 获取待完成工单
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public List<ReplenishSubOrderDto> GetReplenishSubOrderDto(BasePageDataApo pageDataApo, out int totalCount)
 		{
 
@@ -103,6 +105,7 @@ namespace CFLMedCab.DAL
 		/// 获取待完成上架商品列表
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public List<ReplenishSubOrderdtlDto> GetReplenishSubOrderdtlDto(ReplenishSubOrderdtlApo pageDataApo, out int totalCount)
 		{
 			totalCount = 0;
@@ -110,7 +113,7 @@ namespace CFLMedCab.DAL
 
 			//查询语句
 			var queryable = Db.Queryable<ReplenishSubOrderdtl>()
-				.Where(it => it.status == 0 && it.replenish_sub_orderid == pageDataApo.replenish_sub_orderid )
+				.Where(it => it.status == (int)RPOStatusType.待完成 && it.replenish_sub_orderid == pageDataApo.replenish_sub_orderid )
 				.OrderBy(it => it.birth_date, OrderByType.Desc)
 				.Select<ReplenishSubOrderdtlDto>();
 			
@@ -129,12 +132,14 @@ namespace CFLMedCab.DAL
 
 		}
 
+
 		/// <summary>
 		/// 确认时，修改工单数据
 		/// </summary>
 		/// <param name="replenishSubOrderid">上架单id</param>
 		/// <param name="datasDto">当前操作数据dto</param>
 		/// <returns></returns>
+		[Obsolete]
 		public bool UpdateReplenishStatus(int replenishSubOrderid, List<ReplenishSubOrderdtlDto> replenishSubOrderdtlDtos)
 		{
 			
@@ -176,12 +181,99 @@ namespace CFLMedCab.DAL
 
 		}
 
-        /// <summary>
-        /// 生成上架单号
-        /// </summary>
-        /// <param name="po">上架单</param>
-        /// <returns></returns>
-        public string InsertReplenishOrder(ReplenishOrder ro)
+
+		/// <summary>
+		/// 获取待完成上架工单
+		/// </summary>
+		/// <returns></returns>
+		public List<ReplenishOrderDto> GetReplenishOrderDto(BasePageDataApo pageDataApo, out int totalCount)
+		{
+
+			totalCount = 0;
+			List<ReplenishOrderDto> data;
+
+			//查询语句
+			var queryable = Db.Queryable<ReplenishOrder, ReplenishSubOrder>((ro, rso) => new object[] {
+			JoinType.Left, rso.replenish_order_code == ro.code})
+				.Where((ro, rso) => (SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
+													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
+													  .Count() > 0) && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.OrderBy((ro, rso) => ro.create_time, OrderByType.Desc)
+				.Select((ro, rso) => new ReplenishOrderDto
+				{
+					id = ro.id,
+					code = ro.code,
+					status = ro.status,
+					distribute_time = ro.create_time,
+					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
+													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
+													  .Count()
+				});
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+
+		}
+
+		/// <summary>
+		/// 获取待完成上架商品列表(通过总的上架单)
+		/// </summary>
+		/// <returns></returns>
+		public List<ReplenishSubOrderdtlDto> GetReplenishOrderdtlDto(ReplenishSubOrderdtlApo pageDataApo, out int totalCount)
+		{
+			totalCount = 0;
+			List<ReplenishSubOrderdtlDto> data;
+
+			//查询语句
+			var queryable = Db.Queryable<ReplenishSubOrderdtl, ReplenishSubOrder>((rsod, rso) => new object[] {
+			JoinType.Left, rsod.replenish_sub_orderid == rso.id})
+				.Where((rsod, rso) => rsod.status == (int)RPOStatusType.待完成 && rso.replenish_order_code == pageDataApo.replenish_order_code)
+				.OrderBy(it => it.birth_date, OrderByType.Desc)
+				.Select<ReplenishSubOrderdtlDto>();
+
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+
+		}
+
+		/// <summary>
+		/// 确认时，修改工单数据(通过总的上架单)
+		/// </summary>
+		/// <param name="replenishSubOrderid">上架单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdateReplenishStatus(string replenishSubOrderCode, List<ReplenishSubOrderdtlDto> replenishSubOrderdtlDtos)
+		{
+
+			return Db.Updateable(replenishSubOrderdtlDtos.MapToList<ReplenishSubOrderdtlDto, ReplenishSubOrderdtl>()).ExecuteCommand() > 0;
+
+		}
+
+		/// <summary>
+		/// 生成上架单号
+		/// </summary>
+		/// <param name="po">上架单</param>
+		/// <returns></returns>
+		public string InsertReplenishOrder(ReplenishOrder ro)
         {
             return Db.Insertable(ro).ExecuteReturnEntity().code;
         }

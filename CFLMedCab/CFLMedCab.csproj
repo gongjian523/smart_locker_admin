@@ -172,8 +172,10 @@
     <Compile Include="DTO\Goodss\GoodsDto.cs" />
     <Compile Include="DTO\Inventory\InventoryOrderDto.cs" />
     <Compile Include="DTO\Picking\PickingSubOrderdtlDto.cs" />
+    <Compile Include="DTO\Picking\PickingOrderDto.cs" />
     <Compile Include="DTO\Picking\PickingSubOrderDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderdtlDto.cs" />
+    <Compile Include="DTO\Replenish\ReplenishOrderDto.cs" />
     <Compile Include="DTO\Replenish\ReplenishSubOrderDto.cs" />
     <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderdtlDto.cs" />
