@@ -57,9 +57,10 @@ namespace CFLMedCab.DAL
 
 
 		/// <summary>
-		/// 获取待完成上架工单
+		/// 获取待完成拣货工单
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public List<PickingSubOrderDto> GetPickingSubOrderDto(BasePageDataApo pageDataApo, out int totalCount)
 		{
 
@@ -100,9 +101,10 @@ namespace CFLMedCab.DAL
 		}
 
 		/// <summary>
-		/// 获取待完成上架商品列表
+		/// 获取待完成拣货商品列表
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public List<PickingSubOrderdtlDto> GetPickingSubOrderdtlDto(PickingSubOrderdtlApo pageDataApo, out int totalCount)
 		{
 			totalCount = 0;
@@ -132,9 +134,10 @@ namespace CFLMedCab.DAL
 		/// <summary>
 		/// 确认时，修改工单数据
 		/// </summary>
-		/// <param name="pickingSubOrderid">上架单id</param>
+		/// <param name="pickingSubOrderid">拣货单id</param>
 		/// <param name="datasDto">当前操作数据dto</param>
 		/// <returns></returns>
+		[Obsolete]
 		public bool UpdatePickingStatus(int pickingSubOrderid, List<PickingSubOrderdtlDto> pickingSubOrderdtlDtos)
 		{
 
@@ -163,8 +166,8 @@ namespace CFLMedCab.DAL
 						currentStatus = (int)PSOStatusType.部分拣货;
 					}
 
-					Db.Updateable<ReplenishSubOrder>()
-						.SetColumns(it => new ReplenishSubOrder() { status = currentStatus })
+					Db.Updateable<PickingSubOrder>()
+						.SetColumns(it => new PickingSubOrder() { status = currentStatus })
 						.Where(it => it.id == pickingSubOrderid)
 						.ExecuteCommand();
 				}
@@ -176,12 +179,98 @@ namespace CFLMedCab.DAL
 		}
 
 
-        /// <summary>
-        /// 生成拣货单号
-        /// </summary>
-        /// <param name="po">拣货单</param>
-        /// <returns></returns>
-        public string InsertPickingOrder(PickingOrder po)
+		/// <summary>
+		/// 获取待完成拣货工单
+		/// </summary>
+		/// <returns></returns>
+		public List<PickingOrderDto> GetPickingOrderDto(BasePageDataApo pageDataApo, out int totalCount)
+		{
+
+			totalCount = 0;
+			List<PickingOrderDto> data;
+
+			//查询语句
+			var queryable = Db.Queryable<PickingOrder, PickingSubOrder>((ro, rso) => new object[] {
+			JoinType.Left, rso.picking_order_code == ro.code})
+				.Where((ro, rso) => (SqlFunc.Subqueryable<PickingSubOrderdtl>()
+													  .Where(itsub => itsub.picking_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
+													  .Count() > 0) && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.OrderBy((ro, rso) => ro.create_time, OrderByType.Desc)
+				.Select((ro, rso) => new PickingOrderDto
+				{
+					id = ro.id,
+					code = ro.code,
+					status = ro.status,
+					distribute_time = ro.create_time,
+					picked_goods_num = SqlFunc.Subqueryable<PickingSubOrderdtl>()
+													  .Where(itsub => itsub.picking_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
+													  .Count()
+				});
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+
+		}
+
+		/// <summary>
+		/// 获取待完成拣货商品列表(通过总的拣货单)
+		/// </summary>
+		/// <returns></returns>
+		public List<PickingSubOrderdtlDto> GetPickingOrderdtlDto(PickingSubOrderdtlApo pageDataApo, out int totalCount)
+		{
+			totalCount = 0;
+			List<PickingSubOrderdtlDto> data;
+
+			//查询语句
+			var queryable = Db.Queryable<PickingSubOrderdtl, PickingSubOrder>((rsod, rso) => new object[] {
+			JoinType.Left, rsod.picking_sub_orderid == rso.id})
+				.Where((rsod, rso) => rsod.status == (int)RPOStatusType.待完成 && rso.picking_order_code == pageDataApo.picking_order_code)
+				.OrderBy(it => it.birth_date, OrderByType.Desc)
+				.Select<PickingSubOrderdtlDto>();
+
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+
+		}
+
+		/// <summary>
+		/// 确认时，修改工单数据(通过总的拣货单)
+		/// </summary>
+		/// <param name="pickingSubOrderid">拣货单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdatePickingStatus(string pickingSubOrderCode, List<PickingSubOrderdtlDto> pickingSubOrderdtlDtos)
+		{
+
+			return Db.Updateable(pickingSubOrderdtlDtos.MapToList<PickingSubOrderdtlDto, PickingSubOrderdtl>()).ExecuteCommand() > 0;
+
+		}
+
+		/// <summary>
+		/// 生成拣货单号
+		/// </summary>
+		/// <param name="po">拣货单</param>
+		/// <returns></returns>
+		public string InsertPickingOrder(PickingOrder po)
         {
             return Db.Insertable(po).ExecuteReturnEntity().code;
         }
@@ -207,7 +296,7 @@ namespace CFLMedCab.DAL
         }
 
         /// <summary>
-        /// 获得所有上架单的个数
+        /// 获得所有拣货单的个数
         /// </summary>
         /// <returns></returns>
         public int GetPickingOrderNum()

@@ -39,10 +39,12 @@ namespace CFLMedCab.BLL
             goodsDal = GoodsDal.GetInstance();
         }
 
+
 		/// <summary>
 		/// 获取待完成拣货工单
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public BasePageDataDto<PickingSubOrderDto> GetPickingSubOrderDto(BasePageDataApo basePageDataApo)
 		{
 			return new BasePageDataDto<PickingSubOrderDto>()
@@ -58,6 +60,7 @@ namespace CFLMedCab.BLL
 		/// 获取待完成拣货商品列表
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public BasePageDataDto<PickingSubOrderdtlDto> GetPickingSubOrderdtlDto(PickingSubOrderdtlApo pageDataApo)
 		{
 			
@@ -70,61 +73,7 @@ namespace CFLMedCab.BLL
 			};
 		}
 
-		/// <summary>
-		/// 获取补货操作情况
-		/// </summary>
-		/// <param name="pickingSubOrderid"></param>
-		/// <param name="goodsDtos"></param>
-		/// <returns></returns>
-		public List<GoodsDto> GetPickingSubOrderdtlOperateDto(int pickingSubOrderid, string pickingSubOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
-		{
-
-	
-
-			//获取当前工单商品
-			var pickingSubOrderdtlDtos = pickingDal.GetPickingSubOrderdtlDto(
-				new PickingSubOrderdtlApo {
-					picking_sub_orderid = pickingSubOrderid
-				}, out int totalCount);
-
-			goodsDtos.ForEach(it =>
-			{
-				//获取业务单号
-				it.business_order_code = pickingSubOrderCode;
-				//入库
-				if (it.operate_type == (int)OperateType.入库)
-				{
-					it.operate_type_description = OperateType.入库.ToString();
-					it.exception_flag = (int)ExceptionFlag.异常;
-					it.exception_flag_description = ExceptionFlag.异常.ToString();
-					it.exception_description = ExceptionDescription.操作与业务类型冲突.ToString();
-				}
-				//出库
-				else if (it.operate_type == (int)OperateType.出库)
-				{
-					it.operate_type_description = OperateType.入库.ToString();
-					//当前出库操作的商品是否在工单中存在
-					if (!pickingSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code) && rsoDto.status == (int)PSOStatusType.待拣货))
-					{
-						it.exception_flag = (int)ExceptionFlag.异常;
-						it.exception_flag_description = ExceptionFlag.异常.ToString();
-						it.exception_description = ExceptionDescription.拣货商品不在工单目录.ToString();
-					}
-					else
-					{
-						it.exception_flag = (int)ExceptionFlag.正常;
-					}
-				}
-			});
-
-			//统计数量
-			operateGoodsNum = goodsDtos.Count;
-			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
-			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
-			
-			//均升序排列
-			return goodsDtos.OrderBy (it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
-		}
+		
 
 		/// <summary>
 		/// 确认时，修改工单数据
@@ -132,6 +81,7 @@ namespace CFLMedCab.BLL
 		/// <param name="pickingSubOrderid">拣货单id</param>
 		/// <param name="datasDto">当前操作数据dto</param>
 		/// <returns></returns>
+		[Obsolete]
 		public bool UpdatePickingStatus(int pickingSubOrderid, List<GoodsDto> datasDto)
 		{
 
@@ -163,12 +113,122 @@ namespace CFLMedCab.BLL
 			return ret;
 		}
 
-        /// <summary>
-        /// 模拟补货单 
-        /// </summary>
-        /// <param name="rfid">单品码的RFID</param>
-        /// <returns></returns>
-        public void InitPickingOrder(string poCode, string psoCode, Hashtable rfid)
+		/// <summary>
+		/// 获取待完成拣货工单
+		/// </summary>
+		/// <returns></returns>
+		public BasePageDataDto<PickingOrderDto> GetPickingOrderDto(BasePageDataApo basePageDataApo)
+		{
+			return new BasePageDataDto<PickingOrderDto>()
+			{
+				PageIndex = basePageDataApo.PageIndex,
+				PageSize = basePageDataApo.PageSize,
+				Data = pickingDal.GetPickingOrderDto(basePageDataApo, out int totalCount).ToList(),
+				TotalCount = totalCount
+			};
+		}
+
+		/// <summary>
+		/// 获取拣货操作情况
+		/// </summary>
+		/// <param name="pickingSubOrderid"></param>
+		/// <param name="goodsDtos"></param>
+		/// <returns></returns>
+		public List<GoodsDto> GetPickingSubOrderdtlOperateDto(int pickingSubOrderid, string pickingOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+		{
+
+			//获取当前工单商品
+			var pickingSubOrderdtlDtos = pickingDal.GetPickingOrderdtlDto(
+				new PickingSubOrderdtlApo
+				{
+					picking_order_code = pickingOrderCode
+				}, out int totalCount);
+
+
+
+			goodsDtos.ForEach(it =>
+			{
+				//获取业务单号
+				it.business_order_code = pickingOrderCode;
+				//入库
+				if (it.operate_type == (int)OperateType.入库)
+				{
+					it.operate_type_description = OperateType.入库.ToString();
+					it.exception_flag = (int)ExceptionFlag.异常;
+					it.exception_flag_description = ExceptionFlag.异常.ToString();
+					it.exception_description = ExceptionDescription.操作与业务类型冲突.ToString();
+				}
+				//出库
+				else if (it.operate_type == (int)OperateType.出库)
+				{
+					it.operate_type_description = OperateType.入库.ToString();
+					//当前出库操作的商品是否在工单中存在
+					if (!pickingSubOrderdtlDtos.Exists(rsoDto => rsoDto.code.Equals(it.code) && rsoDto.status == (int)PSOStatusType.待拣货))
+					{
+						it.exception_flag = (int)ExceptionFlag.异常;
+						it.exception_flag_description = ExceptionFlag.异常.ToString();
+						it.exception_description = ExceptionDescription.拣货商品不在工单目录.ToString();
+					}
+					else
+					{
+						it.exception_flag = (int)ExceptionFlag.正常;
+					}
+				}
+			});
+
+			//统计数量
+			operateGoodsNum = goodsDtos.Count;
+			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+
+			//均升序排列
+			return goodsDtos.OrderBy(it => it.exception_flag).ThenBy(it => it.expire_date).ToList();
+		}
+
+		/// <summary>
+		/// 确认时，修改工单数据
+		/// </summary>
+		/// <param name="pickingSubOrderid">拣货单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		public bool UpdatePickingStatus(string pickingOrderCode, List<GoodsDto> datasDto)
+		{
+
+			//获取当前工单商品
+			var pickingSubOrderdtlDtos = pickingDal.GetPickingOrderdtlDto(
+				new PickingSubOrderdtlApo
+				{
+					picking_order_code = pickingOrderCode
+				}, out int totalCount);
+
+
+			//修改工单数据
+			pickingSubOrderdtlDtos.ForEach(it =>
+			{
+				if (datasDto.Exists(dataDto => dataDto.exception_flag == (int)ExceptionFlag.正常 && it.code.Equals(dataDto.code)))
+				{
+					it.status = (int)RPOStatusType.已完成;
+				}
+			});
+
+			bool ret = pickingDal.UpdatePickingStatus(pickingOrderCode, pickingSubOrderdtlDtos);
+
+			//生成库存变化信息
+			if (ret)
+			{
+				goodsChageOrderDal.InsertGoodsChageOrderInfo(datasDto, RequisitionType.退货出库);
+			}
+
+			return ret;
+
+		}
+
+		/// <summary>
+		/// 模拟拣货单 
+		/// </summary>
+		/// <param name="rfid">单品码的RFID</param>
+		/// <returns></returns>
+		public void InitPickingOrder(string poCode, string psoCode, Hashtable rfid)
         {
             pickingDal.InsertPickingOrder(new PickingOrder
             {

@@ -16,5 +16,10 @@ namespace CFLMedCab.DTO.Picking
 		/// </summary>
 		public int picking_sub_orderid { get; set; }
 
+		/// <summary>
+		/// 拣货单单号
+		/// </summary>
+		public string picking_order_code { get; set; }
+
 	}
 }

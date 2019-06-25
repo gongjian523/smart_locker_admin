@@ -45,9 +45,10 @@ namespace CFLMedCab.BLL
         }
 
 		/// <summary>
-		/// 获取待完成上架工单
+		/// 获取待完成上架单
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public BasePageDataDto<ReplenishSubOrderDto> GetReplenishSubOrderDto(BasePageDataApo basePageDataApo)
 		{
 			return new BasePageDataDto<ReplenishSubOrderDto>()
@@ -64,6 +65,7 @@ namespace CFLMedCab.BLL
 		/// 获取待完成上架商品列表
 		/// </summary>
 		/// <returns></returns>
+		[Obsolete]
 		public BasePageDataDto<ReplenishSubOrderdtlDto> GetReplenishSubOrderdtlDto(ReplenishSubOrderdtlApo pageDataApo)
 		{
 			
@@ -77,18 +79,72 @@ namespace CFLMedCab.BLL
 		}
 
 		/// <summary>
+		/// 确认时，修改工单数据
+		/// </summary>
+		/// <param name="replenishSubOrderid">上架单id</param>
+		/// <param name="datasDto">当前操作数据dto</param>
+		/// <returns></returns>
+		[Obsolete]
+		public bool UpdateReplenishStatus(int replenishSubOrderid, List<GoodsDto> datasDto)
+		{
+
+			//获取当前工单商品
+			var replenishSubOrderdtlDtos = replenishDal.GetReplenishSubOrderdtlDto(
+				new ReplenishSubOrderdtlApo
+				{
+					replenish_sub_orderid = replenishSubOrderid
+				}, out int totalCount);
+
+
+			//修改工单数据
+			replenishSubOrderdtlDtos.ForEach(it=> 
+			{
+				if (datasDto.Exists(dataDto => dataDto.exception_flag == (int)ExceptionFlag.正常 && it.code.Equals(dataDto.code)))
+				{
+					it.status = (int)RPOStatusType.已完成;
+				}
+			});
+
+			bool ret = replenishDal.UpdateReplenishStatus(replenishSubOrderid, replenishSubOrderdtlDtos);
+
+			//生成库存变化信息
+			if (ret) {
+				goodsChageOrderDal.InsertGoodsChageOrderInfo(datasDto, RequisitionType.退货出库);
+			}
+
+			return ret;
+
+		}
+
+		/// <summary>
+		/// 获取待完成上架工单
+		/// </summary>
+		/// <returns></returns>
+		public BasePageDataDto<ReplenishOrderDto> GetReplenishOrderDto(BasePageDataApo basePageDataApo)
+		{
+			return new BasePageDataDto<ReplenishOrderDto>()
+			{
+				PageIndex = basePageDataApo.PageIndex,
+				PageSize = basePageDataApo.PageSize,
+				Data = replenishDal.GetReplenishOrderDto(basePageDataApo, out int totalCount).ToList(),
+				TotalCount = totalCount
+			};
+		}
+
+		/// <summary>
 		/// 获取补货操作情况
 		/// </summary>
 		/// <param name="replenishSubOrderid"></param>
 		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, string replenishSubOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+		public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, string replenishOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//获取当前工单商品
-			var replenishSubOrderdtlDtos = replenishDal.GetReplenishSubOrderdtlDto(
-				new ReplenishSubOrderdtlApo {
-					replenish_sub_orderid = replenishSubOrderid
+			var replenishSubOrderdtlDtos = replenishDal.GetReplenishOrderdtlDto(
+				new ReplenishSubOrderdtlApo
+				{
+					replenish_order_code = replenishOrderCode
 				}, out int totalCount);
 
 
@@ -97,7 +153,7 @@ namespace CFLMedCab.BLL
 			{
 
 				//获取业务单号
-				it.business_order_code = replenishSubOrderCode;
+				it.business_order_code = replenishOrderCode;
 
 				//入库
 				if (it.operate_type == (int)OperateType.入库)
@@ -140,19 +196,19 @@ namespace CFLMedCab.BLL
 		/// <param name="replenishSubOrderid">上架单id</param>
 		/// <param name="datasDto">当前操作数据dto</param>
 		/// <returns></returns>
-		public bool UpdateReplenishStatus(int replenishSubOrderid, List<GoodsDto> datasDto)
+		public bool UpdateReplenishStatus(string replenishOrderCode, List<GoodsDto> datasDto)
 		{
 
 			//获取当前工单商品
-			var replenishSubOrderdtlDtos = replenishDal.GetReplenishSubOrderdtlDto(
+			var replenishSubOrderdtlDtos = replenishDal.GetReplenishOrderdtlDto(
 				new ReplenishSubOrderdtlApo
 				{
-					replenish_sub_orderid = replenishSubOrderid
+					replenish_order_code = replenishOrderCode
 				}, out int totalCount);
 
 
 			//修改工单数据
-			replenishSubOrderdtlDtos.ForEach(it=> 
+			replenishSubOrderdtlDtos.ForEach(it =>
 			{
 				if (datasDto.Exists(dataDto => dataDto.exception_flag == (int)ExceptionFlag.正常 && it.code.Equals(dataDto.code)))
 				{
@@ -160,10 +216,11 @@ namespace CFLMedCab.BLL
 				}
 			});
 
-			bool ret = replenishDal.UpdateReplenishStatus(replenishSubOrderid, replenishSubOrderdtlDtos);
+			bool ret = replenishDal.UpdateReplenishStatus(replenishOrderCode, replenishSubOrderdtlDtos);
 
 			//生成库存变化信息
-			if (ret) {
+			if (ret)
+			{
 				goodsChageOrderDal.InsertGoodsChageOrderInfo(datasDto, RequisitionType.退货出库);
 			}
 
@@ -171,12 +228,12 @@ namespace CFLMedCab.BLL
 
 		}
 
-        /// <summary>
-        /// 模拟补货单 
-        /// </summary>
-        /// <param name="rfid">单品码的RFID</param>
-        /// <returns></returns>
-        public void InitReplenshOrder(string roCode, string rsoCode, Hashtable rfid)
+		/// <summary>
+		/// 模拟补货单 
+		/// </summary>
+		/// <param name="rfid">单品码的RFID</param>
+		/// <returns></returns>
+		public void InitReplenshOrder(string roCode, string rsoCode, Hashtable rfid)
         {
 
             replenishDal.InsertReplenishOrder(new ReplenishOrder
