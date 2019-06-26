@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              xmlns:l="clr-namespace:CFLMedCab.Controls"
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
-             mc:Ignorable="d">
+             mc:Ignorable="d" d:DesignHeight="2352" d:DesignWidth="3336">
     <UserControl.Resources>
         <Style x:Key="{x:Type l:EditBox}" TargetType="{x:Type l:EditBox}" >
             <Setter Property="HorizontalAlignment" Value="Left"  />
@@ -26,21 +26,21 @@
     </UserControl.Resources>
     <Grid Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="298"/>
+            <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Border Background="{StaticResource ManuInvBrush}" Margin="40,40,20,0" CornerRadius="4,4,4,4">
+        <Border Background="{StaticResource ManuInvBrush}" Margin="40,40,20,0" CornerRadius="4,4,4,4" Padding="20">
             <Grid>
                 <Label HorizontalAlignment="Center" Margin="0,68,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
                 <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,150,0,0" BorderThickness="0"  Width="226"  Height="64"  
                         Background="#FFFFFF"  Foreground="{StaticResource ManuInvBrush}" FontSize="28" Content="盘点"  Click="onEnterPopInventory" />
             </Grid>
         </Border>
-        <Border Grid.Column="1" Background="{StaticResource AutoInvBrush}" Margin="20,40,40,0" CornerRadius="4,4,4,4">
+        <Border Grid.Column="1" Background="{StaticResource AutoInvBrush}" Margin="20,40,40,0" CornerRadius="4,4,4,4"  Padding="20">
             <Grid>
                 <Label HorizontalAlignment="Center" Margin="0,48,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
                 <Label Name="inventoryTime" HorizontalAlignment="Center" Margin="0,110,0,0" FontSize="20" FontWeight="Regular" Foreground="#FFFFFF"/>
@@ -49,13 +49,13 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="40,40,40,40" CornerRadius="4,4,4,4">
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="40,40,40,40" CornerRadius="4,4,4,4" Padding="20">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <Grid>
+                <Grid Grid.Row="0">
                     <StackPanel Orientation="Horizontal" Margin="80,20,80,0">
                         <RadioButton x:Name="BtnUnconfirmed" Style="{StaticResource TabButton}"  Width="140"  Content="待确认"  FontSize="16"  IsChecked="True" Click="onLoadInventory"/>
                         <RadioButton x:Name="BtnConfirmed"  Style="{StaticResource TabButton}"  Width="140"  Content="已确认"  FontSize="16" Click="onLoadInventory"/>
@@ -64,7 +64,7 @@
                     <Label Margin="40,98,40,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="2"/>
                 </Grid>
                 <Grid Grid.Row="1" x:Name="ContentView">
-                    <Grid Margin="40">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -73,7 +73,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="362"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -84,7 +84,8 @@
                         <Grid Grid.Column="6" x:Name="column7"/>
                         <Grid Grid.Column="7" x:Name="column8"/>
                     </Grid>
-                    <ListView  x:Name="inventoryListView" Margin="10,10,0,0" VerticalAlignment="Top"  AlternationCount="2" 
+                    <!--AlternationCount="2"-->
+                    <ListView  x:Name="inventoryListView" VerticalAlignment="Top"   
                                ItemsSource="{Binding}"  HorizontalAlignment="Left"  
                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                                Style="{StaticResource DefaultListView}"
