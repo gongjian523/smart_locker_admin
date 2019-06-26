@@ -190,21 +190,20 @@ namespace CFLMedCab.DAL
 			List<PickingOrderDto> data;
 
 			//查询语句
-			var queryable = Db.Queryable<PickingOrder, PickingSubOrder>((ro, rso) => new object[] {
-			JoinType.Left, rso.picking_order_code == ro.code})
-				.Where((ro, rso) => (SqlFunc.Subqueryable<PickingSubOrderdtl>()
-													  .Where(itsub => itsub.picking_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
-													  .Count() > 0) && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
-				.OrderBy((ro, rso) => ro.create_time, OrderByType.Desc)
-				.Select((ro, rso) => new PickingOrderDto
+			var queryable = Db.Queryable<PickingOrder, PickingSubOrder, PickingSubOrderdtl>((po, pso, psod) => new object[] {
+			JoinType.Left, pso.picking_order_code == po.code,
+			JoinType.Left, pso.id == psod.picking_sub_orderid
+			})
+			    .GroupBy((po, pso) => po.code)
+				.Where((po, pso, psod) => psod.status == (int)RPOStatusType.待完成 && po.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.OrderBy((po, pso) => po.create_time, OrderByType.Desc)
+				.Select((po, pso, psod) => new PickingOrderDto
 				{
-					id = ro.id,
-					code = ro.code,
-					status = ro.status,
-					distribute_time = ro.create_time,
-					picked_goods_num = SqlFunc.Subqueryable<PickingSubOrderdtl>()
-													  .Where(itsub => itsub.picking_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
-													  .Count()
+					id = po.id,
+					code = po.code,
+					status = po.status,
+					distribute_time = po.create_time,
+					picked_goods_num = SqlFunc.AggregateCount(psod.id)
 				});
 
 			//如果小于0，默认查全部

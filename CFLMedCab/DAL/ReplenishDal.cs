@@ -193,21 +193,20 @@ namespace CFLMedCab.DAL
 			List<ReplenishOrderDto> data;
 
 			//查询语句
-			var queryable = Db.Queryable<ReplenishOrder, ReplenishSubOrder>((ro, rso) => new object[] {
-			JoinType.Left, rso.replenish_order_code == ro.code})
-				.Where((ro, rso) => (SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
-													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
-													  .Count() > 0) && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+			var queryable = Db.Queryable<ReplenishOrder, ReplenishSubOrder, ReplenishSubOrderdtl>((ro, rso, rsod) => new object[] {
+			JoinType.Left, rso.replenish_order_code == ro.code,
+			JoinType.Left, rso.id == rsod.replenish_sub_orderid
+			})
+				.GroupBy((ro, rso) => ro.code)
+				.Where((ro, rso, rsod) => rsod.status == (int)RPOStatusType.待完成 && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
 				.OrderBy((ro, rso) => ro.create_time, OrderByType.Desc)
-				.Select((ro, rso) => new ReplenishOrderDto
+				.Select((ro, rso, rsod) => new ReplenishOrderDto
 				{
 					id = ro.id,
 					code = ro.code,
 					status = ro.status,
 					distribute_time = ro.create_time,
-					not_picked_goods_num = SqlFunc.Subqueryable<ReplenishSubOrderdtl>()
-													  .Where(itsub => itsub.replenish_sub_orderid == rso.id && itsub.status == (int)RPOStatusType.待完成)
-													  .Count()
+					not_picked_goods_num = SqlFunc.AggregateCount(rsod.id)
 				});
 
 			//如果小于0，默认查全部
@@ -271,7 +270,7 @@ namespace CFLMedCab.DAL
 		/// <summary>
 		/// 生成上架单号
 		/// </summary>
-		/// <param name="po">上架单</param>
+		/// <param name="ro">上架单</param>
 		/// <returns></returns>
 		public string InsertReplenishOrder(ReplenishOrder ro)
         {
@@ -281,7 +280,7 @@ namespace CFLMedCab.DAL
         /// <summary>
         /// 生成上架单工号
         /// </summary>
-        /// <param name="po">上架工单</param>
+        /// <param name="ro">上架工单</param>
         /// <returns></returns>
         public int InsertReplenishSubOrder(ReplenishSubOrder rso)
         {
