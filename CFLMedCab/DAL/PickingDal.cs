@@ -231,10 +231,10 @@ namespace CFLMedCab.DAL
 			List<PickingSubOrderdtlDto> data;
 
 			//查询语句
-			var queryable = Db.Queryable<PickingSubOrderdtl, PickingSubOrder>((rsod, rso) => new object[] {
-			JoinType.Left, rsod.picking_sub_orderid == rso.id})
-				.Where((rsod, rso) => rsod.status == (int)RPOStatusType.待完成 && rso.picking_order_code == pageDataApo.picking_order_code)
-				.OrderBy(it => it.birth_date, OrderByType.Desc)
+			var queryable = Db.Queryable<PickingSubOrderdtl, PickingSubOrder>((psod, pso) => new object[] {
+			JoinType.Left, psod.picking_sub_orderid == pso.id})
+				.Where((psod, pso) => psod.status == (int)RPOStatusType.待完成 && pso.picking_order_code == pageDataApo.picking_order_code)
+				.OrderBy((psod, pso) => psod.birth_date, OrderByType.Desc)
 				.Select<PickingSubOrderdtlDto>();
 
 

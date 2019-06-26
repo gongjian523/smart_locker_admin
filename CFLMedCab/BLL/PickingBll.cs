@@ -228,14 +228,14 @@ namespace CFLMedCab.BLL
 		/// </summary>
 		/// <param name="rfid">单品码的RFID</param>
 		/// <returns></returns>
-		public void InitPickingOrder(string poCode, string psoCode, Hashtable rfid)
+		public void InitPickingOrder(string poCode, string psoCode, Hashtable rfid, int principalId)
         {
             pickingDal.InsertPickingOrder(new PickingOrder
             {
                 code = poCode,
                 create_time = DateTime.Now,
 				end_time = DateTime.Now.AddDays(25),
-				principal_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+				principal_id = principalId,
                 status = (int)RPOStatusType.待完成
             });
 

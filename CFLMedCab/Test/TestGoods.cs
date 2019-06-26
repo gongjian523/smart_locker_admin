@@ -1,13 +1,10 @@
 ﻿using CFLMedCab.BLL;
-using CFLMedCab.DAL;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using static CFLMedCab.Model.Enum.UserIdEnum;
 
 namespace CFLMedCab.Test
 {
@@ -37,29 +34,30 @@ namespace CFLMedCab.Test
                 return;
 
             List<User> users = new List<User> {
+                new User{
+                    name = "Alex",
+                    role = (int)UserIdType.SPD交收员,
+                    vein_id = 58268,
+                },
+
                  new User{
                     name = "郭颖",
-                    role = 0,
+                    role = (int)UserIdType.医生,
                     vein_id = 57688,
                 },
                 new User{
                     name = "Nathan",
-                    role = 0,
+                    role = (int)UserIdType.医生,
                     vein_id = 58046,
                 },
                 new User{
-                    name = "Will",
-                    role = 0,
-                    vein_id = 58268,
-                },
-                new User{
                     name = "Kate",
-                    role = 0,
+                    role = (int)UserIdType.医生,
                     vein_id = 12630,
                 },
                 new User{
                     name = "ZHIWEN",
-                    role = 0,
+                    role = (int)UserIdType.医生,
                     vein_id = 62800,
                 },
             };
@@ -82,6 +80,7 @@ namespace CFLMedCab.Test
                     valid_period = 180,
                     expire_date = new DateTime(2019, 7, 2),
                     position = "CAB1-1",
+                    fetch_type = 1,
                     remarks = ""
                 },
                 new Goods
@@ -94,6 +93,7 @@ namespace CFLMedCab.Test
                     valid_period = 180,
                     expire_date = new DateTime(2019, 8, 2),
                     position = "CAB1-1",
+                    fetch_type = 1,
                     remarks = ""
                 },
                 new Goods
@@ -106,6 +106,7 @@ namespace CFLMedCab.Test
                     valid_period = 180,
                     expire_date = new DateTime(2019, 9, 2),
                     position = "CAB1-1",
+                    fetch_type = 2,
                     remarks = ""
                 },
                 new Goods
@@ -118,6 +119,7 @@ namespace CFLMedCab.Test
                     valid_period = 90,
                     expire_date = new DateTime(2019, 5, 12),
                     position = "CAB1-2",
+                    fetch_type = 1,
                     remarks = ""
                 },
                 new Goods
@@ -130,6 +132,7 @@ namespace CFLMedCab.Test
                     valid_period = 90,
                     expire_date = new DateTime(2019, 6, 12),
                     position = "CAB1-2",
+                    fetch_type = 1,
                     remarks = ""
                 },
                 new Goods
@@ -142,6 +145,7 @@ namespace CFLMedCab.Test
                     valid_period = 90,
                     expire_date = new DateTime(2019, 7, 12),
                     position = "CAB1-2",
+                    fetch_type = 2,
                     remarks = ""
                 },
                 new Goods
@@ -154,6 +158,7 @@ namespace CFLMedCab.Test
                     valid_period = 30,
                     expire_date = new DateTime(2019, 2, 2),
                     position = "CAB2-1",
+                    fetch_type = 1,
                     remarks = ""
                 },
                 new Goods
@@ -166,6 +171,7 @@ namespace CFLMedCab.Test
                     valid_period = 30,
                     expire_date = new DateTime(2019,2, 12),
                     position = "CAB2-1",
+                    fetch_type = 2,
                     remarks = ""
                 },
                 new Goods
@@ -178,6 +184,7 @@ namespace CFLMedCab.Test
                     valid_period = 60,
                     expire_date = new DateTime(2019, 4, 2),
                     position = "CAB2-2",
+                    fetch_type = 1,
                     remarks = ""
                 },
                  new Goods
@@ -190,6 +197,7 @@ namespace CFLMedCab.Test
                     valid_period = 60,
                     expire_date = new DateTime(2019, 4, 2),
                     position = "CAB2-2",
+                    fetch_type = 2,
                     remarks = ""
                 },
             };
@@ -203,19 +211,19 @@ namespace CFLMedCab.Test
                 return;
 
             Hashtable ro1 = new Hashtable();
-            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70"};
-            HashSet<string> hs2 = new HashSet<string> { "E20000176012028119504DA5", "E20000176012023919504D48", "E20000176012028219504DAD" };
+            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67" };
+            HashSet<string> hs2 = new HashSet<string> { "E20000176012028119504DA5", "E20000176012023919504D48" };
             ro1.Add("hs1", hs1);
             ro1.Add("hs2", hs2);
-            replenishBll.InitReplenshOrder("RO-TEST-001", "RO001-RSO-TEST-00", ro1);
+            replenishBll.InitReplenshOrder("RO-TEST-001", "RO001-RSO-TEST-00", ro1, 1);
 
             Hashtable ro2 = new Hashtable();
-            HashSet<string> hs3 = new HashSet<string> { "E20000176012026619504D8D", "E20000176012026319404F98"};
-            HashSet<string> hs4 = new HashSet<string> { "E20000176012028019504DA0", "E20000176012026519504D85"};
+            HashSet<string> hs3 = new HashSet<string> { "E20000176012026619504D8D" };
+            HashSet<string> hs4 = new HashSet<string> { "E20000176012028019504DA0" };
 
             ro2.Add("hs3", hs3);
             ro2.Add("hs4", hs4);
-            replenishBll.InitReplenshOrder("RO-TEST-002", "RO002-RSO-TEST-00", ro2);
+            replenishBll.InitReplenshOrder("RO-TEST-002", "RO002-RSO-TEST-00", ro2, 1);
         }
 
         public void InitPickingOrder()
@@ -224,20 +232,20 @@ namespace CFLMedCab.Test
                 return;
 
             Hashtable ro1 = new Hashtable();
-            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70" };
-            HashSet<string> hs2 = new HashSet<string> { "E20000176012028119504DA5", "E20000176012023919504D48", "E20000176012028219504DAD" };
+            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67" };
+            HashSet<string> hs2 = new HashSet<string> { "E20000176012028119504DA5", "E20000176012023919504D48" };
             ro1.Add("hs1", hs1);
             ro1.Add("hs2", hs2);
 
-            pickingBll.InitPickingOrder("PO-TEST-001", "PO001-PSO-TEST-00", ro1);
+            pickingBll.InitPickingOrder("PO-TEST-001", "PO001-PSO-TEST-00", ro1, 1);
 
             Hashtable ro2 = new Hashtable();
-            HashSet<string> hs3 = new HashSet<string> { "E20000176012026619504D8D", "E20000176012026319404F98" };
-            HashSet<string> hs4 = new HashSet<string> { "E20000176012028019504DA0", "E20000176012026519504D85" };
+            HashSet<string> hs3 = new HashSet<string> { "E20000176012026619504D8D"};
+            HashSet<string> hs4 = new HashSet<string> { "E20000176012028019504DA0"};
 
             ro2.Add("hs3", hs3);
             ro2.Add("hs4", hs4);
-            pickingBll.InitPickingOrder("PO-TEST-002", "PO002-PSO-TEST-00", ro2);
+            pickingBll.InitPickingOrder("PO-TEST-002", "PO002-PSO-TEST-00", ro2, 1);
         }
 
         public void InitSurgerOrder()

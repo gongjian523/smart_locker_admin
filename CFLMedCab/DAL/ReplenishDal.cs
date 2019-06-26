@@ -237,7 +237,7 @@ namespace CFLMedCab.DAL
 			var queryable = Db.Queryable<ReplenishSubOrderdtl, ReplenishSubOrder>((rsod, rso) => new object[] {
 			JoinType.Left, rsod.replenish_sub_orderid == rso.id})
 				.Where((rsod, rso) => rsod.status == (int)RPOStatusType.待完成 && rso.replenish_order_code == pageDataApo.replenish_order_code)
-				.OrderBy(it => it.birth_date, OrderByType.Desc)
+				.OrderBy(rsod => rsod.birth_date, OrderByType.Desc)
 				.Select<ReplenishSubOrderdtlDto>();
 
 
