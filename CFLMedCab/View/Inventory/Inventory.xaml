@@ -85,13 +85,14 @@
                         <Grid Grid.Column="7" x:Name="column8"/>
                     </Grid>
                     <!--AlternationCount="2"-->
+                    <!-- AllowsColumnReorder="true"-->
                     <ListView  x:Name="inventoryListView" VerticalAlignment="Top"   
                                ItemsSource="{Binding}"  HorizontalAlignment="Left"  
                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                                Style="{StaticResource DefaultListView}"
                                >
                         <ListView.View>
-                            <GridView AllowsColumnReorder="true">
+                            <GridView >
                                 <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding code}"   Width="{Binding ElementName=column1,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

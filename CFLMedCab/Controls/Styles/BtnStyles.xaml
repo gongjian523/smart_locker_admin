@@ -345,8 +345,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="150" Padding="5" MinHeight="48" Width="{TemplateBinding Width}"  Background="#457EFF" CornerRadius="{StaticResource GRadius}">
-                            <TextBlock x:Name="RightLabel" FontSize="22"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#FFFFFF"/>
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="150" Padding="5" MinHeight="64" Width="{TemplateBinding Width}"  Background="#457EFF" CornerRadius="{StaticResource GRadius}">
+                            <TextBlock x:Name="RightLabel" FontSize="30"  HorizontalAlignment="Center" VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#FFFFFF"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -370,8 +370,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="150" MinHeight="48" Padding="5"  Width="{TemplateBinding Width}" BorderThickness="1" BorderBrush="{StaticResource TitleColor2}"  Background="#FFFFFF"  CornerRadius="{StaticResource GRadius}">
-                            <TextBlock x:Name="RightLabel" FontSize="22"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="{StaticResource TitleColor2}"></TextBlock>
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="150" MinHeight="64" Padding="5"  Width="{TemplateBinding Width}" BorderThickness="1" BorderBrush="{StaticResource TitleColor2}"  Background="#FFFFFF"  CornerRadius="{StaticResource GRadius}">
+                            <TextBlock x:Name="RightLabel" FontSize="30"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="{StaticResource TitleColor2}"></TextBlock>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
@@ -395,7 +395,7 @@
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinHeight="150" MinWidth="48"  Background="{x:Null}">
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinWidth="48"  Background="{x:Null}">
                             <StackPanel Orientation="Horizontal">
                                 <Image Source="/Resources/Images/add.png"/>
                                 <TextBlock x:Name="RightLabel"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#457EFF"/>
@@ -414,17 +414,17 @@
     </Style>
 
     <Style x:Key="ListButton" TargetType="{x:Type Button}">
-        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontSize" Value="24"/>
         <Setter Property="Cursor" Value="Hand"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="VerticalAlignment" Value="Stretch"/>
-        <Setter Property="Margin" Value="0 5"/>
+        <Setter Property="Margin" Value="5 0"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Grid HorizontalAlignment="Left">
-                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}" MinHeight="150" MinWidth="48"  Background="{x:Null}">
-                            <TextBlock x:Name="RightLabel" FontSize="18"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#FF0C80F3"/>
+                        <Border x:Name="RightBorder" Grid.Column="1" Height="{TemplateBinding Height}"  MinWidth="30"  Background="{x:Null}">
+                            <TextBlock x:Name="RightLabel" FontSize="24"  HorizontalAlignment="Center"  VerticalAlignment="Center" Text="{TemplateBinding RadioButton.Content}"  Foreground="#FF0C80F3"/>
                         </Border>
                     </Grid>
                     <ControlTemplate.Triggers>
