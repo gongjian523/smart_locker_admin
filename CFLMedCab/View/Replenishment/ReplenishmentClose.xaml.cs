@@ -38,9 +38,11 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         ReplenishBll replenishBll = new ReplenishBll();
         GoodsBll goodsBll = new GoodsBll();
+
         private ReplenishOrderDto replenishOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
+
         public ReplenishmentClose(ReplenishOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();

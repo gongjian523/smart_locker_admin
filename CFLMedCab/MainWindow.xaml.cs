@@ -361,9 +361,10 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNoNumOpen(object sender, RoutedEventArgs e)
         {
-            GerFetchState gerFetchState = new GerFetchState(1);
-            ContentFrame.Navigate(gerFetchState);
+            NaviView.Visibility = Visibility.Hidden;
 
+            GerFetchState gerFetchState = new GerFetchState(1);
+            FullFrame.Navigate(gerFetchState);
 
             List<string> com = ComName.GetAllLockerCom();
 
