@@ -29,10 +29,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class Replenishment : UserControl
     {
-        public delegate void EnterReplenishmentDetailHandler(object sender, ReplenishSubOrderDto e);
+        public delegate void EnterReplenishmentDetailHandler(object sender, ReplenishOrderDto e);
         public event EnterReplenishmentDetailHandler EnterReplenishmentDetailEvent;
 
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubOrderDto e);
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishOrderDto e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         ReplenishBll replenishBll = new ReplenishBll();
@@ -44,10 +44,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
             InitData();
         }
 
-        //private ObservableCollection<ReplenishOrder> _replenishOrderView = new ObservableCollection<ReplenishOrder>();
-        //public ObservableCollection<ReplenishOrder> ReplenishOrderViewList     
-        private ObservableCollection<ReplenishSubOrderDto> _replenishOrderView = new ObservableCollection<ReplenishSubOrderDto>();
-        public ObservableCollection<ReplenishSubOrderDto> ReplenishOrderViewList
+        private ObservableCollection<ReplenishOrderDto> _replenishOrderView = new ObservableCollection<ReplenishOrderDto>();
+        public ObservableCollection<ReplenishOrderDto> ReplenishOrderViewList
         {
             get
             {
@@ -66,8 +64,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             ReplenishOrderViewList.Clear();
 
-            //List<ReplenishOrder> replenishOrders= replenishOrderDal.GetList();
-            List<ReplenishSubOrderDto> replenishOrders = replenishBll.GetReplenishSubOrderDto(new BasePageDataApo()).Data;
+            List<ReplenishOrderDto> replenishOrders = replenishBll.GetReplenishOrderDto(new BasePageDataApo()).Data;
             replenishOrders.ForEach(replenishOrder => ReplenishOrderViewList.Add(replenishOrder));
         }
         
@@ -78,8 +75,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetailOpen_Click(object sender, RoutedEventArgs e)
         {
-            ReplenishSubOrderDto replenishSubShortOrder = (ReplenishSubOrderDto)((Button)sender).Tag;
-            EnterReplenishmentDetailOpenEvent(this, replenishSubShortOrder);
+            ReplenishOrderDto replenishShortOrder = (ReplenishOrderDto)((Button)sender).Tag;
+            EnterReplenishmentDetailOpenEvent(this, replenishShortOrder);
         }
 
         /// <summary>
@@ -89,8 +86,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
-            ReplenishSubOrderDto replenishSubShortOrder = (ReplenishSubOrderDto)((Button)sender).Tag;
-            EnterReplenishmentDetailEvent(this, replenishSubShortOrder);
+            ReplenishOrderDto replenishShortOrder = (ReplenishOrderDto)((Button)sender).Tag;
+            EnterReplenishmentDetailEvent(this, replenishShortOrder);
         }
     }
 }

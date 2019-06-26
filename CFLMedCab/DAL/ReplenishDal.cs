@@ -252,16 +252,16 @@ namespace CFLMedCab.DAL
 				totalCount = data.Count();
 			}
 			return data;
-
 		}
 
-		/// <summary>
-		/// 确认时，修改工单数据(通过总的上架单)
-		/// </summary>
-		/// <param name="replenishSubOrderid">上架单id</param>
-		/// <param name="datasDto">当前操作数据dto</param>
-		/// <returns></returns>
-		public bool UpdateReplenishStatus(string replenishSubOrderCode, List<ReplenishSubOrderdtlDto> replenishSubOrderdtlDtos)
+
+        /// <summary>
+        /// 确认时，修改工单数据(通过总的上架单)
+        /// </summary>
+        /// <param name="replenishSubOrderid">上架单id</param>
+        /// <param name="datasDto">当前操作数据dto</param>
+        /// <returns></returns>
+        public bool UpdateReplenishStatus(string replenishSubOrderCode, List<ReplenishSubOrderdtlDto> replenishSubOrderdtlDtos)
 		{
 
 			return Db.Updateable(replenishSubOrderdtlDtos.MapToList<ReplenishSubOrderdtlDto, ReplenishSubOrderdtl>()).ExecuteCommand() > 0;

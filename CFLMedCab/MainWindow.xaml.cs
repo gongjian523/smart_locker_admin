@@ -60,6 +60,8 @@ namespace CFLMedCab
         private GoodsBll goodsBll = new GoodsBll();
         private UserBll userBll = new UserBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        private ReplenishBll replenishBll = new ReplenishBll();
+        private PickingBll pickingBll = new PickingBll();
 
         private int cabClosedNum;
 
@@ -77,8 +79,8 @@ namespace CFLMedCab
 
 #if TESTENV
         private System.Timers.Timer testTimer;
-        private ReplenishSubOrderDto testRSOPara = new ReplenishSubOrderDto();
-        private PickingSubOrderDto testPSOPara = new PickingSubOrderDto();
+        private ReplenishOrderDto testROPara = new ReplenishOrderDto();
+        private PickingOrderDto testPOPara = new PickingOrderDto();
 #endif
 
         public MainWindow()
@@ -622,7 +624,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentDetail(object sender, ReplenishSubOrderDto e)
+        private void onEnterReplenishmentDetail(object sender, ReplenishOrderDto e)
         {
             ReplenishmentDetail replenishmentDetail = new ReplenishmentDetail(e);
             replenishmentDetail.EnterReplenishmentDetailOpenEvent += new ReplenishmentDetail.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
@@ -636,7 +638,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentDetailOpen(object sender, ReplenishSubOrderDto e)
+        private void onEnterReplenishmentDetailOpen(object sender, ReplenishOrderDto e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -656,11 +658,25 @@ namespace CFLMedCab
             testTimer.AutoReset = false;
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onEnterReplenishmentCloseTestEvent);
-            testRSOPara = e;
+            testROPara = e;
 #else
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
-            delegateGetMsg.userData = e;
+
+            List<string> listCom = replenishBll.GetReplenishOrderPositons(new ReplenishSubOrderdtlApo { replenish_order_code = e.code});
+            if (listCom.Count == 0)
+                return;
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
+            delegateGetMsg.userData = e;
+            cabClosedNum = 1;
+
+            if (listCom.Count == 2)
+            {
+                LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
+                delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
+                delegateGetMsg2.userData = e;
+                cabClosedNum = 2;
+            }
 #endif
         }
 
@@ -674,10 +690,10 @@ namespace CFLMedCab
         {
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-            ReplenishSubOrderDto replenishSubOrderDto = testRSOPara;
+            ReplenishOrderDto replenishOrderDto = testROPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto, ht);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishOrderDto, ht);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -698,12 +714,16 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
+            cabClosedNum--;
+            if (cabClosedNum == 1)
+                return;
+
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-            ReplenishSubOrderDto replenishSubOrderDto = (ReplenishSubOrderDto)delegateGetMsg.userData;
+            ReplenishOrderDto replenishOrderDto = (ReplenishOrderDto)delegateGetMsg.userData;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishSubOrderDto, ht);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishOrderDto, ht);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -737,7 +757,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnGoodsDetail(object sender, PickingSubOrderDto e)
+        private void onEnterReturnGoodsDetail(object sender, PickingOrderDto e)
         {
             ReturnGoodsDetail returnGoodsDetail = new ReturnGoodsDetail(e);
             returnGoodsDetail.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsDetail.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
@@ -752,7 +772,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnGoodsDetailOpen(object sender, PickingSubOrderDto e)
+        private void onEnterReturnGoodsDetailOpen(object sender, PickingOrderDto e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -772,11 +792,24 @@ namespace CFLMedCab
             testTimer.AutoReset = false;
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onEnterReturnGoodsCloseTestEvent);
-            testPSOPara = e;
+            testPOPara = e;
 #else
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(ComName.GetLockerCom(e.position), out bool isGetSuccess);
-            delegateGetMsg.userData = e;
+            List<string> listCom = pickingBll.GetPickingOrderPositons(new PickingSubOrderdtlApo { picking_order_code = e.code });
+            if (listCom.Count == 0)
+                return;
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
+            delegateGetMsg.userData = e;
+            cabClosedNum = 1;
+
+            if (listCom.Count == 2)
+            {
+                LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
+                delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
+                delegateGetMsg2.userData = e;
+                cabClosedNum = 2;
+            }
 #endif
         }
 
@@ -791,7 +824,7 @@ namespace CFLMedCab
             bool isGetSuccess;
             //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
             Hashtable ht = new Hashtable();
-            PickingSubOrderDto pickingSubOrderDto = testPSOPara;
+            PickingOrderDto pickingSubOrderDto = testPOPara;
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -816,12 +849,16 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
+            cabClosedNum--;
+            if (cabClosedNum == 1)
+                return;
+
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingSubOrderDto)delegateGetMsg.userData, ht);
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingOrderDto)delegateGetMsg.userData, ht);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
 

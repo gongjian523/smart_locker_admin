@@ -27,24 +27,24 @@ namespace CFLMedCab.View.Return
     public partial class ReturnGoodsDetail : UserControl
     {
         //进入拣货单详情开门状态页面
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubOrderDto e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingOrderDto e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
         //进入拣货单列表页面
         public delegate void EnterReturnGoodsHandler(object sender, RoutedEventArgs e);
         public event EnterReturnGoodsHandler EnterReturnGoodsEvent;
 
-        private PickingSubOrderDto pickingSubOrderDto;
+        private PickingOrderDto pickingOrderDto;
         PickingBll pickingBll = new PickingBll();
-        public ReturnGoodsDetail(PickingSubOrderDto model)
+        public ReturnGoodsDetail(PickingOrderDto model)
         {
             InitializeComponent();
-            pickingSubOrderDto = model;
+            pickingOrderDto = model;
             //操作人
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             orderNum.Content = model.code;
-            listView.DataContext = pickingBll.GetPickingSubOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id }).Data;
+            listView.DataContext = pickingBll.GetPickingOrderdtlDto(new PickingSubOrderdtlApo { picking_order_code = model.code }).Data;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnerDetailOpen(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsDetailOpenEvent(this, pickingSubOrderDto);
+            EnterReturnGoodsDetailOpenEvent(this, pickingOrderDto);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace CFLMedCab.View.Return
     public partial class ReturnGoodsClose : UserControl
     {
         //进入补货单详情开门状态页面
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubOrderDto e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingOrderDto e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
         //跳出关闭弹出框
@@ -38,13 +38,13 @@ namespace CFLMedCab.View.Return
 
         PickingBll pickingBll = new PickingBll();
         GoodsBll goodsBll = new GoodsBll();
-        private PickingSubOrderDto pickingSubOrderDto;
+        private PickingOrderDto pickingOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
-        public ReturnGoodsClose(PickingSubOrderDto model, Hashtable hashtable)
+        public ReturnGoodsClose(PickingOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
-            pickingSubOrderDto = model;
+            pickingOrderDto = model;
             //操作人
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             ////工单号
@@ -53,7 +53,7 @@ namespace CFLMedCab.View.Return
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
-            goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.id, model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             listView.DataContext = goodsDetails;
             inNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;
@@ -68,7 +68,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            pickingBll.UpdatePickingStatus(pickingSubOrderDto.id, goodsDetails);
+            pickingBll.UpdatePickingStatus(pickingOrderDto.code, goodsDetails);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
@@ -80,7 +80,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNotEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsDetailOpenEvent(this, pickingSubOrderDto);
+            EnterReturnGoodsDetailOpenEvent(this, pickingOrderDto);
             return;
         }
     }

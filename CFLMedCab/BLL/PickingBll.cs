@@ -128,13 +128,30 @@ namespace CFLMedCab.BLL
 			};
 		}
 
-		/// <summary>
-		/// 获取拣货操作情况
+        /// <summary>
+		/// 获取待完成拣货商品列表
 		/// </summary>
-		/// <param name="pickingSubOrderid"></param>
-		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetPickingSubOrderdtlOperateDto(int pickingSubOrderid, string pickingOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+        public BasePageDataDto<PickingSubOrderdtlDto> GetPickingOrderdtlDto(PickingSubOrderdtlApo pageDataApo)
+        {
+
+            return new BasePageDataDto<PickingSubOrderdtlDto>()
+            {
+                PageIndex = pageDataApo.PageIndex,
+                PageSize = pageDataApo.PageSize,
+                Data = pickingDal.GetPickingOrderdtlDto(pageDataApo, out int totalCount),
+                TotalCount = totalCount
+            };
+        }
+
+
+        /// <summary>
+        /// 获取拣货操作情况
+        /// </summary>
+        /// <param name="pickingSubOrderid"></param>
+        /// <param name="goodsDtos"></param>
+        /// <returns></returns>
+        public List<GoodsDto> GetPickingSubOrderdtlOperateDto(string pickingOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//获取当前工单商品
@@ -223,12 +240,27 @@ namespace CFLMedCab.BLL
 
 		}
 
-		/// <summary>
-		/// 模拟拣货单 
-		/// </summary>
-		/// <param name="rfid">单品码的RFID</param>
-		/// <returns></returns>
-		public void InitPickingOrder(string poCode, string psoCode, Hashtable rfid, int principalId)
+        /// <summary>
+        /// 获取上架单中需要抗柜门的串口
+        /// </summary>
+        /// <param name="pageDataApo">当前操作数据dto</param>
+        /// <returns></returns>
+        public List<string> GetPickingOrderPositons(PickingSubOrderdtlApo pageDataApo)
+        {
+            HashSet<string> listCom = new HashSet<string>();
+            var list = pickingDal.GetPickingOrderdtlDto(pageDataApo, out int totalCount);
+
+            list.ForEach(item => listCom.Add(ComName.GetLockerCom(item.position)));
+
+            return listCom.ToList();
+        }
+
+        /// <summary>
+        /// 模拟拣货单 
+        /// </summary>
+        /// <param name="rfid">单品码的RFID</param>
+        /// <returns></returns>
+        public void InitPickingOrder(string poCode, string psoCode, Hashtable rfid, int principalId)
         {
             pickingDal.InsertPickingOrder(new PickingOrder
             {

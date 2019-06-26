@@ -24,17 +24,17 @@ namespace CFLMedCab.View.Return
     /// </summary>
     public partial class ReturnGoodsDetailOpen : UserControl
     {
-        private PickingSubOrderDto pickingSubOrderDto;
+        private PickingOrderDto pickingOrderDto;
         PickingBll pickingBll = new PickingBll();
-        public ReturnGoodsDetailOpen(PickingSubOrderDto model)
+        public ReturnGoodsDetailOpen(PickingOrderDto model)
         {
             InitializeComponent();
-            pickingSubOrderDto = model;
+            pickingOrderDto = model;
             //操作人
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             //工单号
             orderNum.Content = model.code;
-            listView.DataContext = pickingBll.GetPickingSubOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id }).Data;
+            listView.DataContext = pickingBll.GetPickingOrderdtlDto(new PickingSubOrderdtlApo { picking_sub_orderid = model.id }).Data;
         }
     }
 }

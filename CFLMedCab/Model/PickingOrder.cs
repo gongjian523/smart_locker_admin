@@ -41,7 +41,7 @@ namespace CFLMedCab.Model
         public DateTime end_time { get; set; }
 
         /// <summary>
-        /// 上架工单号
+        /// 拣货工单号
         /// </summary>
         public string code { get; set; }
 	}

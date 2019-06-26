@@ -131,13 +131,29 @@ namespace CFLMedCab.BLL
 			};
 		}
 
-		/// <summary>
-		/// 获取补货操作情况
+        /// <summary>
+		/// 获取待完成上架商品列表
 		/// </summary>
-		/// <param name="replenishSubOrderid"></param>
-		/// <param name="goodsDtos"></param>
 		/// <returns></returns>
-		public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(int replenishSubOrderid, string replenishOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
+        public BasePageDataDto<ReplenishSubOrderdtlDto> GetReplenishOrderdtlDto(ReplenishSubOrderdtlApo pageDataApo)
+        {
+
+            return new BasePageDataDto<ReplenishSubOrderdtlDto>()
+            {
+                PageIndex = pageDataApo.PageIndex,
+                PageSize = pageDataApo.PageSize,
+                Data = replenishDal.GetReplenishOrderdtlDto(pageDataApo, out int totalCount),
+                TotalCount = totalCount
+            };
+        }
+
+        /// <summary>
+        /// 获取补货操作情况
+        /// </summary>
+        /// <param name="replenishSubOrderid"></param>
+        /// <param name="goodsDtos"></param>
+        /// <returns></returns>
+        public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(string replenishOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
 
 			//获取当前工单商品
@@ -146,8 +162,6 @@ namespace CFLMedCab.BLL
 				{
 					replenish_order_code = replenishOrderCode
 				}, out int totalCount);
-
-
 
 			goodsDtos.ForEach(it =>
 			{
@@ -228,12 +242,28 @@ namespace CFLMedCab.BLL
 
 		}
 
-		/// <summary>
-		/// 模拟补货单 
-		/// </summary>
-		/// <param name="rfid">单品码的RFID</param>
-		/// <returns></returns>
-		public void InitReplenshOrder(string roCode, string rsoCode, Hashtable rfid, int principalId)
+
+        /// <summary>
+        /// 获取上架单中需要抗柜门的串口
+        /// </summary>
+        /// <param name="pageDataApo">当前操作数据dto</param>
+        /// <returns></returns>
+        public List<string> GetReplenishOrderPositons(ReplenishSubOrderdtlApo pageDataApo)
+        {
+            HashSet<string> listCom = new HashSet<string>();
+            var list = replenishDal.GetReplenishOrderdtlDto(pageDataApo, out int totalCount);
+
+            list.ForEach(item => listCom.Add(ComName.GetLockerCom(item.position)));
+
+            return listCom.ToList();
+        }
+
+        /// <summary>
+        /// 模拟补货单 
+        /// </summary>
+        /// <param name="rfid">单品码的RFID</param>
+        /// <returns></returns>
+        public void InitReplenshOrder(string roCode, string rsoCode, Hashtable rfid, int principalId)
         {
 
             replenishDal.InsertReplenishOrder(new ReplenishOrder

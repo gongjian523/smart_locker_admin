@@ -29,7 +29,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
     public partial class ReplenishmentClose : UserControl
     {
         //进入补货单详情开门状态页面
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishSubOrderDto e);
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishOrderDto e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         //跳出关闭弹出框
@@ -38,10 +38,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         ReplenishBll replenishBll = new ReplenishBll();
         GoodsBll goodsBll = new GoodsBll();
-        private ReplenishSubOrderDto replenishSubOrderDto;
+        private ReplenishOrderDto replenishOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
-        public ReplenishmentClose(ReplenishSubOrderDto model, Hashtable hashtable)
+        public ReplenishmentClose(ReplenishOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
             //操作人
@@ -49,11 +49,11 @@ namespace CFLMedCab.View.ReplenishmentOrder
             //工单号
             orderNum.Content = model.code;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            replenishSubOrderDto = model;
+            replenishOrderDto = model;
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
-            goodsDetails = replenishBll.GetReplenishSubOrderdtlOperateDto(model.id, model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            goodsDetails = replenishBll.GetReplenishSubOrderdtlOperateDto(model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
             inNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;
             abnormalOutNum.Content = outStorageGoodsExNum;
@@ -67,7 +67,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            replenishBll.UpdateReplenishStatus(replenishSubOrderDto.id, goodsDetails);
+            replenishBll.UpdateReplenishStatus(replenishOrderDto.code, goodsDetails);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, null);
         }
@@ -79,7 +79,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            EnterReplenishmentDetailOpenEvent(this, replenishSubOrderDto);
+            EnterReplenishmentDetailOpenEvent(this, replenishOrderDto);
             return;
         }
     }

@@ -27,10 +27,10 @@ namespace CFLMedCab.View.Return
     {
         //PickingOrderDal pickingOrderDal = new PickingOrderDal();
 
-        public delegate void EnterReturnGoodsDetailHandler(object sender, PickingSubOrderDto e);
+        public delegate void EnterReturnGoodsDetailHandler(object sender, PickingOrderDto e);
         public event EnterReturnGoodsDetailHandler EnterReturnGoodsDetailEvent;
 
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingSubOrderDto e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingOrderDto e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
         PickingBll pickingBll = new PickingBll();
         public ReturnGoods()
@@ -41,10 +41,8 @@ namespace CFLMedCab.View.Return
             InitData();
         }
 
-        //private ObservableCollection<PickingOrder> _pickingOrderView = new ObservableCollection<PickingOrder>();
-        //public ObservableCollection<PickingOrder> PickingOrderList
-        private ObservableCollection<PickingSubOrderDto> _pickingOrderView = new ObservableCollection<PickingSubOrderDto>();
-        public ObservableCollection<PickingSubOrderDto> PickingOrderList
+        private ObservableCollection<PickingOrderDto> _pickingOrderView = new ObservableCollection<PickingOrderDto>();
+        public ObservableCollection<PickingOrderDto> PickingOrderList
         {
             get
             {
@@ -62,7 +60,7 @@ namespace CFLMedCab.View.Return
         private void InitData()
         {
             PickingOrderList.Clear();
-            List<PickingSubOrderDto> pickingOrders = pickingBll.GetPickingSubOrderDto(new APO.BasePageDataApo()).Data;
+            List<PickingOrderDto> pickingOrders =  pickingBll.GetPickingOrderDto(new APO.BasePageDataApo()).Data; 
             pickingOrders.ForEach(pickingOrder => PickingOrderList.Add(pickingOrder));
         }
 
@@ -73,8 +71,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnterDetail(object sender, RoutedEventArgs e)
         {
-            PickingSubOrderDto pickingSubShortOrder = (PickingSubOrderDto)((Button)sender).Tag;
-            EnterReturnGoodsDetailEvent(this, pickingSubShortOrder);
+            PickingOrderDto pickingShortOrder = (PickingOrderDto)((Button)sender).Tag;
+            EnterReturnGoodsDetailEvent(this, pickingShortOrder);
         }
 
         /// <summary>
@@ -84,8 +82,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnterDetailOpen(object sender, RoutedEventArgs e)
         {
-            PickingSubOrderDto pickingSubShortOrder = (PickingSubOrderDto)((Button)sender).Tag;
-            EnterReturnGoodsDetailOpenEvent(this, pickingSubShortOrder);
+            PickingOrderDto pickingShortOrder = (PickingOrderDto)((Button)sender).Tag;
+            EnterReturnGoodsDetailOpenEvent(this, pickingShortOrder);
         }
     }
 }

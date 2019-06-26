@@ -25,12 +25,13 @@ namespace CFLMedCab.View.ReplenishmentOrder
     public partial class ReplenishmentDetailOpen : UserControl
     {
         ReplenishBll replenishBll = new ReplenishBll();
-        public ReplenishmentDetailOpen(ReplenishSubOrderDto model)
+
+        public ReplenishmentDetailOpen(ReplenishOrderDto model)
         {
             InitializeComponent();
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             orderNum.Content = model.code;
-            listView.DataContext = replenishBll.GetReplenishSubOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_sub_orderid = model.id }).Data;
+            listView.DataContext = replenishBll.GetReplenishOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_order_code = model.code }).Data;
         }
     }
 }
