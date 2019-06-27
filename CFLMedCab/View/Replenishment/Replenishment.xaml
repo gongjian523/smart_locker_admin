@@ -32,8 +32,8 @@
                             <Label Content="{Binding distribute_time,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Style="{StaticResource lblTitle7}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0"  Grid.ColumnSpan="3" HorizontalAlignment="Right" Margin="0 10 0 0">
-                        <Button Style="{StaticResource CommonNoButton}" Content="查看详情" Name="Retract"   Tag="{Binding}" HorizontalAlignment="Left"  Click="EnterDetail_Click"/>
-                        <Button Style="{StaticResource CommonYesButton}" Content="确认开柜" Name="Confirm"  Tag="{Binding}"  Margin="40,0,40,0" HorizontalAlignment="Left" Click="EnterDetailOpen_Click"/>
+                        <Button Style="{StaticResource CommonNoButtonT}" Content="查看详情" Name="Retract"   Tag="{Binding}" HorizontalAlignment="Left"  Click="EnterDetail_Click"/>
+                        <Button Style="{StaticResource CommonYesButtonT}" Content="确认开柜" Name="Confirm"  Tag="{Binding}"  Margin="40,0,40,0" HorizontalAlignment="Left" Click="EnterDetailOpen_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -45,8 +45,8 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Label  Style="{StaticResource lblTitle5}" Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left"  VerticalAlignment="Center" />
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="40,0,40,40">
+        <Label  Style="{StaticResource lblTitle5}" Content="待完成上架工单"  Grid.Row="0" HorizontalAlignment="Left" Margin="60,0,20,0"  VerticalAlignment="Center" />
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="20,0,20,20">
             <ItemsControl ItemTemplate="{StaticResource replenishOrder}" ItemsSource="{Binding ReplenishOrderViewList, UpdateSourceTrigger=PropertyChanged}"/>
         </ScrollViewer>
         <Grid />

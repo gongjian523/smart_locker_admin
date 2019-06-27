@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="900">
+             d:DesignHeight="800" d:DesignWidth="900">
     <UserControl.Resources>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
     </UserControl.Resources>

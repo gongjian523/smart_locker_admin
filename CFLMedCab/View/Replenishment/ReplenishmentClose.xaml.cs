@@ -5,12 +5,14 @@ using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Constant;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,12 +38,15 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
+
         ReplenishBll replenishBll = new ReplenishBll();
         GoodsBll goodsBll = new GoodsBll();
 
         private ReplenishOrderDto replenishOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
+
+        private Timer endTimer;
 
         public ReplenishmentClose(ReplenishOrderDto model, Hashtable hashtable)
         {
@@ -52,14 +57,21 @@ namespace CFLMedCab.View.ReplenishmentOrder
             orderNum.Content = model.code;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             replenishOrderDto = model;
+
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
             goodsDetails = replenishBll.GetReplenishSubOrderdtlOperateDto(model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+
             inNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;
             abnormalOutNum.Content = outStorageGoodsExNum;
             listView.DataContext = goodsDetails;
+
+            endTimer = new Timer(Contant.ClosePageEndTimer);
+            endTimer.AutoReset = false;
+            endTimer.Enabled = true;
+            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
         }
 
         /// <summary>
@@ -69,9 +81,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            replenishBll.UpdateReplenishStatus(replenishOrderDto.code, goodsDetails);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
-            EnterPopCloseEvent(this, null);
+            EndOperation();
         }
 
         /// <summary>
@@ -84,5 +94,26 @@ namespace CFLMedCab.View.ReplenishmentOrder
             EnterReplenishmentDetailOpenEvent(this, replenishOrderDto);
             return;
         }
+
+        /// <summary>
+        /// 结束定时器超时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                EndOperation();
+            }));
+        }
+
+        private void EndOperation()
+        {
+            replenishBll.UpdateReplenishStatus(replenishOrderDto.code, goodsDetails);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            EnterPopCloseEvent(this, null);
+        }
+
     }
 }

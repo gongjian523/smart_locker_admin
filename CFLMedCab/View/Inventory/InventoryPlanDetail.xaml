@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:CFLMedCab.View"
         xmlns:cvt="clr-namespace:CFLMedCab.Converter"
         mc:Ignorable="d"
-        Height="510" Width="646" >
+        Height="510" Width="760" >
     <Control.Resources>
         <cvt:InventoryPlanSwitchStaConverter x:Key="InventoryPlanSwitchStaConverter"/>
     </Control.Resources>
@@ -17,7 +17,7 @@
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="{StaticResource rowHeight30}"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
@@ -76,14 +76,14 @@
             <Grid  Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
-                    <ColumnDefinition Width="2*"/>
-                    <ColumnDefinition Width="1*" />
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" x:Name="Column1"/>
                 <Grid Grid.Column="1" x:Name="Column2"/>
                 <Grid Grid.Column="2" x:Name="Column3"/>
                 <Label Style="{StaticResource lblTitle1}" Content="盘点计划：" VerticalContentAlignment="Center" Grid.Column="0" />
-                <TextBox  x:Name="planInputTb"  Text="请输入盘点时间，如 19：00" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}" />
+                <TextBox  x:Name="planInputTb"  Text="请输入盘点时间，如 19：00" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}" Height="48" />
                 <Button Style="{StaticResource AddButton}" Content="新增盘点计划" Grid.Column="2"  HorizontalAlignment="Center" VerticalAlignment="Top" Click="onAddPlan"/>
             </Grid>
             <Button Style="{StaticResource CommonYesButton}" Content="保存"  Grid.Column="0" Grid.Row="3"  HorizontalAlignment="Right" Click="onSave" Margin="0,10,60,10"/>

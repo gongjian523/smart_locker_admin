@@ -37,7 +37,7 @@
                         <Label Content="操作人" Style="{StaticResource lblTitle3}" />
                         <Label Content="Label" Name="operatorName"  Style="{StaticResource lblTitle4_0}"/>
                     </StackPanel>
-                    <StackPanel  Grid.Column="0" Grid.Row="2"   Orientation="Horizontal">
+                    <StackPanel  Grid.Column="1" Grid.Row="2"   Orientation="Horizontal">
                         <Label Content="操作日期"  Style="{StaticResource lblTitle3}"/>
                         <Label Content="Label" Name="time"  Style="{StaticResource lblTitle4_1}"/>
                     </StackPanel>
@@ -64,15 +64,11 @@
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="2*" />
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
