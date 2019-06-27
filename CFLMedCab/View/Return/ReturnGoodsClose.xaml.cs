@@ -5,12 +5,14 @@ using CFLMedCab.DTO.Picking;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Constant;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -36,11 +38,15 @@ namespace CFLMedCab.View.Return
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
+        private Timer endTimer;
+
         PickingBll pickingBll = new PickingBll();
         GoodsBll goodsBll = new GoodsBll();
+
         private PickingOrderDto pickingOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
+
         public ReturnGoodsClose(PickingOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
@@ -50,15 +56,22 @@ namespace CFLMedCab.View.Return
             ////工单号
             orderNum.Content = model.code;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
+
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
             goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+
             listView.DataContext = goodsDetails;
             inNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;
             abnormalOutNum.Content = outStorageGoodsExNum;
             listView.DataContext = goodsDetails;
+
+            endTimer = new Timer(Contant.ClosePageEndTimer);
+            endTimer.AutoReset = false;
+            endTimer.Enabled = true;
+            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
         }
 
         /// <summary>
@@ -68,9 +81,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            pickingBll.UpdatePickingStatus(pickingOrderDto.code, goodsDetails);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
-            EnterPopCloseEvent(this, null);
+            EndOperation();
         }
 
         /// <summary>
@@ -82,6 +93,26 @@ namespace CFLMedCab.View.Return
         {
             EnterReturnGoodsDetailOpenEvent(this, pickingOrderDto);
             return;
+        }
+
+        /// <summary>
+        /// 结束定时器超时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                EndOperation();
+            }));
+        }
+
+        private void EndOperation()
+        {
+            pickingBll.UpdatePickingStatus(pickingOrderDto.code, goodsDetails);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            EnterPopCloseEvent(this, null);
         }
     }
 }

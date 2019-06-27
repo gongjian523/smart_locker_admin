@@ -195,6 +195,7 @@
     <Compile Include="Infrastructure\ToolHelper\CollectHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
+    <Compile Include="Model\Constant\Contant.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
     <Compile Include="Model\Enum\NavBtnEnum.cs" />

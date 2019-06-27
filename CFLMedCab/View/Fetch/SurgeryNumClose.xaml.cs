@@ -9,6 +9,7 @@ using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Constant;
 using CFLMedCab.Model.Enum;
 using System;
 using System.Collections;
@@ -16,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -39,6 +41,8 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
+        private Timer endTimer;
+
         private SurgeryOrderDto surgeryOrderDto;
         private Hashtable after;
         //领用商品信息
@@ -49,15 +53,17 @@ namespace CFLMedCab.View.Fetch
         private List<SurgeryOrderdtlDto> surgeryOrderdtlDtos;
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+
         public SurgeryNumClose(SurgeryOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            surgeryNum.Content = model.code;
-            after = hashtable;
             surgeryOrderDto = model;
+            surgeryNum.Content = model.code;
+
+            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            after = hashtable;
             //盘点当前柜子里的商品
             goodDtos = goodsBll.GetInvetoryGoodsDto(hashtable);
             //获取库存变化信息
@@ -66,12 +72,18 @@ namespace CFLMedCab.View.Fetch
             goodsChageOrderdtls = fetchOrderBll.GetSurgeryGoodsOperateDto(goodsChageOrderdtls, model.code, out int currentOperateNum, out int storageOperateExNum, out int notStorageOperateExNum);
             //手术领用详细单变化信息
             surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode = model.code, OperateGoodsDtos = goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
+
             listView.DataContext = surgeryOrderdtlDtos.Where(it => it.not_fetch_num > 0);//手术领用详细单变化信息绑定
             listView1.DataContext = goodsChageOrderdtls;
             inNum.Content = currentOperateNum;//领用数
             abnormalInNum.Content = storageOperateExNum;//异常入库
             abnormalOutNum.Content = notStorageOperateExNum;//异常出库
             waitNum.Content = notFetchGoodsNum;//待领用数
+
+            endTimer = new Timer(Contant.ClosePageEndTimer);
+            endTimer.AutoReset = false;
+            endTimer.Enabled = true;
+            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
         }
 
         /// <summary>
@@ -90,6 +102,23 @@ namespace CFLMedCab.View.Fetch
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
+        {
+            EndOperation();
+        }
+
+        /// <summary>
+        /// 结束定时器超时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() => {
+                EndOperation();
+            }));
+        }
+
+        private void EndOperation()
         {
             fetchOrderBll.UpdateSurgeryOrderdtl(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodDtos, OperateGoodsDtos = goodsChageOrderdtls }, surgeryOrderdtlDtos);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
