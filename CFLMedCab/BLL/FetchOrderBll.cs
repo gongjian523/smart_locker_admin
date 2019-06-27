@@ -494,7 +494,8 @@ namespace CFLMedCab.BLL
 			});
 
 			//统计数量
-			operateGoodsNum = goodsDtos.Count;
+			//当前退回数量
+			operateGoodsNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库).Count();
 			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
@@ -509,8 +510,7 @@ namespace CFLMedCab.BLL
 		/// <returns></returns>
 		public bool UpdateGoBackFetchOrder(List<GoodsDto> datasDto)
 		{
-            //if (datasDto.Count == 0)
-            //    return true;
+            if (datasDto.Count == 0) return false;
 
 			//获取对应领用单的详情数据
 			var fetchOrderDtls = FetchOrderDal.GetFetchOrderDtlsByGoBackGoodsDtos(datasDto);
