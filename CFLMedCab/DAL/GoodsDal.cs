@@ -181,7 +181,8 @@ namespace CFLMedCab.DAL
                     name = it.name,
                     goods_code = it.goods_code,
                     amount = SqlFunc.AggregateCount(it.id),
-                    expire_time = SqlFunc.AggregateMin(it.expire_date)
+                    expire_time = SqlFunc.AggregateMin(it.expire_date),
+                    position = it.position
                 });
 
             //如果小于0，默认查全部
@@ -195,6 +196,26 @@ namespace CFLMedCab.DAL
                 totalCount = data.Count();
             }
             return data;
+        }
+
+        /// <summary>
+        /// 获取所有完整商品属性集合
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodDto> GetAllGoodsDto()
+        {
+            //查询语句
+            return Db.Queryable<Goods>()
+                .GroupBy(it => it.goods_code)
+                .OrderBy(it => it.goods_code, OrderByType.Asc)
+                .Select(it => new GoodDto
+                {
+                    name = it.name,
+                    goods_code = it.goods_code,
+                    amount = SqlFunc.AggregateCount(it.id),
+                    expire_time = SqlFunc.AggregateMin(it.expire_date),
+                    position = it.position
+                }).ToList();
         }
     }
 }

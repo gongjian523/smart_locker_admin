@@ -181,5 +181,15 @@ namespace CFLMedCab.BLL
         {
             GoodsDal.InsertGoods(list);
         }
+
+
+        /// <summary>
+        /// 获取所有完整商品属性集合
+        /// </summary>
+        /// <returns></returns>
+        public List<GoodDto> GetAllGoodsDto()
+        {
+            return GoodsDal.GetAllGoodsDto();
+        }
     }
 }

@@ -29,16 +29,54 @@ namespace CFLMedCab.View
         //跳出详情页面
         public delegate void EnterStockDetailedHandler(object sender, GoodDto goodDto);
         public event EnterStockDetailedHandler EnterStockDetailedEvent;
+
         GoodsBll goodsBll = new GoodsBll();
         GoodsChangeOrderBll goodsChangeOrderBll = new GoodsChangeOrderBll();
+
         private List<GoodDto> goodDtos;//最新库存信息
+        private List<GoodDto> comboBoxList = new List<GoodDto>();
+
         public Stock()
         {
             InitializeComponent();
-            stockquery.IsChecked = true;
-            condition.IsChecked = true;
+            InitGoodsCodeNameCombox();
+
             queryData(this, null);
-            queryCriteria();
+        }
+
+        /// <summary>
+        /// 库存快照事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onStockSnapshot(object sender, RoutedEventArgs e)
+        {
+            queryFilter.Visibility = Visibility.Collapsed;
+
+            ResetGoodsCodeNameCombox();
+
+            goodsCodeSP.Visibility = Visibility.Visible;
+            operating_time.Visibility = Visibility.Hidden;
+
+            stockSnapshotQuery.Visibility = Visibility.Visible;
+            validityQuery.Visibility = Visibility.Hidden;
+            stockQuery.Visibility = Visibility.Hidden;
+
+            Content.Visibility = Visibility.Visible;
+            Content1.Visibility = Visibility.Hidden;
+            Content2.Visibility = Visibility.Hidden;
+            queryData(this, null);
+        }
+
+        /// <summary>
+        /// 条件查询事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onConditionQuery(object sender, RoutedEventArgs e)
+        {
+            queryFilter.Visibility = Visibility.Visible;
+            ResetGoodsCodeNameCombox();
         }
 
         /// <summary>
@@ -63,6 +101,7 @@ namespace CFLMedCab.View
                 getGoodApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
 
                 goodDtos = goodsBll.GetStockGoodsDto(getGoodApo, out totalCount);
+
                 listView.DataContext = goodDtos;
                 totalNum.Content = goodsEpsHashSetDatas.Count;
             }
@@ -81,9 +120,11 @@ namespace CFLMedCab.View
                     getGoodsApo.expire_date = DateTime.Now.AddMonths(2);
                 if (single3.IsChecked == true)
                     getGoodsApo.expire_date = DateTime.Now.AddMonths(3);
+
                 getGoodsApo.goodsEpsDatas = goodsEpsHashSetDatas;
                 getGoodsApo.code = goods_code.SelectedValue == null || ((GoodDto)goods_code.SelectedValue).goods_code == "全部" ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
                 getGoodsApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
+
                 List<GoodsDto> goodDtos = goodsBll.GetValidityGoodsDto(getGoodsApo, out totalCount);
                 listView1.DataContext = goodDtos;
             }
@@ -96,60 +137,37 @@ namespace CFLMedCab.View
                     goodsChangeApo.operate_type = 1;
                 if (!string.IsNullOrEmpty(startTime.Text) && !string.IsNullOrWhiteSpace(startTime.Text))
                     goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
+
                 if (!string.IsNullOrEmpty(endTime.Text) && !string.IsNullOrWhiteSpace(endTime.Text))
                 {
                     DateTime time = Convert.ToDateTime(endTime.Text.Replace("0:00:00", "23:59:59"));
                     goodsChangeApo.endTime = new DateTime(time.Year, time.Month, time.Day, 23, 59, 59);
                 }
                 goodsChangeApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
+
                 List<GoodsChangeDto> goodsChangeDtos = goodsChangeOrderBll.GetGoodsChange(goodsChangeApo, out totalCount);
                 listView2.DataContext = goodsChangeDtos;
             }
         }
 
-        public void queryCriteria()
+        public void InitGoodsCodeNameCombox()
         {
-            if (goodDtos.Where(it => it.name == "全部").ToList().Count <=0)
-                goodDtos.Add(new GoodDto { name = "全部", goods_code = "全部" });
-            goods_name.ItemsSource = goodDtos.OrderByDescending(it => it.goods_code);
-            goods_code.ItemsSource = goodDtos.OrderByDescending(it => it.goods_code);
-            goods_name.SelectedItem = goodDtos.Where(it => it.goods_code == "全部").First();
-            goods_code.SelectedItem = goodDtos.Where(it => it.goods_code == "全部").First();
+            comboBoxList = goodsBll.GetAllGoodsDto();
+
+            if (comboBoxList.Where(it => it.name == "全部").ToList().Count <=0)
+                comboBoxList.Add(new GoodDto { name = "全部", goods_code = "全部" });
+
+            goods_name.ItemsSource = comboBoxList.OrderByDescending(it => it.goods_code);
+            goods_code.ItemsSource = comboBoxList.OrderByDescending(it => it.goods_code);
+            goods_name.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
+            goods_code.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
+
         }
 
-        /// <summary>
-        /// 库存快照事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void StockSnapshot(object sender, RoutedEventArgs e)
+        public void ResetGoodsCodeNameCombox()
         {
-            goodsCode.Visibility = Visibility.Hidden;
-            goodsName.Visibility = Visibility.Hidden;
-            query.Visibility = Visibility.Hidden;
-
-            stockSnapshotQuery.Visibility = Visibility.Visible;
-            validityQuery.Visibility = Visibility.Hidden;
-            stockQuery.Visibility = Visibility.Hidden;
-            operating_time.Visibility = Visibility.Hidden;
-
-            Content.Visibility = Visibility.Visible;
-            Content1.Visibility = Visibility.Hidden;
-            Content2.Visibility = Visibility.Hidden;
-            queryData(this, null);
-        }
-
-        /// <summary>
-        /// 条件查询事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ConditionQuery(object sender, RoutedEventArgs e)
-        {
-            goodsCode.Visibility = Visibility.Visible;
-            goodsName.Visibility = Visibility.Visible;
-            query.Visibility = Visibility.Visible;
-            queryCriteria();
+            goods_name.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
+            goods_code.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
         }
 
         /// <summary>
@@ -159,19 +177,21 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void EffectivePeriod(object sender, RoutedEventArgs e)
         {
+            queryFilter.Visibility = Visibility.Visible;
+
+            goodsCodeSP.Visibility = Visibility.Visible;
+            operating_time.Visibility = Visibility.Hidden;
+
+            ResetGoodsCodeNameCombox();
+
             stockSnapshotQuery.Visibility = Visibility.Hidden;
             validityQuery.Visibility = Visibility.Visible;
             stockQuery.Visibility = Visibility.Hidden;
-            operating_time.Visibility = Visibility.Hidden;
-
-            goodsCode.Visibility = Visibility.Visible;
-            goodsName.Visibility = Visibility.Visible;
-            query.Visibility = Visibility.Visible;
 
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Visible;
             Content2.Visibility = Visibility.Hidden;
-            queryCriteria();
+            //queryCriteria();
             All.IsChecked = true;
             queryData(this, null);
         }
@@ -184,19 +204,21 @@ namespace CFLMedCab.View
         private void StockQuery(object sender, RoutedEventArgs e)
         {
 
+            queryFilter.Visibility = Visibility.Visible;
+
+            goodsCodeSP.Visibility = Visibility.Hidden;
+            operating_time.Visibility = Visibility.Visible;
+
+            ResetGoodsCodeNameCombox();
+
             stockSnapshotQuery.Visibility = Visibility.Hidden;
             validityQuery.Visibility = Visibility.Hidden;
             stockQuery.Visibility = Visibility.Visible;
 
-            operating_time.Visibility = Visibility.Visible;
-            goodsName.Visibility = Visibility.Visible;
-            goodsCode.Visibility = Visibility.Hidden;
-            query.Visibility = Visibility.Visible;
-
             Content.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Hidden;
             Content2.Visibility = Visibility.Visible;
-            queryCriteria();
+
             outStock.IsChecked = true;
             queryData(this, null);
         }
@@ -211,5 +233,27 @@ namespace CFLMedCab.View
             GoodDto goodDto = (GoodDto)((Button)sender).Tag;
             EnterStockDetailedEvent(this, goodDto);
         }
-    }
+
+        /// <summary>
+        /// 商品名称选择框变化事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onGoodsNameChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+
+        /// <summary>
+        /// 商品名称选择框变化事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onGoodsCodeChanged(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+}
 }

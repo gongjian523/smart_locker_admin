@@ -719,6 +719,8 @@ namespace CFLMedCab
             if (cabClosedNum == 1)
                 return;
 
+            
+
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
             ReplenishOrderDto replenishOrderDto = (ReplenishOrderDto)delegateGetMsg.userData;

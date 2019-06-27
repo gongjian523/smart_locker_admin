@@ -39,6 +39,7 @@ namespace CFLMedCab.View.Fetch
 
         private Hashtable after = new Hashtable();
         private List<GoodsDto> goodsChageOrderdtls= new List<GoodsDto>();
+
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
 
@@ -47,11 +48,12 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-            List<GoodsDto> goodsChageOrderdtls = new List<GoodsDto>();
+
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;
             List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);//获取关柜之后的库存变化信息
             goodsChageOrderdtls = fetchOrderBll.GetGoBackFetchOrderdtlOperateDto(goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+
             listView.DataContext = goodsChageOrderdtls;
             returnNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;

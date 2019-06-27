@@ -28,5 +28,10 @@ namespace CFLMedCab.DTO.Goodss
         /// 最早日期
         /// </summary>
         public DateTime  expire_time  { get; set; }
+
+        /// <summary>
+        /// 货柜号
+        /// </summary>
+        public string position { get; set; }
     }
 }

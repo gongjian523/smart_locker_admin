@@ -19,11 +19,11 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Border  Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
-                <Grid>
-                    <RadioButton Content="库存查询"  Name="stockSnapshot" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="40,36,0,0" VerticalAlignment="Top" IsChecked="True" FontWeight="Bold" Click="StockSnapshot"/>
-                    <RadioButton Content="效期查询" Name="validity" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="260,36,0,0" VerticalAlignment="Top" FontWeight="Bold" Click="EffectivePeriod"/>
-                    <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  HorizontalAlignment="Left" Margin="480,36,0,0" VerticalAlignment="Top" FontWeight="Bold" Click="StockQuery" />
-                </Grid>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton Content="库存查询"  Name="stockSnapshot" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  IsChecked="True" FontWeight="Bold" Click="onStockSnapshot"/>
+                    <RadioButton Content="有效期查询" Name="validity" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="EffectivePeriod"/>
+                    <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="StockQuery" />
+                </StackPanel>
             </Border>
             <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice">
                 <Grid>
@@ -31,53 +31,56 @@
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-                    <StackPanel Grid.Row="0" Name="stockSnapshotQuery">
-                        <RadioButton Name="stockquery"  Content="库存快照" FontSize="22" GroupName="stockquery" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" VerticalAlignment="Top" Click="StockSnapshot"/>
-                        <RadioButton Name="condition"  Margin="160 -47" FontSize="22" Content="条件查询" GroupName="condition" IsChecked="True" Style="{DynamicResource CircularNavButton}" HorizontalAlignment="Left" VerticalAlignment="Top"  Click="ConditionQuery" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="0" Name="validityQuery" Visibility="Hidden">
-                        <RadioButton GroupName="single" Grid.Row="0" Name="All" Content="全部" FontSize="22" IsChecked="True" Style="{DynamicResource CircularNavButton}"  HorizontalAlignment="Left" VerticalAlignment="Top" Click="queryData" />
-                        <RadioButton GroupName="single" Grid.Row="0" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="180 -48" HorizontalAlignment="Left" VerticalAlignment="Top" Content="效期小于1个月" FontSize="22"  Click="queryData" />
-                        <RadioButton GroupName="single" Grid.Row="0" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="380 -48" HorizontalAlignment="Left" VerticalAlignment="Top" Content="效期小于2个月" FontSize="22" Click="queryData" />
-                        <RadioButton GroupName="single" Grid.Row="0" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="290 -48" HorizontalAlignment="Right" VerticalAlignment="Top" Content="效期小于3个月" FontSize="22" Click="queryData" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="0" Name="stockQuery" Visibility="Hidden">
-                        <RadioButton GroupName="single" Grid.Row="0" Name="outStock" Style="{DynamicResource SingleNavButton}" IsChecked="True" HorizontalAlignment="Left" VerticalAlignment="Top" Content="出库" FontSize="22" Click="queryData" />
-                        <RadioButton GroupName="single" Grid.Row="0" Name="inStock"  Style="{DynamicResource SingleNavButton}" Margin="200 -48" HorizontalAlignment="Left" VerticalAlignment="Top" Content="入库" FontSize="22" Click="queryData" />
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Name="goodsCode" Margin="0 16" Visibility="Hidden" MinWidth="255" MinHeight="48" HorizontalAlignment="Left" VerticalAlignment="Center" >
-                        <ComboBox x:Name="goods_code" Height="40" >
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Rectangle Fill="{Binding goods_code}" Width="16" Height="16" Margin="0,2,5,2" />
-                                        <TextBlock Name="test" Text="{Binding goods_code}"  FontSize="22"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
-                    <!--<TextBox Grid.Row="1" HorizontalAlignment="Left" Name="operating_time" Visibility="Hidden" Width="255"  TextWrapping="Wrap" Text="操作时间" VerticalAlignment="Top" Foreground="#999999" FontWeight="Bold" FontSize="14"/>-->
-                    <!--<Calendar  HorizontalAlignment="Left" VerticalAlignment="Top" Name="operating_time" Visibility="Hidden" DisplayMode="Month" SelectionMode="SingleRange"/>-->
-                    <StackPanel Grid.Row="1" Name="operating_time" Visibility="Hidden" MinHeight="48">
-
-                        <DatePicker MinHeight="48" Name="startTime" Margin="0 20" HorizontalAlignment="Left" SelectedDateFormat="Long" VerticalAlignment="Top" Width="130" Focusable="False" Language="zh-CN"/>
-                        <Label Content="至" MinHeight="48" FontSize="22" Margin="122 -68" ></Label>
-                        <DatePicker MinHeight="48" Name="endTime" Margin="150 -68" HorizontalAlignment="Left" SelectedDateFormat="Long" VerticalAlignment="Top" Width="130"  Focusable="False"/>
-                    </StackPanel>
-                    <StackPanel Grid.Row="1" Margin="300 0" Name="goodsName" Visibility="Hidden" MinWidth="255"  MinHeight="48" HorizontalAlignment="Left" VerticalAlignment="Center" Language="zh-CN">
-                        <ComboBox x:Name="goods_name" MinHeight="48" >
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Rectangle Fill="{Binding name}" Width="16" Height="16" Margin="0,2,5,2" />
-                                        <TextBlock Text="{Binding name}"  FontSize="22"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>
-                    </StackPanel>
-                    <Button Grid.Row="1" Margin="280 14" Style="{StaticResource CommonNoButton}" Content="查询" Name="query" Visibility="Hidden" HorizontalAlignment="Right" VerticalAlignment="Top" Click="queryData" />
+                    <Grid>
+                        <StackPanel Name="stockSnapshotQuery" Orientation="Horizontal">
+                            <RadioButton Name="stockquery"  Content="库存快照" FontSize="22" GroupName="stockquery" IsChecked="True" Style="{DynamicResource CircularNavButton}"  Click="onStockSnapshot"/>
+                            <RadioButton Name="condition"  Margin="20,0,0,0" FontSize="22" Content="条件查询" GroupName="stockquery"  Style="{DynamicResource CircularNavButton}" Click="onConditionQuery" />
+                        </StackPanel>
+                        <StackPanel Name="validityQuery" Visibility="Hidden" Orientation="Horizontal">
+                            <RadioButton GroupName="single" Grid.Row="0" Name="All" Content="全部" FontSize="22" IsChecked="True" Style="{DynamicResource CircularNavButton}"  Click="queryData" />
+                            <RadioButton GroupName="single" Grid.Row="0" Name="single1" Style="{DynamicResource SingleNavButton}" Margin="20,0,0,0" Content="效期小于1个月" FontSize="22"  Click="queryData" />
+                            <RadioButton GroupName="single" Grid.Row="0" Name="single2" Style="{DynamicResource SingleNavButton}" Margin="20,0,0,0" Content="效期小于2个月" FontSize="22" Click="queryData" />
+                            <RadioButton GroupName="single" Grid.Row="0" Name="single3" Style="{DynamicResource SingleNavButton}" Margin="20,0,0,0" Content="效期小于3个月" FontSize="22" Click="queryData" />
+                        </StackPanel>
+                        <StackPanel Name="stockQuery" Visibility="Hidden" Orientation="Horizontal">
+                            <RadioButton GroupName="single" Grid.Row="0" Name="outStock" Style="{DynamicResource SingleNavButton}" IsChecked="True" Content="出库" FontSize="22" Click="queryData" />
+                            <RadioButton GroupName="single" Grid.Row="0" Name="inStock"  Style="{DynamicResource SingleNavButton}" Margin="20,0,0,0" Content="入库" FontSize="22" Click="queryData" />
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" x:Name="queryFilter" Visibility="Collapsed" >
+                        <StackPanel x:Name="goodsCodeSP" Orientation="Horizontal" >
+                            <TextBlock Text="商品码" FontSize="22" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="goods_code" Height="50" Width="260"  HorizontalAlignment="Left" Margin="5,0,0,0" SelectionChanged="onGoodsCodeChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Rectangle Fill="{Binding goods_code}" Width="16" Height="16" Margin="0,2,5,2" />
+                                            <TextBlock Name="test" Text="{Binding goods_code}"  FontSize="22"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel Name="operating_time" Visibility="Hidden" HorizontalAlignment="Left"  Orientation="Horizontal"  >
+                            <DatePicker Name="startTime" Margin="0 20" SelectedDateFormat="Long"  Width="150" Height="50" Focusable="False" Language="zh-CN"/>
+                            <Label Content="至" MinHeight="48" FontSize="22" Margin="10,25" ></Label>
+                            <DatePicker MinHeight="48" Name="endTime" Margin="0,20"  SelectedDateFormat="Long" Width="150" Height="50"  Focusable="False" Language="zh-CN"/>
+                        </StackPanel>
+                        <StackPanel x:Name="goodsNameSP"  Orientation="Horizontal" Margin="400,0,0,0">
+                            <TextBlock Text="商品名称" FontSize="22" VerticalAlignment="Center"/>
+                            <ComboBox x:Name="goods_name"   Height="50" Width="260" Margin="5,0,0,0"  SelectionChanged="onGoodsNameChanged">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Rectangle Fill="{Binding name}" Width="16" Height="16" Margin="0,2,5,2" />
+                                            <TextBlock Text="{Binding name}"  FontSize="22"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+                         </StackPanel>
+                         <Button Grid.Row="1" Margin="0,20,0,20" Style="{StaticResource CommonNoButton}" Content="查询" HorizontalAlignment="Right"  Click="queryData" />
+                    </Grid>
                 </Grid>
             </Border>
 
@@ -95,12 +98,14 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
                         <Grid Grid.Column="2" x:Name="column3"/>
                         <Grid Grid.Column="3" x:Name="column4"/>
                         <Grid Grid.Column="4" x:Name="column5"/>
+                        <Grid Grid.Column="5" x:Name="column6"/>
                     </Grid>
                     <Border Grid.Row="0" Padding="5"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -128,21 +133,28 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="库存数量" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                <GridViewColumn Header="货位" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding position}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="库存数量" Width="{Binding ElementName=column4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding amount}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="最早失效期"  Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                <GridViewColumn Header="最早失效期"  Width="{Binding ElementName=column5,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_time,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
