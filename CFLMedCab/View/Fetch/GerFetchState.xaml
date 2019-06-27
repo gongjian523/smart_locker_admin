@@ -8,13 +8,13 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid  Background="{StaticResource ContentBkBrush}">
         <StackPanel Orientation="Vertical">
-            <Image Width="194" Height="126" HorizontalAlignment="Center"  Margin="0,150,0,0"  >
+            <Image Width="194" Height="126" HorizontalAlignment="Center"  Margin="0,320,0,0"  >
                 <Image.Source>
                     <BitmapImage x:Name="infoImage" UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png"/>
                 </Image.Source>
             </Image>
             <Label Content="柜门已开"  HorizontalAlignment="Center" Margin="0,18,0,0" FontSize="40" Foreground="#619CF8"/>
-            <Label x:Name="attention"  Content=""  HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="28" Foreground="#333333"/>
+            <Label x:Name="attention"  Content=""  HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="32" Foreground="#333333"/>
         </StackPanel>
     </Grid>
 </UserControl>
