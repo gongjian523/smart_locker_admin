@@ -25,7 +25,6 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" x:Name="column1"/>
                 <Grid Grid.Column="1" x:Name="column2"/>
@@ -34,7 +33,6 @@
                 <Grid Grid.Column="4" x:Name="column5"/>
                 <Grid Grid.Column="5" x:Name="column6"/>
                 <Grid Grid.Column="6" x:Name="column7"/>
-                <Grid Grid.Column="7" x:Name="column8"/>
             </Grid>
             <Label Grid.Row="0" Content="库存"  Style="{StaticResource lblTitle5}"/>
             
@@ -87,13 +85,6 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=position}"/>
-                                </DataTemplate>
-                            </GridViewColumn.CellTemplate>
-                        </GridViewColumn>
-                        <GridViewColumn Header="备注"  Width="{Binding ElementName=column8,Path=ActualWidth}">
-                            <GridViewColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=remarks}"/>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>

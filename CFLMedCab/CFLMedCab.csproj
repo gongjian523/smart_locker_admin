@@ -157,7 +157,10 @@
     <Compile Include="Controls\EditBox.cs" />
     <Compile Include="Controls\EditBoxAdorner.cs" />
     <Compile Include="Controls\Taskbar.cs" />
+    <Compile Include="Converter\DateStrConverter.cs" />
     <Compile Include="Converter\ExceptionFlagStrConverter.cs" />
+    <Compile Include="Converter\InventoryActualSwichStaConverter.cs" />
+    <Compile Include="Converter\InventoryConfirmBtnVisiblityConverter.cs" />
     <Compile Include="Converter\InventoryPlanSwitchStaConverter.cs" />
     <Compile Include="Converter\InventoryStatusStrConverter.cs" />
     <Compile Include="Converter\InventoryTypeStrConverter.cs" />

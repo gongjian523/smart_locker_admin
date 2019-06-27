@@ -39,6 +39,7 @@ namespace CFLMedCab.BLL
         {
 
             InventoryOrder inventoryOrder = new InventoryOrder();
+            var ran = new Random();
 
             inventoryOrder.create_time = System.DateTime.Now;
             inventoryOrder.type = (int)type;
@@ -58,7 +59,8 @@ namespace CFLMedCab.BLL
                 inventoryOrder.type = (int)InventoryType.Auto;
             }
 
-            inventoryOrder.code = System.Guid.NewGuid().ToString("N");
+            //inventoryOrder.code = System.Guid.NewGuid().ToString("N");
+            inventoryOrder.code = "INV" + DateTime.Now.ToString("yyyyMMddHHmm") + ran.Next(9999);
 
             //生成记录
 
@@ -148,14 +150,6 @@ namespace CFLMedCab.BLL
         /// <returns></returns>
         public void UpdateInventoryDetails(List<InventoryOrderdtl> list)
         {
-            //foreach(var item in list)
-            //{
-            //    if (item.id == 0)
-            //        inventoryDal.InsertInventoryDetails(item);
-            //    else
-            //        inventoryDal.UpdateInventoryDetails(item);
-            //}
-
             //更新已有的计划
             var oldlist = list.Where(item => item.id != 0).ToList();
             if (oldlist.Count != 0)

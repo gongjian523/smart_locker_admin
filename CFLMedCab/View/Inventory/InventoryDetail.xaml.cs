@@ -4,7 +4,9 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,7 +24,7 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// InventoryConfirm.xaml 的交互逻辑
     /// </summary>
-    public partial class InventoryDetail : UserControl
+    public partial class InventoryDetail : UserControl,INotifyPropertyChanged
     {
 
         public delegate void EnterInventoryHandler(object sender, RoutedEventArgs e);
@@ -31,18 +33,44 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterAddProductHandler(object sender, InventoryDetailPara e);
         public event EnterAddProductHandler EnterAddProductEvent;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         InventoryBll inventoryBll = new InventoryBll();
         GoodsBll goodsBll = new GoodsBll();
 
         InventoryDetailPara order = new InventoryDetailPara();
         List<InventoryOrderdtl> dtlList = new List<InventoryOrderdtl>();
 
+
+        public string Code { get; set; }
+        public DateTime CreateTime { get; set; }
+        public int Type { get; set; }
+
+        private int _status;
+        public int Status
+        {
+            get { return _status; }
+            set
+            {
+                if (value == _status)
+                    return;
+                _status = value;
+                NotifyPropertyChanged("Status");
+            }
+        }
+
+
         public InventoryDetail(InventoryDetailPara para)
         {
             InitializeComponent();
 
             order = para;
-            DataContext = order;
+            //DataContext = order;
+            DataContext = this;
+            Code = order.code;
+            CreateTime = order.create_time;
+            Type = order.type;
+            Status = order.status;
 
             dtlList = inventoryBll.GetInventoryDetailsByInventoryId(para.id);
 
@@ -69,17 +97,20 @@ namespace CFLMedCab.View.Inventory
                     item.id = 0;
                     item.inventory_order_id = para.id;
                     item.goods_type = (int)GoodsInventoryStatus.Manual;
-                    item.book_inventory = 1;
+                    item.book_inventory = 0;
                     item.actual_inventory = 1;
-                    item.num_differences = 0;
+                    item.num_differences = 1;
 
                     dtlList.Add(item);
                 }
             }
 
-            goodsDtllistView.DataContext = dtlList;
+            goodsDtllistConfirmView.DataContext = dtlList;
+            goodsDtllistCheckView.DataContext = dtlList;
 
-            hideButtons();
+            hideButtons(order.btnType == 0 ? true : false);
+            goodsDtllistConfirmView.Visibility = order.btnType == 0 ? Visibility.Visible : Visibility.Collapsed;
+            goodsDtllistCheckView.Visibility = order.btnType != 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 
         /// <summary>
@@ -101,7 +132,13 @@ namespace CFLMedCab.View.Inventory
         {
             inventoryBll.ConfirmInventory((InventoryOrder)order);
             inventoryBll.UpdateInventoryDetails(dtlList);
-            hideButtons();
+            hideButtons(false);
+
+            goodsDtllistConfirmView.Visibility = Visibility.Collapsed;
+            goodsDtllistCheckView.Visibility = Visibility.Visible;
+
+            Status = 1;
+            goodsDtllistCheckView.Items.Refresh();
         }
 
         /// <summary>
@@ -114,11 +151,19 @@ namespace CFLMedCab.View.Inventory
             EnterInventoryEvent(this, null);
         }
 
-        private void hideButtons()
+        private void hideButtons(bool visible)
         {
-            btnAddProduct.Visibility = order.btnType == 0 ? Visibility.Visible : Visibility.Hidden;
-            btnCancel.Visibility = order.btnType == 0 ? Visibility.Visible : Visibility.Hidden;
-            btnConfirm.Visibility = order.btnType == 0 ? Visibility.Visible : Visibility.Hidden;
+            btnAddProduct.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
+            btnCancel.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
+            btnConfirm.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
+        }
+
+        // This method is called by the Set accessor of each property.  
+        // The CallerMemberName attribute that is applied to the optional propertyName  
+        // parameter causes the property name of the caller to be substituted as an argument.  
+        private void NotifyPropertyChanged([CallerMemberName]String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -23,6 +23,8 @@
         </Style>
         <cvt:InventoryStatusStrConverter x:Key="InventoryStatusStrConverter"/>
         <cvt:InventoryTypeStrConverter x:Key="InventoryTypeStrConverter"/>
+        <cvt:InventoryConfirmBtnVisiblityConverter x:Key="InventoryConfirmBtnVisiblityConverter"/>
+        <cvt:DateStrConverter x:Key="DateStrConverter"/>
     </UserControl.Resources>
     <Grid Background="{StaticResource ContentBkBrush}">
         <Grid.RowDefinitions>
@@ -55,25 +57,25 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
+
                 <Grid Grid.Row="0">
-                    <StackPanel Orientation="Horizontal" Margin="80,20,80,0">
-                        <RadioButton x:Name="BtnUnconfirmed" Style="{StaticResource TabButton}"  Width="140"  Content="待确认"  FontSize="16"  IsChecked="True" Click="onLoadInventory"/>
-                        <RadioButton x:Name="BtnConfirmed"  Style="{StaticResource TabButton}"  Width="140"  Content="已确认"  FontSize="16" Click="onLoadInventory"/>
-                        <RadioButton x:Name="BtnAll" Style="{StaticResource TabButton}"  Width="140"  Content="全部"  FontSize="16" Click="onLoadInventory" Visibility="Hidden"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,80,0">
+                        <RadioButton x:Name="BtnUnconfirmed" Style="{StaticResource FrameNavButton}"  Width="140"  Content="待确认"  FontSize="34" FontWeight="Bold" IsChecked="True" Click="onLoadInventory"/>
+                        <RadioButton x:Name="BtnConfirmed"  Style="{StaticResource FrameNavButton}"  Width="140"  Content="已确认"  FontSize="34" FontWeight="Bold" Click="onLoadInventory"/>
+                        <RadioButton x:Name="BtnAll" Style="{StaticResource FrameNavButton}"  Width="140"  Content="全部"  FontSize="34" FontWeight="Bold" Click="onLoadInventory" Visibility="Hidden"/>
                     </StackPanel>
-                    <Label Margin="40,98,40,0" Background="{StaticResource ContentBkBrush}" Width="auto" Height="2"/>
                 </Grid>
-                <Grid Grid.Row="1" x:Name="ContentView">
+                <Grid Grid.Row="1" x:Name="ContentView" Margin="0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="2.5*" />
+                            <ColumnDefinition Width="1.5*" />
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -84,8 +86,6 @@
                         <Grid Grid.Column="6" x:Name="column7"/>
                         <Grid Grid.Column="7" x:Name="column8"/>
                     </Grid>
-                    <!--AlternationCount="2"-->
-                    <!-- AllowsColumnReorder="true"-->
                     <ListView  x:Name="inventoryListView" VerticalAlignment="Top"   
                                ItemsSource="{Binding}"  HorizontalAlignment="Left"  
                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
@@ -93,17 +93,17 @@
                                >
                         <ListView.View>
                             <GridView >
-                                <GridViewColumn Header="盘点单号" DisplayMemberBinding="{Binding code}"   Width="{Binding ElementName=column1,Path=ActualWidth}">
+                                <GridViewColumn Header="盘点单号" Width="{Binding ElementName=column1,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}" />
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="盘点日期" DisplayMemberBinding="{Binding create_time,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}"    Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <GridViewColumn Header="盘点日期" Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding create_time,StringFormat='{}{0:yyyy-MM-dd}'}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -128,22 +128,28 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <!--DisplayMemberBinding="{Binding operator_name}"-->
                                 <GridViewColumn Header="确认人"    Width="{Binding ElementName=column6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <l:EditBox Height="25" Value="{Binding Path=inspector_name}" />
+                                            <!--<l:EditBox Height="25" Value="{Binding Path=inspector_name}" />-->
+                                            <TextBlock   Style="{StaticResource TextBlockCommon}" Text="{Binding inspector_name}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-
-                                <GridViewColumn Header="确认日期" DisplayMemberBinding="{Binding confirm_time,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}"   Width="{Binding ElementName=column7,Path=ActualWidth}"/>
-
+                                <GridViewColumn Header="确认日期"  Width="{Binding ElementName=column7,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <!--<TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding confirm_time,StringFormat='{}{0:yyyy-MM-dd}'}"/>-->
+                                            <TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding confirm_time,Converter={StaticResource DateStrConverter}}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                                 <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <Button Style="{StaticResource ListButton}" x:Name="BtnConfirm" Content="确认"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}"/>
+                                                <Button Style="{StaticResource ListButton}" x:Name="BtnConfirm" Content="确认"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" 
+                                                        Visibility="{Binding status,Converter={StaticResource InventoryConfirmBtnVisiblityConverter}}"/>
                                                 <Button Style="{StaticResource ListButton}" x:Name="BtnDetail" Content="查看"   Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}"/>
                                             </StackPanel>
                                         </DataTemplate>
