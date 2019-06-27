@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -17,9 +18,22 @@ namespace CFLMedCab
     /// </summary>
     public partial class App : Application
     {
-        protected override void OnStartup(StartupEventArgs e)
+		public EventWaitHandle ProgramStarted { get; set; }
+
+		protected override void OnStartup(StartupEventArgs e)
         {
-            base.OnStartup(e);
+			bool createNew;
+			ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "乘法云", out createNew);
+
+
+			if (!createNew)
+			{
+				MessageBox.Show("已有一个程序实例运行");
+				Current.Shutdown();
+				Environment.Exit(0);
+			}
+
+			base.OnStartup(e);
             User user = new User
             {
                 id = 1111,
@@ -28,5 +42,8 @@ namespace CFLMedCab
             };
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
         }
+
+
+
     }
 }
