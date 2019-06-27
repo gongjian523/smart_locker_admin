@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CFLMedCab.View.Inventory"
         mc:Ignorable="d"
-        Height="350" 
-        Width="480"  >
+        Height="400" 
+        Width="680"  >
     <!--<UserControl.Resources>
         <Style TargetType="{x:Type GridViewColumnHeader}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>

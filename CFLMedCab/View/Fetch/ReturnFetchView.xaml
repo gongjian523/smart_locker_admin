@@ -6,7 +6,7 @@
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
-             d:DesignHeight="500" d:DesignWidth="900">
+             d:DesignHeight="800" d:DesignWidth="900">
     <Control.Resources>
         <cvt:OperateTypeConverter x:Key="OperateTypeConverter"/>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
@@ -16,7 +16,7 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
-                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
 
@@ -48,7 +48,7 @@
                 <Grid x:Name="GridValue">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Style="{StaticResource TipBorder}" Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
