@@ -44,6 +44,7 @@ using CFLMedCab.Controls;
 using static CFLMedCab.Controls.Taskbar;
 using System.Windows.Forms;
 using static CFLMedCab.Model.Enum.UserIdEnum;
+using CFLMedCab.Infrastructure.BootUpHelper;
 
 namespace CFLMedCab
 {
@@ -85,7 +86,10 @@ namespace CFLMedCab
 
         public MainWindow()
         {
-            InitializeComponent();
+			//开启启动
+			BootUpHelper.GetInstance().SetMeAutoStart();
+
+			InitializeComponent();
             foreach (Screen scr in Screen.AllScreens)
             {
                 if (scr.Primary)
