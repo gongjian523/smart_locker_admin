@@ -220,11 +220,11 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-
                     <Label Style="{StaticResource lblTitle5}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Left" VerticalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Grid.Column="1">
-                        <Button Style="{StaticResource CommonYesButton}" Content="是" HorizontalAlignment="Right" Margin="0,0,20,0"  Grid.Column="0" VerticalAlignment="Top" Click="onEndOperation"/>
-                        <Button Style="{StaticResource CommonNoButton}" Content="否" HorizontalAlignment="Left" Margin="20,0,0,0"  Grid.Column="1" VerticalAlignment="Top" Click="onNoEndOperation"/>
+                        <Button Style="{StaticResource CommonYesButton}" x:Name="YesBtn" Content="是,并回到首页"  Width="220" Click="onEndOperation" />
+                        <Button Style="{StaticResource CommonYesButton}" x:Name="YesAndExitBtn" Content="是,并退出" Margin="60,0,0,0" Width="220"  Click="onEndOperation"/>
+                        <Button Style="{StaticResource CommonNoButton}" x:Name="NoBtn" Content="否" Margin="60,0,0,0"  Width="220"  Click="onNoEndOperation"/>
                     </StackPanel>
                 </Grid>
             </Border>

@@ -1112,19 +1112,30 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterPopClose(object sender, RoutedEventArgs e)
+        private void onEnterPopClose(object sender, bool e)
         {
-            CloseCabinet closeCabinet = new CloseCabinet();
-            closeCabinet.HidePopCloseEvent += new CloseCabinet.HidePopCloseHandler(onHidePopClose);
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
+            if (!e)
             {
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    NaviView.Visibility = Visibility.Visible;
+                    HomePageView.Visibility = Visibility.Visible;
+                    btnBackHP.Visibility = Visibility.Hidden;
+                }));
+            }
+            else
+            {
+                CloseCabinet closeCabinet = new CloseCabinet();
+                closeCabinet.HidePopCloseEvent += new CloseCabinet.HidePopCloseHandler(onHidePopClose);
 
-                PopFrame.Navigate(closeCabinet);
-            }));
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    PopFrame.Visibility = Visibility.Visible;
+                    MaskView.Visibility = Visibility.Visible;
 
+                    PopFrame.Navigate(closeCabinet);
+                }));
+            }
         }
 
         /// <summary>

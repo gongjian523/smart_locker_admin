@@ -35,7 +35,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         //跳出关闭弹出框
-        public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
+        public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
 
@@ -81,7 +81,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            EndOperation();
+            Button btn = (Button)sender;
+            EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
 
         /// <summary>
@@ -104,16 +105,15 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                EndOperation();
+                EndOperation(true);
             }));
         }
 
-        private void EndOperation()
+        private void EndOperation(bool bEixt)
         {
             replenishBll.UpdateReplenishStatus(replenishOrderDto.code, goodsDetails);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
-            EnterPopCloseEvent(this, null);
+            EnterPopCloseEvent(this, bEixt);
         }
-
     }
 }

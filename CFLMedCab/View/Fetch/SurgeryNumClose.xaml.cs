@@ -38,7 +38,7 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterSurgeryNumOpenHandler(object sender, SurgeryOrderDto surgeryOrderDto);
         public event EnterSurgeryNumOpenHandler EnterSurgeryNumOpenEvent;
         //跳出关闭弹出框
-        public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
+        public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
         private Timer endTimer;
@@ -103,7 +103,8 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            EndOperation();
+            Button btn = (Button)sender;
+            EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
 
         /// <summary>
@@ -114,15 +115,15 @@ namespace CFLMedCab.View.Fetch
         private void onEndTimerExpired(object sender, ElapsedEventArgs e)
         {
             App.Current.Dispatcher.Invoke((Action)(() => {
-                EndOperation();
+                EndOperation(true);
             }));
         }
 
-        private void EndOperation()
+        private void EndOperation(bool bExit)
         {
             fetchOrderBll.UpdateSurgeryOrderdtl(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodDtos, OperateGoodsDtos = goodsChageOrderdtls }, surgeryOrderdtlDtos);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
-            EnterPopCloseEvent(this, null);
+            EnterPopCloseEvent(this, bExit);
         }
     }
 }
