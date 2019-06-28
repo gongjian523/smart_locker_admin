@@ -42,6 +42,7 @@ namespace CFLMedCab.View.Inventory
             inventoryPara = dtlPara;
             listView.DataContext = codeList;
 
+            codeInputTb.Focus();
         }
 
         private void onSave(object sender, RoutedEventArgs e)
@@ -64,6 +65,21 @@ namespace CFLMedCab.View.Inventory
         {
             HidePopAddProductEvent(this, null);
         }
+
+
+        /// <summary>
+        /// 扫码查询事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                onAddProduct(this, null);
+            }
+        }
+
 
         private void onAddProduct(object sender, RoutedEventArgs e)
         {

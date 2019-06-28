@@ -59,7 +59,7 @@
                 <Grid Grid.Column="1" x:Name="Column2"/>
                 <Grid Grid.Column="2" x:Name="Column3"/>
                 <Label Content="单品码：" VerticalContentAlignment="Center" Grid.Column="0" />
-                <TextBox  x:Name="codeInputTb"  Height="28" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}"/>
+                <TextBox  x:Name="codeInputTb"  Height="28" Grid.Column="1" Width="{Binding ElementName=Column2,Path=ActualWidth}" PreviewKeyDown="SearchBox_OnKeyDown"/>
                 <Button Style="{StaticResource AddButton}" Content="新增单品码" Grid.Column="2"  HorizontalAlignment="Right" VerticalAlignment="Top"  Click="onAddProduct"/>
             </Grid>
 
