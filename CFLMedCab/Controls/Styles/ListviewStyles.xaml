@@ -95,7 +95,7 @@
     </Style>
     <Style TargetType="{x:Type GridViewColumnHeader}">
         <Setter Property="Background" Value="{StaticResource GListColor}" />
-        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontSize" Value="22"/>
         <Setter Property="Template" >
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
@@ -116,7 +116,7 @@
                                 <Thumb.Style>
                                     <Style TargetType="{x:Type Thumb}">
                                         <Setter Property="Canvas.Right" Value="-9"/>
-                                        <Setter Property="Width" Value="18"/>
+                                        <Setter Property="Width" Value="22"/>
                                         <Setter Property="Height" Value="{Binding ActualHeight, RelativeSource={RelativeSource TemplatedParent}}"/>
                                         <Setter Property="Padding" Value="0"/>
                                         <Setter Property="Background" Value="White"/>

@@ -43,28 +43,25 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
                     <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle1}" />
                     <Label Content="{Binding Code}" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3" Name="surgeryNum" Style="{StaticResource lblTitle2}"/>
-                    <StackPanel  Grid.Column="0" Grid.Row="2"  Orientation="Horizontal">
-                        <Label Content="盘点日期" Style="{StaticResource lblTitle3}"/>
-                        <Label Content="{Binding CreateTime}" Style="{StaticResource lblTitle4_0}"/>
-                    </StackPanel>
-                    <StackPanel  Grid.Column="1" Grid.Row="2"  Orientation="Horizontal">
-                        <Label Content="盘点类型" Style="{StaticResource lblTitle3}"/>
-                        <Label Content="{Binding Type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Style="{StaticResource lblTitle4_1}"/>
-                    </StackPanel>
-                    <StackPanel  Grid.Column="2" Grid.Row="2"  Orientation="Horizontal">
-                        <Label Content="盘点状态" Style="{StaticResource lblTitle3}"/>
-                        <Label Content="{Binding Status, Converter= {StaticResource InventoryStatusStrConverter} }" Style="{StaticResource lblTitle4_1}"/>
-                    </StackPanel>
+                    <Label Grid.Column="1" Grid.Row="0" Content="盘点日期" Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Column="1" Grid.Row="1" Content="{Binding CreateTime}" Style="{StaticResource lblTitle4_0}"/>
+
+                    <Label Grid.Column="2" Grid.Row="0" Content="盘点类型" Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Column="2" Grid.Row="1" Content="{Binding Type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Style="{StaticResource lblTitle4_1}"/>
+
+                    <Label Grid.Column="3" Grid.Row="0" Content="盘点状态" Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Column="3" Grid.Row="1" Content="{Binding Status, Converter= {StaticResource InventoryStatusStrConverter} }" Style="{StaticResource lblTitle4_1}"/>
+
                 </Grid>
             </Border>
 
@@ -147,7 +144,7 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Grid HorizontalAlignment="Center"  Visibility="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type UserControl},AncestorLevel=1},Path= btnType, Converter={StaticResource  InventoryConfirmBtnVisiblityConverter}}" >
-                                                     <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding actual_inventory, Converter={StaticResource InventoryActualSwichStaConverter}}"  HorizontalAlignment="Center"/>
+                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding actual_inventory, Converter={StaticResource InventoryActualSwichStaConverter}}"  HorizontalAlignment="Center"/>
                                                 </Grid>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
@@ -211,8 +208,8 @@
                             </ListView.View>
                         </ListView>
                     </Grid>
-                    
-                    
+
+
                     <Button Style="{StaticResource AddButton}" x:Name="btnAddProduct" Content="新增实际库存商品"  Height="48"  Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="1" Margin="0,0,20,0"  Click="onAddProduct" HorizontalAlignment="Right"/>
                     <Button Style="{StaticResource CommonYesButton}" x:Name="btnConfirm" Content="盘点确认"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Right"  VerticalAlignment="Center"  Click="onConfirm"/>
                     <Button Style="{StaticResource CommonNoButton}" x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Left" Margin="30,0,0,0" VerticalAlignment="Center" Click="onCancel" Visibility="Hidden"/>
