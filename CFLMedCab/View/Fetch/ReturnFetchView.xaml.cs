@@ -6,6 +6,7 @@ using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Constant;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -31,7 +33,7 @@ namespace CFLMedCab.View.Fetch
     public partial class ReturnFetchView : UserControl
     {
         //跳出关闭弹出框
-        public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
+        public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
         public delegate void EnterReturnFetchHandler(object sender, RoutedEventArgs e);
@@ -42,6 +44,8 @@ namespace CFLMedCab.View.Fetch
 
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+
+        private Timer endTimer;
 
         public ReturnFetchView(Hashtable hashtable)
         {
@@ -58,6 +62,11 @@ namespace CFLMedCab.View.Fetch
             returnNum.Content = operateGoodsNum;
             abnormalInNum.Content = storageGoodsExNum;
             abnormalOutNum.Content = outStorageGoodsExNum;
+
+            endTimer = new Timer(Contant.ClosePageEndTimer);
+            endTimer.AutoReset = false;
+            endTimer.Enabled = true;
+            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
         }
 
 
@@ -78,10 +87,30 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            Button btn = (Button)sender;
+            EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
+        }
+
+
+        /// <summary>
+        /// 结束定时器超时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() => {
+                EndOperation(true);
+            }));
+        }
+
+
+        private void EndOperation(bool bExit)
+        {
             fetchOrderBll.UpdateGoBackFetchOrder(goodsChageOrderdtls);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
 
-            EnterPopCloseEvent(this, null);
+            EnterPopCloseEvent(this, bExit);
         }
     }
 

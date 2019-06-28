@@ -35,7 +35,7 @@ namespace CFLMedCab.View.Return
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
         //跳出关闭弹出框
-        public delegate void EnterPopCloseHandler(object sender, RoutedEventArgs e);
+        public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
         private Timer endTimer;
@@ -81,7 +81,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            EndOperation();
+            Button btn = (Button)sender;
+            EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
 
         /// <summary>
@@ -89,7 +90,7 @@ namespace CFLMedCab.View.Return
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onNotEndOperation(object sender, RoutedEventArgs e)
+        private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
             EnterReturnGoodsDetailOpenEvent(this, pickingOrderDto);
             return;
@@ -104,15 +105,15 @@ namespace CFLMedCab.View.Return
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                EndOperation();
+                EndOperation(true);
             }));
         }
 
-        private void EndOperation()
+        private void EndOperation(bool bEixt)
         {
             pickingBll.UpdatePickingStatus(pickingOrderDto.code, goodsDetails);
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
-            EnterPopCloseEvent(this, null);
+            EnterPopCloseEvent(this, bEixt);
         }
     }
 }
