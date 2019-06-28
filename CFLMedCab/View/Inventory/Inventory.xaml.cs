@@ -9,7 +9,9 @@ using CFLMedCab.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Timers;
 using System.Windows;
@@ -27,7 +29,7 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// Inventory.xaml 的交互逻辑
     /// </summary>
-    public partial class Inventory : UserControl
+    public partial class Inventory : UserControl, INotifyPropertyChanged
     {
         public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
         public event EnterPopInventoryHandler EnterPopInventoryEvent;
@@ -41,8 +43,23 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterInventoryDetailHandler(object sender, InventoryDetailPara e);
         public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
         InventoryBll inventoryBll = new InventoryBll();
         List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
+
+        private string _content;
+        public string NextInvContent
+        {
+            get { return _content; }
+            set
+            {
+                if (value == _content)
+                    return;
+                _content = value;
+                NotifyPropertyChanged("NextInvContent");
+            }
+        }
 
         public Inventory()
         {
@@ -51,7 +68,10 @@ namespace CFLMedCab.View.Inventory
             GetInventoryList();
 
             SetNextAutoInvTime();
+
+            DataContext = this;
         }
+
 
         /// <summary>
         /// 盘点
@@ -149,7 +169,8 @@ namespace CFLMedCab.View.Inventory
 
             if(inventoryPlans.Count == 0)
             {
-                inventoryTime.Content = "暂无盘点计划"; 
+                //inventoryTime.Content = "暂无盘点计划"; 
+                NextInvContent = "暂无盘点计划";
                 return;
             }
 
@@ -172,9 +193,19 @@ namespace CFLMedCab.View.Inventory
                 }
             }
             if (timeSpan != new TimeSpan())
-                inventoryTime.Content = "下一次自动盘点时间:" + date.ToString("yyyy-MM-dd HH:mm");
+                //inventoryTime.Content = "下一次自动盘点时间:" + date.ToString("yyyy-MM-dd HH:mm");
+                NextInvContent = "下一次自动盘点时间:" + date.ToString("yyyy-MM-dd HH:mm");
             else
-                inventoryTime.Content = "暂无盘点计划";
+                //inventoryTime.Content = "暂无盘点计划";
+                NextInvContent = "暂无盘点计划";
+        }
+
+        // This method is called by the Set accessor of each property.  
+        // The CallerMemberName attribute that is applied to the optional propertyName  
+        // parameter causes the property name of the caller to be substituted as an argument.  
+        private void NotifyPropertyChanged([CallerMemberName]String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
     

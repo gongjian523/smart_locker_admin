@@ -8,7 +8,7 @@
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid  Background="{StaticResource ContentBkBrush}">
         <StackPanel Orientation="Vertical">
-            <Image Width="194" Height="126" HorizontalAlignment="Center"  Margin="0,320,0,0"  >
+            <Image Width="387" Height="252" HorizontalAlignment="Center"  Margin="0,320,0,0"  >
                 <Image.Source>
                     <BitmapImage x:Name="infoImage" UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png"/>
                 </Image.Source>

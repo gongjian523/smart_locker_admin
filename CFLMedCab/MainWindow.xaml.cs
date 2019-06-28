@@ -179,14 +179,16 @@ namespace CFLMedCab
 
         private void onLoginInfoHidenEvent(object sender, LoginStatus e)
         {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Hidden;
-                MaskView.Visibility = Visibility.Hidden;
+            //App.Current.Dispatcher.Invoke((Action)(() =>
+            //{
+            //    PopFrame.Visibility = Visibility.Hidden;
+            //    MaskView.Visibility = Visibility.Hidden;
 
-                if (e.LoginState == 1)
-                    LoginBkView.Visibility = Visibility.Hidden;
-            }));
+            //    //验证成功不跳出提示弹窗
+            //    //if (e.LoginState == 1)
+            //    //    LoginBkView.Visibility = Visibility.Hidden;
+            //}));
+            ClosePop();
 
             if (e.LoginState == 0)
             {
@@ -341,9 +343,14 @@ namespace CFLMedCab
                 cabClosedNum++;
                 return;
             }
-    
-            bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
+
+            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+
+            //关闭盘点中弹窗
+            ClosePop();
             
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -407,7 +414,13 @@ namespace CFLMedCab
                 return;
             }
 
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
+
             Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+
+            //关闭盘点中弹窗
+            ClosePop();
             
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -522,10 +535,16 @@ namespace CFLMedCab
                 return;
             }
 
-            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
 
             Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+
+            //关闭盘点中弹窗
+            ClosePop();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -591,8 +610,13 @@ namespace CFLMedCab
                 return;
             }
 
-            bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
+
+            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+
+            //关闭盘点中弹窗
+            ClosePop();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -723,14 +747,18 @@ namespace CFLMedCab
             if (cabClosedNum == 1)
                 return;
 
-            
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
 
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-            ReplenishOrderDto replenishOrderDto = (ReplenishOrderDto)delegateGetMsg.userData;
+
+            //关闭盘点中弹窗
+            ClosePop();
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishOrderDto, ht);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose((ReplenishOrderDto)delegateGetMsg.userData, ht);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -860,8 +888,14 @@ namespace CFLMedCab
             if (cabClosedNum == 1)
                 return;
 
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
+
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            //关闭盘点中弹窗
+            ClosePop();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -921,11 +955,12 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopInventory(object sender, System.EventArgs e)
         {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Hidden;
-                MaskView.Visibility = Visibility.Hidden;        
-            }));            
+            //App.Current.Dispatcher.Invoke((Action)(() =>
+            //{
+            //    PopFrame.Visibility = Visibility.Hidden;
+            //    MaskView.Visibility = Visibility.Hidden;        
+            //}));         
+            ClosePop();
         }
 
         /// <summary>
@@ -969,12 +1004,12 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopInventoryPlan(object sender, System.EventArgs e)
         {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Hidden;
-                MaskView.Visibility = Visibility.Hidden;
-                
-            }));
+            //App.Current.Dispatcher.Invoke((Action)(() =>
+            //{
+            //    PopFrame.Visibility = Visibility.Hidden;
+            //    MaskView.Visibility = Visibility.Hidden;
+            //}));
+            ClosePop();
         }
 
 
@@ -1006,14 +1041,13 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopAddProduct(object sender, RoutedEventArgs e)
         {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Hidden;
-                MaskView.Visibility = Visibility.Hidden;
-            }));
+            //App.Current.Dispatcher.Invoke((Action)(() =>
+            //{
+            //    PopFrame.Visibility = Visibility.Hidden;
+            //    MaskView.Visibility = Visibility.Hidden;
+            //}));
+            ClosePop();
         }
-
- 
 
         /// <summary>
         /// 库存查询
@@ -1046,11 +1080,12 @@ namespace CFLMedCab
 
         private void colseStockDetailedEvent(object sender, RoutedEventArgs e)
         {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Hidden;
-                MaskView.Visibility = Visibility.Hidden;
-            }));
+            //App.Current.Dispatcher.Invoke((Action)(() =>
+            //{
+            //    PopFrame.Visibility = Visibility.Hidden;
+            //    MaskView.Visibility = Visibility.Hidden;
+            //}));
+            ClosePop();
         }
 #endregion
 
@@ -1107,6 +1142,39 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopOpen(object sender, RoutedEventArgs e)
         {
+            //App.Current.Dispatcher.Invoke((Action)(() =>
+            //{
+            //    PopFrame.Visibility = Visibility.Hidden;
+            //    MaskView.Visibility = Visibility.Hidden;
+            //}));
+            ClosePop();
+        }
+
+        /// <summary>
+        /// 弹出盘存中提示框操作
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnterInvotoryOngoing()
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                InventoryOngoing inventoryOngoing = new InventoryOngoing();
+
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(inventoryOngoing);
+            }));
+        }
+
+        /// <summary>
+        /// 关闭弹出框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ClosePop()
+        {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 PopFrame.Visibility = Visibility.Hidden;
@@ -1118,7 +1186,6 @@ namespace CFLMedCab
         {
             Taskbar.HideTask(true);
         }
-
 
         /// <summary>
         /// 退出按钮

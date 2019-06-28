@@ -45,7 +45,7 @@
         <Border Grid.Column="1" Background="{StaticResource AutoInvBrush}" Margin="20,40,40,0" CornerRadius="4,4,4,4"  Padding="20">
             <Grid>
                 <Label HorizontalAlignment="Center" Margin="0,48,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
-                <Label Name="inventoryTime" HorizontalAlignment="Center" Margin="0,110,0,0" FontSize="20" FontWeight="Regular" Foreground="#FFFFFF"/>
+                <Label Name="inventoryTime" HorizontalAlignment="Center" Margin="0,110,0,0"  Content="{Binding NextInvContent}" FontSize="20" FontWeight="Regular" Foreground="#FFFFFF"/>
                 <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,145,0,0" BorderThickness="0"  Width="226"  Height="64"  
                         Background="#FFFFFF"  Foreground="{StaticResource AutoInvBrush}" FontSize="28" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
             </Grid>
