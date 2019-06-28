@@ -22,24 +22,23 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition  Height="auto"/>
                         <RowDefinition  Height="auto"/>
                         <RowDefinition  Height="auto"/>
                     </Grid.RowDefinitions>
 
                     <Label Content="手术领用单号" Grid.Column="0" Grid.Row="0"  Style="{StaticResource lblTitle1}"/>
                     <Label Content="Label" Grid.Column="0" Grid.Row="1" Name="surgeryNum"  Style="{StaticResource lblTitle2}"/>
-                    <StackPanel  Grid.Column="0" Grid.Row="2"  Orientation="Horizontal">
-                        <Label  Content="使用状态"  Style="{StaticResource lblTitle3}"/>
-                        <Label  Content="领用中" Name="state"  Style="{StaticResource lblTitle4_0}"/>
-                    </StackPanel>
-                    <StackPanel  Grid.Column="1" Grid.Row="2"  Orientation="Horizontal">
-                        <Label  Content="手术时间"  Style="{StaticResource lblTitle3}"/>
-                        <Label  Content="手术时间" Name="time" Style="{StaticResource lblTitle4_1}"/>
-                    </StackPanel>
-                    <Button Style="{StaticResource CommonNoButton}" FontWeight="Bold" Grid.Column="2" Grid.Row="2" Content="手术耗材详情" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Top"  Click="EnterSurgeryDetail"/>
+
+                    <Label Grid.Column="1" Grid.Row="0"  Content="使用状态"  Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Column="1" Grid.Row="1"  Content="领用中" Name="state"  Style="{StaticResource lblTitle4_0}"/>
+
+                    <Label Grid.Column="2" Grid.Row="0"  Content="手术时间"  Style="{StaticResource lblTitle3}"/>
+                    <Label  Grid.Column="2" Grid.Row="1" Content="手术时间" Name="time" Style="{StaticResource lblTitle4_1}"/>
+               
+                    <Button Style="{StaticResource CommonNoButton}" FontWeight="Bold" Grid.Column="3" Grid.Row="0" Grid.RowSpan="2"  Content="手术耗材详情" HorizontalAlignment="Left" Margin="0" VerticalAlignment="Center"  Click="EnterSurgeryDetail"/>
                 </Grid>
             </Border>
             <Border Style="{StaticResource BottomRadiusBorder}"   x:Name="myGrid"  Grid.Row="1">
