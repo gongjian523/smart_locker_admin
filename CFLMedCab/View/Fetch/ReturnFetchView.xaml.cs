@@ -77,6 +77,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param> 
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
+            endTimer.Close();
             EnterReturnFetch(this, null);
         }
 
@@ -87,6 +88,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            endTimer.Close();
             Button btn = (Button)sender;
             EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }

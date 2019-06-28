@@ -81,6 +81,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            endTimer.Close();
             Button btn = (Button)sender;
             EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
@@ -92,6 +93,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
+            endTimer.Close();
             EnterReturnGoodsDetailOpenEvent(this, pickingOrderDto);
             return;
         }
