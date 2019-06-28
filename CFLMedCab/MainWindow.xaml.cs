@@ -139,6 +139,8 @@ namespace CFLMedCab
             vein.ChekVein();
 
             ConsoleManager.Show();
+
+            LoginBkView.Visibility = Visibility.Visible;
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
