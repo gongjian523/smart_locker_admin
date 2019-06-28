@@ -140,7 +140,7 @@ namespace CFLMedCab
 
             ConsoleManager.Show();
 
-            LoginBkView.Visibility = Visibility.Visible;
+            //LoginBkView.Visibility = Visibility.Visible;
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
