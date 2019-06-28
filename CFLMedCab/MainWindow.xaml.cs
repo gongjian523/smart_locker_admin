@@ -106,7 +106,7 @@ namespace CFLMedCab
                     WindowState = WindowState.Maximized;
                     ResizeMode = ResizeMode.NoResize;
                     WindowStyle = WindowStyle.None;
-                    //WindowState = WindowState.Normal;
+                    WindowState = WindowState.Normal;
                     ShowInTaskbar = false;
 
                     break;
