@@ -36,6 +36,8 @@ namespace CFLMedCab.View.Fetch
         public SurgeryQuery()
         {
             InitializeComponent();
+
+            tbOddNumbers.Focus();
         }
     
         /// <summary>
