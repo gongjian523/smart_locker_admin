@@ -11,7 +11,7 @@
         Height="1080"
         Width ="1920"
         WindowStyle="None"
-        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" WindowState="Maximized"  ShowTitleBar="False" Closed="MetroWindow_Closed" Closing="MetroWindow_Closing">
+        AllowsTransparency="True" Loaded="MetroWindow_Loaded" ResizeMode="NoResize" WindowState="Maximized" IsCloseButtonEnabled="False"  ShowTitleBar="False" Closed="MetroWindow_Closed" Closing="MetroWindow_Closing">
     <Control.Resources>
         <cvt:NavBtnVisiblityConverter x:Key="NavBtnVisiblityConverter"/>
     </Control.Resources>
