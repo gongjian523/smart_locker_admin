@@ -45,6 +45,7 @@ using static CFLMedCab.Controls.Taskbar;
 using System.Windows.Forms;
 using static CFLMedCab.Model.Enum.UserIdEnum;
 using CFLMedCab.Infrastructure.BootUpHelper;
+using System.Windows.Interop;
 
 namespace CFLMedCab
 {
@@ -77,6 +78,18 @@ namespace CFLMedCab
             }
         }
 
+        private const int GWL_STYLE = -16;
+        private const int WS_SYSMENU = 0x80000;
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, UInt32 bRevert);
+        [DllImport("USER32.DLL ", CharSet = CharSet.Unicode)]
+        private static extern UInt32 RemoveMenu(IntPtr hMenu, UInt32 nPosition, UInt32 wFlags);
+        private const UInt32 SC_CLOSE = 0x0000F060;
+        private const UInt32 MF_BYCOMMAND = 0x00000000;
 
 #if TESTENV
         private System.Timers.Timer testTimer;
@@ -90,6 +103,10 @@ namespace CFLMedCab
 			BootUpHelper.GetInstance().SetMeAutoStart();
 
 			InitializeComponent();
+            var hwnd = new WindowInteropHelper(this).Handle;
+            //IntPtr hMenu = GetSystemMenu(hwnd, 0);
+            //RemoveMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
+            SetWindowLong(hwnd, GWL_STYLE, GetWindowLong(hwnd, GWL_STYLE) & ~WS_SYSMENU);
             foreach (Screen scr in Screen.AllScreens)
             {
                 if (scr.Primary)
@@ -104,7 +121,7 @@ namespace CFLMedCab
                     WindowState = WindowState.Maximized;
                     ResizeMode = ResizeMode.NoResize;
                     WindowStyle = WindowStyle.None;
-                    WindowState = WindowState.Normal;
+                    //WindowState = WindowState.Normal;
                     ShowInTaskbar = false;
 
                     break;
@@ -1195,6 +1212,8 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
+     
+
             Taskbar.HideTask(true);
         }
 
@@ -1205,7 +1224,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onExit(object sender, RoutedEventArgs e)
         {
-
+            Taskbar.HideTask(false);
             NaviView.Visibility = Visibility.Visible;
             HomePageView.Visibility = Visibility.Visible;
             btnBackHP.Visibility = Visibility.Hidden;
@@ -1278,7 +1297,17 @@ namespace CFLMedCab
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
-            Taskbar.HideTask(false);
+           Taskbar.HideTask(false);
+        }
+
+        private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
         }
     }
 }
