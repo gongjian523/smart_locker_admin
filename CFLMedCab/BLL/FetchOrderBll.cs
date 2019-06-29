@@ -288,6 +288,7 @@ namespace CFLMedCab.BLL
 					it.exception_flag = (int)ExceptionFlag.异常;
 					it.exception_flag_description = ExceptionFlag.异常.ToString();
 					it.exception_description = ExceptionDescription.操作与业务类型冲突.ToString();
+                    it.confirm_btn_visibility = false;
 				}
 				//出库
 				else if (it.operate_type == (int)OperateType.出库)
@@ -301,20 +302,25 @@ namespace CFLMedCab.BLL
 						if (surgeryOrderdtlDtos.Exists(surgeryOrderdtlDto => it.goods_code == surgeryOrderdtlDto.goods_code))
 						{
 							it.exception_flag = (int)ExceptionFlag.正常;
-						}
+                            it.confirm_btn_visibility = false;
+                        }
 						else
 						{
 							it.exception_flag = (int)ExceptionFlag.异常;
 							it.exception_flag_description = ExceptionFlag.异常.ToString();
 							it.exception_description = ExceptionDescription.商品不在待领目录.ToString();
-						}
+                            it.exception_description_bak = it.exception_description;
+                            it.confirm_btn_visibility = true;
+                        }
 					}
 					else
 					{
 						it.exception_flag = (int)ExceptionFlag.异常;
 						it.exception_flag_description = ExceptionFlag.异常.ToString();
 						it.exception_description = ExceptionDescription.领用属性与业务类型冲突.ToString();
-					}
+                        it.exception_description_bak = it.exception_description;
+                        it.confirm_btn_visibility = true;
+                    }
 				}
 			});
 

@@ -127,5 +127,24 @@ namespace CFLMedCab.View.Fetch
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, bExit);
         }
+
+        private void onConfirmed(object sender, RoutedEventArgs e)
+        {
+            GoodsDto goodsDto = (GoodsDto)((CheckBox)sender).Tag;
+            bool bCheck = (bool)((CheckBox)sender).IsChecked;
+
+            foreach (var item in goodsChageOrderdtls)
+            {
+                if(item.code == goodsDto.code)
+                {
+                    item.exception_flag = bCheck ? (int)ExceptionFlag.正常 : (int)ExceptionFlag.异常;
+                    item.exception_flag_description = bCheck ? ExceptionFlag.正常.ToString() : ExceptionFlag.异常.ToString();
+                    item.exception_description = bCheck ? "" : item.exception_description_bak;
+
+                    break;
+                }
+            }
+        }
+
     }
 }

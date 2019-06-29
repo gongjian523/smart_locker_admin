@@ -36,10 +36,20 @@ namespace CFLMedCab.DTO.Goodss
 		/// </summary>
 		public string exception_description { get; set; }
 
-		/// <summary>
-		/// 业务单号
-		/// </summary>
-		public string business_order_code { get; set; }
+        /// <summary>
+        /// 异常说明备份
+        /// </summary>
+        public string exception_description_bak { get; set; }
+
+        /// <summary>
+        /// 确认按钮是否可见
+        /// </summary>
+        public bool  confirm_btn_visibility { get; set; }
+
+        /// <summary>
+        /// 业务单号
+        /// </summary>
+        public string business_order_code { get; set; }
 
 	}
 }

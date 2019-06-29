@@ -63,9 +63,9 @@
                     <Border Grid.Row="0" Grid.Column="1" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Style="{StaticResource TipBorder}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="该手术领用单待领用耗材如下，其中" Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="inNum" Style="{StaticResource lblTitleRed}"/>
+                            <Label Content=" " Name="inStock" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="种商品有库存"  Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
+                            <Label Content=" " Name="noStock" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="种本柜无库存" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>

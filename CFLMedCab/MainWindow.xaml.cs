@@ -81,6 +81,7 @@ namespace CFLMedCab
 
 #if TESTENV
         private System.Timers.Timer testTimer;
+        private SurgeryOrderDto testSOPara = new SurgeryOrderDto();
         private ReplenishOrderDto testROPara = new ReplenishOrderDto();
         private PickingOrderDto testPOPara = new PickingOrderDto();
 #endif
@@ -241,6 +242,8 @@ namespace CFLMedCab
 
                             PopFrame.Navigate(loginInfo);
 
+                            
+
                         }));
 
                     }
@@ -257,6 +260,7 @@ namespace CFLMedCab
                         {
                             LoginBkView.Visibility = Visibility.Hidden;
                             SetNavBtnVisiblity(user.role);
+                            tbNameText.Text = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
                         }));
                     }
                 }
@@ -292,6 +296,12 @@ namespace CFLMedCab
         {
             //获得年月日
             this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
+        }
+
+
+        private void onExitApp(object sender, RoutedEventArgs e)
+        {
+            System.Environment.Exit(0);
         }
         
         
@@ -495,6 +505,13 @@ namespace CFLMedCab
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             PopFrame.Navigate(openCabinet);
 
+#if TESTENV
+            testTimer = new System.Timers.Timer(10000);
+            testTimer.AutoReset = false;
+            testTimer.Enabled = true;
+            testTimer.Elapsed += new ElapsedEventHandler(onEnterSurgeryNumLockerTestEvent);
+            testSOPara = model;
+#else
             List<string> listCom = fetchOrderBll.GetSurgeryOrderdtlPosition(model.code);
             if (listCom.Count == 0)
                 return;
@@ -511,10 +528,32 @@ namespace CFLMedCab
                 delegateGetMsg2.userData = model;
                 cabClosedNum = 2;
             }
-
+#endif
             SpeakerHelper.Sperker("柜门已开，请按照领用单拿取耗材，拿取完毕请关闭柜门");
         }
 
+
+#if TESTENV
+        /// <summary>
+        /// 进入上架单详情页-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSurgeryNumLockerTestEvent(object sender, EventArgs e)
+        {
+            //Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+            Hashtable ht = new Hashtable();
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(testSOPara, ht);
+                surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
+                surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
+
+                FullFrame.Navigate(surgeryNumClose);
+            }));
+        }
+#else
         /// <summary>
         /// 手术有单领用关门状态
         /// </summary>
@@ -558,10 +597,11 @@ namespace CFLMedCab
                 FullFrame.Navigate(surgeryNumClose);
             }));
         }
-#endregion
-#endregion
+#endif
+        #endregion
+        #endregion
 
-#region 领用退回
+        #region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -911,9 +951,9 @@ namespace CFLMedCab
             }));
         }
 #endif
-        #endregion
+#endregion
 
-        #region Inventory
+#region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -1234,7 +1274,7 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Hidden;
         }
 
-        #region test
+#region test
 
         private void MockData()
         {
@@ -1280,7 +1320,7 @@ namespace CFLMedCab
             Console.WriteLine("返回开锁状态{0}", isClose);
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
         }
-        #endregion
+#endregion
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {

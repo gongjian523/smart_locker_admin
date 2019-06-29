@@ -11,6 +11,9 @@
         <cvt:OperateTypeConverter x:Key="OperateTypeConverter"/>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
         <cvt:ExceptionFlagStrConverter x:Key="ExceptionFlagStrConverter"/>
+        <cvt:CheckBoxVisibityConverter x:Key="CheckBoxVisibityConverter"/>
+        <cvt:ExceptionalConfirmConverter x:Key="ExceptionalConfirmConverter"/>
+        <cvt:ExceptionStrVisibilityConverter x:Key="ExceptionStrVisibilityConverter"/>
     </Control.Resources>
     <Border Style="{StaticResource CommonBlueBorder}">
         <Grid>
@@ -147,6 +150,7 @@
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="2*" />
+                                        <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
                                     <Grid Grid.Column="0" x:Name="column1"/>
                                     <Grid Grid.Column="1" x:Name="column2"/>
@@ -155,6 +159,7 @@
                                     <Grid Grid.Column="4" x:Name="column5"/>
                                     <Grid Grid.Column="5" x:Name="column6"/>
                                     <Grid Grid.Column="6" x:Name="column7"/>
+                                    <Grid Grid.Column="7" x:Name="column8"/>
                                 </Grid>
 
                                 <Label Content="本次操作明细" Grid.Row="0" Style="{StaticResource lblTitle5}"/>
@@ -206,7 +211,19 @@
                                             <GridViewColumn Header="异常说明" Width="{Binding ElementName=column7,Path=ActualWidth}">
                                                 <GridViewColumn.CellTemplate>
                                                     <DataTemplate>
-                                                        <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=exception_description}"/>
+                                                        <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=exception_description}"  
+                                                                   Visibility="{Binding exception_flag,  Converter={StaticResource ExceptionStrVisibilityConverter}}"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+                                            <GridViewColumn Header="是否领用"  Width="{Binding ElementName=column8,Path=ActualWidth}" >
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Grid HorizontalAlignment="Center">
+                                                            <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"   HorizontalAlignment="Center"  Tag="{Binding}" 
+                                                                      IsChecked="{Binding exception_flag,  Converter={StaticResource ExceptionalConfirmConverter}}"  
+                                                                      Visibility="{Binding confirm_btn_visibility,  Converter={StaticResource CheckBoxVisibityConverter}}"  Click="onConfirmed"/>
+                                                        </Grid>
                                                     </DataTemplate>
                                                 </GridViewColumn.CellTemplate>
                                             </GridViewColumn>

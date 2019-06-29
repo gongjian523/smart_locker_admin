@@ -30,6 +30,8 @@ namespace CFLMedCab.View.Fetch
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);
             listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }, out int stockGoodsNum, out int notStockGoodsNum).Data;
+            inStock.Content = stockGoodsNum;
+            noStock.Content = notStockGoodsNum;
         }
         
     }
