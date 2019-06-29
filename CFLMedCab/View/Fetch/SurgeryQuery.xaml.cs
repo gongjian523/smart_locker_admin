@@ -53,8 +53,15 @@ namespace CFLMedCab.View.Fetch
                 MessageBox.Show("手术单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
+
+            if(!fetchOrderBll.IsUnDoneGoodsInSurgeryOrder(value))
+            {
+                MessageBox.Show("此手术单中商品已经领取完毕！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
             //根据领用单查找手术单
-            List<SurgeryOrderDto> surgeryOrderDtos = fetchOrderBll.GetSurgeryOrderDto(new SurgeryOrderApo { SurgeryOrderCode= value }).Data;
+                List<SurgeryOrderDto> surgeryOrderDtos = fetchOrderBll.GetSurgeryOrderDto(new SurgeryOrderApo { SurgeryOrderCode= value }).Data;
             if (surgeryOrderDtos .Count>0)
             {
                 EnterSurgeryDetailEvent(this, surgeryOrderDtos.First());

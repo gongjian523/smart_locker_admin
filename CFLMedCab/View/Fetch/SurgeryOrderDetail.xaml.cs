@@ -36,11 +36,10 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterSurgeryNumOpenHandler(object sender, SurgeryOrderDto surgeryOrderDto);
         public event EnterSurgeryNumOpenHandler EnterSurgeryNumOpenEvent;
 
-        private Hashtable after;
         private SurgeryOrderDto surgeryOrderDto;
-        private List<GoodsDto> goodsChageOrderdtls;
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+
         public SurgeryOrderDetail(SurgeryOrderDto model)
         {
             InitializeComponent();

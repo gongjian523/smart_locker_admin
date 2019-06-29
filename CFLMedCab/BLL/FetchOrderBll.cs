@@ -583,5 +583,14 @@ namespace CFLMedCab.BLL
             return FetchOrderDal.GettSurgerOrderNum();
         }
 
+
+        /// <summary>
+        /// 手术单中是否存在需要领取的物品
+        /// </summary>
+        /// <returns></returns>
+        public bool IsUnDoneGoodsInSurgeryOrder(string code)
+        {
+            return FetchOrderDal.GetSurgeryOrderdtlPosition(code).ToList().Count > 0;
+        }
     }
 }

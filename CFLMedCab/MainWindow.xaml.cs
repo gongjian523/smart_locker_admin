@@ -1272,6 +1272,7 @@ namespace CFLMedCab
             NaviView.Visibility = Visibility.Visible;
             HomePageView.Visibility = Visibility.Visible;
             btnBackHP.Visibility = Visibility.Hidden;
+            Taskbar.HideTask(true);
         }
 
 #region test
