@@ -88,8 +88,10 @@ namespace CFLMedCab
 
         public MainWindow()
         {
-			//开启启动
-			BootUpHelper.GetInstance().SetMeAutoStart();
+            Taskbar.HideTask(true);
+
+            //开启启动
+            BootUpHelper.GetInstance().SetMeAutoStart();
 
 			InitializeComponent();
        
@@ -1322,7 +1324,7 @@ namespace CFLMedCab
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
-           Taskbar.HideTask(false);
+           Taskbar.HideTask(true);
         }
 
         private void MetroWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
