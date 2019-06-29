@@ -301,6 +301,7 @@ namespace CFLMedCab
 
         private void onExitApp(object sender, RoutedEventArgs e)
         {
+            Taskbar.HideTask(false);
             System.Environment.Exit(0);
         }
         
@@ -1239,8 +1240,6 @@ namespace CFLMedCab
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
-     
-
             Taskbar.HideTask(true);
         }
 
@@ -1251,7 +1250,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onExit(object sender, RoutedEventArgs e)
         {
-            Taskbar.HideTask(false);
             NaviView.Visibility = Visibility.Visible;
             HomePageView.Visibility = Visibility.Visible;
             btnBackHP.Visibility = Visibility.Hidden;
