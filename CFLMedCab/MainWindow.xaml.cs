@@ -67,6 +67,8 @@ namespace CFLMedCab
 
         private int cabClosedNum;
 
+        private Inventory inventoryHandler;
+
         private TestGoods test = new TestGoods();
 
         private User _curUser;
@@ -162,13 +164,12 @@ namespace CFLMedCab
 
             foreach(var item in listPan)
             {
-
                 DateTime date1 = DateTime.Now;
                 DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0,2)), int.Parse(item.inventorytime_str.Substring(3,2)), 0);
 
                 TimeSpan timeSpan = date2 - date1;
 
-                if (timeSpan.TotalMinutes < 1 && timeSpan.TotalMinutes > 0 )
+                if (timeSpan.TotalMinutes < 1 && timeSpan.TotalMinutes > -1 )
                 {
                     bool isGetSuccess;
                     Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
@@ -176,13 +177,18 @@ namespace CFLMedCab
                     List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
                     inventoryBll.NewInventory(list,InventoryType.Auto);
 
+                    if (inventoryHandler != null)
+                    {
+                        App.Current.Dispatcher.Invoke((Action)(() => {
+                            inventoryHandler.RefreshInventoryList();
+                            inventoryHandler.SetNextAutoInvTime();
+                        }));
+                    }
                     return;
                 }
-
                 Console.WriteLine("onInventoryTimer:" + timeSpan.TotalMinutes);
             }
         }
-
 
         private void onLoginInfoHidenEvent(object sender, LoginStatus e)
         {
@@ -243,9 +249,6 @@ namespace CFLMedCab
                             loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
 
                             PopFrame.Navigate(loginInfo);
-
-                            
-
                         }));
 
                     }
@@ -974,7 +977,7 @@ namespace CFLMedCab
             inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
 
             ContentFrame.Navigate(inventory);
-
+            inventoryHandler = inventory;
         }
 
         /// <summary>
@@ -1057,6 +1060,12 @@ namespace CFLMedCab
             //    MaskView.Visibility = Visibility.Hidden;
             //}));
             ClosePop();
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                if (inventoryHandler != null)
+                    inventoryHandler.SetNextAutoInvTime();
+            }));
         }
 
 
@@ -1259,6 +1268,9 @@ namespace CFLMedCab
 #else
             LoginBkView.Visibility = Visibility.Visible;
 #endif
+
+            inventoryHandler = null;
+
             vein.ChekVein();
         }
 
@@ -1273,6 +1285,8 @@ namespace CFLMedCab
             HomePageView.Visibility = Visibility.Visible;
             btnBackHP.Visibility = Visibility.Hidden;
             Taskbar.HideTask(true);
+
+            inventoryHandler = null;
         }
 
 #region test

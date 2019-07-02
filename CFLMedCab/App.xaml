@@ -8,6 +8,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/CFLMedCab;component/Controls/Styles/BtnStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/CFLMedCab;component/Controls/Styles/ControlStyles.xaml"/>
+                <ResourceDictionary Source="pack://application:,,,/CFLMedCab;component/Controls/Styles/DatePickerStyles.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/CFLMedCab;component/Controls/Themes/AccentColors.xaml"/>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />

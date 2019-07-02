@@ -135,8 +135,8 @@ namespace CFLMedCab.View
                     goodsChangeApo.operate_type = 0;
                 else if (this.inStock.IsChecked == true)
                     goodsChangeApo.operate_type = 1;
-                if (!string.IsNullOrEmpty(startTime.Text) && !string.IsNullOrWhiteSpace(startTime.Text))
-                    goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
+                //if (!string.IsNullOrEmpty(startTime.Text) && !string.IsNullOrWhiteSpace(startTime.Text))
+                //    goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
 
                 if (!string.IsNullOrEmpty(endTime.Text) && !string.IsNullOrWhiteSpace(endTime.Text))
                 {

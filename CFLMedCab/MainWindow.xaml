@@ -89,7 +89,7 @@
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="onEnterInvtory" x:Name="NavBtnEnterInvtory" />
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="2"  Margin="10,10,10,10"   Background="#3174FF"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterStock" x:Name="NavBtnEnterStock"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="3"  Margin="10,10,10,10"   Background="#3174FF"  Content="库存查询"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="3"  Margin="10,10,10,10"   Background="#3174FF"  Content="退出"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onExitApp" x:Name="NavBtnExitApp"/>
                     </Grid>
 

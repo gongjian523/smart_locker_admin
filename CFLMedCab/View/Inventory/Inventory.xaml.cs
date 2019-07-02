@@ -134,11 +134,17 @@ namespace CFLMedCab.View.Inventory
             EnterInventoryDetailEvent(this, para);
         }
 
+        //“已确认”和“待确认”Tab 按钮更新
         private void onLoadInventory(object sender, RoutedEventArgs e)
         {
             GetInventoryList();
         }
 
+        //自动盘点更新
+        public void RefreshInventoryList()
+        {
+            GetInventoryList();
+        }
 
         private void GetInventoryList()
         {
@@ -162,8 +168,7 @@ namespace CFLMedCab.View.Inventory
             inventoryListView.Items.Refresh();
         }
 
-
-        private void SetNextAutoInvTime()
+        public void SetNextAutoInvTime()
         {
             List<InventoryPlan> inventoryPlans = inventoryBll.GetInventoryPlan().Where(it => it.status == 0).ToList();
 
@@ -199,6 +204,7 @@ namespace CFLMedCab.View.Inventory
                 //inventoryTime.Content = "暂无盘点计划";
                 NextInvContent = "暂无盘点计划";
         }
+
 
         // This method is called by the Set accessor of each property.  
         // The CallerMemberName attribute that is applied to the optional propertyName  
