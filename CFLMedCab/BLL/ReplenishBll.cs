@@ -155,9 +155,8 @@ namespace CFLMedCab.BLL
         /// <returns></returns>
         public List<GoodsDto> GetReplenishSubOrderdtlOperateDto(string replenishOrderCode, List<GoodsDto> goodsDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum)
 		{
-
-			//获取当前工单商品
-			var replenishSubOrderdtlDtos = replenishDal.GetReplenishOrderdtlDto(
+            //获取当前工单商品
+            var replenishSubOrderdtlDtos = replenishDal.GetReplenishOrderdtlDto(
 				new ReplenishSubOrderdtlApo
 				{
 					replenish_order_code = replenishOrderCode
@@ -184,7 +183,7 @@ namespace CFLMedCab.BLL
 					{
 						it.exception_flag = (int)ExceptionFlag.正常;
 					}
-				}
+                }
 				//出库
 				else if (it.operate_type == (int)OperateType.出库)
 				{
@@ -195,9 +194,10 @@ namespace CFLMedCab.BLL
 				}
 			});
 
-			//统计数量
-			operateGoodsNum = goodsDtos.Count;
-			storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
+            //统计数量
+            //operateGoodsNum = goodsDtos.Count;
+            operateGoodsNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库).Count();
+            storageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.入库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 			outStorageGoodsExNum = goodsDtos.Where(it => it.operate_type == (int)OperateType.出库 && it.exception_flag == (int)ExceptionFlag.异常).Count();
 
 			//均升序排列

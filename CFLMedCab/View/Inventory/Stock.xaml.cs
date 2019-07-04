@@ -3,12 +3,14 @@ using CFLMedCab.APO.Inventory;
 using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -41,7 +43,36 @@ namespace CFLMedCab.View
             InitializeComponent();
             InitGoodsCodeNameCombox();
 
+            //Timer invTimer = new Timer(3000);
+            //invTimer.AutoReset = false;
+            //invTimer.Enabled = true;
+            //invTimer.Elapsed += new ElapsedEventHandler(onEndInventory);
+
             queryData(this, null);
+        }
+
+        private void onEndInventory(object sender, ElapsedEventArgs e)
+        {
+            GetGoodApo getGoodApo = new GetGoodApo();
+
+            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+
+            HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
+            foreach (HashSet<string> goodsEpsData in ht.Values)
+            {
+                goodsEpsHashSetDatas.UnionWith(goodsEpsData);
+            }
+            getGoodApo.goodsEpsDatas = goodsEpsHashSetDatas;
+            getGoodApo.code = goods_code.SelectedValue == null || ((GoodDto)goods_code.SelectedValue).goods_code == "全部" ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
+            getGoodApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
+
+            goodDtos = goodsBll.GetStockGoodsDto(getGoodApo, out int totalCount);
+
+            listView.DataContext = goodDtos;
+            totalNum.Content = goodsEpsHashSetDatas.Count;
+
+            listView.Items.Refresh();
         }
 
         /// <summary>
@@ -135,8 +166,8 @@ namespace CFLMedCab.View
                     goodsChangeApo.operate_type = 0;
                 else if (this.inStock.IsChecked == true)
                     goodsChangeApo.operate_type = 1;
-                //if (!string.IsNullOrEmpty(startTime.Text) && !string.IsNullOrWhiteSpace(startTime.Text))
-                //    goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
+                if (!string.IsNullOrEmpty(startTime.Text) && !string.IsNullOrWhiteSpace(startTime.Text))
+                    goodsChangeApo.startTime = Convert.ToDateTime(startTime.Text);
 
                 if (!string.IsNullOrEmpty(endTime.Text) && !string.IsNullOrWhiteSpace(endTime.Text))
                 {

@@ -215,59 +215,43 @@ namespace CFLMedCab
         {
             int id = vein.GetVeinId();
 
+            System.Diagnostics.Debug.WriteLine("VeinId {0}", id);
+
             if (id >= 0)
             {
                 vein.Close();
 
                 LoginStatus sta = new LoginStatus();
+                User user = userBll.GetUserByVeinId(id);
 
-                //验证失败
-                if (id == 0)
+                if(id == 0 || user == null)
                 {
-                    sta.LoginState = 0;
-                    sta.LoginString = "登录失败";
-                    sta.LoginString2 = "请再次进行验证";
+                    App.Current.Dispatcher.Invoke((Action)(() =>
+                    {
+                        LoginInfo loginInfo = new LoginInfo(new LoginStatus {
+                            LoginState = 0,
+                            LoginString = "登录失败",
+                            LoginString2 = "请再次进行验证"
+                    });
+
+                    PopFrame.Visibility = Visibility.Visible;
+                    MaskView.Visibility = Visibility.Visible;
+
+                    loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
+
+                    PopFrame.Navigate(loginInfo);
+                    }));
                 }
                 else
                 {
-                    User user = userBll.GetUserByVeinId(id);
+                    ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
 
-                    //本地数据库中没有查询到此次指静脉信息
-                    if (user == null)
+                    App.Current.Dispatcher.Invoke((Action)(() =>
                     {
-                        sta.LoginState = 0;
-                        sta.LoginString = "登录失败";
-                        sta.LoginString2 = "请再次进行验证";
-
-                        App.Current.Dispatcher.Invoke((Action)(() =>
-                        {
-                            LoginInfo loginInfo = new LoginInfo(sta);
-
-                            PopFrame.Visibility = Visibility.Visible;
-                            MaskView.Visibility = Visibility.Visible;
-
-                            loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
-
-                            PopFrame.Navigate(loginInfo);
-                        }));
-
-                    }
-                    //验证成功
-                    else
-                    {
-                        sta.LoginState = 1;
-                        sta.LoginString = "登录成功";
-                        sta.LoginString2 = "欢迎" + user.name + "登录";
-
-                        ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
-
-                        App.Current.Dispatcher.Invoke((Action)(() =>
-                        {
-                            LoginBkView.Visibility = Visibility.Hidden;
-                            SetNavBtnVisiblity(user.role);
-                            tbNameText.Text = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
-                        }));
-                    }
+                        LoginBkView.Visibility = Visibility.Hidden;
+                        SetNavBtnVisiblity(user.role);
+                        tbNameText.Text = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+                    }));
                 }
             }
             else
