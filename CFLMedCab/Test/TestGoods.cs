@@ -39,11 +39,15 @@ namespace CFLMedCab.Test
                     role = (int)UserIdType.SPD交收员,
                     vein_id = 58268,
                 },
-
-                 new User{
-                    name = "郭颖",
+                new User{
+                    name = "郭颖Doc",
                     role = (int)UserIdType.医生,
                     vein_id = 57688,
+                },
+                new User{
+                    name = "郭颖SPD",
+                    role = (int)UserIdType.SPD交收员,
+                    vein_id = 61886,
                 },
                 new User{
                     name = "Nathan",
@@ -224,6 +228,11 @@ namespace CFLMedCab.Test
             ro2.Add("hs3", hs3);
             ro2.Add("hs4", hs4);
             replenishBll.InitReplenshOrder("RO-TEST-002", "RO002-RSO-TEST-00", ro2, 1);
+
+            Hashtable ro3 = new Hashtable();
+            ro3.Add("hs1", hs1);
+            ro3.Add("hs4", hs4);
+            replenishBll.InitReplenshOrder("RO-TEST-003", "RO003-RSO-TEST-00", ro3, 3);
         }
 
         public void InitPickingOrder()
@@ -246,6 +255,11 @@ namespace CFLMedCab.Test
             ro2.Add("hs3", hs3);
             ro2.Add("hs4", hs4);
             pickingBll.InitPickingOrder("PO-TEST-002", "PO002-PSO-TEST-00", ro2, 1);
+
+            Hashtable ro3 = new Hashtable();
+            ro3.Add("hs2", hs2);
+            ro3.Add("hs3", hs3);
+            pickingBll.InitPickingOrder("PO-TEST-003", "PO003-PSO-TEST-00", ro3, 3);
         }
 
         public void InitSurgerOrder()
@@ -262,21 +276,57 @@ namespace CFLMedCab.Test
                     name="一次性输液器",
                     fetch_type=1,
                     fetch_num=2,
-                    already_fetch_num=1,
-                    not_fetch_num=1,
-                }  , new SurgeryOrderdtl
+                    already_fetch_num=0,
+                    not_fetch_num=2,
+                }  
+                ,
+                new SurgeryOrderdtl
                 {
                     surgery_order_code="sh12",
                     goods_code="B30001",
                     name="医用胶布卷",
                     fetch_type=1,
-                    fetch_num=2,
-                    already_fetch_num=1,
+                    fetch_num=1,
+                    already_fetch_num=0,
                     not_fetch_num=1,
                 }
             };
             fetchOrderBll.InitSurgerOrder(surgeryOrders);
 
+            List<SurgeryOrderdtl> surgeryOrdersG = new List<SurgeryOrderdtl>
+            {
+                new SurgeryOrderdtl
+                {
+                    surgery_order_code="GUOYTEST001",
+                    goods_code="B20001",
+                    name="一次性输液器",
+                    fetch_type=1,
+                    fetch_num=2,
+                    already_fetch_num=1,
+                    not_fetch_num=1,
+                },
+                new SurgeryOrderdtl
+                {
+                    surgery_order_code="GUOYTEST001",
+                    goods_code="B30001",
+                    name="医用胶布卷",
+                    fetch_type=1,
+                    fetch_num=1,
+                    already_fetch_num=0,
+                    not_fetch_num=1,
+                },
+                new SurgeryOrderdtl
+                {
+                    surgery_order_code="GUOYTEST001",
+                    goods_code="B30002",
+                    name="手术刀片",
+                    fetch_type=1,
+                    fetch_num=1,
+                    already_fetch_num=0,
+                    not_fetch_num=1,
+                },
+            };
+            fetchOrderBll.InitSurgerOrder(surgeryOrdersG);
         }
     }
 }
