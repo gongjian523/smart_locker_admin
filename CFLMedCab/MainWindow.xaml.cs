@@ -265,7 +265,7 @@ namespace CFLMedCab
         private void SetNavBtnVisiblity(int role)
         {
             bool isMedicalStuff = ((UserIdType)role == UserIdType.医生 || (UserIdType)role == UserIdType.护士 || (UserIdType)role == UserIdType.医院管理员) ? true : false;
-
+            
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -273,6 +273,7 @@ namespace CFLMedCab
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStock.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnExitApp.Visibility = ((UserIdType)role == UserIdType.SPD经理) ? Visibility.Visible : Visibility.Hidden;
         }
 
         private void ShowCurTimer(object sender, EventArgs e)
@@ -286,7 +287,6 @@ namespace CFLMedCab
             //获得年月日
             this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
         }
-
 
         private void onExitApp(object sender, RoutedEventArgs e)
         {

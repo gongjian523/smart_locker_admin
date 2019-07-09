@@ -541,6 +541,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\IWshRuntimeLibrary.dll" />
+    <Resource Include="Resources\Images\btn-Exit.png" />
+    <Resource Include="Resources\Images\delete.png" />
     <Resource Include="Resources\Images\to-right.png" />
     <Resource Include="Resources\Images\to-left.png" />
     <Resource Include="Resources\Images\ico-calendar.png" />
