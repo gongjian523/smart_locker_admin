@@ -890,8 +890,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnGoodsCloseTestEvent(object sender, EventArgs e)
         {
-            bool isGetSuccess;
-            //Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            //Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
             Hashtable ht = new Hashtable();
             PickingOrderDto pickingSubOrderDto = testPOPara;
 
@@ -941,9 +940,9 @@ namespace CFLMedCab
             }));
         }
 #endif
-#endregion
+        #endregion
 
-#region Inventory
+        #region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>

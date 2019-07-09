@@ -32,7 +32,7 @@
                             <TextBlock Text="{Binding distribute_time,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}" Style="{StaticResource tbTitle7}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2"  Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0 10 0 0">
-                            <Button Style="{StaticResource CommonNoButtonT}" Content="查看详情" Name="Retract" Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  RenderTransformOrigin="0.51,-0.507" Click="onEnterDetail"/>
+                            <Button Style="{StaticResource CommonNoButtonT}" Content="查看详情" Name="Retract" Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetail"/>
                             <Button Style="{StaticResource CommonYesButtonT}" Content="确认开柜" Name="Confirm"  Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetailOpen"/>
                         </StackPanel>
                     </Grid>
@@ -40,14 +40,25 @@
             </Grid>
         </DataTemplate>
     </UserControl.Resources>
-    <Grid  Background="{StaticResource ContentBkBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Label Content="待完成拣货工单"  Grid.Row="0" HorizontalAlignment="Left"  Margin="60,0,20,0"  VerticalAlignment="Center" FontSize="32" />
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="20,0,20,20">
-            <ItemsControl ItemTemplate="{StaticResource pickingOrderView}" ItemsSource="{Binding PickingOrderList, UpdateSourceTrigger=PropertyChanged}"/>
-        </ScrollViewer>
-    </Grid>
+    <Border Style="{StaticResource CommonBlueBorder}" >
+        <Grid  x:Name="myGrid" Background="{StaticResource ContentBkBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Label Content="请输入拣货工单号或扫描拣货工单二维码"   Margin="20,0,20,0"  Style="{StaticResource lblTitle1}"/>
+                <Button Style="{StaticResource CommonYesButton}"  Content="查询"  HorizontalAlignment="Right"   Margin="0,0,20,5" Click="EnterDetail_Click"/>
+            </Grid>
+            <TextBox x:Name="tbInputNumbers" Grid.Row="1"  Height="48" Margin="20,5,20,0"  TextWrapping="Wrap" Text="" 
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                            Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
+            <Label Content="待完成拣货工单"  Grid.Row="2" HorizontalAlignment="Left"   Margin="20,10,0,0" VerticalAlignment="Center" Style="{StaticResource lblTitle1}" />
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20">
+                <ItemsControl ItemTemplate="{StaticResource pickingOrderView}" ItemsSource="{Binding PickingOrderList, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+        </Grid>
+    </Border>
 </UserControl>

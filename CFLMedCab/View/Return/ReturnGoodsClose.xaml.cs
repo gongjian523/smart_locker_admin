@@ -30,13 +30,14 @@ namespace CFLMedCab.View.Return
     /// </summary>
     public partial class ReturnGoodsClose : UserControl
     {
-        //进入补货单详情开门状态页面
+        //进入拣货单详情开门状态页面
         public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingOrderDto e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
+
 
         private Timer endTimer;
 
@@ -46,6 +47,11 @@ namespace CFLMedCab.View.Return
         private PickingOrderDto pickingOrderDto;
         private Hashtable after;
         private List<GoodsDto> goodsDetails;
+
+        private string code;
+        private int actInNum; 
+
+        bool bExit;
 
         public ReturnGoodsClose(PickingOrderDto model, Hashtable hashtable)
         {
@@ -68,6 +74,9 @@ namespace CFLMedCab.View.Return
             abnormalOutNum.Content = outStorageGoodsExNum;
             listView.DataContext = goodsDetails;
 
+            code = model.code;
+            actInNum = operateGoodsNum;
+
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
             endTimer.Enabled = true;
@@ -81,9 +90,26 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
-            Button btn = (Button)sender;
-            EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
+            //todo 判断条件还要修改
+            if(abnormalInNum.Content == inNum.Content)
+            {
+                endTimer.Close();
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                EndOperation(bExit);  
+            }
+            else
+            {
+                endTimer.Close();
+                endTimer.Start();
+                normalView.Visibility = Visibility.Collapsed;
+                abnormalView.Visibility = Visibility.Visible;
+
+                codeLb.Content = code;
+                statusLb.Content = "异常";
+                //TODO
+                plaPickNumLb.Content = "";
+                actPickNumLb.Content = actInNum;
+            }
         }
 
         /// <summary>
@@ -117,5 +143,51 @@ namespace CFLMedCab.View.Return
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, bEixt);
         }
+
+
+        /// <summary>
+        /// 操作缺货按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onShowBtnShort(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            bthShortHide.Visibility = (btn.Name == "bthShortShow" ? Visibility.Visible : Visibility.Collapsed);
+        }
+
+        /// <summary>
+        /// 操作损耗按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onShowBtnLoss(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            bthLossHide.Visibility = (btn.Name == "bthLossShow" ? Visibility.Visible : Visibility.Collapsed);
+        }
+
+        /// <summary>
+        /// 操作其他按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onShowBtnOther(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            bthOtherHide.Visibility = (btn.Name == "bthOtherShow" ? Visibility.Visible : Visibility.Collapsed);
+        }
+
+        /// <summary>
+        /// 提交按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onSubmit(object sender, RoutedEventArgs e)
+        {
+            endTimer.Close();
+            EndOperation(bExit);
+        }
+
     }
 }

@@ -73,7 +73,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterDetailOpen_Click(object sender, RoutedEventArgs e)
+        private void onEnterDetailOpen(object sender, RoutedEventArgs e)
         {
             ReplenishOrderDto replenishShortOrder = (ReplenishOrderDto)((Button)sender).Tag;
             EnterReplenishmentDetailOpenEvent(this, replenishShortOrder);
@@ -84,10 +84,46 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterDetail_Click(object sender, RoutedEventArgs e)
+        private void onEnterDetail(object sender, RoutedEventArgs e)
         {
             ReplenishOrderDto replenishShortOrder = (ReplenishOrderDto)((Button)sender).Tag;
             EnterReplenishmentDetailEvent(this, replenishShortOrder);
+        }
+
+        /// <summary>
+        /// 查看详情
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void EnterDetail_Click(object sender, RoutedEventArgs e)
+        {
+            var value = tbInputNumbers.Text;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                MessageBox.Show("拣货工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            if (ReplenishOrderViewList.Where(item => item.code == value).ToList().Count == 0)
+            {
+                MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            EnterReplenishmentDetailEvent(this, ReplenishOrderViewList.Where(item => item.code == value).First());
+        }
+
+        /// <summary>
+        /// 扫码查询事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                EnterDetail_Click(this, null);
+            }
         }
     }
 }
