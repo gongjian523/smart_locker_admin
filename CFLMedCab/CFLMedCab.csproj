@@ -89,6 +89,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>Lib\IWshRuntimeLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="MahApps.Metro, Version=1.6.5.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MahApps.Metro.1.6.5\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
@@ -207,6 +210,7 @@
     <Compile Include="Infrastructure\ToolHelper\CollectHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
+    <Compile Include="Infrastructure\ToolHelper\LogUtils.cs" />
     <Compile Include="Model\Constant\Contant.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
@@ -537,7 +541,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Lib\IWshRuntimeLibrary.dll" />
-    <Resource Include="Resources\Images\delete.png" />
     <Resource Include="Resources\Images\to-right.png" />
     <Resource Include="Resources\Images\to-left.png" />
     <Resource Include="Resources\Images\ico-calendar.png" />

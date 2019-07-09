@@ -10,6 +10,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using CFLMedCab.Infrastructure.ToolHelper;
+using log4net;
+using System.Windows.Threading;
 
 namespace CFLMedCab
 {
@@ -25,8 +28,9 @@ namespace CFLMedCab
 			bool createNew;
 			ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "乘法云", out createNew);
 
+            LogUtils.InitLog4Net();
 
-			if (!createNew)
+            if (!createNew)
 			{
 				MessageBox.Show("已有一个程序实例运行");
 				Current.Shutdown();
@@ -41,9 +45,18 @@ namespace CFLMedCab
                 vein_id = 12323,
             };
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
+
+            // 注册Application_Error
+            DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
         }
 
+        //异常处理逻辑
+         void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
+         {
+            //处理完后，我们需要将Handler=true表示已此异常已处理过
 
-
+            LogUtils.Error(e.ToString());
+            e.Handled = true;
+         }
     }
 }
