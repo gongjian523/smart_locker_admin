@@ -100,7 +100,7 @@ namespace CFLMedCab.View.Inventory
             GoodsBll goodsBll = new GoodsBll();
 
             List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
-            inventoryBll.NewInventory(list, InventoryType.Manual);
+            int id = inventoryBll.NewInventory(list, InventoryType.Manual);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -109,6 +109,13 @@ namespace CFLMedCab.View.Inventory
 
             HidePopInventoryEvent(this, null);
 
+            InventoryOrderDto orderDto = inventoryOrderDtos.Where(item => item.id == id).ToList().First();
+            InventoryDetailPara para = AutoMapperHelper.MapTo<InventoryDetailPara>(orderDto);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                EnterInventoryDetailEvent(this, para);
+            }));
         }
 
         /// <summary>
