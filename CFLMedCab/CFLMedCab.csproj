@@ -202,6 +202,7 @@
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
     <Compile Include="DAL\GoodsDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
+    <Compile Include="Infrastructure\DeviceHelper\Class1.cs" />
     <Compile Include="Infrastructure\DeviceHelper\SpeakerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
       <SubType>Component</SubType>
@@ -237,6 +238,12 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\User.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\SystemSetting.xaml.cs">
+      <DependentUpon>SystemSetting.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BindingVein.xaml.cs">
+      <DependentUpon>BindingVein.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\CloseCabinet.xaml.cs">
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
@@ -318,6 +325,10 @@
     <Compile Include="View\Fetch\SurgeryQuery.xaml.cs">
       <DependentUpon>SurgeryQuery.xaml</DependentUpon>
     </Compile>
+    <Page Include="Controls\Styles\ComboBoxStyles.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\Styles\DatePickerStyles.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
       <SubType>Designer</SubType>
@@ -359,6 +370,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\SystemSetting.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\BindingVein.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\CloseCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -540,6 +559,9 @@
     <Folder Include="Controls\Controls\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\GReaderApi.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Lib\IWshRuntimeLibrary.dll" />
     <Resource Include="Resources\Images\btn-Exit.png" />
     <Resource Include="Resources\Images\delete.png" />

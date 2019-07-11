@@ -273,7 +273,10 @@ namespace CFLMedCab
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStock.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-            NavBtnExitApp.Visibility = ((UserIdType)role == UserIdType.SPD经理) ? Visibility.Visible : Visibility.Hidden;
+#if TESTENV
+#else
+            btnExitApp.Visibility = ((UserIdType)role == UserIdType.SPD经理) ? Visibility.Visible : Visibility.Hidden;
+#endif
         }
 
         private void ShowCurTimer(object sender, EventArgs e)
@@ -295,8 +298,8 @@ namespace CFLMedCab
         }
         
         
-        #region 领用
-        #region 一般领用
+#region 领用
+#region 一般领用
         /// <summary>
         /// 一般领用
         /// </summary>
@@ -588,10 +591,10 @@ namespace CFLMedCab
             }));
         }
 #endif
-        #endregion
-        #endregion
+#endregion
+#endregion
 
-        #region 领用退回
+#region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -940,9 +943,9 @@ namespace CFLMedCab
             }));
         }
 #endif
-        #endregion
+#endregion
 
-        #region Inventory
+#region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -1128,6 +1131,25 @@ namespace CFLMedCab
         }
 #endregion
 
+        private void onEnterBindingVein(object sender, RoutedEventArgs e)
+        {
+            PopFrame.Visibility = Visibility.Visible;
+
+            BindingVein bindingVein = new BindingVein();
+            bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
+            PopFrame.Navigate(bindingVein);
+        }
+
+
+        private void onEnterSysSetting(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
+
+            SystemSetting systemSetting = new SystemSetting();
+
+            ContentFrame.Navigate(systemSetting);
+        }
 
         /// <summary>
         /// 弹出关门提示框

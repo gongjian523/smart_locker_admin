@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -48,5 +49,48 @@ namespace CFLMedCab.Infrastructure
             else
                 return "COM4";
         }
+
+        public static string GetCabNameByRFidCom(string com)
+        {
+            if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.CodeMCab);
+            else if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.CodeSCab);
+            else
+                return "";
+        }
+
+        public static string GetLockerComByRfidCom(string com)
+        {
+            if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
+            else if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
+            else
+                return "";
+        }
+
+        public static string GetLockerComByCabName(string cabName)
+        {
+            if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.CodeMCab))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
+            else if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.CodeSCab))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
+            else
+                return "";
+        }
+
+
+        public static string GetCabNameByCode(string code, Hashtable ht)
+        {
+            foreach (string key in ht.Keys)
+            {
+                if(((HashSet<string>) ht[key]).Contains(code))
+                    return GetCabNameByRFidCom(key);
+            }
+
+            return "";
+        }
+
     }
 }

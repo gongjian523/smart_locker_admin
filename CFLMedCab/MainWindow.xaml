@@ -29,6 +29,8 @@
                        Foreground="#FFFFFF" Text="欢迎使用乘法云链耗材管理系统"/>
                 <TextBlock HorizontalAlignment="Center" Margin="0,61,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="55" 
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
+                <Button  HorizontalAlignment="Center" Margin="0,80,0,0"  Style="{StaticResource CommonNoButtonT2}" 
+                         Content="绑定指静脉" Height="120" Width="320" Click="onEnterBindingVein"/>
             </StackPanel>
         </Grid>
         <Grid x:Name="NaviView" Visibility="Visible" Panel.ZIndex="1">
@@ -45,6 +47,7 @@
 
                 <Button Style="{StaticResource ReturnButton}" Content="退出"     Name="btnExit" Margin="-150,5,0,5" HorizontalAlignment="Center"   Click="onExit" />
                 <Button Style="{StaticResource ReturnButton}" Content="回到首页" Name="btnBackHP"  Margin="150,5,0,5" HorizontalAlignment="Center"  Click="onBackToHP" Visibility="Hidden"/>
+                <Button Style="{StaticResource ReturnButton}" Content="退出程序" Name="btnExitApp"  Margin="220,5,0,5" HorizontalAlignment="Center"  Click="onExitApp" />
 
                 <TextBlock Height="Auto"
                     Margin="0,0,150,0"
@@ -89,8 +92,8 @@
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="onEnterInvtory" x:Name="NavBtnEnterInvtory" />
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="2"  Margin="10,10,10,10"   Background="#7291FD"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterStock" x:Name="NavBtnEnterStock"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="3"  Margin="10,10,10,10"   Background="#3D74FF"  Content="退出"
-                                 Tag="/CFLMedCab;component/Resources/Images/btn-Exit.png" Click="onExitApp" x:Name="NavBtnExitApp"/>
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="3"  Margin="10,10,10,10"   Background="#3D74FF"  Content="系统设置"
+                                 Tag="/CFLMedCab;component/Resources/Images/btn-Exit.png" Click="onEnterSysSetting" x:Name="NavBtnEnterSysSetting"/>
                     </Grid>
 
                 </Border>

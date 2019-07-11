@@ -46,6 +46,17 @@ namespace CFLMedCab
             };
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
 
+            ApplicationState.SetValue((int)ApplicationKey.CodeMCab, "Cab1");
+            ApplicationState.SetValue((int)ApplicationKey.CodeSCab, "Cab2");
+
+            ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, "COM2");
+            ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, "COM5");
+
+            ApplicationState.SetValue((int)ApplicationKey.COM_MRFid, "COM1");
+            ApplicationState.SetValue((int)ApplicationKey.COM_SRFid, "COM4");
+
+            ApplicationState.SetValue((int)ApplicationKey.COM_MVein, "COM9");
+
             // 注册Application_Error
             DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
         }

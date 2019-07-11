@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Infrastructure
 {
-    enum ApplicationKey{ CurUser, CurGoods};
+    enum ApplicationKey{ CurUser, CurGoods, CodeMCab, CodeSCab, COM_MLocker, COM_SLocker, COM_MRFid, COM_SRFid, COM_MVein };
 
     public static class ApplicationState
     {
