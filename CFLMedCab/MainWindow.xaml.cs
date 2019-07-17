@@ -47,6 +47,10 @@ using static CFLMedCab.Model.Enum.UserIdEnum;
 using CFLMedCab.Infrastructure.BootUpHelper;
 using System.Windows.Interop;
 
+//[DllImport("Dll.dll", EntryPoint = "add", CallingConvention = CallingConvention.Cdecl)]
+//public static extern int add(int a, int b);
+
+
 namespace CFLMedCab
 {
     /// <summary>
@@ -273,9 +277,10 @@ namespace CFLMedCab
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStock.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            btnExitApp.Visibility = Visibility.Visible;
 #if TESTENV
 #else
-            btnExitApp.Visibility = ((UserIdType)role == UserIdType.SPD经理) ? Visibility.Visible : Visibility.Hidden;
+            //btnExitApp.Visibility = ((UserIdType)role == UserIdType.SPD经理) ? Visibility.Visible : Visibility.Hidden;
 #endif
         }
 
@@ -1138,6 +1143,7 @@ namespace CFLMedCab
             BindingVein bindingVein = new BindingVein();
             bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
             PopFrame.Navigate(bindingVein);
+            vein.Close();
         }
 
 
@@ -1302,7 +1308,7 @@ namespace CFLMedCab
             test.InitUsersInfo();
 
 #if TESTENV
-            LoginBkView.Visibility = Visibility.Hidden;
+            //LoginBkView.Visibility = Visibility.Hidden;
         
             User user = userBll.GetTestUser();        
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);

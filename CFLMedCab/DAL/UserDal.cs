@@ -64,5 +64,10 @@ namespace CFLMedCab.DAL
         {
             return Db.Queryable<User>().Select<User>().ToList();
         }
+
+        public User GetUserByName(string name)
+        {
+            return Db.Queryable<User>().Where(user => user.name.ToUpper() == name.ToUpper()).First();
+        }
     }
 }

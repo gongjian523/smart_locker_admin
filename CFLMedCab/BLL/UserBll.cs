@@ -37,5 +37,10 @@ namespace CFLMedCab.BLL
             return userDal.GetUser().First();
         }
 
+
+        public User GetUserByName(string name)
+        {
+            return userDal.GetUserByName(name);
+        }
     }
 }

@@ -40,11 +40,12 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <Prefer32Bit>true</Prefer32Bit>
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -202,11 +203,11 @@
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
     <Compile Include="DAL\GoodsDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
-    <Compile Include="Infrastructure\DeviceHelper\Class1.cs" />
     <Compile Include="Infrastructure\DeviceHelper\SpeakerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Infrastructure\DeviceHelper\VeinUtils.cs" />
     <Compile Include="Infrastructure\ToolHelper\AutoMapperHelper.cs" />
     <Compile Include="Infrastructure\ToolHelper\CollectHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
@@ -559,10 +560,14 @@
     <Folder Include="Controls\Controls\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Lib\BioVein.Win32.dll" />
+    <Content Include="Lib\BioVein1x.Win32.dll" />
+    <Content Include="Lib\BioVein3x.Win32.dll" />
     <Content Include="Lib\GReaderApi.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Lib\IWshRuntimeLibrary.dll" />
+    <Content Include="Lib\VeinMatch.Win32.dll" />
     <Resource Include="Resources\Images\btn-Exit.png" />
     <Resource Include="Resources\Images\delete.png" />
     <Resource Include="Resources\Images\to-right.png" />
