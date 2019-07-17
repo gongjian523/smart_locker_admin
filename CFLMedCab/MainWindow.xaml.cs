@@ -47,8 +47,6 @@ using static CFLMedCab.Model.Enum.UserIdEnum;
 using CFLMedCab.Infrastructure.BootUpHelper;
 using System.Windows.Interop;
 
-//[DllImport("Dll.dll", EntryPoint = "add", CallingConvention = CallingConvention.Cdecl)]
-//public static extern int add(int a, int b);
 
 
 namespace CFLMedCab
@@ -60,7 +58,11 @@ namespace CFLMedCab
     {
         private DispatcherTimer ShowTimer;
         private DispatcherTimer InventoryTimer;
+#if VEINSERIAL
         private VeinHelper vein;
+#else
+        private VeinUtils vein;
+#endif
 
         private InventoryBll inventoryBll = new InventoryBll();
         private GoodsBll goodsBll = new GoodsBll();
@@ -75,8 +77,8 @@ namespace CFLMedCab
 
         private TestGoods test = new TestGoods();
 
-        private User _curUser;
-        public User CurUser { get {
+        private CurrentUser _curUser;
+        public CurrentUser CurUser { get {
                 return _curUser;
             }
             set {
@@ -129,7 +131,7 @@ namespace CFLMedCab
 
             DataContext = this;
 
-            this.tbNameText.Text = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            this.tbNameText.Text = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
 
             ShowTime();
             ShowTimer = new DispatcherTimer();
@@ -142,10 +144,16 @@ namespace CFLMedCab
             InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
             InventoryTimer.Start();
 
+#if VEINSERIAL
             vein = new VeinHelper("COM9", 9600);
             vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
             Console.WriteLine("onStart");
             vein.ChekVein();
+#else
+            vein = VeinUtils.GetInstance();
+            vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
+            vein.DetectFinger();
+#endif
 
             ConsoleManager.Show();
 
@@ -194,27 +202,23 @@ namespace CFLMedCab
             }
         }
 
+
         private void onLoginInfoHidenEvent(object sender, LoginStatus e)
         {
-            //App.Current.Dispatcher.Invoke((Action)(() =>
-            //{
-            //    PopFrame.Visibility = Visibility.Hidden;
-            //    MaskView.Visibility = Visibility.Hidden;
-
-            //    //验证成功不跳出提示弹窗
-            //    //if (e.LoginState == 1)
-            //    //    LoginBkView.Visibility = Visibility.Hidden;
-            //}));
             ClosePop();
 
             if (e.LoginState == 0)
             {
                 Console.WriteLine("onLoginInfoHidenEvent");
+#if VEINSERIAL
                 vein.ChekVein();
+#else
+                vein.DetectFinger();
+#endif
             }
         }
 
-
+#if VEINSERIAL
         private void onReceivedDataVein(object sender, SerialDataReceivedEventArgs e)
         {
             int id = vein.GetVeinId();
@@ -226,7 +230,7 @@ namespace CFLMedCab
                 vein.Close();
 
                 LoginStatus sta = new LoginStatus();
-                User user = userBll.GetUserByVeinId(id);
+                CurrentUser user = userBll.GetUserByVeinId(id);
 
                 if(id == 0 || user == null)
                 {
@@ -254,7 +258,7 @@ namespace CFLMedCab
                     {
                         LoginBkView.Visibility = Visibility.Hidden;
                         SetNavBtnVisiblity(user.role);
-                        tbNameText.Text = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+                        tbNameText.Text = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
                     }));
                 }
             }
@@ -265,7 +269,63 @@ namespace CFLMedCab
             }
 
         }
+#else
+        private void onFingerDetected(object sender, int e)
+        {
+            LoginStatus sta = new LoginStatus();
+            CurrentUser user = new CurrentUser();
+            string info = "等待检测指静脉的时候发生错误";
 
+            if (e == 0)
+            {
+                byte[] macthfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
+
+                if (vein.GrabFeature(macthfeature, out info) == VeinUtils.FV_ERRCODE_SUCCESS)
+                {
+                    
+
+                    //foreach()
+                    //{
+                    //    vein.
+                    //        if
+                    //        ()
+                    //}
+                }
+            }
+
+            if (e == -1 || user.id == 0)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    LoginInfo loginInfo = new LoginInfo(new LoginStatus
+                    {
+                        LoginState = 0,
+                        LoginString = info,
+                        LoginString2 = "请再次进行验证"
+                    });
+
+                    PopFrame.Visibility = Visibility.Visible;
+                    MaskView.Visibility = Visibility.Visible;
+
+                    loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
+
+                    PopFrame.Navigate(loginInfo);
+                }));
+            }
+            else
+            {
+                ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
+
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    LoginBkView.Visibility = Visibility.Hidden;
+                    SetNavBtnVisiblity(user.role);
+                    tbNameText.Text = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+                }));
+            }
+            
+        }
+#endif
         private void SetNavBtnVisiblity(int role)
         {
             bool isMedicalStuff = ((UserIdType)role == UserIdType.医生 || (UserIdType)role == UserIdType.护士 || (UserIdType)role == UserIdType.医院管理员) ? true : false;
@@ -1143,7 +1203,9 @@ namespace CFLMedCab
             BindingVein bindingVein = new BindingVein();
             bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
             PopFrame.Navigate(bindingVein);
+#if VEINSERIAL
             vein.Close();
+#endif
         }
 
 
@@ -1208,7 +1270,10 @@ namespace CFLMedCab
                 LoginBkView.Visibility = Visibility.Visible;
 #endif
 
+#if VEINSERIAL
                 vein.ChekVein();
+#else
+#endif
             }));
         }
 
@@ -1282,7 +1347,11 @@ namespace CFLMedCab
 
             inventoryHandler = null;
 
+#if VEINSERIAL
             vein.ChekVein();
+#else
+
+#endif
         }
 
         /// <summary>
@@ -1310,7 +1379,7 @@ namespace CFLMedCab
 #if TESTENV
             //LoginBkView.Visibility = Visibility.Hidden;
         
-            User user = userBll.GetTestUser();        
+            CurrentUser user = userBll.GetTestUser();        
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
 
             TestGoods testGoods = new TestGoods();

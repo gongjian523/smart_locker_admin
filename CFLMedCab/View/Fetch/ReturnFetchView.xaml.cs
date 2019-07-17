@@ -51,7 +51,7 @@ namespace CFLMedCab.View.Fetch
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
 
             Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
             after = hashtable;

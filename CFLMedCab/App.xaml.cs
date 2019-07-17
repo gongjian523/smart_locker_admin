@@ -38,7 +38,7 @@ namespace CFLMedCab
 			}
 
 			base.OnStartup(e);
-            User user = new User
+            CurrentUser user = new CurrentUser
             {
                 id = 1111,
                 name = "Nathan",

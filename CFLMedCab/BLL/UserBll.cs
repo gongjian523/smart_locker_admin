@@ -17,7 +17,7 @@ namespace CFLMedCab.BLL
             userDal = UserDal.GetInstance();
         }
 
-        public User  GetUserByVeinId(int veinId)
+        public CurrentUser  GetUserByVeinId(int veinId)
         {
             return userDal.GetUserByVeinId(veinId);
         }
@@ -27,18 +27,18 @@ namespace CFLMedCab.BLL
             return userDal.GetUserNum();
         }
 
-        public void InsetUsers(List<User> list)
+        public void InsetUsers(List<CurrentUser> list)
         {
             userDal.InsertUser(list);
         }
 
-        public User GetTestUser()
+        public CurrentUser GetTestUser()
         {
             return userDal.GetUser().First();
         }
 
 
-        public User GetUserByName(string name)
+        public CurrentUser GetUserByName(string name)
         {
             return userDal.GetUserByName(name);
         }

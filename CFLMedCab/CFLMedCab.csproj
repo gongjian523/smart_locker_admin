@@ -237,7 +237,7 @@
     <Compile Include="Model\SurgeryOrder.cs" />
     <Compile Include="Model\FetchOrderdtl.cs" />
     <Compile Include="Model\SurgeryOrderdtl.cs" />
-    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
     <Compile Include="View\SystemSetting.xaml.cs">
       <DependentUpon>SystemSetting.xaml</DependentUpon>

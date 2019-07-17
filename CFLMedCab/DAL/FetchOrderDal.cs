@@ -115,7 +115,7 @@ namespace CFLMedCab.DAL
 					//用uuid当作新生成的领用单单号
 					code = Guid.NewGuid().ToString("N"),
 					create_time = DateTime.Now,
-				    operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id,
+				    operator_id = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id,
 					type = (int)goodsChageAttribute.RequisitionType,
 					status = (int)goodsChageAttribute.RequisitionStatus,
 					business_order_code = business_order_code

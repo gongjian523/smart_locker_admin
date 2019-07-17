@@ -71,7 +71,7 @@ namespace CFLMedCab.DAL
 			//查询语句
 			var queryable = Db.Queryable<ReplenishSubOrder,ReplenishOrder>((rso, ro) => new object[] {
             JoinType.Left, rso.replenish_order_code == ro.code})
-				.Where((rso, ro) => (rso.status == (int)RSOStatusType.待上架 || rso.status == (int)RSOStatusType.部分上架) && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.Where((rso, ro) => (rso.status == (int)RSOStatusType.待上架 || rso.status == (int)RSOStatusType.部分上架) && ro.principal_id == ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id)
 				.OrderBy(rso => rso.create_time, OrderByType.Desc)
 				.Select((rso, ro) => new ReplenishSubOrderDto
 				{
@@ -198,7 +198,7 @@ namespace CFLMedCab.DAL
 			JoinType.Left, rso.id == rsod.replenish_sub_orderid
 			})
 				.GroupBy((ro, rso) => ro.code)
-				.Where((ro, rso, rsod) => rsod.status == (int)RPOStatusType.待完成 && ro.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.Where((ro, rso, rsod) => rsod.status == (int)RPOStatusType.待完成 && ro.principal_id == ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id)
 				.OrderBy((ro, rso) => ro.create_time, OrderByType.Desc)
 				.Select((ro, rso, rsod) => new ReplenishOrderDto
 				{

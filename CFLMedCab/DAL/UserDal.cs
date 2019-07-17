@@ -45,29 +45,29 @@ namespace CFLMedCab.DAL
             Db = SqlSugarHelper.GetInstance().Db;
         }
 
-        public User GetUserByVeinId(int veinId)
+        public CurrentUser GetUserByVeinId(int veinId)
         {
-            return Db.Queryable<User>().Where(user => user.vein_id == veinId).First();
+            return Db.Queryable<CurrentUser>().Where(user => user.vein_id == veinId).First();
         }
 
         public int GetUserNum()
         {
-            return Db.Queryable<User>().Select<User>().ToList().Count();
+            return Db.Queryable<CurrentUser>().Select<CurrentUser>().ToList().Count();
         }
 
-        public void InsertUser(List<User> list)
+        public void InsertUser(List<CurrentUser> list)
         {
-            Db.Insertable<User>(list).ExecuteCommand();
+            Db.Insertable<CurrentUser>(list).ExecuteCommand();
         }
 
-        public List<User> GetUser()
+        public List<CurrentUser> GetUser()
         {
-            return Db.Queryable<User>().Select<User>().ToList();
+            return Db.Queryable<CurrentUser>().Select<CurrentUser>().ToList();
         }
 
-        public User GetUserByName(string name)
+        public CurrentUser GetUserByName(string name)
         {
-            return Db.Queryable<User>().Where(user => user.name.ToUpper() == name.ToUpper()).First();
+            return Db.Queryable<CurrentUser>().Where(user => user.name.ToUpper() == name.ToUpper()).First();
         }
     }
 }

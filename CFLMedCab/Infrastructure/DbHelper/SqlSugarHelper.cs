@@ -100,7 +100,7 @@ namespace CFLMedCab.Infrastructure.DbHelper
             Db.CodeFirst.InitTables<SurgeryOrderdtl>();
 
             //创建用户表
-            Db.CodeFirst.InitTables<User>();
+            Db.CodeFirst.InitTables<CurrentUser>();
         }
 
         public static string GetCurrentProjectPath

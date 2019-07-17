@@ -33,33 +33,33 @@ namespace CFLMedCab.Test
             if (userBll.GetUserNum() > 0)
                 return;
 
-            List<User> users = new List<User> {
-                new User{
+            List<CurrentUser> users = new List<CurrentUser> {
+                new CurrentUser{
                     name = "Alex",
                     role = (int)UserIdType.SPD交收员,
                     vein_id = 58268,
                 },
-                new User{
+                new CurrentUser{
                     name = "郭颖Doc",
                     role = (int)UserIdType.医生,
                     vein_id = 57688,
                 },
-                new User{
+                new CurrentUser{
                     name = "郭颖SPD",
                     role = (int)UserIdType.SPD交收员,
                     vein_id = 61886,
                 },
-                new User{
+                new CurrentUser{
                     name = "Nathan",
                     role = (int)UserIdType.医生,
                     vein_id = 58046,
                 },
-                new User{
+                new CurrentUser{
                     name = "Kate",
                     role = (int)UserIdType.医生,
                     vein_id = 12630,
                 },
-                new User{
+                new CurrentUser{
                     name = "ZHIWEN",
                     role = (int)UserIdType.医生,
                     vein_id = 62800,

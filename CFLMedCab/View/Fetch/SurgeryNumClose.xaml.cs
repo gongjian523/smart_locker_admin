@@ -57,7 +57,7 @@ namespace CFLMedCab.View.Fetch
         public SurgeryNumClose(SurgeryOrderDto model, Hashtable hashtable)
         {
             InitializeComponent();
-            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             surgeryOrderDto = model;
             surgeryNum.Content = model.code;

@@ -27,7 +27,9 @@ namespace CFLMedCab.View
 
         private UserBll userBll = new UserBll();
 
-        private User user = new User();
+        private CurrentUser user = new CurrentUser();
+
+        VeinUtils vein = VeinUtils.GetInstance();
 
         public BindingVein()
         {
@@ -52,7 +54,6 @@ namespace CFLMedCab.View
             }));
         }
 
-
         public void onExitApp(object sender, EventArgs e)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -76,19 +77,14 @@ namespace CFLMedCab.View
             BindingView.Visibility = Visibility.Visible;
 
             rebindingBtn.Visibility = Visibility.Hidden;
-            
-
 
             Task.Factory.StartNew(Binding);
-
         }
             
 
         private void Binding()
         {
             int ret;
-
-            VeinUtils vein = new VeinUtils();
 
             ret = vein.LoadingDevice();
 

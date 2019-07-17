@@ -50,8 +50,8 @@ namespace CFLMedCab.BLL
             if (type == InventoryType.Manual)
             {
                 //获取当前用户
-                inventoryOrder.operator_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id;
-                inventoryOrder.operator_name = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+                inventoryOrder.operator_id = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id;
+                inventoryOrder.operator_name = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
                 inventoryOrder.type = (int)InventoryType.Manual;
             }
             else
@@ -81,8 +81,8 @@ namespace CFLMedCab.BLL
             //设置当前时间
             inventoryOrder.confirm_time = DateTime.Now;
             //设置当前盘点确认人姓名和id
-            inventoryOrder.inspector_id = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id;
-            inventoryOrder.inspector_name = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            inventoryOrder.inspector_id = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id;
+            inventoryOrder.inspector_name = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
 
             inventoryDal.ConfirmInventory(inventoryOrder);
         }

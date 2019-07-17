@@ -70,7 +70,7 @@ namespace CFLMedCab.DAL
 			//查询语句
 			var queryable = Db.Queryable<PickingSubOrder, PickingOrder>((pso, po) =>new object[] {
             JoinType.Left, pso.picking_order_code == po.code})
-				.Where((pso, po) => (pso.status == (int)PSOStatusType.待拣货 || pso.status == (int)PSOStatusType.部分拣货)  &&  po.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.Where((pso, po) => (pso.status == (int)PSOStatusType.待拣货 || pso.status == (int)PSOStatusType.部分拣货)  &&  po.principal_id == ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id)
 				.OrderBy(pso => pso.create_time, OrderByType.Desc)
 				.Select((pso, po) => new PickingSubOrderDto
 				{
@@ -195,7 +195,7 @@ namespace CFLMedCab.DAL
 			JoinType.Left, pso.id == psod.picking_sub_orderid
 			})
 			    .GroupBy((po, pso) => po.code)
-				.Where((po, pso, psod) => psod.status == (int)RPOStatusType.待完成 && po.principal_id == ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).id)
+				.Where((po, pso, psod) => psod.status == (int)RPOStatusType.待完成 && po.principal_id == ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id)
 				.OrderBy((po, pso) => po.create_time, OrderByType.Desc)
 				.Select((po, pso, psod) => new PickingOrderDto
 				{

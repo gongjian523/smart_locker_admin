@@ -9,9 +9,15 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Infrastructure.DeviceHelper
 {
-
     public  class VeinUtils
     {
+        enum Match_Flg
+        {
+            M_1_1,      //1比1验证
+            M_1_G,      //1比G识别
+            M_1_N,      //1比N识别
+        };
+
         //错误代码
         public const int FV_ERRCODE_SUCCESS = 0;         //成功、正常
         public const int FV_ERRCODE_WRONG_PARAMETER = -1;		//参数错误：数值范围，内存大小，字符数组与字符串等
@@ -110,12 +116,41 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_MatchFeature", CallingConvention = CallingConvention.Cdecl)]
         public static extern int FV_MatchFeature(byte[] matchFeature, byte[] regFeature, byte regCnt, char flg, uint securityLevel, ref uint diff, byte[] aiFeatureBuf, ref uint aiDataLen);
 
+        StringBuilder[] devIdList = new StringBuilder[10];	//设备列表
+        StringBuilder devName = new StringBuilder("CabS");          //选择被操作设备
+        StringBuilder serialName = new StringBuilder("COM8:");
+        int devNum;                          //枚举设备数1~10
 
-        //static char[][] devIdList = new char[10][];	//设备列表
-        static StringBuilder[] devIdList = new StringBuilder[10];	//设备列表
-        static StringBuilder devName = new StringBuilder("CabS");          //选择被操作设备
-        static int devNum;                          //枚举设备数1~10
+        bool bExitDetect;
 
+        //监测
+        public delegate void FingerDetectedHandler(object sender, int e);
+        public event FingerDetectedHandler FingerDetectedEvent;
+
+        // 定义一个静态变量来保存类的实例
+        private static VeinUtils singleton;
+
+        // 定义一个标识确保线程同步
+        private static readonly object locker = new object();
+
+        //定义公有方法提供一个全局访问点。
+        public static VeinUtils GetInstance()
+        {
+            //这里的lock其实使用的原理可以用一个词语来概括“互斥”这个概念也是操作系统的精髓
+            //其实就是当一个进程进来访问的时候，其他进程便先挂起状态
+            if (singleton == null)
+            {
+                lock (locker)
+                {
+                    // 如果类的实例不存在则创建，否则直接返回
+                    if (singleton == null)
+                    {
+                        singleton = new VeinUtils();
+                    }
+                }
+            }
+            return singleton;
+        }
 
         public string GetSdkVersion()
         {
@@ -160,8 +195,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         {
             //枚举设备，带回设备名称列表
 
-            StringBuilder serialName = new StringBuilder("COM8:");
-
             int ret = FV_LoadingDevice(devName, serialName, 9600, 2);
             if (FV_ERRCODE_SUCCESS != ret)
             {
@@ -194,6 +227,74 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
             return ret;
         }
+
+        // 等待手指某状态（ 0移开；3放置 ） 
+        public void SetDetectFingerState(bool state)
+        {
+            bExitDetect = state;
+        }
+
+        // 等待手指某状态（ 0移开；3放置 ） 
+        public void  DetectFinger()
+        {
+            int wDetectCnt = 0;                         //循环检测次数
+            int wErrCount = 0;                          //检测产生错误的次数
+            byte u1FingerStatus = 0;           //手指状态
+
+            int nRetVal;
+            int nDetectTimes = D_FINGER_DETECT_PERIOD / D_FINGER_DETECT_INTERVAL;
+            int nInterval = D_FINGER_DETECT_INTERVAL;
+            int nStartCnt = nDetectTimes / 30;
+
+            int flg = 3;
+            bExitDetect = false;
+
+            string stateE = flg != 0 ? "Place" : "Remove";  //0移开；3放置
+            string state = flg != 0 ? "放置" : "移开";  //0移开；3放置
+
+            //等待移开手指、
+            int i = 0;
+            while (!bExitDetect)
+            { //循环检测手指
+
+                nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
+                if (FV_ERRCODE_SUCCESS != nRetVal)
+                {//检测时产生错误。
+                    wErrCount++;
+
+                    Thread.Sleep(nInterval);
+
+                    if (3 < wErrCount)
+                    {
+                        System.Diagnostics.Debug.WriteLine("Wait for" + stateE + "finger error!");
+                        FingerDetectedEvent(this, -1);
+                        return ;
+                    }
+                }
+                else
+                {
+                    wErrCount = 0;
+                    if ((flg & 0xFF) != u1FingerStatus)
+                    {
+                        //手指还没有移开
+                        if (0 == (wDetectCnt % nStartCnt))
+                        {
+                            System.Diagnostics.Debug.WriteLine("Please " + stateE + " finger " + i);//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
+                            i++;
+                        }
+                        Thread.Sleep(nInterval);
+                    }
+                    else
+                    {
+                        //手指已经移开
+                        System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE);
+                        FingerDetectedEvent(this, 0);
+                        return ;
+                    }
+                }
+            }
+        }
+
 
         // 等待手指某状态（ 0移开；3放置 ） 
         public int WaitState(int flg, out string info)
@@ -288,92 +389,74 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return ret;
         }
 
-
-        ////获取特征与已注册特征比对
-        //void MatchFeature()
-        //{
-        //    //获取特征
-        //    byte[] macthfeature = new byte[FV_FEATURE_SIZE];
-
-        //    int ret = FV_GrabFeature(devName, macthfeature, (char)0x00);
-        //    if (FV_ERRCODE_SUCCESS != ret)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine("Read vein feature read failed, error code= " + ret);
-        //        return;
-        //    }
-        //    System.Diagnostics.Debug.WriteLine("Read vein feature read successfully.");
-
-        //    //比对特征
-        //    unsigned int diff;
-        //    ret = match(macthfeature, (unsigned char *)m_user->regfeature,FEATURE_COLLECT_CNT, (unsigned char*)m_user->aifeature, &diff, m_user->user_info.fid, M_1_N);
-        //    if (FV_ERRCODE_SUCCESS != ret)
-        //        System.Diagnostics.Debug.WriteLine(devName + ":The match failed and the value was returned = " + ret);
-        //    else
-        //        //System.Diagnostics.Debug.WriteLine(devName + ":Match user (name:%s,uid:%d,fid:%d,fgid:%d) pass, difference :%d.\r\n", m_user->user_info.name, m_user->user_info.uid,
-        //        //    m_user->user_info.fid, m_user->user_info.fgid, diff);
-        //}
+        //获取特征与已注册特征比对
+        public int GrabFeature (byte[] macthfeature, out string info)
+        {
+            int ret = FV_GrabFeature(devName, macthfeature, (char)0x00);
+            if (FV_ERRCODE_SUCCESS != ret){
+                System.Diagnostics.Debug.WriteLine("Read vein feature read failed, error code= " + ret);
+                info = "采集指静脉特征失败！ " + ret;
+            }
+            else{
+                System.Diagnostics.Debug.WriteLine("Read vein feature read successfully.");
+                info = "采集指静脉特征成功！";
+            }
+            return ret;
+        }
 
 
-        ////调用比对接口注意事项
-        //int match(unsigned char* macthfeature, unsigned char* regfeature,
-        //    unsigned int regfcnt, unsigned char* aifeature,
-        //    unsigned int* diff, int fid, int matchflg)
-        //{
-        //    //说明：
-        //    //比对结果 match(单个待比对特征，某根手指的注册特征，注册特征个数，该手指的动态特征，存放比多结果差异度）；动态特征可能被更新
-        //    //比对应以某根手指为单位，这样才能生产对应该根手指的动态特征
+        //调用比对接口注意事项
+        int Match(byte[] macthfeature, byte[] regfeature, int regfcnt, byte[] aifeature,
+            ref uint diff, int matchflg)
+        {
+            //说明：
+            //比对结果 match(单个待比对特征，某根手指的注册特征，注册特征个数，该手指的动态特征，存放比多结果差异度）；动态特征可能被更新
+            //比对应以某根手指为单位，这样才能生产对应该根手指的动态特征
 
 
-        //    //1.获取被比对特征 = 某根手指的注册特征 + 该手指的动态特征
-        //    int accept_match_feature_cnt = regfcnt + FV_DYNAMIC_FEATURE_CNT;
-        //    unsigned char* accept_match_feature = (unsigned char*)calloc(accept_match_feature_cnt * FV_FEATURE_SIZE, sizeof(char));
-        //    memcpy(accept_match_feature, regfeature, regfcnt * FV_FEATURE_SIZE);
-        //    memcpy(accept_match_feature + regfcnt * FV_FEATURE_SIZE, aifeature, FV_DYNAMIC_FEATURE_CNT * FV_FEATURE_SIZE);
+            //1.获取被比对特征 = 某根手指的注册特征 + 该手指的动态特征
+            int accept_match_feature_cnt = regfcnt + FV_DYNAMIC_FEATURE_CNT;
+            byte[] accept_match_feature = new byte[accept_match_feature_cnt* FV_FEATURE_SIZE];
+            Array.Copy(regfeature, 0, accept_match_feature, 0, regfcnt * FV_FEATURE_SIZE);
+            Array.Copy(aifeature, 0, accept_match_feature, regfcnt * FV_FEATURE_SIZE, FV_DYNAMIC_FEATURE_CNT * FV_FEATURE_SIZE);
 
+            //2.确定（安全级别）参数
+            int securityLevel = -1;
+            if (matchflg == (int)Match_Flg.M_1_1)
+                securityLevel = 6; //1:1：已经通过其它方式确定某一个特定用户，调用本接口确定是否为其本人，建议数字为6
+            else
+                securityLevel = 4; //1:N：N个用户中循环调用本接口比对查找匹配的用户时，建议数字为4
 
-        //    //2.确定（安全级别）参数
-        //    char securityLevel = -1;
-        //    if (matchflg == M_1_1)
-        //        securityLevel = 6; //1:1：已经通过其它方式确定某一个特定用户，调用本接口确定是否为其本人，建议数字为6
-        //    else
-        //        securityLevel = 4; //1:N：N个用户中循环调用本接口比对查找匹配的用户时，建议数字为4
+            //3.说明你开辟的动态特征缓冲区大小
+            uint ailen = FV_DYNAMIC_FEATURE_CNT * FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
 
+            //4.调用比对接口
+            int ret = FV_MatchFeature(macthfeature, accept_match_feature, (byte)accept_match_feature_cnt, (char)0x03, (uint)securityLevel, ref diff, aifeature, ref ailen);
 
-        //    //3.说明你开辟的动态特征缓冲区大小
-        //    unsigned int ailen = FV_DYNAMIC_FEATURE_CNT * FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
+            //5.分析比对返回值
+            if (ret != FV_ERRCODE_SUCCESS)
+            {
+                return ret;
+            }
 
+            //6.判断返回的动态特征长度长度，是否需要保存动态特征
+            if (ailen > 0)
+            {
+                //在比对成功的前提下
+                //比对函数返回了有效的学习数据，数据已经保存在FV_MatchFeature接口调用的第7个参数m_FeatureDataAI缓冲区中。
+                //利用智能学习功能，把比对通过的情况下，把学习生成的数据作为下一次比对数据的一部分可以大大的提高用户体验.
+                //返回的ailen值为0的话，aifeature的内容不会被改变，也就是保留上次学习的数据。
 
-        //    //4.调用比对接口
-        //    int ret = FV_MatchFeature(macthfeature, accept_match_feature, accept_match_feature_cnt, 0x03, securityLevel, diff, aifeature, &ailen);
+                //!!!!
+                //更新fid的动态特征，更新可以逐渐提升比对精度及速度。
+                //这里aifeature传参若为某个用户的内存，比对成功下直接被修改，不用在手动更新
+                //如果aifeature传参不是某个用户的内存，需要拷贝自己更新
 
+                System.Diagnostics.Debug.WriteLine("Dynamic features have been updated.\r\n");
+            }
 
-        //    //5.分析比对返回值
-        //    if (ret != FV_ERRCODE_SUCCESS)
-        //    {
-        //        return ret;
-        //    }
-
-
-        //    //6.判断返回的动态特征长度长度，是否需要保存动态特征
-        //    if (ailen > 0)
-        //    {
-        //        //在比对成功的前提下
-        //        //比对函数返回了有效的学习数据，数据已经保存在FV_MatchFeature接口调用的第7个参数m_FeatureDataAI缓冲区中。
-        //        //利用智能学习功能，把比对通过的情况下，把学习生成的数据作为下一次比对数据的一部分可以大大的提高用户体验.
-        //        //返回的ailen值为0的话，aifeature的内容不会被改变，也就是保留上次学习的数据。
-
-        //        //!!!!
-        //        //更新fid的动态特征，更新可以逐渐提升比对精度及速度。
-        //        //这里aifeature传参若为某个用户的内存，比对成功下直接被修改，不用在手动更新
-        //        //如果aifeature传参不是某个用户的内存，需要拷贝自己更新
-
-        //        System.Diagnostics.Debug.WriteLine("Dynamic features have been updated.\r\n");
-        //    }
-
-        //    return ret;
-        //}
-
-
+            return ret;
+        }
 
         //// 等待手指某状态（ 0移开；3放置 ） 
         //private int wait_state(StringBuilder devname, int flg)

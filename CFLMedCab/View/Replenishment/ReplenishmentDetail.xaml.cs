@@ -40,7 +40,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             InitializeComponent();
             entity = model;    
-            operatorName.Content = ApplicationState.GetValue<User>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
             orderNum.Content = model.code;
             listView.DataContext = replenishBll.GetReplenishOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_order_code = model.code }).Data;
         }
