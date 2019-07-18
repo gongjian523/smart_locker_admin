@@ -145,7 +145,6 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
-
 		/// <summary>
 		/// 同步获取get请求结果
 		/// </summary>
@@ -205,11 +204,13 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		public BaseData<T> Post<T>(T postParam, string url) where T : class
+		public BaseData<T> Post<T, K>(K postParam, string url) where T : class
 		{
 
 			var handleEventWait = new HandleEventWait();
 			BaseData<T> ret = null;
+
+			LogUtils.Debug($"psot的url为：{url} ; post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
 			JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
 			{

@@ -3,7 +3,7 @@ using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using System.Collections.Generic;
-
+using System.Web;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -38,7 +38,26 @@ namespace CFLMedCab.Http.Bll
 			return singleton;
 		}
 
-		public string FingerVein;
+		/// <summary>
+		/// 指静脉绑定
+		/// </summary>
+		/// <param name="param">请求参数</param>
+		/// <returns></returns>
+		public BaseData<string> VeinmatchBinding(VeinmatchPostParam param)
+		{
+			return HttpHelper.GetInstance().Post<string, VeinmatchPostParam>(param, HttpConstant.GetVeinmatchBindingUrl());
+		}
+
+		/// <summary>
+		/// 指静脉识别 
+		/// </summary>
+		/// <param name="param">请求参数</param>
+		/// <returns></returns>
+		public BaseData<string> VeinmatchLogin(string regfeature)
+		{
+			//匿名类
+			return HttpHelper.GetInstance().Post<string, object>(new { regfeature }, HttpConstant.GetVeinmatchLoginUrl());
+		}
 
 		/// <summary>
 		/// 获取token，根据用户参数
@@ -50,26 +69,26 @@ namespace CFLMedCab.Http.Bll
 			//获取账户数据
 			BaseData<Account> baseDataAccount = HttpHelper.GetInstance().Get<Account>(new QueryParam
 			{
-				view_filter = new QueryParam.ViewFilter
+				view_filter = 
 				{
-					filter = new QueryParam.Filter
+					filter = 
 					{
 						logical_relation = "1 AND 2",
-						expressions = new List<QueryParam.Expressions>
+						expressions =
 						{
 							new QueryParam.Expressions
 							{
 								field = "Phone",
 								@operator = "CONTAINS",
-								operands =  BllHelper.OperandsProcess(new List<string>{ account.Phone })
+								operands =  {$"'{ HttpUtility.UrlEncode(account.Phone) }'"}
 							},
 							new QueryParam.Expressions
 							{
 								field = "Password",
 								@operator = "==",
-								operands = BllHelper.OperandsProcess(new List<string>{ BllHelper.EncodeBase64Str(account.Password) })
+								operands = {$"'{ BllHelper.EncodeBase64Str(account.Password) }'" }
 							}
-						},
+						}
 					}
 				}
 			});
@@ -79,10 +98,10 @@ namespace CFLMedCab.Http.Bll
 
 				return hh.Get<User>(new QueryParam
 				{
-					@in = new QueryParam.In
+					@in =
 					{
 						field = "MobilePhone",
-						in_list = BllHelper.ParamUrlEncode(new List<string> { baseDataAccount.body.objects[0].Phone })
+						in_list =  { HttpUtility.UrlEncode(baseDataAccount.body.objects[0].Phone) }
 					}
 				});
 
