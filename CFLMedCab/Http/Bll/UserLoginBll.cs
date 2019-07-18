@@ -45,8 +45,9 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="account"></param>
 		/// <returns></returns>
-		public string GetUserToken(Account account)
+		public BaseData<string> GetUserToken(Account account)
 		{
+			//获取账户数据
 			BaseData<Account> baseDataAccount = HttpHelper.GetInstance().Get<Account>(new QueryParam
 			{
 				view_filter = new QueryParam.ViewFilter
@@ -73,24 +74,31 @@ namespace CFLMedCab.Http.Bll
 				}
 			});
 
-			BaseData<User> baseDataUser = null;
+			//根据账户获取用户数据
+			BaseData<User> baseDataUser = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 
-			if (baseDataAccount.code == (int)ResultCode.OK)
-			{
-				
-				baseDataUser =  HttpHelper.GetInstance().Get<User>(new QueryParam
+				return hh.Get<User>(new QueryParam
 				{
 					@in = new QueryParam.In
 					{
 						field = "MobilePhone",
-						in_list = new List<string> { baseDataAccount.body.objects[0].Phone }
+						in_list = BllHelper.ParamUrlEncode(new List<string> { baseDataAccount.body.objects[0].Phone })
 					}
 				});
 
-				
+			}, baseDataAccount);
 
-			}
-			return baseDataUser.ToString();
+			//根据用户获取token
+			return HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
+			{
+
+				return hh.Get<string>(HttpConstant.GetTokenQueryUrl(new TokenQueryParam
+				{
+					user_id = baseDataUser.body.objects[0].id
+				}));
+
+			}, baseDataUser);
+
 		}
 	}
 }

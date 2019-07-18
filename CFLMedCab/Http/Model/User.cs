@@ -17,7 +17,11 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string Phone { get; set; }
 
-
+		/// <summary>
+		/// 目前用的账户字段
+		/// </summary>
+		public string MobilePhone { get; set; }
+		
 
 	}
 }

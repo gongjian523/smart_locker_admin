@@ -37,7 +37,9 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="msg">日志信息</param>
         public static void Debug(string msg)
         {
-            log.Debug(msg);
+			Console.WriteLine($"Debug@{msg}");
+
+			log.Debug(msg);
         }
         /// <summary>
         /// Debug
@@ -46,7 +48,9 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="exception">错误信息</param>
         public static void Debug(string msg, Exception exception)
         {
-            log.Debug(msg, exception);
+			Console.WriteLine($"Debug@{msg}");
+			Console.WriteLine($"Exception@{exception.Message}");
+			log.Debug(msg, exception);
         }
 
         #endregion
@@ -58,7 +62,8 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="msg">日志信息</param>
         public static void Info(string msg)
         {
-            log.Info(msg);
+			Console.WriteLine($"Info@{msg}");
+			log.Info(msg);
         }
         /// <summary>
         /// Info
@@ -67,7 +72,9 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="exception">错误信息</param>
         public static void Info(string msg, Exception exception)
         {
-            log.Info(msg, exception);
+			Console.WriteLine($"Info@{msg}");
+			Console.WriteLine($"Exception@{exception.Message}");
+			log.Info(msg, exception);
         }
         #endregion
 
@@ -78,7 +85,8 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="msg">日志信息</param>
         public static void Warn(string msg)
         {
-            log.Warn(msg);
+			Console.WriteLine($"Warn@{msg}");
+			log.Warn(msg);
         }
         /// <summary>
         /// Warn
@@ -87,7 +95,9 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="exception">错误信息</param>
         public static void Warn(string msg, Exception exception)
         {
-            log.Warn(msg, exception);
+			Console.WriteLine($"Warn@{msg}");
+			Console.WriteLine($"Exception@{exception.Message}");
+			log.Warn(msg, exception);
         }
         #endregion
 
@@ -98,7 +108,8 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="msg">日志信息</param>
         public static void Error(string msg)
         {
-            log.Error(msg);
+			Console.WriteLine($"Error@{msg}");
+			log.Error(msg);
         }
         /// <summary>
         /// Error
@@ -107,7 +118,9 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="exception">错误信息</param>
         public static void Error(string msg, Exception exception)
         {
-            log.Error(msg, exception);
+			Console.WriteLine($"Error@{msg}");
+			Console.WriteLine($"Exception@{exception.Message}");
+			log.Error(msg, exception);
         }
         #endregion
 
@@ -118,7 +131,8 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="msg">日志信息</param>
         public static void Fatal(string msg)
         {
-            log.Fatal(msg);
+			Console.WriteLine($"Fatal@{msg}");
+			log.Fatal(msg);
         }
         /// <summary>
         /// Fatal
@@ -127,7 +141,9 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// <param name="exception">错误信息</param>
         public static void Fatal(string msg, Exception exception)
         {
-            log.Fatal(msg, exception);
+			Console.WriteLine($"Fatal@{msg}");
+			Console.WriteLine($"Exception@{exception.Message}");
+			log.Fatal(msg, exception);
         }
         #endregion
     }

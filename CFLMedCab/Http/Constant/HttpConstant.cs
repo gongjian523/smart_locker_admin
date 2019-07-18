@@ -1,9 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using CFLMedCab.Infrastructure.ToolHelper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Web;
 
 namespace CFLMedCab.Http.Constant
 {
@@ -120,6 +122,7 @@ namespace CFLMedCab.Http.Constant
 				
 			}
 
+			LogUtils.Debug($"url参数为：{queryParamUrlStr.ToString()}");
 
 			return Domain + UrlPrefix + tableName + "/query" + queryParamUrlStr.ToString();
 		}
@@ -176,14 +179,11 @@ namespace CFLMedCab.Http.Constant
 					if (queryParamPropValue == null)
 						continue;
 
-					string[] orderValues = (string[])queryParamPropValue;
-					foreach (string orderValue in orderValues)
-					{
-						queryParamUrlStr.Append(queryParamProp.Name);
-						queryParamUrlStr.Append("=");
-						queryParamUrlStr.Append(orderValue);
-						queryParamUrlStr.Append("&");
-					}
+					string value = (string)queryParamPropValue;
+					queryParamUrlStr.Append(queryParamProp.Name);
+					queryParamUrlStr.Append("=");
+					queryParamUrlStr.Append(value);
+					queryParamUrlStr.Append("&");
 
 				}
 
@@ -193,6 +193,8 @@ namespace CFLMedCab.Http.Constant
 
 
 			}
+
+			LogUtils.Debug($"url参数为：{queryParamUrlStr.ToString()}");
 
 			return TokenUrl + queryParamUrlStr.ToString();
 
@@ -227,20 +229,20 @@ namespace CFLMedCab.Http.Constant
 		/// <summary>
 		/// 正常
 		/// </summary>
-		[Description("正常")]
-		Normal = 0,
+		[Description("请求正常")]
+		请求正常 = 0,
 
 		/// <summary>
 		/// 异常
 		/// </summary>
-		[Description("异常")]
-		Abnormal = 1,
+		[Description("请求异常")]
+		请求异常 = 1,
 
 		/// <summary>
 		/// 超时
 		/// </summary>
-		[Description("超时")]
-		TimeOut = 2
+		[Description("请求超时")]
+		请求超时 = 2
 
 	}
 
@@ -249,6 +251,12 @@ namespace CFLMedCab.Http.Constant
 	/// </summary>
 	public enum ResultCode
 	{
+		/// <summary>
+		/// Result_Exception
+		/// </summary>
+		[Description("Result_Exception")]
+		Result_Exception = -2,
+
 		/// <summary>
 		/// Request_Exception
 		/// </summary>

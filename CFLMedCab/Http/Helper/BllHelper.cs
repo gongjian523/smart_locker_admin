@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Web;
 
 namespace CFLMedCab.Http.Helper
 {
@@ -9,6 +10,21 @@ namespace CFLMedCab.Http.Helper
 	/// </summary>
 	public class BllHelper
 	{
+		/// <summary>
+		/// 通用json list参数的urlEncode编码
+		/// </summary>
+		/// <param name="paramList"></param>
+		/// <returns></returns>
+		public static List<string> ParamUrlEncode(List<string> paramList)
+		{
+			for (int i = 0, len = paramList.Count; i < len; i++)
+			{
+				paramList[i] = HttpUtility.UrlEncode(paramList[i]);
+			}
+	        return paramList;
+
+		}
+
 		/// <summary>
 		/// 加单引号操作,用于查询表达式
 		/// </summary>
@@ -19,7 +35,7 @@ namespace CFLMedCab.Http.Helper
 
 			for (int i = 0, len = operands.Count; i < len; i++)
 			{
-				operands[i] = $"'{ operands[i] }'";
+				operands[i] = $"'{ HttpUtility.UrlEncode(operands[i]) }'";
 			}
 
 			return operands;
