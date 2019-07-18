@@ -72,7 +72,12 @@ namespace CFLMedCab.Http.Constant
 					//从原对象中获取值
 					var queryParamPropValue = queryParamProp.GetValue(queryParam, null);
 
-					if (queryParamPropValue == null || (queryParamPropValue is int && (int)queryParamPropValue == -1))
+					//根据参数赋值情况过滤
+					if (queryParamPropValue == null 
+						|| (queryParamPropValue is List<string> && ((List<string>)queryParamPropValue).Count <= 0 ) 
+						|| (queryParamPropValue is QueryParam.In && ((QueryParam.In)queryParamPropValue).in_list.Count <= 0)
+						|| (queryParamPropValue is QueryParam.ViewFilter && ((QueryParam.ViewFilter)queryParamPropValue).filter.expressions.Count <= 0)
+						|| (queryParamPropValue is int && (int)queryParamPropValue == -1))
 						continue;
 
 					switch (queryParamProp.Name)
@@ -80,15 +85,13 @@ namespace CFLMedCab.Http.Constant
 						//拼接排序相关字段
 						case "order_by":
 						case "order_flag":
-
-							string[] orderValues = (string[])queryParamPropValue;
-							foreach (string orderValue in orderValues)
-							{
+							List<string> orderValues = (List<string>)queryParamPropValue;
+							orderValues.ForEach(value => {
 								queryParamUrlStr.Append(queryParamProp.Name);
 								queryParamUrlStr.Append("=");
-								queryParamUrlStr.Append(orderValue);
+								queryParamUrlStr.Append(value);
 								queryParamUrlStr.Append("&");
-							}
+							});
 
 							break;
 						//拼接分页相关字段
@@ -278,16 +281,15 @@ namespace CFLMedCab.Http.Constant
 	public class QueryParam
 	{
 
-
 		/// <summary>
 		/// 支持多级排序	order_by=updated_at&order_by=created_at
 		/// </summary>
-		public List<string> order_by { get; set; }
+		public List<string> order_by { get; set; } = new List<string>();
 
 		/// <summary>
 		/// 可选值：DESC/ASC，支持多级排序，请确保 order_flag 和 order_by 参数个数相同	order_flag=DESC&order_flag=ASC
 		/// </summary>
-		public List<string> order_flag { get; set; }
+		public List<string> order_flag { get; set; } = new List<string>();
 
 		/// <summary>
 		/// 查询个数
@@ -303,12 +305,12 @@ namespace CFLMedCab.Http.Constant
 		/// <summary>
 		/// 有 2 个字段，field 表示要筛选的字段， in_list 表示字段的值的列表
 		/// </summary>
-		public In @in { get; set; }
+		public In @in { get; set; } = new In();
 
 		/// <summary>
 		/// 表达式字典
 		/// </summary>
-		public ViewFilter view_filter { get; set; }
+		public ViewFilter view_filter { get; set; } = new ViewFilter();
 
 		/// <summary>
 		/// in对象
@@ -317,7 +319,7 @@ namespace CFLMedCab.Http.Constant
 		{
 			public string field { get; set; }
 
-			public List<string> in_list { get; set; }
+			public List<string> in_list { get; set; } = new List<string>();
 		}
 
 		/// <summary>
@@ -333,7 +335,7 @@ namespace CFLMedCab.Http.Constant
 			/// <summary>
 			/// 筛选条件
 			/// </summary>
-			public Filter filter { get; set; }
+			public Filter filter { get; set; } = new Filter();
 
 		}
 
@@ -351,7 +353,7 @@ namespace CFLMedCab.Http.Constant
 			/// <summary>
 			/// 表达式列表，每个元素由display_name, field, operator, operands 4 个字段组成
 			/// </summary>
-			public List<Expressions> expressions { get; set; }
+			public List<Expressions> expressions { get; set; } = new List<Expressions>();
 		}
 
 		/// <summary>
@@ -359,16 +361,7 @@ namespace CFLMedCab.Http.Constant
 		/// </summary>
 		public class Expressions
 		{
-			/// <summary>
-			/// 表达式内部的字符串转换成base64
-			/// </summary>
-			/// <param name="str"></param>
-			/// <returns></returns>
-			public static string GetBase64Str(string str)
-			{
-				return Convert.ToBase64String(Encoding.ASCII.GetBytes(str));
-			}
-
+			
 			/// <summary>
 			/// 该表达式的显示名
 			/// </summary>
@@ -397,18 +390,7 @@ namespace CFLMedCab.Http.Constant
 			/// 字符串 	"'hello world'"(注意：双引号之内需要加单引号表示是字符串)
 			/// 日期时间 	"2017-05-10T10:26:58Z"
 			/// </summary>
-			public List<string> operands { get; set; }
-
-			/// <summary>
-			/// 加单引号操作
-			/// </summary>
-			/// <param name="operands"></param>
-			/// <returns></returns>
-			public static List<string> OperandsProcess(List<string> operands)
-			{
-				operands.All(value => { value = $"'{value}'"; return true; });
-				return operands;
-			}
+			public List<string> operands { get; set; } = new List<string>();
 
 		}
 	}
@@ -437,6 +419,12 @@ namespace CFLMedCab.Http.Constant
 		/// 
 		/// </summary>
 		public string app { get; set; } = "crm";
+	}
+
+	public class VeinmatchPostParam
+	{
+		public List<string> regfeature { get; set; } = new List<string>(3);
+
 	}
 
 
