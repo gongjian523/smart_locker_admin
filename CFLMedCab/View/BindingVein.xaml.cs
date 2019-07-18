@@ -154,11 +154,9 @@ namespace CFLMedCab.View
 
             this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
 
-            user.reg_feature = Encoding.Default.GetString(regfeature);
-            user.ai_feature = Encoding.Default.GetString(regfeature);
+            user.reg_feature = Convert.ToBase64String(regfeature);
+            user.ai_feature = Convert.ToBase64String(regfeature);
             userBll.UpdateCurrentUsers(user);
         }
-
-        
     }
 }

@@ -40,13 +40,13 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 指静脉数值图像
         /// </summary>
-        [SugarColumn(IsNullable = true)]
+        [SugarColumn(IsNullable = true, Length = 2048)]
         public string reg_feature { get; set; }
 
         /// <summary>
         /// 指静脉数值图像
         /// </summary>
-        [SugarColumn(IsNullable = true)]
+        [SugarColumn(IsNullable = true, Length = 2048)]
         public string ai_feature { get; set; }
 
     }

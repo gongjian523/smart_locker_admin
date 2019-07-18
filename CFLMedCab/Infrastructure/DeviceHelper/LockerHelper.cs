@@ -16,8 +16,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// </summary>
 		private static readonly int timeout = 10000;
 
-		
-
 		/// <summary>
 		/// 保持子线程阻塞主线程
 		/// </summary>

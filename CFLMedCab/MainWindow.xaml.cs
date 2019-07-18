@@ -30,6 +30,8 @@ using CFLMedCab.Infrastructure.BootUpHelper;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CFLMedCab
 {
@@ -148,8 +150,6 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 #else
-            
-
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
             int vienSt = vein.LoadingDevice();
@@ -162,7 +162,8 @@ namespace CFLMedCab
             {
                 if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
                     vein.OpenDevice();
-                vein.DetectFinger();
+
+                Task.Factory.StartNew(vein.DetectFinger);
             }
 #endif
 #endif
@@ -226,7 +227,7 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-                vein.DetectFinger();
+                Task.Factory.StartNew(vein.DetectFinger);
 #endif
 #endif
             }
@@ -291,6 +292,7 @@ namespace CFLMedCab
             LoginStatus sta = new LoginStatus();
             CurrentUser user = new CurrentUser();
             string info = "等待检测指静脉的时候发生错误";
+            string info2 = "请再次进行验证";
 
             if (e == 0)
             {
@@ -302,11 +304,17 @@ namespace CFLMedCab
 
                     foreach (var item in userList)
                     {
+                        if (item.reg_feature == null)
+                            continue;
+
+                        if (item.ai_feature == null)
+                            item.ai_feature = item.reg_feature;
+
                         byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT *VeinUtils.FV_FEATURE_SIZE ];
-                        regfeature = Encoding.Default.GetBytes(item.reg_feature);
+                        regfeature = Convert.FromBase64String(item.reg_feature);
 
                         byte[] aifeature = new byte[VeinUtils.FV_DYNAMIC_FEATURE_CNT*VeinUtils.FV_FEATURE_SIZE];
-                        aifeature = Encoding.Default.GetBytes(item.ai_feature);
+                        aifeature = Convert.FromBase64String(item.ai_feature);
 
                         uint diff = 0;
                         uint ailen = VeinUtils.FV_DYNAMIC_FEATURE_CNT * VeinUtils.FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
@@ -317,14 +325,15 @@ namespace CFLMedCab
                             user = item;
                             if(ailen > 0)
                             {
-                                item.ai_feature = Encoding.Default.GetString(aifeature);
+                                item.ai_feature = Convert.ToBase64String(aifeature);
                                 userBll.UpdateCurrentUsers(item);
                             }
                             break;
                         }
                     }
 
-                    info = "还未注册";
+                    info = "没有找到和当前指静脉匹配的用户";
+                    info2 = "请先绑定指静脉";
                 }
             }
 
@@ -336,7 +345,7 @@ namespace CFLMedCab
                     {
                         LoginState = 0,
                         LoginString = info,
-                        LoginString2 = "请再次进行验证"
+                        LoginString2 = info2
                     });
 
                     PopFrame.Visibility = Visibility.Visible;
@@ -1312,7 +1321,7 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-                vein.DetectFinger();
+                Task.Factory.StartNew(vein.DetectFinger);
 #endif
 #endif
             }));
@@ -1388,7 +1397,7 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.ChekVein();
 #else
-            vein.DetectFinger();
+            Task.Factory.StartNew(vein.DetectFinger);
 #endif
 #endif
             inventoryHandler = null;
