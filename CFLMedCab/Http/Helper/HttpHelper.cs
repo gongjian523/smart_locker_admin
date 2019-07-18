@@ -5,6 +5,7 @@ using CFLMedCab.Http.Constant;
 using CFLMedCab.Http.Model.Base;
 using System.Net;
 using CFLMedCab.Infrastructure.ToolHelper;
+using System;
 
 namespace CFLMedCab.Http.Helper
 {
@@ -60,13 +61,13 @@ namespace CFLMedCab.Http.Helper
 
 			switch (resultHandleType)
 			{
-				case ResultHandleType.Normal:
+				case ResultHandleType.请求正常:
 
 					ret = JsonConvert.DeserializeObject<BaseData<T>>(result);
 					handleEventWait.Set();
 
 					break;
-				case ResultHandleType.Abnormal:
+				case ResultHandleType.请求异常:
 
 					ret = new BaseData<T>
 					{
@@ -76,7 +77,7 @@ namespace CFLMedCab.Http.Helper
 					handleEventWait.Set();
 
 					break;
-				case ResultHandleType.TimeOut:
+				case ResultHandleType.请求超时:
 
 					if (handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
 					{
@@ -158,15 +159,15 @@ namespace CFLMedCab.Http.Helper
 
 			JumpKick.HttpLib.Http.Get(HttpConstant.GetQueryUrl(typeof(T).Name, queryParam)).Headers(GetHeaders()).OnSuccess(result =>
 			{
-				ResultHand(ResultHandleType.Normal, handleEventWait, result, out ret);
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
 			}).OnFail(webexception =>
 			{
-				ResultHand(ResultHandleType.Abnormal, handleEventWait, webexception.Message, out ret);
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
 
 			}).Go();
 
-			ResultHand(ResultHandleType.TimeOut, handleEventWait, "请求超时", out ret);
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
 
 			return ret;
 
@@ -185,15 +186,15 @@ namespace CFLMedCab.Http.Helper
 
 			JumpKick.HttpLib.Http.Post(HttpConstant.GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
 			{
-				ResultHand(ResultHandleType.Normal, handleEventWait, result, out ret);
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
 			}).OnFail(webexception =>
 			{
-				ResultHand(ResultHandleType.Abnormal, handleEventWait, webexception.Message, out ret);
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
 
 			}).Go();
 
-			ResultHand(ResultHandleType.TimeOut, handleEventWait, "请求超时", out ret);
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
 
 			return ret;
 
@@ -212,15 +213,15 @@ namespace CFLMedCab.Http.Helper
 
 			JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
 			{
-				ResultHand(ResultHandleType.Normal, handleEventWait, result, out ret);
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
 			}).OnFail(webexception =>
 			{
-				ResultHand(ResultHandleType.Abnormal, handleEventWait, webexception.Message, out ret);
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
 
 			}).Go();
 
-			ResultHand(ResultHandleType.TimeOut, handleEventWait, "请求超时", out ret);
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
 
 			return ret;
 
@@ -229,7 +230,7 @@ namespace CFLMedCab.Http.Helper
 		/// <summary>
 		/// 同步获取get请求结果
 		/// </summary>
-		/// <param name="queryParam">token参数</param>
+		/// <param name="url">已经拼接好的url</param>
 		/// <returns></returns>
 		public BaseData<T> Get<T>(string url) where T : class
 		{
@@ -238,19 +239,21 @@ namespace CFLMedCab.Http.Helper
 
 			JumpKick.HttpLib.Http.Get(url).Headers(GetHeaders()).OnSuccess(result =>
 			{
-				ResultHand(ResultHandleType.Normal, handleEventWait, result, out ret);
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
 			}).OnFail(webexception =>
 			{
-				ResultHand(ResultHandleType.Abnormal, handleEventWait, webexception.Message, out ret);
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
 
 			}).Go();
 
-			ResultHand(ResultHandleType.TimeOut, handleEventWait, "请求超时", out ret);
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
 
 			return ret;
 
 		}
+
+		
 
 		/// <summary>
 		/// 获取
@@ -276,6 +279,107 @@ namespace CFLMedCab.Http.Helper
 		public void SetHeaders(string token)
 		{
 			this.token = token;
+		}
+
+		/// <summary>
+		/// 检查结果是否正确
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <param name="isSuccess"></param>
+		/// <returns></returns>
+		public BaseData<T> ResultCheck<T, K>(BaseData<K> baseData, out bool isSuccess)
+		{
+			isSuccess = false;
+
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if(baseData.body != null &&  baseData.body.global_offset > 0)
+				{
+					isSuccess = true;
+				}
+			}
+
+			return new BaseData<T>()
+			{
+				code = baseData.code,
+				description = baseData.description,
+				message = baseData.message
+			};
+
+		}
+
+		/// <summary>
+		/// 检查结果是否正确
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <param name="isSuccess"></param>
+		/// <returns></returns>
+		public BaseData<T> ResultCheck<T>(BaseData<T> baseData, out bool isSuccess)
+		{
+			isSuccess = false;
+
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null && baseData.body.global_offset > 0)
+				{
+					isSuccess = true;
+				}
+			}
+
+			return new BaseData<T>()
+			{
+				code = baseData.code,
+				description = baseData.description,
+				message = baseData.message
+			};
+
+		}
+
+		/// <summary>
+		/// 检查结果是否正确,用于多次表关联的校验
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <returns></returns>
+		public BaseData<T> ResultCheck<T,K>(Func<HttpHelper, BaseData<T>> func, BaseData<K> baseData)
+		{
+
+			BaseData<T> ret;
+
+			//结果集正常
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null && baseData.body.global_offset > 0)
+				{
+					ret = func(this);
+				}
+				//结果集正常，但为空
+				else
+				{
+					ret = new BaseData<T>
+					{
+						code = (int)ResultCode.Result_Exception,
+						message = ResultCode.Result_Exception.ToString()
+					};
+				}
+			}
+			//结果集异常
+			else
+			{
+				ret = new BaseData<T>()
+				{
+					code = baseData.code,
+					description = baseData.description,
+					message = baseData.message
+				};
+			}
+
+			return ret;
 		}
 
 	}
