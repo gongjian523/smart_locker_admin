@@ -157,8 +157,6 @@ namespace CFLMedCab
             if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
             {
                 onFingerDetected(this, -1);
-
-                Convert.ToBase64String
             }
             else
             {
