@@ -108,12 +108,14 @@ namespace CFLMedCab.View
                 }
             }
 
-            byte[][] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT][];
+            byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT * VeinUtils.FV_FEATURE_SIZE];
             string info = "";
 
             for (int i = 0; i < VeinUtils.FEATURE_COLLECT_CNT; i++)
             {
                 Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "请将手指放在指静脉模块上！第" + (i+1) + "次"));
+
+                byte[] subregfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
 
                 //等待手指放置
                 if (vein.WaitState(0x03, out info) < 0)
@@ -125,7 +127,7 @@ namespace CFLMedCab.View
                     return;
                 }
 
-                if (vein.RegisterProcess(i, regfeature[0], out regfeature[i], out info) != 0)
+                if (vein.RegisterProcess(i, regfeature, out subregfeature, out info) != 0)
                 {
                     Dispatcher.BeginInvoke(new Action(() => {
                         WarnInfo2.Content = info;
@@ -147,10 +149,14 @@ namespace CFLMedCab.View
                     return;
                 }
 
-                user.reg_feature = Encoding.Default.GetString(regfeature[0]);
-                user.ai_feature = Encoding.Default.GetString(regfeature[0]);
-                userBll.UpdateCurrentUsers(user);
+                Array.Copy(subregfeature, 0, regfeature, i* VeinUtils.FV_FEATURE_SIZE,VeinUtils.FV_FEATURE_SIZE);
             }
+
+            this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
+
+            user.reg_feature = Encoding.Default.GetString(regfeature);
+            user.ai_feature = Encoding.Default.GetString(regfeature);
+            userBll.UpdateCurrentUsers(user);
         }
 
         

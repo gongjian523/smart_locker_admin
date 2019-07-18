@@ -29,6 +29,7 @@ using static CFLMedCab.Model.Enum.UserIdEnum;
 using CFLMedCab.Infrastructure.BootUpHelper;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
+using System.Text;
 
 namespace CFLMedCab
 {
@@ -147,12 +148,26 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 #else
+            
+
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
-            vein.DetectFinger();
-#endif
-#endif
+            int vienSt = vein.LoadingDevice();
 
+            if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+            {
+                onFingerDetected(this, -1);
+
+                Convert.ToBase64String
+            }
+            else
+            {
+                if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
+                    vein.OpenDevice();
+                vein.DetectFinger();
+            }
+#endif
+#endif
             ConsoleManager.Show();
 
             //LoginBkView.Visibility = Visibility.Visible;
@@ -289,10 +304,10 @@ namespace CFLMedCab
 
                     foreach (var item in userList)
                     {
-                        byte[] regfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
+                        byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT *VeinUtils.FV_FEATURE_SIZE ];
                         regfeature = Encoding.Default.GetBytes(item.reg_feature);
 
-                        byte[] aifeature = new byte[VeinUtils.FV_FEATURE_SIZE];
+                        byte[] aifeature = new byte[VeinUtils.FV_DYNAMIC_FEATURE_CNT*VeinUtils.FV_FEATURE_SIZE];
                         aifeature = Encoding.Default.GetBytes(item.ai_feature);
 
                         uint diff = 0;

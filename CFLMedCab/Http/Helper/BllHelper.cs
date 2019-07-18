@@ -34,7 +34,5 @@ namespace CFLMedCab.Http.Helper
 		{
 			return Convert.ToBase64String(Encoding.ASCII.GetBytes(str));
 		}
-
-
 	}
 }
