@@ -11,7 +11,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 {
     public  class VeinUtils
     {
-        enum Match_Flg
+        public enum Match_Flg
         {
             M_1_1,      //1比1验证
             M_1_G,      //1比G识别
@@ -406,8 +406,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 
         //调用比对接口注意事项
-        int Match(byte[] macthfeature, byte[] regfeature, int regfcnt, byte[] aifeature,
-            ref uint diff, int matchflg)
+        public int Match(byte[] macthfeature, byte[] regfeature, int regfcnt, byte[] aifeature,
+            ref uint diff, int matchflg, ref uint ailen)
         {
             //说明：
             //比对结果 match(单个待比对特征，某根手指的注册特征，注册特征个数，该手指的动态特征，存放比多结果差异度）；动态特征可能被更新
@@ -428,7 +428,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 securityLevel = 4; //1:N：N个用户中循环调用本接口比对查找匹配的用户时，建议数字为4
 
             //3.说明你开辟的动态特征缓冲区大小
-            uint ailen = FV_DYNAMIC_FEATURE_CNT * FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
+            //uint ailen = FV_DYNAMIC_FEATURE_CNT * FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
 
             //4.调用比对接口
             int ret = FV_MatchFeature(macthfeature, accept_match_feature, (byte)accept_match_feature_cnt, (char)0x03, (uint)securityLevel, ref diff, aifeature, ref ailen);

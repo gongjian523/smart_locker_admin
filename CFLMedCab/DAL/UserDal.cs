@@ -69,5 +69,10 @@ namespace CFLMedCab.DAL
         {
             return Db.Queryable<CurrentUser>().Where(user => user.name.ToUpper() == name.ToUpper()).First();
         }
+
+        public void UpdateCurrentUser(CurrentUser item)
+        {
+            Db.Updateable<CurrentUser>(item).ExecuteCommand();
+        }
     }
 }

@@ -146,6 +146,10 @@ namespace CFLMedCab.View
                     }));
                     return;
                 }
+
+                user.reg_feature = Encoding.Default.GetString(regfeature[0]);
+                user.ai_feature = Encoding.Default.GetString(regfeature[0]);
+                userBll.UpdateCurrentUsers(user);
             }
         }
 

@@ -42,5 +42,15 @@ namespace CFLMedCab.BLL
         {
             return userDal.GetUserByName(name);
         }
+
+        public List<CurrentUser> GetAllUsers()
+        {
+            return userDal.GetUser();
+        }
+
+        public void  UpdateCurrentUsers(CurrentUser item)
+        {
+            userDal.UpdateCurrentUser(item);
+        }
     }
 }
