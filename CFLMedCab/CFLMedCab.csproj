@@ -90,6 +90,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>Lib\IWshRuntimeLibrary.dll</HintPath>
     </Reference>
+    <Reference Include="JumpKick.HttpLib, Version=2.0.16.94, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\HttpLib.2.0.16.94\lib\net45\JumpKick.HttpLib.dll</HintPath>
+    </Reference>
     <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
@@ -153,6 +156,9 @@
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="Http\test\BaseBll.cs" />
+    <Compile Include="Http\test\HandleBll.cs" />
+    <Compile Include="Http\Bll\UserLoginBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
     <Compile Include="BLL\PickingBll.cs" />
     <Compile Include="BLL\ReplenishBll.cs" />
@@ -208,10 +214,19 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Infrastructure\DeviceHelper\VeinUtils.cs" />
+    <Compile Include="Http\test\HttpLib.cs" />
+    <Compile Include="Http\Constant\HttpConstant.cs" />
+    <Compile Include="Http\Helper\HttpHelper.cs" />
+    <Compile Include="Http\Helper\BllHelper.cs" />
+    <Compile Include="Http\Model\Base\BaseBody.cs" />
+    <Compile Include="Http\Model\Base\BaseData.cs" />
+    <Compile Include="Http\Model\Account.cs" />
+    <Compile Include="Http\Model\User.cs" />
     <Compile Include="Infrastructure\ToolHelper\AutoMapperHelper.cs" />
     <Compile Include="Infrastructure\ToolHelper\CollectHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
+    <Compile Include="Infrastructure\ToolHelper\GetRandomString.cs" />
     <Compile Include="Infrastructure\ToolHelper\LogUtils.cs" />
     <Compile Include="Model\Constant\Contant.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
