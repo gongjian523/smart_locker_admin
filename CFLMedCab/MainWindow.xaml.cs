@@ -1,17 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using CFLMedCab.View;
 using CFLMedCab.View.Inventory;
@@ -22,32 +12,23 @@ using System.Timers;
 using System.Media;
 using CFLMedCab.View.Login;
 using CFLMedCab.Model;
-using GDotnet.Reader.Api.Protocol.Gx;
-using GDotnet.Reader.Api.DAL;
 using CFLMedCab.View.ReplenishmentOrder;
 using CFLMedCab.View.Return;
-using CFLMedCab.DAL;
-using SqlSugar;
 using CFLMedCab.BLL;
 using CFLMedCab.Infrastructure;
-using System.Speech.Synthesis;
 using CFLMedCab.View.Fetch;
 using System.Collections;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.DTO.Picking;
 using CFLMedCab.Test;
 using CFLMedCab.DTO.Goodss;
-using CFLMedCab.APO.Surgery;
 using CFLMedCab.DTO.Surgery;
-using System.Runtime.InteropServices;
 using CFLMedCab.Controls;
-using static CFLMedCab.Controls.Taskbar;
 using System.Windows.Forms;
 using static CFLMedCab.Model.Enum.UserIdEnum;
 using CFLMedCab.Infrastructure.BootUpHelper;
-using System.Windows.Interop;
-
-
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
 
 namespace CFLMedCab
 {
@@ -96,7 +77,18 @@ namespace CFLMedCab
 
         public MainWindow()
         {
-            Taskbar.HideTask(true);
+
+			//var ret = HttpHelper.GetInstance().Get<Account>(null);
+
+
+
+			var data = UserLoginBll.GetInstance().GetUserToken(new Account
+			{
+				Phone = "18888888888",
+				Password = "lidi123123"
+			});
+
+			Taskbar.HideTask(true);
 
             //开启启动
             BootUpHelper.GetInstance().SetMeAutoStart();
