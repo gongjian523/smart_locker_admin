@@ -182,7 +182,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			isGetSuccess = true;
 
 			string com1 = "COM1";
-			string com4 = "COM4";
+#if DUALCAB
+            string com4 = "COM4";
+#endif
 
 			Hashtable currentEpcDataHt = new Hashtable();
 
@@ -196,6 +198,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
+#if DUALCAB
 			GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
 			if (isCom4Connect)
 			{
@@ -205,8 +208,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				isGetSuccess = false;
 			}
-
-           
+#endif
 
             WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
@@ -216,7 +218,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		}
 #endif
 
-        public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
+            public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
 		{
 			Console.ReadKey();
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();

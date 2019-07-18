@@ -438,9 +438,10 @@ namespace CFLMedCab
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
 
+#if DUALCAB
             LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
-
+#endif
             cabClosedNum = 0;
 
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
@@ -457,7 +458,7 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
-
+#if DUALCAB
             if (cabClosedNum == 0)
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
@@ -469,6 +470,7 @@ namespace CFLMedCab
                 cabClosedNum++;
                 return;
             }
+#endif
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
@@ -508,8 +510,10 @@ namespace CFLMedCab
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
 
+#if DUALCAB
             LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+#endif
 
             cabClosedNum = 0;
 
@@ -528,6 +532,7 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
+#if DUALCAB
             if (cabClosedNum == 0)
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
@@ -539,6 +544,7 @@ namespace CFLMedCab
                 cabClosedNum++;
                 return;
             }
+#endif
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
@@ -624,15 +630,21 @@ namespace CFLMedCab
             testTimer.Elapsed += new ElapsedEventHandler(onEnterSurgeryNumLockerTestEvent);
             testSOPara = model;
 #else
+
+#if DUALCAB
             List<string> listCom = fetchOrderBll.GetSurgeryOrderdtlPosition(model.code);
             if (listCom.Count == 0)
                 return;
+#else
+           List<string> listCom = ComName.GetAllLockerCom();
+#endif
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
             delegateGetMsg.userData = model;
             cabClosedNum = 1;
 
+#if DUALCAB
             if (listCom.Count == 2)
             {
                 LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
@@ -640,6 +652,7 @@ namespace CFLMedCab
                 delegateGetMsg2.userData = model;
                 cabClosedNum = 2;
             }
+#endif
 #endif
             SpeakerHelper.Sperker("柜门已开，请按照领用单拿取耗材，拿取完毕请关闭柜门");
         }
@@ -678,6 +691,7 @@ namespace CFLMedCab
                 return;
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
 
+#if DUALCAB
             cabClosedNum--;
 
             if (cabClosedNum == 1)
@@ -689,6 +703,7 @@ namespace CFLMedCab
                 }));
                 return;
             }
+#endif
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
@@ -733,11 +748,12 @@ namespace CFLMedCab
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
 
+#if DUALCAB
             LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
 
             cabClosedNum = 0;
-
+#endif
             SpeakerHelper.Sperker("柜门已开，请放入您需要回退的耗材，放回完毕请关闭柜门");
         }
 
@@ -753,6 +769,7 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
+#if DUALCAB
             if (cabClosedNum == 0)
             {
 
@@ -765,6 +782,7 @@ namespace CFLMedCab
                 cabClosedNum++;
                 return;
             }
+#endif
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
@@ -846,15 +864,20 @@ namespace CFLMedCab
             testROPara = e;
 #else
 
+#if DUALCAB
             List<string> listCom = replenishBll.GetReplenishOrderPositons(new ReplenishSubOrderdtlApo { replenish_order_code = e.code});
             if (listCom.Count == 0)
                 return;
+#else
+           List<string> listCom = ComName.GetAllLockerCom();
+#endif
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
             delegateGetMsg.userData = e;
-            cabClosedNum = 1;
 
+#if DUALCAB
+            cabClosedNum = 1;
             if (listCom.Count == 2)
             {
                 LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
@@ -862,6 +885,7 @@ namespace CFLMedCab
                 delegateGetMsg2.userData = e;
                 cabClosedNum = 2;
             }
+#endif
 #endif
         }
 
@@ -899,9 +923,11 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
+#if DUALCAB
             cabClosedNum--;
             if (cabClosedNum == 1)
                 return;
+#endif
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
@@ -985,15 +1011,20 @@ namespace CFLMedCab
             testTimer.Elapsed += new ElapsedEventHandler(onEnterReturnGoodsCloseTestEvent);
             testPOPara = e;
 #else
+#if DUALCAB
             List<string> listCom = pickingBll.GetPickingOrderPositons(new PickingSubOrderdtlApo { picking_order_code = e.code });
             if (listCom.Count == 0)
                 return;
+#else
+            List<string> listCom = ComName.GetAllLockerCom();
+#endif
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
             delegateGetMsg.userData = e;
-            cabClosedNum = 1;
 
+#if DUALCAB
+            cabClosedNum = 1;
             if (listCom.Count == 2)
             {
                 LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
@@ -1001,6 +1032,7 @@ namespace CFLMedCab
                 delegateGetMsg2.userData = e;
                 cabClosedNum = 2;
             }
+#endif
 #endif
         }
 
@@ -1039,9 +1071,11 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
+#if DUALCAB
             cabClosedNum--;
             if (cabClosedNum == 1)
                 return;
+#endif
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();

@@ -165,9 +165,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			isGetSuccess = true;
 
 			string com2 = "COM2";
-			string com5 = "COM5";
+#if DUALCAB
+            string com5 = "COM5";
+#endif
 
-			Hashtable currentLockerDataHt = new Hashtable();
+            Hashtable currentLockerDataHt = new Hashtable();
 
 			SerialPort com1ClientConn = CreateClientConn(com2, 115200, out bool isCom1Connect);
 			if (isCom1Connect)
@@ -179,7 +181,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
-			SerialPort com4ClientConn = CreateClientConn(com5, 115200, out bool isCom4Connect);
+#if DUALCAB
+            SerialPort com4ClientConn = CreateClientConn(com5, 115200, out bool isCom4Connect);
 			if (isCom4Connect)
 			{
 				currentLockerDataHt.Add(com5, DealComData(com4ClientConn, com5, out isGetSuccess));
@@ -188,8 +191,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				isGetSuccess = false;
 			}
+#endif
 
-			WaitHandle.WaitAll(manualEvents.ToArray());
+            WaitHandle.WaitAll(manualEvents.ToArray());
 
 			return currentLockerDataHt;
 

@@ -45,6 +45,18 @@ namespace CFLMedCab.View
             SrfidCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid);
 
             MVeinCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MVein);
+
+#if DUALCAB
+#else
+            lbSCabName.Visibility = Visibility.Hidden;
+            tbSCabName.Visibility = Visibility.Hidden;
+
+            tbSrfid.Visibility = Visibility.Hidden;
+            SrfidCB.Visibility = Visibility.Hidden;
+
+            tbSLocker.Visibility = Visibility.Hidden;
+            SLockerCB.Visibility = Visibility.Hidden;
+#endif
         }
 
         private void onSave(object sender, RoutedEventArgs e)
@@ -70,6 +82,11 @@ namespace CFLMedCab.View
         {
             ComboBox box = sender as ComboBox;
             box.ItemsSource = SerialComList;
+        }
+
+        private void onItemChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }
