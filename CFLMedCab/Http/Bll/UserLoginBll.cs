@@ -38,7 +38,26 @@ namespace CFLMedCab.Http.Bll
 			return singleton;
 		}
 
-		public string FingerVein;
+		/// <summary>
+		/// 指静脉绑定
+		/// </summary>
+		/// <param name="param">请求参数</param>
+		/// <returns></returns>
+		public BaseData<string> VeinmatchBinding(VeinmatchPostParam param)
+		{
+			return HttpHelper.GetInstance().Post<string, VeinmatchPostParam>(param, HttpConstant.GetVeinmatchBindingUrl());
+		}
+
+		/// <summary>
+		/// 指静脉识别 
+		/// </summary>
+		/// <param name="param">请求参数</param>
+		/// <returns></returns>
+		public BaseData<string> VeinmatchLogin(string regfeature)
+		{
+			//匿名类
+			return HttpHelper.GetInstance().Post<string, object>(new { regfeature }, HttpConstant.GetVeinmatchLoginUrl());
+		}
 
 		/// <summary>
 		/// 获取token，根据用户参数
