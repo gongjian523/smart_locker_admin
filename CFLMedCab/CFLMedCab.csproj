@@ -157,6 +157,8 @@
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="Http\Bll\BaseBll.cs" />
+    <Compile Include="Http\Bll\ShelfBll.cs" />
     <Compile Include="Http\Bll\UserLoginBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
     <Compile Include="BLL\PickingBll.cs" />
@@ -200,6 +202,14 @@
     <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderDto.cs" />
+    <Compile Include="Http\Enum\ResultCode.cs" />
+    <Compile Include="Http\Enum\ResultHandleType.cs" />
+    <Compile Include="Http\Model\Enum\ShelfTaskStatus.cs" />
+    <Compile Include="Http\Model\param\QueryParam.cs" />
+    <Compile Include="Http\Model\param\TokenQueryParam.cs" />
+    <Compile Include="Http\Model\param\VeinmatchPostParam.cs" />
+    <Compile Include="Http\Model\ShelfTask.cs" />
+    <Compile Include="Http\Model\ShelfTaskCommodityDetail.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="Infrastructure\BootUpHelper\BootUpHelper.cs" />
     <Compile Include="Infrastructure\ComName.cs" />

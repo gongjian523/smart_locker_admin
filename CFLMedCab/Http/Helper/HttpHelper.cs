@@ -6,6 +6,9 @@ using CFLMedCab.Http.Model.Base;
 using System.Net;
 using CFLMedCab.Infrastructure.ToolHelper;
 using System;
+using CFLMedCab.Http.Model.param;
+using System.Text;
+using CFLMedCab.Http.Enum;
 
 namespace CFLMedCab.Http.Helper
 {
@@ -46,6 +49,175 @@ namespace CFLMedCab.Http.Helper
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 		}
 
+		/// <summary>
+		/// 根据表名获取查询数据url
+		/// </summary>
+		/// <param name="tableName"></param>
+		/// <returns></returns>
+		public static string GetQueryUrl(string tableName, QueryParam queryParam)
+		{
+
+			StringBuilder queryParamUrlStr = new StringBuilder();
+			if (queryParam != null)
+			{
+				queryParamUrlStr.Append("?");
+
+				var queryParamProps = queryParam.GetType().GetProperties();
+
+				foreach (var queryParamProp in queryParamProps)
+				{
+					//从原对象中获取值
+					var queryParamPropValue = queryParamProp.GetValue(queryParam, null);
+
+					//根据参数赋值情况过滤
+					if (queryParamPropValue == null
+						|| (queryParamPropValue is List<string> && ((List<string>)queryParamPropValue).Count <= 0)
+						|| (queryParamPropValue is QueryParam.In && ((QueryParam.In)queryParamPropValue).in_list.Count <= 0)
+						|| (queryParamPropValue is QueryParam.ViewFilter && ((QueryParam.ViewFilter)queryParamPropValue).filter.expressions.Count <= 0)
+						|| (queryParamPropValue is int && (int)queryParamPropValue == -1))
+						continue;
+
+					switch (queryParamProp.Name)
+					{
+						//拼接排序相关字段
+						case "order_by":
+						case "order_flag":
+							List<string> orderValues = (List<string>)queryParamPropValue;
+							orderValues.ForEach(value => {
+								queryParamUrlStr.Append(queryParamProp.Name);
+								queryParamUrlStr.Append("=");
+								queryParamUrlStr.Append(value);
+								queryParamUrlStr.Append("&");
+							});
+
+							break;
+						//拼接分页相关字段
+						case "limit":
+						case "offset":
+							string pageValue = queryParamPropValue.ToString();
+							queryParamUrlStr.Append(queryParamProp.Name);
+							queryParamUrlStr.Append("=");
+							queryParamUrlStr.Append(pageValue);
+							queryParamUrlStr.Append("&");
+							break;
+
+						//拼接json 过滤查询参数
+						case "in":
+						case "view_filter":
+							string jsonValue = JsonConvert.SerializeObject(queryParamPropValue);
+							queryParamUrlStr.Append(queryParamProp.Name);
+							queryParamUrlStr.Append("=");
+							queryParamUrlStr.Append(jsonValue);
+							queryParamUrlStr.Append("&");
+							break;
+						default:
+							break;
+					}
+
+				}
+
+				if (queryParamUrlStr.Length > 0)
+					//去掉末尾的&
+					queryParamUrlStr.Remove(queryParamUrlStr.Length - 1, 1);
+
+			}
+
+			LogUtils.Debug($"url参数为：{queryParamUrlStr.ToString()}");
+
+			return HttpConstant.Domain + HttpConstant.UrlPrefix + tableName + "/query" + queryParamUrlStr.ToString();
+		}
+
+		/// <summary>
+		/// 根据表名获取创建数据url
+		/// </summary>
+		/// <param name="tableName"></param>
+		/// <returns></returns>
+		public static string GetCreateUrl(string tableName)
+		{
+			return HttpConstant.Domain + HttpConstant.UrlPrefix + tableName;
+		}
+
+		/// <summary>
+		/// 根据表名获取更新数据url
+		/// </summary>
+		/// <param name="tableName"></param>
+		/// <returns></returns>
+		public static string GetUpdateUrl(string tableName, string id)
+		{
+			return HttpConstant.Domain + HttpConstant.UrlPrefix + tableName + "/" + id;
+		}
+
+		/// <summary>
+		/// 根据表名获取删除数据url
+		/// </summary>
+		/// <param name="tableName"></param>
+		/// <returns></returns>
+		public static string GetDeleteUrl(string tableName, string id, string tableVersion)
+		{
+
+			return HttpConstant.Domain + HttpConstant.UrlPrefix + tableName + "/" + id + "?version={" + tableVersion + "}";
+		}
+
+		/// <summary>
+		/// 获取token请求的url
+		/// </summary>
+		/// <returns></returns>
+		public static string GetTokenQueryUrl(TokenQueryParam queryParam)
+		{
+			StringBuilder queryParamUrlStr = new StringBuilder();
+			if (queryParam != null)
+			{
+				queryParamUrlStr.Append("?");
+
+				var queryParamProps = queryParam.GetType().GetProperties();
+
+				foreach (var queryParamProp in queryParamProps)
+				{
+					//从原对象中获取值
+					var queryParamPropValue = queryParamProp.GetValue(queryParam, null);
+
+					if (queryParamPropValue == null)
+						continue;
+
+					string value = (string)queryParamPropValue;
+					queryParamUrlStr.Append(queryParamProp.Name);
+					queryParamUrlStr.Append("=");
+					queryParamUrlStr.Append(value);
+					queryParamUrlStr.Append("&");
+
+				}
+
+				if (queryParamUrlStr.Length > 0)
+					//去掉末尾的&
+					queryParamUrlStr.Remove(queryParamUrlStr.Length - 1, 1);
+
+
+			}
+
+			LogUtils.Debug($"url参数为：{queryParamUrlStr.ToString()}");
+
+			return HttpConstant.TokenUrl + queryParamUrlStr.ToString();
+
+		}
+
+
+		/// <summary>
+		/// 获取指静脉绑定请求的url
+		/// </summary>
+		/// <returns></returns>
+		public static string GetVeinmatchLoginUrl()
+		{
+			return HttpConstant.Domain + HttpConstant.VeinmatchLoginUrlSuffix;
+		}
+
+		/// <summary>
+		/// 获取指静脉绑定请求的url
+		/// </summary>
+		/// <returns></returns>
+		public static string GetVeinmatchBindingUrl()
+		{
+			return HttpConstant.Domain + HttpConstant.VeinmatchBindingUrlSuffix;
+		}
 
 		/// <summary>
 		/// 通用返回结果处理类
@@ -156,7 +328,7 @@ namespace CFLMedCab.Http.Helper
 			var handleEventWait = new HandleEventWait();
 			BaseData<T> ret = null;
 
-			JumpKick.HttpLib.Http.Get(HttpConstant.GetQueryUrl(typeof(T).Name, queryParam)).Headers(GetHeaders()).OnSuccess(result =>
+			JumpKick.HttpLib.Http.Get(GetQueryUrl(typeof(T).Name, queryParam)).Headers(GetHeaders()).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
@@ -183,7 +355,7 @@ namespace CFLMedCab.Http.Helper
 			var handleEventWait = new HandleEventWait();
 			BaseData<T> ret = null;
 
-			JumpKick.HttpLib.Http.Post(HttpConstant.GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
+			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
@@ -257,7 +429,7 @@ namespace CFLMedCab.Http.Helper
 		
 
 		/// <summary>
-		/// 获取
+		/// 获取token
 		/// </summary>
 		/// <returns></returns>
 		public IDictionary<string, string> GetHeaders()

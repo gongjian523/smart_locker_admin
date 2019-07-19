@@ -8,7 +8,7 @@ namespace CFLMedCab.Http.Model
 	public class User
 	{
 		/// <summary>
-		/// 用户id
+		/// id
 		/// </summary>
 		public string id { get; set; }
 
