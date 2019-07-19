@@ -205,6 +205,7 @@
     <Compile Include="Http\Enum\ResultCode.cs" />
     <Compile Include="Http\Enum\ResultHandleType.cs" />
     <Compile Include="Http\Model\Enum\ShelfTaskStatus.cs" />
+    <Compile Include="Http\Model\param\PostParam.cs" />
     <Compile Include="Http\Model\param\QueryParam.cs" />
     <Compile Include="Http\Model\param\TokenQueryParam.cs" />
     <Compile Include="Http\Model\param\VeinmatchPostParam.cs" />

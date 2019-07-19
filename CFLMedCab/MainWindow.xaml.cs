@@ -85,24 +85,6 @@ namespace CFLMedCab
         public MainWindow()
         {
 
-			//var ret = HttpHelper.GetInstance().Get<Account>(null);
-
-
-
-			//var data = UserLoginBll.GetInstance().GetUserToken(new Account
-			//{
-			//	Phone = "18888888888",
-			//	Password = "lidi123123"
-			//});
-
-			//var data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinmatchPostParam
-			//{
-			//regfeature = { "544a5", "54d28", "adfdsf"},
-			//finger_name = "test"
-			//});
-
-			//var data = UserLoginBll.GetInstance().VeinmatchLogin("544a5");
-
 			Taskbar.HideTask(true);
 
             //开启启动

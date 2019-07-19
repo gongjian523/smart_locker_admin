@@ -9,7 +9,7 @@ namespace CFLMedCab.Http.Model
 	/// <summary>
 	/// 上架任务（工单）
 	/// </summary>
-	class ShelfTask
+	public class ShelfTask
 	{
 		/// <summary>
 		/// id

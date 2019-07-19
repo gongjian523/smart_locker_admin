@@ -354,6 +354,35 @@ namespace CFLMedCab.Http.Helper
 
 			var handleEventWait = new HandleEventWait();
 			BaseData<T> ret = null;
+			LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
+
+			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			return ret;
+
+		}
+
+		/// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="postParam">通用post参数</param>
+		/// <returns></returns>
+		public BaseData<T> Post<T>(PostParam<T> postParam) where T : class
+		{
+
+			var handleEventWait = new HandleEventWait();
+			BaseData<T> ret = null;
+			LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
 			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
 			{
@@ -375,6 +404,7 @@ namespace CFLMedCab.Http.Helper
 		/// 同步获取post请求结果
 		/// </summary>
 		/// <param name="url"></param>
+		/// <param name="postParam">post参数</param>
 		/// <returns></returns>
 		public BaseData<T> Post<T, K>(K postParam, string url) where T : class
 		{
@@ -382,7 +412,7 @@ namespace CFLMedCab.Http.Helper
 			var handleEventWait = new HandleEventWait();
 			BaseData<T> ret = null;
 
-			LogUtils.Debug($"psot的url为：{url} ; post请求参数为{JsonConvert.SerializeObject(postParam)}");
+			LogUtils.Debug($"post的url为：{url} ; post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
 			JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
 			{
