@@ -1,11 +1,13 @@
 ﻿
 
+using CFLMedCab.Http.Model.Base;
+
 namespace CFLMedCab.Http.Model
 {
 	/// <summary>
 	/// 账户
 	/// </summary>
-	public class Account
+	public class Account:BaseModel
 	{
 
 		/// <summary>

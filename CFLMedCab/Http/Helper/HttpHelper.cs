@@ -345,6 +345,33 @@ namespace CFLMedCab.Http.Helper
 		}
 
 		/// <summary>
+		/// 同步获取get请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public BaseData<T> Get<T>() where T : class
+		{
+
+			var handleEventWait = new HandleEventWait();
+			BaseData<T> ret = null;
+
+			JumpKick.HttpLib.Http.Get(GetQueryUrl(typeof(T).Name, null)).Headers(GetHeaders()).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			return ret;
+
+		}
+
+		/// <summary>
 		/// 同步获取post请求结果
 		/// </summary>
 		/// <param name="url"></param>
@@ -484,34 +511,6 @@ namespace CFLMedCab.Http.Helper
 			this.token = token;
 		}
 
-		/// <summary>
-		/// 检查结果是否正确
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="K"></typeparam>
-		/// <param name="baseData"></param>
-		/// <param name="isSuccess"></param>
-		/// <returns></returns>
-		public BaseData<T> ResultCheck<T, K>(BaseData<K> baseData, out bool isSuccess)
-		{
-			isSuccess = false;
-
-			if (baseData.code == (int)ResultCode.OK)
-			{
-				if(baseData.body != null &&  baseData.body.global_offset > 0)
-				{
-					isSuccess = true;
-				}
-			}
-
-			return new BaseData<T>()
-			{
-				code = baseData.code,
-				description = baseData.description,
-				message = baseData.message
-			};
-
-		}
 
 		/// <summary>
 		/// 检查结果是否正确
@@ -531,14 +530,38 @@ namespace CFLMedCab.Http.Helper
 				{
 					isSuccess = true;
 				}
+				//结果集正常，但为空
+				else
+				{
+					baseData.code = (int)ResultCode.Result_Exception;
+					baseData.message = ResultCode.Result_Exception.ToString();
+				}
 			}
 
-			return new BaseData<T>()
+			return baseData;
+
+		}
+
+		/// <summary>
+		/// 检查结果是否正确
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <returns></returns>
+		public BaseData<T> ResultCheck<T>(BaseData<T> baseData)
+		{
+
+			if (baseData.code == (int)ResultCode.OK)
 			{
-				code = baseData.code,
-				description = baseData.description,
-				message = baseData.message
-			};
+				if (baseData.body == null || baseData.body.global_offset <= 0)
+				{
+					baseData.code = (int)ResultCode.Result_Exception;
+					baseData.message = ResultCode.Result_Exception.ToString();
+				}
+			}
+
+			return baseData;
 
 		}
 
