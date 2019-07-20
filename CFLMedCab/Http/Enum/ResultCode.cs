@@ -12,6 +12,7 @@ namespace CFLMedCab.Http.Enum
 	/// </summary>
 	public enum ResultCode
 	{
+
 		/// <summary>
 		/// Result_Exception
 		/// </summary>

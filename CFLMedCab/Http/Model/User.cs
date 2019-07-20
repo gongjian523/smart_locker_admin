@@ -1,16 +1,14 @@
 ﻿
 
+using CFLMedCab.Http.Model.Base;
+
 namespace CFLMedCab.Http.Model
 {
 	/// <summary>
 	/// 用户
 	/// </summary>
-	public class User
+	public class User : BaseModel
 	{
-		/// <summary>
-		/// id
-		/// </summary>
-		public string id { get; set; }
 
 		/// <summary>
 		/// 手机

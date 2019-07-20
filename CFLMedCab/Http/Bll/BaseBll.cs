@@ -1,8 +1,13 @@
-﻿using System;
+﻿using CFLMedCab.Http.Helper;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.param;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -35,5 +40,36 @@ namespace CFLMedCab.Http.Bll
 			}
 			return singleton;
 		}
+
+		/// <summary>
+		/// 通用业务，通过id查询名称,如果出错，返回出错信息
+		/// </summary>
+		public string GetNameById<K>(string id) where K : BaseModel 
+		{
+			BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+			{
+				@in =
+				{
+				field = "id",
+				in_list =  { HttpUtility.UrlEncode(id) }
+				}
+			});
+
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+
+			if (isSuccess)
+			{
+				return baseData.body.objects[0].name;
+			}
+			else
+			{
+				return baseData.message;
+			}
+		}
+
+
 	}
+
+	
+
 }

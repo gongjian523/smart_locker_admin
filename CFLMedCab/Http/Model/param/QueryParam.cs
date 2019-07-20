@@ -31,7 +31,6 @@ namespace CFLMedCab.Http.Model.param
 		/// </summary>
 		public int offset { get; set; } = -1;
 
-
 		/// <summary>
 		/// 有 2 个字段，field 表示要筛选的字段， in_list 表示字段的值的列表
 		/// </summary>

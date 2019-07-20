@@ -30,13 +30,9 @@ namespace UnitTestProject
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
-			//var data1 = ShelfBllBll.GetInstance().GetUserToken(new Account
-			//{
-			//	Phone = "18888888888",
-			//	Password = "lidi123123"
-			//});
+			 ShelfBll.GetInstance().GetShelfTaskCommodityDetail("ST-44");
 
-	
+
 		}
 
 	}
