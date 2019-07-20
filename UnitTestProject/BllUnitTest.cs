@@ -20,9 +20,9 @@ namespace UnitTestProject
 
 			var data2 = UserLoginBll.GetInstance().VeinmatchBinding(new VeinmatchPostParam
 			{
-				regfeature = { "544a5", "54d28", "adfdsf" },
-				finger_name = "test"
-			});
+                regfeature = "544a5",
+                finger_name = "test"
+            });
 
 			var data3 = UserLoginBll.GetInstance().VeinmatchLogin("544a5");
 		}

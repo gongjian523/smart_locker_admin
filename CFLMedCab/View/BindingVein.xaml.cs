@@ -1,5 +1,9 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.Controls;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
@@ -25,9 +29,10 @@ namespace CFLMedCab.View
         public delegate void HidePopCloseHandler(object sender, RoutedEventArgs e);
         public event HidePopCloseHandler HidePopCloseEvent;
 
+#if LOCALSDK
         private UserBll userBll = new UserBll();
-
         private CurrentUser user = new CurrentUser();
+#endif
 
         VeinUtils vein = VeinUtils.GetInstance();
 
@@ -65,6 +70,7 @@ namespace CFLMedCab.View
 
         public void onBindingVein(object sender, EventArgs e)
         {
+#if LOCALSDK
             user = userBll.GetUserByName(tbInputName.Text);
 
             if (user == null)
@@ -72,6 +78,15 @@ namespace CFLMedCab.View
                 WarnInfo.Content = "无法获取用户信息，请重新输入！";
                 return;
             }
+#else
+            var data1 = UserLoginBll.GetInstance().GetUserToken(new Account
+            {
+                //Phone = tbInputName.Text,
+                //Password = tbInputPsw.Text
+                Phone = "18628293148",
+                Password = "cfy12345"
+            });
+#endif
 
             loginView.Visibility = Visibility.Collapsed;
             BindingView.Visibility = Visibility.Visible;
@@ -80,7 +95,6 @@ namespace CFLMedCab.View
 
             Task.Factory.StartNew(Binding);
         }
-            
 
         private void Binding()
         {
@@ -152,11 +166,24 @@ namespace CFLMedCab.View
                 Array.Copy(subregfeature, 0, regfeature, i* VeinUtils.FV_FEATURE_SIZE,VeinUtils.FV_FEATURE_SIZE);
             }
 
-            this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
-
+#if LOCALSDK
             user.reg_feature = Convert.ToBase64String(regfeature);
             user.ai_feature = Convert.ToBase64String(regfeature);
             userBll.UpdateCurrentUsers(user);
+            this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
+#else
+            BaseData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinmatchPostParam
+            {
+                regfeature = Convert.ToBase64String(regfeature),
+                finger_name = "fingerSSS"
+            });
+
+            if(data.code == 0)
+                this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
+            else
+                this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = data.message));
+#endif
+
         }
     }
 }
