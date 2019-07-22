@@ -30,4 +30,20 @@ namespace CFLMedCab.Http.Model.login
         public string max_times { get; set; }
 
     }
+
+
+
+    //用户Token
+    public class UserToken
+    {
+        /// <summary>
+        /// 后续接口使用token，有效期2小时
+        /// </summary>
+        public string access_token { get; set; }
+
+        /// <summary>
+        /// access_token过期后，重新获取access_token 使用的token
+        /// </summary>
+        public string refresh_token { get; set; }
+    }
 }

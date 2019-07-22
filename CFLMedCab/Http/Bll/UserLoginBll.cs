@@ -105,22 +105,31 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public BaseSingleData<Token> GetUserToken(SignInParam siParam)
+        public BaseSingleData<UserToken> GetUserToken(SignInParam siParam)
         {
             BaseSingleData<Token> dataSignIn = HttpHelper.GetInstance().Post<Token, SignInParam>(HttpHelper.GetSignInUrl(), siParam, true);
 
-            return dataSignIn;
+            //根据账户获取用户数据
+            BaseSingleData<UserToken> dataUserToken = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
+
+                UserSignInParam bodyPara = new UserSignInParam();
+                IDictionary<string, string> headerParam = new Dictionary<string, string>();
+                headerParam.Add("Authorization", dataSignIn.body.token);
+
+                return hh.Post<UserToken, UserSignInParam>(HttpHelper.GetUserSignInUrl(), bodyPara, headerParam);
+
+            }, dataSignIn);
+
+            return dataUserToken;
         }
 
         /// <summary>
         /// 获取图形验证码
         /// </summary>
         /// <returns></returns>
-        public string GetCaptchaImage()
+        public BaseSingleData<CaptchaToken> GetCaptchaImageToken()
         {
-            BaseSingleData<CaptchaToken> result = HttpHelper.GetInstance().Post<CaptchaToken>(HttpHelper.GetCaptchaTokeUrl(),true);
-            return HttpHelper.GetCaptchaImageUrl() + "?captcha_token=" + result.body.captcha_token;
-
+             return HttpHelper.GetInstance().Post<CaptchaToken>(HttpHelper.GetCaptchaTokeUrl(),true);
         }
     }
 }

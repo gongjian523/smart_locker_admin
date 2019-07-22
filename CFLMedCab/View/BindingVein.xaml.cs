@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.Controls;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
@@ -31,6 +32,8 @@ namespace CFLMedCab.View
 
         public delegate void HidePopCloseHandler(object sender, RoutedEventArgs e);
         public event HidePopCloseHandler HidePopCloseEvent;
+
+        private string CaptchaToken { get; set; }
 
 #if LOCALSDK
         private UserBll userBll = new UserBll();
@@ -87,62 +90,77 @@ namespace CFLMedCab.View
             }
 #else
 
-            if (tbInputName.Text == "")
+            if (tbInputName.Text == "" || tbInputPsw.Password.ToString() == "")
             {
                 Dispatcher.BeginInvoke(new Action(() => {
-                    WarnInfo.Content = "无法获取用户信息，请重新输入！";
+                    if(tbInputName.Text == "")
+                        WarnInfo.Content = "请输入用户名！";
+                    else
+                        WarnInfo.Content = "请输入密码！";
+                }));
+                return;
+            }
+
+            SignInParam siParam = new SignInParam();
+
+            if (tbInputAuth.Visibility == Visibility.Visible)
+            {
+                siParam.captcha_token = CaptchaToken;
+                siParam.captcha_value = tbInputAuth.Text;
+            }
+            siParam.password = tbInputPsw.Password.ToString();
+            siParam.phone = "+86 " + tbInputName.Text;
+            siParam.source = "app";
+
+            var data1 = UserLoginBll.GetInstance().GetUserToken(siParam);
+
+            if(data1.code != 0)
+            {
+                var data = UserLoginBll.GetInstance().GetCaptchaImageToken();
+
+                if(data.code != 0)
+                {
+                    Dispatcher.BeginInvoke(new Action(() => {
+                        WarnInfo.Content = "获取账号失败，请再次输入用户信息、密码以及验证，并重新绑定";
+                    }));
+                    return;
+                }
+
+                CaptchaToken = data.body.captcha_token;
+                // 4、再联网异步获取头像图片
+                //Task<System.Drawing.Image> result = ImageUtils.GetBitmapFromWebServerAsync(url);
+                System.Drawing.Image image = ImageUtils.GetBitmapFromWebServer(HttpHelper.GetCaptchaImageUrl() + "?captcha_token=" + data.body.captcha_token);
+
+                // 5、转型：Image --> Bitmap --> BitmapImage
+                Bitmap bitmap = new Bitmap(image);
+                BitmapImage bitmapImage = ImageUtils.BitmapToBitmapImage(bitmap);
+
+                Dispatcher.BeginInvoke(new Action(() => {
+                    lbInputAuth.Visibility = Visibility.Visible;
+                    tbInputAuth.Visibility = Visibility.Visible;
+                    imageAuth.Visibility = Visibility.Visible;
+
+                    imageAuth.Source = bitmapImage;
+                    WarnInfo.Content = "获取账号失败，请再次输入用户信息、密码以及验证，并重新绑定！";
                 }));
             }
-                
+            else
+            {
+                loginView.Visibility = Visibility.Collapsed;
+                BindingView.Visibility = Visibility.Visible;
 
+                rebindingBtn.Visibility = Visibility.Hidden;
 
-            //SignInParam siParam = new SignInParam();
+                HttpHelper.GetInstance().SetHeaders(data1.body.access_token);
 
-            //if (tbInputAuti.Visibility == Visibility.Visible)
-            //{
-            //    siParam.captcha_token = account.CaptchaToken;
-            //    siParam.captcha_value = account.CaptchaValue;
-            //}
-            //siParam.password = account.Password;
-            //siParam.phone = "+86 " + account.Phone;
-            //siParam.source = "app";
-
-
-
-            //var data1 = UserLoginBll.GetInstance().GetUserToken(siParam);
+                Task.Factory.StartNew(Binding);
+            }
 #endif
-
-
-            string url = UserLoginBll.GetInstance().GetCaptchaImage();
-
-            // 4、再联网异步获取头像图片
-            //Task<System.Drawing.Image> result = ImageUtils.GetBitmapFromWebServerAsync(url);
-            System.Drawing.Image image = ImageUtils.GetBitmapFromWebServer(url);
-
-            // 5、转型：Image --> Bitmap --> BitmapImage
-            Bitmap bitmap = new Bitmap(image);
-            BitmapImage bitmapImage = ImageUtils.BitmapToBitmapImage(bitmap);
-
-            Dispatcher.BeginInvoke(new Action(() => {
-                imageAuth.Source = bitmapImage;
-            }));
-          
-
-            
-
-            //loginView.Visibility = Visibility.Collapsed;
-            //BindingView.Visibility = Visibility.Visible;
-
-            //rebindingBtn.Visibility = Visibility.Hidden;
-
-            //Task.Factory.StartNew(Binding);
         }
 
         private void Binding()
         {
             int ret;
-            return;
-
 
             ret = vein.LoadingDevice();
 

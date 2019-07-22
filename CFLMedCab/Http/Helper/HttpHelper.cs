@@ -713,12 +713,44 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-		/// <summary>
-		/// 同步获取post请求结果
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns></returns>
-		public BaseData<T> Put<T>(T putParam) where T : BaseModel
+
+        // <summary>
+        /// 同步获取post请求结果
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public BaseSingleData<T> Post<T, K>(string url, K postParam,  IDictionary<string, string> headerParam) where T : class
+        {
+            var handleEventWait = new HandleEventWait();
+            BaseSingleData<T> ret = null;
+
+            JsonSerializerSettings jsetting = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
+            JumpKick.HttpLib.Http.Post(url).Headers(headerParam).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+            {
+                ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+            }).OnFail(webexception =>
+            {
+                ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+            }).Go();
+
+            ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+            return ret;
+        }
+
+
+        /// <summary>
+        /// 同步获取post请求结果
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public BaseData<T> Put<T>(T putParam) where T : BaseModel
 		{
 
 			var handleEventWait = new HandleEventWait();
@@ -761,25 +793,25 @@ namespace CFLMedCab.Http.Helper
             return Headers;
 		}
 
-		/// <summary>
-		/// 设置token值
-		/// </summary>
-		/// <returns></returns>
-		public void SetHeaders(string token)
+        /// <summary>
+        /// 设置token值
+        /// </summary>
+        /// <returns></returns>
+        public void SetHeaders(string token)
 		{
+            Headers.Clear();
             Headers.Add("x-token", token);
 		}
 
-
-		/// <summary>
-		/// 检查结果是否正确
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="K"></typeparam>
-		/// <param name="baseData"></param>
-		/// <param name="isSuccess"></param>
-		/// <returns></returns>
-		public BaseData<T> ResultCheck<T>(BaseData<T> baseData, out bool isSuccess)
+        /// <summary>
+        /// 检查结果是否正确
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="K"></typeparam>
+        /// <param name="baseData"></param>
+        /// <param name="isSuccess"></param>
+        /// <returns></returns>
+        public BaseData<T> ResultCheck<T>(BaseData<T> baseData, out bool isSuccess)
 		{
 			isSuccess = false;
 
@@ -874,7 +906,7 @@ namespace CFLMedCab.Http.Helper
 		/// <typeparam name="K"></typeparam>
 		/// <param name="baseData"></param>
 		/// <returns></returns>
-		public BaseSingleData<T> ResultCheck<T, K>(Func<HttpHelper, BaseSingleData<T>> func, BaseData<K> baseData)
+		public BaseSingleData<T> ResultCheck<T, K>(Func<HttpHelper, BaseSingleData<T>> func, BaseSingleData<K> baseData)
         {
 
             BaseSingleData<T> ret;
@@ -882,7 +914,7 @@ namespace CFLMedCab.Http.Helper
             //结果集正常
             if (baseData.code == (int)ResultCode.OK)
             {
-                if (baseData.body != null && baseData.body.global_offset > 0)
+                if (baseData.body != null)
                 {
                     ret = func(this);
                 }
