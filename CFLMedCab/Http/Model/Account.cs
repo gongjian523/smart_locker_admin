@@ -29,5 +29,16 @@ namespace CFLMedCab.Http.Model
 		/// 智能柜⾝身份标识（指静脉做标识）
 		/// </summary>
 		public string SmartDevice { get; set; }
-	}
+
+
+        /// <summary>
+        /// 图形验证码token
+        /// </summary>
+        public string CaptchaToken { get; set; }
+
+        /// <summary>
+        /// 图形验证码
+        /// </summary>
+        public string CaptchaValue { get; set; }
+    }
 }

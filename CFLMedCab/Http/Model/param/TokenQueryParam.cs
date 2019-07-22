@@ -11,20 +11,20 @@ namespace CFLMedCab.Http.Model.param
 	/// </summary>
 	public class TokenQueryParam
 	{
-		/// <summary>
-		/// 为固定字段 【AQACQqweMIgBAAAAF8jlWJSoBWPpxUA】，在正式上线时会变化
-		/// </summary>
-		public string tenant_id { get; set; } = "AQACQqweMIgBAAAAF8jlWJSoBWPpxUA";
+        /// <summary>
+        /// 为固定字段 【AQACQqweMIgBAAAAF8jlWJSoBWPpxUA】，在正式上线时会变化
+        /// </summary>
+        public string tenant_id { get; set; } = "AQACQqweMIgBAAAAF8-jlWJSoBWPpxUA";
 
-		/// <summary>
-		/// 用户id
-		/// </summary>
-		public string user_id { get; set; }
+        /// <summary>
+        /// 用户id
+        /// </summary>
+        public string user_id { get; set; }
 
 		/// <summary>
 		/// 客户端类型
 		/// </summary>
-		public string device { get; set; } = "web";
+		public string device { get; set; } = "app";
 
 		/// <summary>
 		/// 

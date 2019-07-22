@@ -232,6 +232,7 @@ namespace CFLMedCab.Http.Helper
             return HttpConstant.Domain + HttpConstant.CaptchaTokenUrlSuffix;
         }
 
+
         /// <summary>
         /// 获取图形验证码的url(特殊)
         /// </summary>
@@ -242,7 +243,7 @@ namespace CFLMedCab.Http.Helper
         }
 
         /// <summary>
-        /// 获取指静脉绑定请求的url
+        /// 获取登录的url
         /// </summary>
         /// <returns></returns>
         public static string GetSignInUrl()
@@ -251,13 +252,15 @@ namespace CFLMedCab.Http.Helper
         }
 
         /// <summary>
-        /// 获取指静脉绑定请求的url
+        /// 获取用户登录url
         /// </summary>
         /// <returns></returns>
         public static string GetUserSignInUrl()
         {
             return HttpConstant.Domain + HttpConstant.UserSignInUrlSuffix;
         }
+
+
 
 
         /// <summary>
@@ -516,6 +519,35 @@ namespace CFLMedCab.Http.Helper
         }
 
         /// <summary>
+        /// 同步获取get请求结果
+        /// </summary>
+        /// <param name="url">已经拼接好的url</param>
+        /// <returns></returns>
+        public BaseSingleData<T> Get<T,K>(string urlPrefix, K queryParam) where T: class
+        {
+            var handleEventWait = new HandleEventWait();
+            BaseSingleData<T> ret = null;
+
+            string url = GetCommonQueryUrl(urlPrefix, queryParam);
+
+            JumpKick.HttpLib.Http.Get(url).OnSuccess(result =>
+            {
+                ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+            }).OnFail(webexception =>
+            {
+                ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+            }).Go();
+
+            ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+            return ret;
+        }
+
+
+
+        /// <summary>
         /// 同步获取post请求结果
         /// </summary>
         /// <param name="url"></param>
@@ -673,7 +705,7 @@ namespace CFLMedCab.Http.Helper
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public BaseSingleData<T> Post<T,K>(string url, K postParam , Type BaseSingleDataType) where T : class
+        public BaseSingleData<T> Post<T,K>(string url, K postParam , bool BaseSingleDataType) where T : class
         {
             var handleEventWait = new HandleEventWait();
             BaseSingleData<T> ret = null;
