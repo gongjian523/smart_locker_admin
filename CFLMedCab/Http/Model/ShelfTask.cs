@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
+using Newtonsoft.Json;
 
 namespace CFLMedCab.Http.Model
 {

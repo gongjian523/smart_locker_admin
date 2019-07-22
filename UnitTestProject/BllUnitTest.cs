@@ -3,6 +3,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.param;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 
 namespace UnitTestProject
 {
@@ -30,9 +31,18 @@ namespace UnitTestProject
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
-			 ShelfBll.GetInstance().GetShelfTaskCommodityDetail("ST-44");
-
-
+			// ShelfBll.GetInstance().GetShelfTaskCommodityDetail("ST-44");
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+		
+			string ret = JsonConvert.SerializeObject(new ShelfTask
+			{
+				Status = "上架",
+				AbnormalCauses = "商品缺失",
+				AbnormalDescribe = "异常描述"
+			}, Formatting.Indented, jsetting);
 		}
 
 	}

@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Test;
+﻿using CFLMedCab.Http.Model;
+using CFLMedCab.Test;
 using GDotnet.Reader.Api.DAL;
 using GDotnet.Reader.Api.Protocol.Gx;
 using System;
@@ -6,7 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Timers;
+using System.Linq;
 using System.Windows;
+using Newtonsoft.Json;
 
 /// <summary>
 /// rfid工具类
@@ -162,14 +165,88 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				Console.WriteLine("Inventory epc error.");
 				isGetSuccess = false;
 			}
-			
+
 		}
 
-        /// <summary>
-        /// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
-        /// </summary>
+		/// <summary>
+		/// 根据eps json获取eps对象数据
+		/// </summary>
+		/// <param name="isGetSuccess"></param>
+		/// <returns></returns>
+		
+		public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess)
+		{
+
+			isGetSuccess = true;
+
+			string com1 = "COM1";
+
+            string com4 = "COM4";
+
+
+			HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
+
+			//TODO:需要补充id
+			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
+			if (isCom1Connect)
+			{
+				HashSet<string> com1HashSet = DealComData(com1ClientConn, com1, out isGetSuccess);
+
+				foreach (string epsJson in com1HashSet)
+				{
+					CommodityEps commodityEps = JsonConvert.DeserializeObject<CommodityEps>(epsJson);
+					commodityEps.GoodsLocationName = ComName.GetCabNameByRFidCom(com1);
+					//commodityEps.GoodsLocationId = 
+					commodityEps.EquipmentName = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
+					//commodityEps.EquipmentName 
+
+					currentEpcDataHs.Add(commodityEps);
+
+				}
+				
+			}
+			else
+			{
+				isGetSuccess = false;
+			}
+
+			GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
+			if (isCom4Connect)
+			{
+			
+				HashSet<string> com4HashSet = DealComData(com4ClientConn, com4, out isGetSuccess);
+
+				foreach (string epsJson in com4HashSet)
+				{
+					CommodityEps commodityEps = JsonConvert.DeserializeObject<CommodityEps>(epsJson);
+					commodityEps.GoodsLocationName = ComName.GetCabNameByRFidCom(com4);
+					//commodityEps.GoodsLocationId = 
+					commodityEps.EquipmentName = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
+					//commodityEps.EquipmentName 
+
+					currentEpcDataHs.Add(commodityEps);
+
+				}
+			}
+			else
+			{
+				isGetSuccess = false;
+			}
+
+
+			WaitHandle.WaitAll(manualEvents.ToArray());
+			manualEvents.Clear();
+
+			return currentEpcDataHs;
+
+		}
+
+
+		/// <summary>
+		/// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
+		/// </summary>
 #if TESTENV
-        public static Hashtable GetEpcData(out bool isGetSuccess)
+		public static Hashtable GetEpcData(out bool isGetSuccess)
         {
             isGetSuccess = true;
             TestGoods testGoods = new TestGoods();

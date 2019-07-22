@@ -24,5 +24,47 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string CommodityCodeName { get; set; }
 
+		/// <summary>
+		/// 设备id
+		/// </summary>
+		public string EquipmentId { get; set; }
+
+		/// <summary>
+		/// 设备name
+		/// </summary>
+		public string EquipmentName { get; set; }
+
+		/// <summary>
+		/// 货位id
+		/// </summary>
+		public string GoodsLocationId { get; set; }
+
+		/// <summary>
+		/// 货位name
+		/// </summary>
+		public string GoodsLocationName { get; set; }
+
+		/// <summary>
+		/// 重写equal，用于hashset区分
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public override bool Equals(object obj)
+		{
+			CommodityEps e = obj as CommodityEps;
+			return CommodityCodeName == e.CommodityCodeName;
+		}
+
+		/// <summary>
+		/// 重写HashCode，用于hashset区分
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public override int GetHashCode()
+		{
+			return CommodityCodeName.GetHashCode() * 100 + CommodityCodeName.GetHashCode();
+		}
+
+
 	}
 }

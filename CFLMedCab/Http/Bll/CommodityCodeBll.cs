@@ -19,13 +19,14 @@ namespace CFLMedCab.Http.Bll
     public class CommodityCodeBll
     {
 
-        /// <summary>
-        /// 获取商品库存变化
-        /// </summary>
-        /// <param name="preCommodityEpsCollect">之前商品集合</param>
-        /// <param name="afterCommodityEpsCollect">之后商品集合</param>
-        /// <returns></returns>
-        public List<CommodityCode> GetCompareSimpleCommodity(HashSet<string> preCommodityEpsCollect, HashSet<string> afterCommodityEpsCollect)
+		/// <summary>
+		/// 获取商品库存变化
+		/// </summary>
+		/// <param name="preCommodityEpsCollect">之前商品集合</param>
+		/// <param name="afterCommodityEpsCollect">之后商品集合</param>
+		/// <returns></returns>
+	    [Obsolete]
+		private List<CommodityCode> GetCompareSimpleCommodity(HashSet<string> preCommodityEpsCollect, HashSet<string> afterCommodityEpsCollect)
         {
             var commodityCodes = new List<CommodityCode>();
 
@@ -68,45 +69,57 @@ namespace CFLMedCab.Http.Bll
             return commodityCodes;
         }
 
-        /// <summary>
-        /// 获取商品库存变化
-        /// </summary>
-        /// <param name="preCommodityEpsCollect">之前商品集合</param>
-        /// <param name="afterCommodityEpsCollect">之后商品集合</param>
-        /// <returns></returns>
-        public List<CommodityCode> GetCompareSimpleCommodity(Hashtable preCommodityEpsCollect, Hashtable afterCommodityEpsCollect)
-        {
+		/// <summary>
+		/// 获取商品库存变化
+		/// </summary>
+		/// <param name="preCommodityEpsCollect">之前商品集合</param>
+		/// <param name="afterCommodityEpsCollect">之后商品集合</param>
+		/// <returns></returns>
 
-            HashSet<string> preCommodityEpsHashSet = new HashSet<string>();
+		private List<CommodityCode> GetCompareSimpleCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
+		{
+			var commodityCodes = new List<CommodityCode>();
 
-            HashSet<string> afterCommodityEpsHashSet = new HashSet<string>();
+			foreach (CommodityEps currentEps in afterCommodityEpsCollect)
+			{
+				if (!preCommodityEpsCollect.Contains(currentEps))
+				{
 
-            foreach (HashSet<string> currentEps in preCommodityEpsCollect.Values)
-            {
+					commodityCodes.Add(new CommodityCode
+					{
+						CommodityName = currentEps.CommodityName,
+						id = currentEps.CommodityCodeId,
+						name = currentEps.CommodityCodeName,
+						EquipmentId = currentEps.EquipmentId,
+						EquipmentName = currentEps.EquipmentName,
+						GoodsLocationId = currentEps.GoodsLocationId,
+						GoodsLocationName = currentEps.GoodsLocationName,
+						operate_type = (int)OperateType.入库
+					});
+				}
+			}
 
-                preCommodityEpsHashSet.UnionWith(currentEps);
+			foreach (CommodityEps currentEps in preCommodityEpsCollect)
+			{
+				if (!afterCommodityEpsCollect.Contains(currentEps))
+				{
 
-            }
+					commodityCodes.Add(new CommodityCode
+					{
+						CommodityName = currentEps.CommodityName,
+						id = currentEps.CommodityCodeId,
+						name = currentEps.CommodityCodeName,
+						EquipmentId = currentEps.EquipmentId,
+						EquipmentName = currentEps.EquipmentName,
+						GoodsLocationId = currentEps.GoodsLocationId,
+						GoodsLocationName = currentEps.GoodsLocationName,
+						operate_type = (int)OperateType.出库
+					});
+				}
+			}
 
-            foreach (HashSet<string> currentEps in afterCommodityEpsCollect.Values)
-            {
-                afterCommodityEpsHashSet.UnionWith(currentEps);
-            }
-
-            return GetCompareSimpleCommodity(preCommodityEpsHashSet, afterCommodityEpsHashSet);
-        }
-
-        /// <summary>
-        /// 获取商品库存变化
-        /// </summary>
-        /// <param name="preCommodityEpsCollect">之前商品集合</param>
-        /// <param name="afterCommodityEpsCollect">之后商品集合</param>
-        /// <returns></returns>
-        public BaseData<CommodityCode> GetCompareCommodity(HashSet<string> preCommodityEpsCollect, HashSet<string> afterCommodityEpsCollect)
-        {
-            return GetCommodityCode(GetCompareSimpleCommodity(preCommodityEpsCollect, afterCommodityEpsCollect));
-        }
-
+			return commodityCodes;
+		}
 
 		/// <summary>
 		/// 获取商品库存变化
@@ -114,16 +127,18 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="preCommodityEpsCollect">之前商品集合</param>
 		/// <param name="afterCommodityEpsCollect">之后商品集合</param>
 		/// <returns></returns>
-		public BaseData<CommodityCode> GetCompareCommodity(Hashtable preCommodityEpsCollect, Hashtable afterCommodityEpsCollect)
-        {
-            return GetCommodityCode(GetCompareSimpleCommodity(preCommodityEpsCollect, afterCommodityEpsCollect));
-        }
 
-        /// <summary>
-        /// 获取盘点所有数据(Hashtable)
-        /// </summary>
-        /// <returns></returns>
-        public BaseData<CommodityCode> GetInvetoryCommodity(Hashtable goodsEpsCollect)
+		private BaseData<CommodityCode> GetCompareCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
+		{
+			return GetCommodityCode(GetCompareSimpleCommodity(preCommodityEpsCollect, afterCommodityEpsCollect));
+		}
+
+
+		/// <summary>
+		/// 获取盘点所有数据(Hashtable)
+		/// </summary>
+		/// <returns></returns>
+		public BaseData<CommodityCode> GetInvetoryCommodity(Hashtable goodsEpsCollect)
         {
             return GetCommodityCode(goodsEpsCollect);
         }
@@ -221,12 +236,10 @@ namespace CFLMedCab.Http.Bll
 		{
 
 			List<string> commodityCodeIds = new List<string>(commodityCodes.Count);
-			List<string> commodityIds = new List<string>(commodityCodes.Count);
 
 			commodityCodes.ForEach(it => {
 
 				commodityCodeIds.Add(HttpUtility.UrlEncode(it.id));
-				commodityIds.Add(HttpUtility.UrlEncode(it.CommodityId));
 			});
 
 			BaseData<CommodityCode> baseDataCommodityCode = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
@@ -238,26 +251,21 @@ namespace CFLMedCab.Http.Bll
 				}
 			});
 
+			HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
 
-			BaseData<Commodity> baseDataCommodity = HttpHelper.GetInstance().Get<Commodity>(new QueryParam
-			{
-				@in =
-				{
-					field = "id",
-					in_list =  commodityIds
-				}
-			});
-
-			HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess1);
-
-			HttpHelper.GetInstance().ResultCheck(baseDataCommodity, out bool isSuccess2);
-
-			if (isSuccess1 && isSuccess2)
+			if (isSuccess)
 			{
 				baseDataCommodityCode.body.objects.ForEach(it =>
 				{
-					it.operate_type = commodityCodes.Where(cit => cit.id == it.id).Select(cit => cit.operate_type).Single();
-					it.CommodityName = baseDataCommodity.body.objects.Where(bit => bit.id == it.CommodityId).Select(bit => bit.name).Single();
+					CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.id == it.id).Single();
+					it.operate_type = simpleCommodityCode.operate_type;
+					it.CommodityName = simpleCommodityCode.CommodityName;
+					it.name = simpleCommodityCode.name;
+					it.EquipmentId = simpleCommodityCode.EquipmentId;
+					it.EquipmentName = simpleCommodityCode.EquipmentName;
+					it.GoodsLocationId = simpleCommodityCode.GoodsLocationId;
+					it.GoodsLocationName = simpleCommodityCode.GoodsLocationName;
+					it.operate_type = simpleCommodityCode.operate_type;
 				});
 			}
 
