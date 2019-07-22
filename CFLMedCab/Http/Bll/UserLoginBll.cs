@@ -2,6 +2,7 @@
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.login;
 using CFLMedCab.Http.Model.param;
 using System.Collections.Generic;
 using System.Web;
@@ -87,7 +88,7 @@ namespace CFLMedCab.Http.Bll
 			return HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
 			{
 
-				return hh.Get<string>(HttpHelper.GetTokenQueryUrl(new TokenQueryParam
+				return hh.Get<string>(HttpHelper.GetCommonQueryUrl(HttpConstant.TokenUrl, new TokenQueryParam
 				{
 					user_id = baseDataUser.body.objects[0].id
 				}));
@@ -95,5 +96,26 @@ namespace CFLMedCab.Http.Bll
 			}, baseDataUser);
 
 		}
-	}
+
+
+        /// <summary>
+        /// 获取图形验证码
+        /// </summary>
+        /// <returns></returns>
+        public string GetCaptchaImage()
+        {
+            //获取账户数据
+            BaseSingleData<CaptchaToken> baseDataToken = HttpHelper.GetInstance().Post<CaptchaToken>(HttpHelper.GetCaptchaTokeUrl(),true);
+
+            //根据账户获取用户数据
+            string  ret = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
+
+                return hh.Get(HttpHelper.GetCaptchaImageUrl(), baseDataToken.body);
+
+            }, baseDataToken);
+
+
+            return ret;
+        }
+    }
 }

@@ -14,16 +14,25 @@
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <StackPanel x:Name="myGrid" Grid.Row="0" Orientation="Vertical" Margin="20,100,20,0">
+                    <StackPanel x:Name="myGrid" Grid.Row="0" Orientation="Vertical" Margin="20,10,20,0">
 
                         <Label Content="请输入用户名"  Style="{StaticResource lblTitle1}"/>
-                        <TextBox x:Name="tbInputName" Grid.Row="1"  Height="48"  Width="880" Margin="0,15,0,0"  TextWrapping="Wrap" Text="NATHAN" 
+                        <TextBox x:Name="tbInputName" Height="48"  Width="880" Margin="0,15,0,0"  TextWrapping="Wrap" Text="NATHAN" 
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
                              />
                         <Label Content="请输入密码"   Margin="0,15,0,0"  Style="{StaticResource lblTitle1}"/>
-                        <TextBox x:Name="tbInputPsw" Grid.Row="1"  Height="48" Margin="0,15,0,0"  TextWrapping="Wrap" Text="" 
+                        <PasswordBox x:Name="tbInputPsw"  Height="48" Margin="0,15,0,0"  
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
                             Width="{Binding Path=ActualWidth,ElementName=myGrid}" />
+                        <Label Content="请输入验证码"   Margin="0,15,0,0"  Style="{StaticResource lblTitle1}"/>
+                        <TextBox x:Name="tbInputAuti" Height="48" Margin="0,15,0,0"  TextWrapping="Wrap" Text="" 
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                            Width="{Binding Path=ActualWidth,ElementName=myGrid}" />
+                        <Image x:Name="imageAuth" Width="240" Height="80" HorizontalAlignment="Center" Margin="0,10,0,0" >
+                            <Image.Source>
+                                <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png" />
+                            </Image.Source>
+                        </Image>
                         <Label x:Name="WarnInfo"  Margin="0,15,0,0"  Style="{StaticResource lblTitle1_2}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1">

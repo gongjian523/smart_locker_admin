@@ -9,13 +9,12 @@ using System;
 using CFLMedCab.Http.Model.param;
 using System.Text;
 using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Model.login;
 
 namespace CFLMedCab.Http.Helper
 {
 	public class HttpHelper
 	{
-
-		private string token = null;
 
 		// 定义一个静态变量来保存类的实例
 		private static HttpHelper singleton;
@@ -49,12 +48,17 @@ namespace CFLMedCab.Http.Helper
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
 		}
 
-		/// <summary>
-		/// 根据表名获取查询数据url
-		/// </summary>
-		/// <param name="tableName"></param>
-		/// <returns></returns>
-		public static string GetQueryUrl(string tableName, QueryParam queryParam)
+        /// <summary>
+        /// 请求头
+        /// </summary>
+        private IDictionary<string, string> Headers = new Dictionary<string, string>();
+
+        /// <summary>
+        /// 根据表名获取查询数据url
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        public static string GetQueryUrl(string tableName, QueryParam queryParam)
 		{
 
 			StringBuilder queryParamUrlStr = new StringBuilder();
@@ -162,7 +166,7 @@ namespace CFLMedCab.Http.Helper
 		/// 获取token请求的url
 		/// </summary>
 		/// <returns></returns>
-		public static string GetTokenQueryUrl(TokenQueryParam queryParam)
+		public static string GetCommonQueryUrl<T>(string urlPrefix, T queryParam)
 		{
 			StringBuilder queryParamUrlStr = new StringBuilder();
 			if (queryParam != null)
@@ -196,7 +200,7 @@ namespace CFLMedCab.Http.Helper
 
 			LogUtils.Debug($"url参数为：{queryParamUrlStr.ToString()}");
 
-			return HttpConstant.TokenUrl + queryParamUrlStr.ToString();
+			return urlPrefix + queryParamUrlStr.ToString();
 
 		}
 
@@ -219,15 +223,52 @@ namespace CFLMedCab.Http.Helper
 			return HttpConstant.Domain + HttpConstant.VeinmatchBindingUrlSuffix;
 		}
 
-		/// <summary>
-		/// 通用返回结果处理类
-		/// </summary>
-		/// <typeparam name="T">结果消息体类型</typeparam>
-		/// <param name="resultHandleType">结果处理类型</param>
-		/// <param name="handleEventWait">处理http线程类</param>
-		/// <param name="result">字符串结果</param>
-		/// <param name="ret">返回处理后结果</param>
-		private void ResultHand<T>(ResultHandleType resultHandleType, HandleEventWait handleEventWait, string result, out BaseData<T> ret)
+        /// <summary>
+        /// 获取图形验证码token的url
+        /// </summary>
+        /// <returns></returns>
+        public static string GetCaptchaTokeUrl()
+        {
+            return HttpConstant.Domain + HttpConstant.CaptchaTokenUrlSuffix;
+        }
+
+        /// <summary>
+        /// 获取图形验证码的url(特殊)
+        /// </summary>
+        /// <returns></returns>
+        public static string GetCaptchaImageUrl()
+        {
+            return HttpConstant.Domain + HttpConstant.CaptchaImageUrlSuffix;
+        }
+
+        /// <summary>
+        /// 获取指静脉绑定请求的url
+        /// </summary>
+        /// <returns></returns>
+        public static string GetSignInUrl()
+        {
+            return HttpConstant.Domain + HttpConstant.SignInUrlSuffix;
+        }
+
+        /// <summary>
+        /// 获取指静脉绑定请求的url
+        /// </summary>
+        /// <returns></returns>
+        public static string GetUserSignInUrl()
+        {
+            return HttpConstant.Domain + HttpConstant.UserSignInUrlSuffix;
+        }
+
+
+        /// <summary>
+        /// 通用返回结果处理类
+        /// </summary>
+        /// <typeparam name="T">结果消息体类型</typeparam>
+        /// <param name="resultHandleType">结果处理类型</param>
+        /// <param name="handleEventWait">处理http线程类</param>
+        /// <param name="result">字符串结果</param>
+        /// <param name="ret">返回处理后结果</param>
+        private void ResultHand<T>(ResultHandleType resultHandleType, HandleEventWait handleEventWait, string result, out BaseData<T> ret)
 		{
 			ret = null;
 
@@ -267,10 +308,58 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
-		/// <summary>
-		/// http线程阻塞操作类
-		/// </summary>
-		private class HandleEventWait {
+        /// <summary>
+        /// 通用返回结果处理类
+        /// </summary>
+        /// <typeparam name="T">结果消息体类型</typeparam>
+        /// <param name="resultHandleType">结果处理类型</param>
+        /// <param name="handleEventWait">处理http线程类</param>
+        /// <param name="result">字符串结果</param>
+        /// <param name="ret">返回处理后结果</param>
+        private void ResultHand<T>(ResultHandleType resultHandleType, HandleEventWait handleEventWait, string result, out BaseSingleData<T> ret)
+        {
+            ret = null;
+
+            switch (resultHandleType)
+            {
+                case ResultHandleType.请求正常:
+
+                    ret = JsonConvert.DeserializeObject<BaseSingleData<T>>(result);
+                    handleEventWait.Set();
+
+                    break;
+                case ResultHandleType.请求异常:
+
+                    ret = new BaseSingleData<T>
+                    {
+                        code = (int)ResultCode.Request_Exception,
+                        message = result
+                    };
+                    handleEventWait.Set();
+
+                    break;
+                case ResultHandleType.请求超时:
+
+                    if (handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
+                    {
+                        ret = new BaseSingleData<T>
+                        {
+                            code = (int)ResultCode.Request_Exception,
+                            message = result
+                        };
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+        /// <summary>
+        /// http线程阻塞操作类
+        /// </summary>
+        private class HandleEventWait {
 
 			private readonly EventWaitHandle eventWaitHandle;
 
@@ -371,12 +460,67 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
-		/// <summary>
-		/// 同步获取post请求结果
-		/// </summary>
-		/// <param name="url"></param>
-		/// <returns></returns>
-		public BaseData<T> Post<T>(T postParam) where T : class
+        /// <summary>
+        /// 同步获取get请求结果
+        /// </summary>
+        /// <param name="url">已经拼接好的url</param>
+        /// <returns></returns>
+        public BaseData<T> Get<T>(string url) where T : class
+        {
+            var handleEventWait = new HandleEventWait();
+            BaseData<T> ret = null;
+
+            JumpKick.HttpLib.Http.Get(url).Headers(GetHeaders()).OnSuccess(result =>
+            {
+                ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+            }).OnFail(webexception =>
+            {
+                ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+            }).Go();
+
+            ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+            return ret;
+
+        }
+
+        /// <summary>
+        /// 同步获取get请求结果
+        /// </summary>
+        /// <param name="url">已经拼接好的url</param>
+        /// <returns></returns>
+        public string Get<T>(string urlPrefix, T queryParam) where T : class
+        {
+            var handleEventWait = new HandleEventWait();
+            string ret = null;
+
+            JumpKick.HttpLib.Http.Get(GetCommonQueryUrl(urlPrefix, queryParam)).Headers(GetHeaders()).OnSuccess(result =>
+            {
+                ret = result;
+                handleEventWait.Set();
+            }).OnFail(webexception =>
+            {
+                ret = webexception.Message;
+                handleEventWait.Set();
+
+            }).Go();
+
+            if (!handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
+            {
+                ret = ResultHandleType.请求超时.ToString();
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 同步获取post请求结果
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public BaseData<T> Post<T>(T postParam) where T : class
 		{
 
 			var handleEventWait = new HandleEventWait();
@@ -457,49 +601,96 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
-		/// <summary>
-		/// 同步获取get请求结果
-		/// </summary>
-		/// <param name="url">已经拼接好的url</param>
-		/// <returns></returns>
-		public BaseData<T> Get<T>(string url) where T : class
+        /// <summary>
+        /// 同步获取post请求结果
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public BaseData<T> Post<T>(string url) where T : class
+        {
+            var handleEventWait = new HandleEventWait();
+            BaseData<T> ret = null;
+
+            JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).OnSuccess(result =>
+            {
+                ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+            }).OnFail(webexception =>
+            {
+                ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+            }).Go();
+
+            ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+            return ret;
+        }
+
+        // <summary>
+        /// 同步获取post请求结果
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public BaseSingleData<T> Post<T>(string url, bool single) where T : class
+        {
+            var handleEventWait = new HandleEventWait();
+            BaseSingleData<T> ret = null;
+
+            JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).OnSuccess(result =>
+            {
+                ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+            }).OnFail(webexception =>
+            {
+                ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+            }).Go();
+
+            ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+            return ret;
+        }
+
+        // <summary>
+        /// 同步获取post请求结果
+        /// </summary>
+        /// <param name="url"></param>
+        /// <returns></returns>
+        public BaseSingleData<T> Post<T,K>(string url, K postParam , Type BaseSingleDataType) where T : class
+        {
+            var handleEventWait = new HandleEventWait();
+            BaseSingleData<T> ret = null;
+
+            JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
+            {
+                ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+            }).OnFail(webexception =>
+            {
+                ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+            }).Go();
+
+            ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+            return ret;
+        }
+
+     
+
+
+        /// <summary>
+        /// 获取token
+        /// </summary>
+        /// <returns></returns>
+        public IDictionary<string, string> GetHeaders()
 		{
-			var handleEventWait = new HandleEventWait();
-			BaseData<T> ret = null;
+            if (Headers.Count <= 0)
+            {
+                SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
+            }
 
-			JumpKick.HttpLib.Http.Get(url).Headers(GetHeaders()).OnSuccess(result =>
-			{
-				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
-
-			}).OnFail(webexception =>
-			{
-				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
-
-			}).Go();
-
-			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
-
-			return ret;
-
-		}
-
-		
-
-		/// <summary>
-		/// 获取token
-		/// </summary>
-		/// <returns></returns>
-		public IDictionary<string, string> GetHeaders()
-		{
-			if (string.IsNullOrEmpty(token))
-			{
-				token = "Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t";
-			}
-
-			return new Dictionary<string, string>
-			{
-				{ "x-token", token }
-			};
+            return Headers;
 		}
 
 		/// <summary>
@@ -508,7 +699,7 @@ namespace CFLMedCab.Http.Helper
 		/// <returns></returns>
 		public void SetHeaders(string token)
 		{
-			this.token = token;
+            Headers.Add("x-token", token);
 		}
 
 
@@ -608,5 +799,82 @@ namespace CFLMedCab.Http.Helper
 			return ret;
 		}
 
-	}
+        /// <summary>
+		/// 检查结果是否正确,用于多次表关联的校验
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <returns></returns>
+		public BaseSingleData<T> ResultCheck<T, K>(Func<HttpHelper, BaseSingleData<T>> func, BaseData<K> baseData)
+        {
+
+            BaseSingleData<T> ret;
+
+            //结果集正常
+            if (baseData.code == (int)ResultCode.OK)
+            {
+                if (baseData.body != null && baseData.body.global_offset > 0)
+                {
+                    ret = func(this);
+                }
+                //结果集正常，但为空
+                else
+                {
+                    ret = new BaseSingleData<T>
+                    {
+                        code = (int)ResultCode.Result_Exception,
+                        message = ResultCode.Result_Exception.ToString()
+                    };
+                }
+            }
+            //结果集异常
+            else
+            {
+                ret = new BaseSingleData<T>()
+                {
+                    code = baseData.code,
+                    description = baseData.description,
+                    message = baseData.message
+                };
+            }
+
+            return ret;
+        }
+
+        /// <summary>
+        /// 检查结果是否正确,用于多次表关联的校验
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="K"></typeparam>
+        /// <param name="baseData"></param>
+        /// <returns></returns>
+        public string ResultCheck<T>(Func<HttpHelper, string> func, BaseSingleData<T> data)
+        {
+
+            string ret;
+
+            //结果集正常
+            if (data.code == (int)ResultCode.OK)
+            {
+                if (data.body != null)
+                {
+                    ret = func(this);
+                }
+                //结果集正常，但为空
+                else
+                {
+                    ret = ResultCode.Result_Exception.ToString();
+                }
+            }
+            //结果集异常
+            else
+            {
+                ret = data.message;
+            }
+
+            return ret;
+        }
+
+    }
 }

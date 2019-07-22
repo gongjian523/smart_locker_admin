@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-
+using System.Windows.Media.Imaging;
 
 namespace CFLMedCab.View
 {
@@ -88,6 +88,27 @@ namespace CFLMedCab.View
             });
 #endif
 
+            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(240, 80);
+            var data2 = UserLoginBll.GetInstance().GetCaptchaImage();
+
+            //byte[] byteArray = System.Text.Encoding.Default.GetBytes(data2);
+            byte[] byteArray = new byte[256];
+            System.IO.MemoryStream ms = new System.IO.MemoryStream(byteArray);
+            //System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+
+            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            ms.Position = 0;
+
+            var bi = new BitmapImage();
+            bi.BeginInit();
+            bi.CacheOption = BitmapCacheOption.OnLoad;
+            bi.StreamSource = ms;
+            bi.EndInit();
+            bi.Freeze();
+
+            imageAuth.Source = bi;
+
+
             loginView.Visibility = Visibility.Collapsed;
             BindingView.Visibility = Visibility.Visible;
 
@@ -99,13 +120,17 @@ namespace CFLMedCab.View
         private void Binding()
         {
             int ret;
+            return;
+
 
             ret = vein.LoadingDevice();
 
             if (ret != 0 && ret != VeinUtils.FV_ERRCODE_EXISTING)
             {
-                Dispatcher.BeginInvoke(new Action(() => WarnInfo2.Content = "初始化指静脉设备失败，请联系工作人员" + ret));
-                rebindingBtn.Visibility = Visibility.Visible;
+                Dispatcher.BeginInvoke(new Action(() => {
+                    WarnInfo2.Content = "初始化指静脉设备失败，请联系工作人员" + ret;
+                    rebindingBtn.Visibility = Visibility.Visible;
+                }));
                 return;
             }
 
@@ -116,8 +141,10 @@ namespace CFLMedCab.View
                 ret = vein.OpenDevice();
                 if (ret != 0)
                 {
-                    Dispatcher.BeginInvoke(new Action(() => WarnInfo2.Content = "无法打开指静脉设备，请联系工作人员" + ret));
-                    rebindingBtn.Visibility = Visibility.Visible;
+                    Dispatcher.BeginInvoke(new Action(() => {
+                        WarnInfo2.Content = "无法打开指静脉设备，请联系工作人员" + ret;
+                        rebindingBtn.Visibility = Visibility.Visible;
+                    }));
                     return;
                 }
             }

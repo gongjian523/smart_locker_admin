@@ -47,6 +47,28 @@ namespace CFLMedCab.Http.Constant
 		/// 指静脉识别的url(特殊)
 		/// </summary>
 		public static readonly string VeinmatchLoginUrlSuffix = "api/v1.0/plugin/veinmatch/login";
-	}
+
+        /// <summary>
+        /// 获取图形验证码token的url(特殊)
+        /// </summary>
+        public static readonly string CaptchaTokenUrlSuffix = "api/v1.0/account/get_captcha_token";
+
+        /// <summary>
+        /// 获取图形验证码的url(特殊)
+        /// </summary>
+        public static readonly string CaptchaImageUrlSuffix = "api/v1.0/account/get_captcha_image";
+
+        /// <summary>
+        /// 登录的url(特殊)
+        /// </summary>
+        public static readonly string SignInUrlSuffix = "api/v1.0/account/sign_in";
+
+        /// <summary>
+        /// 用户登录的url(特殊)
+        /// </summary>
+        public static readonly string UserSignInUrlSuffix = "api/v1.0/tenant-gateway/account/get_captcha_image";
+
+
+    }
 
 }

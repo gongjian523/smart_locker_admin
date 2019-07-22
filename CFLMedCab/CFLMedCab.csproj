@@ -158,7 +158,6 @@
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
-    <Compile Include="Http\Bll\CommodityBll.cs" />
     <Compile Include="Http\Bll\ShelfBll.cs" />
     <Compile Include="Http\Bll\UserLoginBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
@@ -211,6 +210,8 @@
     <Compile Include="Http\Model\Enum\OperateType.cs" />
     <Compile Include="Http\Model\Enum\ShelfTaskStatus.cs" />
     <Compile Include="Http\Model\Equipment.cs" />
+    <Compile Include="Http\Model\login\CaptchaToken.cs" />
+    <Compile Include="Http\Model\Base\BaseSingleData.cs" />
     <Compile Include="Http\Model\param\PostParam.cs" />
     <Compile Include="Http\Model\param\QueryParam.cs" />
     <Compile Include="Http\Model\param\TokenQueryParam.cs" />
