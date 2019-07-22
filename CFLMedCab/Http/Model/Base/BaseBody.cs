@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace CFLMedCab.Http.Model.Base
 {
@@ -16,7 +17,7 @@ namespace CFLMedCab.Http.Model.Base
 		/// <summary>
 		/// 全局偏移量，当前查询到的最后一条记录的偏移量+1，想要查询后面的记录，该值即为下次查询的 offset 参数
 		/// </summary>
-		public int global_offset { get; set; }
+		public Int32 global_offset { get; set; }
 
 	}
 }

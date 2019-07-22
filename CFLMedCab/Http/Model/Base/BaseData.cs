@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+
 namespace CFLMedCab.Http.Model.Base
 {
 	/// <summary>
@@ -9,7 +10,7 @@ namespace CFLMedCab.Http.Model.Base
 		/// <summary>
 		/// 响应状态码, 0 代表成功，其他值含义参考错误码文档
 		/// </summary>
-		public int code { get; set; }
+		public Int32 code { get; set; }
 
 		/// <summary>
 		/// 返回提示消息

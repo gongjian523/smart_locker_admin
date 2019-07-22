@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
@@ -60,7 +56,7 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override int GetHashCode()
+		public override Int32 GetHashCode()
 		{
 			return CommodityCodeName.GetHashCode() * 100 + CommodityCodeName.GetHashCode();
 		}

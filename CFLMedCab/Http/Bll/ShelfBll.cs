@@ -78,7 +78,7 @@ namespace CFLMedCab.Http.Bll
 					}
 				}
 			});
-			}
+		}
 
 		/// <summary>
 		/// 根据上架单号获取商品详情
@@ -113,13 +113,13 @@ namespace CFLMedCab.Http.Bll
 					//拼接设备名字
 					if (!string.IsNullOrEmpty(it.EquipmentId))
 					{
-						it.EquipmentId = GetNameById<Equipment>(it.EquipmentId);
+						it.EquipmentName = GetNameById<Equipment>(it.EquipmentId);
 					}
 
 					//拼接库房名字
 					if (!string.IsNullOrEmpty(it.EquipmentId))
 					{
-						it.StoreHouseId = GetNameById<StoreHouse>(it.StoreHouseId);
+						it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
 					}
 
 				});
@@ -161,13 +161,13 @@ namespace CFLMedCab.Http.Bll
 					//拼接设备名字
 					if (!string.IsNullOrEmpty(it.EquipmentId))
 					{
-						it.EquipmentId = GetNameById<Equipment>(it.EquipmentId);
+						it.EquipmentName = GetNameById<Equipment>(it.EquipmentId);
 					}
 
 					//拼接库房名字
 					if (!string.IsNullOrEmpty(it.EquipmentId))
 					{
-						it.StoreHouseId = GetNameById<StoreHouse>(it.StoreHouseId);
+						it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
 					}
 
 				});
@@ -177,78 +177,103 @@ namespace CFLMedCab.Http.Bll
 
 		}
 
+
+
+
+		/// <summary>
+		/// 获取变化后的上架单
+		/// </summary>
+		/// <param name="baseDatacommodityCode"></param>
+		/// <param name="baseDataShelfTask"></param>
+		/// <param name="baseDataShelfTaskCommodityDetail"></param>
+		/// <returns></returns>
+		public BaseData<ShelfTask> GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, BaseData<ShelfTask> baseDataShelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
+		{
+
+			//校验是否含有数据，如果含有数据，有就继续下一步
+			BaseData<ShelfTask> retBaseDataShelfTask = HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess1);
+
+			HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess2);
+
+			if (isSuccess1 && isSuccess2)
+			{
+				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
+
+				var shelfTask = baseDataShelfTask.body.objects[0];
+
+				var sfdCommoditys = shelfTaskCommodityDetails.Select(it => it.Commodity).ToList();
+
+				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess3);
+
+				var commodityCodes = new List<CommodityCode>();
+
+				if (isSuccess3)
+				{
+					commodityCodes = baseDatacommodityCode.body.objects;
+				}
+
+				var cccNames = commodityCodes.Select(it => it.CommodityName).ToList();
+
+				//是否名称全部一致
+				bool isAllContains = sfdCommoditys.All(cccNames.Contains) && sfdCommoditys.Count == cccNames.Count;
+
+				if (isAllContains)
+				{
+
+					bool isAllNormal = true;
+
+					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
+					{
+						if (stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityName == stcd.Commodity).Count())
+						{
+							shelfTask.Status = DocumentStatus.异常.ToString();
+							isAllNormal = false;
+							break;
+
+						}
+					}
+
+					if (isAllNormal)
+					{
+						shelfTask.Status = DocumentStatus.已完成.ToString();
+					}
+
+				}
+				else
+				{
+					shelfTask.Status = DocumentStatus.异常.ToString();
+					
+				}
+
+				
+			}
+
+			return retBaseDataShelfTask;
+		}
+
 		/// <summary>
 		/// 更新上架任务单
 		/// </summary>
-		/// <param name="commodities">操作商品集合</param>
+		/// <param name="baseDataShelfTask">最后结果集</param>
 		/// <returns></returns>
-		public BaseData<ShelfTask> PutShelfTask(ShelfTask shelfTask, List<CommodityCode> commodityCodes,  List<ShelfTaskCommodityDetail> shelfTaskCommodityDetails, AbnormalCauses abnormalCauses)
+		public BaseData<ShelfTask> PutShelfTask(BaseData<ShelfTask> baseDataShelfTask, AbnormalCauses abnormalCauses)
 		{
 
-			var sfdCommoditys = shelfTaskCommodityDetails.Select(it => it.Commodity).ToList();
+			//校验是否含有数据，如果含有数据，有就继续下一步
+			BaseData<ShelfTask> retBaseDataShelfTask = HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess1);
 
-			var cccNames = commodityCodes.Select(it => it.CommodityName).ToList();
-
-			//是否名称全部一致
-			bool isAllContains = sfdCommoditys.All(cccNames.Contains) && sfdCommoditys.Count == cccNames.Count;
-
-			if (isAllContains)
+			if (isSuccess1)
 			{
-
-				bool isAllNormal = true;
-
-				foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
+				var shelfTask = baseDataShelfTask.body.objects[0];
+				if (shelfTask.Status == DocumentStatus.异常.ToString())
 				{
-					if (stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityName == stcd.Commodity).Count())
-					{
-						shelfTask.Status = DocumentStatus.异常.ToString();
-						shelfTask.AbnormalCauses = abnormalCauses.ToString();
-						isAllNormal = false;
-						break;
-
-					}
+					shelfTask.AbnormalCauses = abnormalCauses.ToString();
 				}
-
-				if (isAllNormal)
-				{
-					shelfTask.Status = DocumentStatus.已完成.ToString();
-				}
-
-			}
-			else
-			{
-				shelfTask.Status = DocumentStatus.异常.ToString();
-				shelfTask.AbnormalCauses = abnormalCauses.ToString();
+				//put修改上架工单
+				retBaseDataShelfTask = HttpHelper.GetInstance().Put(shelfTask);
 			}
 
-			//获取待完成上架工单
-			//return HttpHelper.getinstance().get<shelftask>(new queryparam
-			//{
-			//	view_filter =
-			//	{
-			//		filter =
-			//		{
-			//			logical_relation = "1 and 2",
-			//			expressions =
-			//			{
-			//				new queryparam.expressions
-			//				{
-			//					field = "name",
-			//					@operator = "==",
-			//					operands =  {$"'{ httputility.urlencode(shelftaskname) }'"}
-			//				},
-			//				new queryparam.expressions
-			//				{
-			//					field = "status",
-			//					@operator = "==",
-			//					operands = {$"'{ httputility.urlencode(shelftaskstatus.待上架.tostring()) }'" }
-			//				}
-			//			}
-			//		}
-			//	}
-			//});
-
-			return null;
+			return retBaseDataShelfTask;
 		}
 
 	}

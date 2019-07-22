@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
+using System;
 
 namespace CFLMedCab.Http.Model
 {
@@ -32,7 +33,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int auto_id { get; set; }
+		public Int32 auto_id { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -44,15 +45,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string id { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public int is_deleted { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string name { get; set; }
+		public Int32 is_deleted { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>

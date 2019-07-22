@@ -559,7 +559,13 @@ namespace CFLMedCab.Http.Helper
 			BaseData<T> ret = null;
 			LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
-			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+
+			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
@@ -587,7 +593,12 @@ namespace CFLMedCab.Http.Helper
 			BaseData<T> ret = null;
 			LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
-			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
@@ -617,7 +628,13 @@ namespace CFLMedCab.Http.Helper
 
 			LogUtils.Debug($"post的url为：{url} ; post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
-			JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+
+			JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 

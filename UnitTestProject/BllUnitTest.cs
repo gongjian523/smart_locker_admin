@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -31,7 +33,47 @@ namespace UnitTestProject
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
-			// ShelfBll.GetInstance().GetShelfTaskCommodityDetail("ST-44");
+
+			BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+						CommodityCodeName = "QR00000038",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
+
+					}
+				},
+
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+						CommodityCodeName = "QR00000035",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
+
+					}
+				}
+			);
+
+
+			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("ST-44");
+
+			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
+
+
+			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
+
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
 				NullValueHandling = NullValueHandling.Ignore
@@ -44,6 +86,36 @@ namespace UnitTestProject
 				AbnormalDescribe = "异常描述"
 			}, Formatting.Indented, jsetting);
 		}
+        /// <summary>
+        /// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
+        /// </summary>
+        [TestMethod]
+        public void ConsumingOrderTestMethod()
+        {
+            //根据通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的id，以及markId（作废标识）。（如果领⽤用单作废标识为【是】则弹窗提醒⼿手术单作废，跳转回前⻚页）
+            var temp = ConsumingBll.GetInstance().GetConsumingOrder("U20190722000048");
+            Console.WriteLine(temp.body.objects[0].id);
+            /*            var id = "AQACQqweDg8BAAAAlQ6o8NWbsxUtQwQA";*/
+            //通过【关联领⽤用单】(ConsumingOrder.id= ConsumingGoodsDetail.ConsumingOrderId）从表格 【领⽤用商品明细】中查询获取领⽤用商品的列列表信息。
+            var lists = ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(temp);
+            Console.WriteLine(lists);
+            //通过【商品编码】从表格【商品库存管理理】中查询商品详情获得商品名称。
+            var details = ConsumingBll.GetInstance().GetPrescriptionOrderGoodsDetail(temp);
+            Console.WriteLine(details);
+        }
 
-	}
+ /*       [TestMethod]
+        public void CommodityInventoryChangeTestMethod()
+        {
+            var changes = new List<CommodityInventoryChange>()
+            {
+                new CommodityInventoryChange()
+                {
+                    C
+                }
+            }
+        }*/
+
+    }
+
 }

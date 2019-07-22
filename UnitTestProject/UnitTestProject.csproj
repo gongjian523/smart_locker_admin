@@ -61,7 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CFLMedCab\CFLMedCab.csproj">
-      <Project>{ac511ded-7d81-471d-bf0b-72172fd756ba}</Project>
+      <Project>{AC511DED-7D81-471D-BF0B-72172FD756BA}</Project>
       <Name>CFLMedCab</Name>
     </ProjectReference>
   </ItemGroup>
