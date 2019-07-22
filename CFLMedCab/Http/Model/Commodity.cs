@@ -69,10 +69,7 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public Int32 is_deleted { get; set; }
-		/// <summary>
-		/// 棉签10*10
-		/// </summary>
-		public string name { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>

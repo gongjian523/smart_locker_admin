@@ -45,15 +45,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string id { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
 		public Int32 is_deleted { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string name { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
