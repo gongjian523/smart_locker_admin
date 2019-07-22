@@ -693,7 +693,12 @@ namespace CFLMedCab.Http.Helper
             var handleEventWait = new HandleEventWait();
             BaseSingleData<T> ret = null;
 
-            JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam)).OnSuccess(result =>
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+			
+			JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
             {
                 ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
@@ -708,14 +713,45 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-     
+		/// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public BaseData<T> Put<T>(T putParam) where T : BaseModel
+		{
+
+			var handleEventWait = new HandleEventWait();
+			BaseData<T> ret = null;
+			LogUtils.Debug($"put请求参数为{JsonConvert.SerializeObject(putParam)}");
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			JumpKick.HttpLib.Http.Post(GetUpdateUrl(typeof(T).Name, putParam.id)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(putParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			return ret;
+
+		}
 
 
-        /// <summary>
-        /// 获取token
-        /// </summary>
-        /// <returns></returns>
-        public IDictionary<string, string> GetHeaders()
+		/// <summary>
+		/// 获取token
+		/// </summary>
+		/// <returns></returns>
+		public IDictionary<string, string> GetHeaders()
 		{
             if (Headers.Count <= 0)
             {
