@@ -6,9 +6,12 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -70,6 +73,10 @@ namespace CFLMedCab.View
 
         public void onBindingVein(object sender, EventArgs e)
         {
+            Dispatcher.BeginInvoke(new Action(() => {
+                WarnInfo.Content = "";
+            }));
+
 #if LOCALSDK
             user = userBll.GetUserByName(tbInputName.Text);
 
@@ -79,42 +86,56 @@ namespace CFLMedCab.View
                 return;
             }
 #else
-            var data1 = UserLoginBll.GetInstance().GetUserToken(new Account
+
+            if (tbInputName.Text == "")
             {
-                //Phone = tbInputName.Text,
-                //Password = tbInputPsw.Text
-                Phone = "18628293148",
-                Password = "cfy12345"
-            });
+                Dispatcher.BeginInvoke(new Action(() => {
+                    WarnInfo.Content = "无法获取用户信息，请重新输入！";
+                }));
+            }
+                
+
+
+            //SignInParam siParam = new SignInParam();
+
+            //if (tbInputAuti.Visibility == Visibility.Visible)
+            //{
+            //    siParam.captcha_token = account.CaptchaToken;
+            //    siParam.captcha_value = account.CaptchaValue;
+            //}
+            //siParam.password = account.Password;
+            //siParam.phone = "+86 " + account.Phone;
+            //siParam.source = "app";
+
+
+
+            //var data1 = UserLoginBll.GetInstance().GetUserToken(siParam);
 #endif
 
-            System.Drawing.Bitmap bmp = new System.Drawing.Bitmap(240, 80);
-            var data2 = UserLoginBll.GetInstance().GetCaptchaImage();
 
-            //byte[] byteArray = System.Text.Encoding.Default.GetBytes(data2);
-            byte[] byteArray = new byte[256];
-            System.IO.MemoryStream ms = new System.IO.MemoryStream(byteArray);
-            //System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
+            string url = UserLoginBll.GetInstance().GetCaptchaImage();
 
-            bmp.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-            ms.Position = 0;
+            // 4、再联网异步获取头像图片
+            //Task<System.Drawing.Image> result = ImageUtils.GetBitmapFromWebServerAsync(url);
+            System.Drawing.Image image = ImageUtils.GetBitmapFromWebServer(url);
 
-            var bi = new BitmapImage();
-            bi.BeginInit();
-            bi.CacheOption = BitmapCacheOption.OnLoad;
-            bi.StreamSource = ms;
-            bi.EndInit();
-            bi.Freeze();
+            // 5、转型：Image --> Bitmap --> BitmapImage
+            Bitmap bitmap = new Bitmap(image);
+            BitmapImage bitmapImage = ImageUtils.BitmapToBitmapImage(bitmap);
 
-            imageAuth.Source = bi;
+            Dispatcher.BeginInvoke(new Action(() => {
+                imageAuth.Source = bitmapImage;
+            }));
+          
 
+            
 
-            loginView.Visibility = Visibility.Collapsed;
-            BindingView.Visibility = Visibility.Visible;
+            //loginView.Visibility = Visibility.Collapsed;
+            //BindingView.Visibility = Visibility.Visible;
 
-            rebindingBtn.Visibility = Visibility.Hidden;
+            //rebindingBtn.Visibility = Visibility.Hidden;
 
-            Task.Factory.StartNew(Binding);
+            //Task.Factory.StartNew(Binding);
         }
 
         private void Binding()
@@ -212,5 +233,6 @@ namespace CFLMedCab.View
 #endif
 
         }
+
     }
 }

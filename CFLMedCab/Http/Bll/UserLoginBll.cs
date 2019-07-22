@@ -4,7 +4,9 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.login;
 using CFLMedCab.Http.Model.param;
+using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Web;
 
 namespace CFLMedCab.Http.Bll
@@ -99,23 +101,26 @@ namespace CFLMedCab.Http.Bll
 
 
         /// <summary>
+        /// 获取token，根据用户参数
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public BaseSingleData<Token> GetUserToken(SignInParam siParam)
+        {
+            BaseSingleData<Token> dataSignIn = HttpHelper.GetInstance().Post<Token, SignInParam>(HttpHelper.GetSignInUrl(), siParam, true);
+
+            return dataSignIn;
+        }
+
+        /// <summary>
         /// 获取图形验证码
         /// </summary>
         /// <returns></returns>
         public string GetCaptchaImage()
         {
-            //获取账户数据
-            BaseSingleData<CaptchaToken> baseDataToken = HttpHelper.GetInstance().Post<CaptchaToken>(HttpHelper.GetCaptchaTokeUrl(),true);
+            BaseSingleData<CaptchaToken> result = HttpHelper.GetInstance().Post<CaptchaToken>(HttpHelper.GetCaptchaTokeUrl(),true);
+            return HttpHelper.GetCaptchaImageUrl() + "?captcha_token=" + result.body.captcha_token;
 
-            //根据账户获取用户数据
-            string  ret = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
-
-                return hh.Get(HttpHelper.GetCaptchaImageUrl(), baseDataToken.body);
-
-            }, baseDataToken);
-
-
-            return ret;
         }
     }
 }

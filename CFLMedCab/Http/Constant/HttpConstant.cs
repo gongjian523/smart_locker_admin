@@ -66,7 +66,7 @@ namespace CFLMedCab.Http.Constant
         /// <summary>
         /// 用户登录的url(特殊)
         /// </summary>
-        public static readonly string UserSignInUrlSuffix = "api/v1.0/tenant-gateway/account/get_captcha_image";
+        public static readonly string UserSignInUrlSuffix = "api/v1.0/tenant-gateway/account/signin";
 
 
     }

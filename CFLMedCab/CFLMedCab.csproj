@@ -217,8 +217,10 @@
     <Compile Include="Http\Model\Equipment.cs" />
     <Compile Include="Http\Model\login\CaptchaToken.cs" />
     <Compile Include="Http\Model\Base\BaseSingleData.cs" />
+    <Compile Include="Http\Model\login\Token.cs" />
     <Compile Include="Http\Model\param\PostParam.cs" />
     <Compile Include="Http\Model\param\QueryParam.cs" />
+    <Compile Include="Http\Model\param\SignInParam.cs" />
     <Compile Include="Http\Model\param\TokenQueryParam.cs" />
     <Compile Include="Http\Model\param\VeinmatchPostParam.cs" />
     <Compile Include="Http\Model\ShelfTask.cs" />
@@ -250,6 +252,7 @@
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
     <Compile Include="Infrastructure\ToolHelper\GetRandomString.cs" />
+    <Compile Include="Infrastructure\ToolHelper\ImageUtils.cs" />
     <Compile Include="Infrastructure\ToolHelper\LogUtils.cs" />
     <Compile Include="Model\Constant\Contant.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
