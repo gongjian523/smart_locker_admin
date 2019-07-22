@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
@@ -33,9 +34,46 @@ namespace UnitTestProject
 		public void ShelfBllTestMethod()
 		{
 
-			CommodityCodeBll.GetInstance().GetCompareCommodity(new HashSet<CommodityEps>() { }, new HashSet<CommodityEps>() { });
+			BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+						CommodityCodeName = "QR00000038",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
 
-			// ShelfBll.GetInstance().GetShelfTaskCommodityDetail("ST-44");
+					}
+				},
+
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+						CommodityCodeName = "QR00000035",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
+
+					}
+				}
+			);
+
+
+			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("ST-44");
+
+			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
+
+
+			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
+
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
 				NullValueHandling = NullValueHandling.Ignore
