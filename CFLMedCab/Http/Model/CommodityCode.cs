@@ -9,54 +9,30 @@ using System.Threading.Tasks;
 namespace CFLMedCab.Http.Model
 {
 	/// <summary>
-	/// 商品管理
+	/// 商品码管理
 	/// </summary>
-	public class Commodity: BaseModel
+	public class CommodityCode:BaseModel
 	{
 		/// <summary>
-		/// 商品码
-		/// </summary>
-		public string CommodityCode { get; set; }
-		/// <summary>
 		/// 
 		/// </summary>
-		public string Manufacturer { get; set; }
+		public string CommodityId { get; set; }
+
 		/// <summary>
-		/// 是
+		/// 商品名称（一类）
 		/// </summary>
-		public string MixedBatch { get; set; }
+		public string CommodityName { get; set; }
+
 		/// <summary>
-		/// 
+		/// 可使用
 		/// </summary>
-		public Price Price { get; set; }
+		public string Status { get; set; }
+
 		/// <summary>
-		/// 
-		/// </summary>
-		public string Remark { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Size { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Specifications { get; set; }
-		/// <summary>
-		/// 常温;阴凉
-		/// </summary>
-		public string StorageAttribute { get; set; }
-		/// <summary>
-		/// 定数包
+		/// RF码
 		/// </summary>
 		public string Type { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Volume { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Weight { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -69,13 +45,13 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string created_by { get; set; }
-
+		
 		/// <summary>
 		/// 
 		/// </summary>
 		public int is_deleted { get; set; }
 		/// <summary>
-		/// 棉签10*10
+		/// 
 		/// </summary>
 		public string name { get; set; }
 		/// <summary>
@@ -98,28 +74,16 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string updated_at { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
 		public string updated_by { get; set; }
 
-		
+		/// <summary>
+		/// 操作类型 0 出库 1 入库
+		/// </summary>
+		public int operate_type { get; set; }
 
 	}
-
-	/// <summary>
-	/// 价钱
-	/// </summary>
-	public class Price
-	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public string symbol { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string value { get; set; }
-	}
-
 }

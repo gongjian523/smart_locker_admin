@@ -70,6 +70,8 @@ namespace CFLMedCab.Http.Bll
 
 	}
 
-	
+
+	//PutCommodityInventoryChange(string List<string>)
+
 
 }

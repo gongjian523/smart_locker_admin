@@ -158,6 +158,7 @@
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
+    <Compile Include="Http\Bll\CommodityCodeBll.cs" />
     <Compile Include="Http\Bll\ShelfBll.cs" />
     <Compile Include="Http\Bll\UserLoginBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
@@ -202,10 +203,14 @@
     <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderDto.cs" />
+    <Compile Include="Http\Enum\DocumentStatus.cs" />
     <Compile Include="Http\Enum\ResultCode.cs" />
     <Compile Include="Http\Enum\ResultHandleType.cs" />
     <Compile Include="Http\Model\Base\BaseModel.cs" />
     <Compile Include="Http\Model\Commodity.cs" />
+    <Compile Include="Http\Model\CommodityCode.cs" />
+    <Compile Include="Http\Model\CommodityEps.cs" />
+    <Compile Include="Http\Model\CommodityInventoryChange.cs" />
     <Compile Include="Http\Model\Common\Permission.cs" />
     <Compile Include="Http\Model\Enum\OperateType.cs" />
     <Compile Include="Http\Model\Enum\ShelfTaskStatus.cs" />
