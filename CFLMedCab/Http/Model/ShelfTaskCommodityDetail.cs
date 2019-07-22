@@ -20,12 +20,12 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 已上架数量
 		/// </summary>
-		public string AlreadyShelfNumber { get; set; }
+		public int AlreadyShelfNumber { get; set; }
 
 		/// <summary>
 		/// 待上架数量
 		/// </summary>
-		public string NeedShelfNumber { get; set; }
+		public int NeedShelfNumber { get; set; }
 
 		/// <summary>
 		/// 商品类型
