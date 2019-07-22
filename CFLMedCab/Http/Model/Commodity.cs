@@ -1,11 +1,6 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace CFLMedCab.Http.Model
 {
 	/// <summary>
@@ -60,7 +55,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int auto_id { get; set; }
+		public Int32 auto_id { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -73,7 +68,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int is_deleted { get; set; }
+		public Int32 is_deleted { get; set; }
 		/// <summary>
 		/// 棉签10*10
 		/// </summary>

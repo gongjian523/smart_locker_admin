@@ -78,7 +78,7 @@ namespace CFLMedCab.Http.Bll
 					}
 				}
 			});
-			}
+		}
 
 		/// <summary>
 		/// 根据上架单号获取商品详情
@@ -221,34 +221,8 @@ namespace CFLMedCab.Http.Bll
 				shelfTask.AbnormalCauses = abnormalCauses.ToString();
 			}
 
-			//获取待完成上架工单
-			//return HttpHelper.getinstance().get<shelftask>(new queryparam
-			//{
-			//	view_filter =
-			//	{
-			//		filter =
-			//		{
-			//			logical_relation = "1 and 2",
-			//			expressions =
-			//			{
-			//				new queryparam.expressions
-			//				{
-			//					field = "name",
-			//					@operator = "==",
-			//					operands =  {$"'{ httputility.urlencode(shelftaskname) }'"}
-			//				},
-			//				new queryparam.expressions
-			//				{
-			//					field = "status",
-			//					@operator = "==",
-			//					operands = {$"'{ httputility.urlencode(shelftaskstatus.待上架.tostring()) }'" }
-			//				}
-			//			}
-			//		}
-			//	}
-			//});
-
-			return null;
+			//put修改上架工单
+			return HttpHelper.GetInstance().Put(shelfTask);
 		}
 
 	}

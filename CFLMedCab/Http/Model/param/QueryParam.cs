@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model.param
 {
@@ -24,12 +21,12 @@ namespace CFLMedCab.Http.Model.param
 		/// <summary>
 		/// 查询个数
 		/// </summary>
-		public int limit { get; set; } = -1;
+		public Int32 limit { get; set; } = -1;
 
 		/// <summary>
 		/// 偏移量
 		/// </summary>
-		public int offset { get; set; } = -1;
+		public Int32 offset { get; set; } = -1;
 
 		/// <summary>
 		/// 有 2 个字段，field 表示要筛选的字段， in_list 表示字段的值的列表

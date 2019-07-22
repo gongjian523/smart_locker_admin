@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.param;
@@ -31,6 +32,9 @@ namespace UnitTestProject
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
+
+			CommodityCodeBll.GetInstance().GetCompareCommodity(new HashSet<CommodityEps>() { }, new HashSet<CommodityEps>() { });
+
 			// ShelfBll.GetInstance().GetShelfTaskCommodityDetail("ST-44");
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{

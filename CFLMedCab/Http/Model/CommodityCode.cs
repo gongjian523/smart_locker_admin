@@ -2,10 +2,6 @@
 using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
@@ -33,7 +29,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int auto_id { get; set; }
+		public Int32 auto_id { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -46,7 +42,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int is_deleted { get; set; }
+		public Int32 is_deleted { get; set; }
 
 		/// <summary>
 		/// 
@@ -102,7 +98,7 @@ namespace CFLMedCab.Http.Model
 		/// 操作类型 0 出库 1 入库
 		/// </summary>
 		[JsonIgnore]
-		public int operate_type { get; set; }
+		public Int32 operate_type { get; set; }
 
 		/// <summary>
 		/// 商品名称（一类）

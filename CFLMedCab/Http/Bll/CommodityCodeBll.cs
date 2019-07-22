@@ -16,7 +16,7 @@ namespace CFLMedCab.Http.Bll
 	/// <summary>
 	/// 商品比对业务
 	/// </summary>
-    public class CommodityCodeBll
+    public class CommodityCodeBll:BaseBll<CommodityCodeBll>
     {
 
 		/// <summary>
@@ -128,7 +128,7 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="afterCommodityEpsCollect">之后商品集合</param>
 		/// <returns></returns>
 
-		private BaseData<CommodityCode> GetCompareCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
+		public BaseData<CommodityCode> GetCompareCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
 		{
 			return GetCommodityCode(GetCompareSimpleCommodity(preCommodityEpsCollect, afterCommodityEpsCollect));
 		}
