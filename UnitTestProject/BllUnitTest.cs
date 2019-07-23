@@ -8,6 +8,7 @@ using CFLMedCab.Http.Model.param;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using static CFLMedCab.Http.Bll.ConsumingBll;
+using static CFLMedCab.Http.Bll.ShelfBll;
 
 namespace UnitTestProject
 {
@@ -71,24 +72,16 @@ namespace UnitTestProject
 			);
 
 
-			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("ST-44");
+			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
 
 			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
 
+			BaseData<ShelfTask> baseDataShelfTaskChange = ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
 
-			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
 
-			JsonSerializerSettings jsetting = new JsonSerializerSettings
-			{
-				NullValueHandling = NullValueHandling.Ignore
-			};
-		
-			string ret = JsonConvert.SerializeObject(new ShelfTask
-			{
-				Status = "上架",
-				AbnormalCauses = "商品缺失",
-				AbnormalDescribe = "异常描述"
-			}, Formatting.Indented, jsetting);
+			//BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(baseDataShelfTaskChange, AbnormalCauses.商品损坏 );
+			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask);
+
 		}
         /// <summary>
         /// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】

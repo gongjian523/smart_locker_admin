@@ -197,7 +197,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 					CommodityEps commodityEps = JsonConvert.DeserializeObject<CommodityEps>(epsJson);
 					commodityEps.GoodsLocationName = ComName.GetCabNameByRFidCom(com1);
 					//commodityEps.GoodsLocationId = 
-					commodityEps.EquipmentName = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
+					commodityEps.EquipmentId = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
 					//commodityEps.EquipmentName 
 
 					currentEpcDataHs.Add(commodityEps);
@@ -221,7 +221,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 					CommodityEps commodityEps = JsonConvert.DeserializeObject<CommodityEps>(epsJson);
 					commodityEps.GoodsLocationName = ComName.GetCabNameByRFidCom(com4);
 					//commodityEps.GoodsLocationId = 
-					commodityEps.EquipmentName = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
+					commodityEps.EquipmentId = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
 					//commodityEps.EquipmentName 
 
 					currentEpcDataHs.Add(commodityEps);

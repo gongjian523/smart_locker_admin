@@ -10,7 +10,6 @@ namespace CFLMedCab.Http.Model.Base
     /// <summary>
     /// 实体通用属性
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
     public class BaseModel
 	{
 		/// <summary>
