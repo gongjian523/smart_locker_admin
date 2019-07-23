@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -19,7 +20,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 来源单据
 		/// </summary>
-		public string SourceBill { get; set; }
+		public SourceBill SourceBill { get; set; }
 
         /// <summary>
         /// 变更后设备
@@ -38,7 +39,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 变更后状态
         /// </summary>
-        public string ChageStatus { get; set; }
+        public string ChangeStatus { get; set; }
 
     }
 

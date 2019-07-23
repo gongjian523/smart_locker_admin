@@ -23,7 +23,7 @@ namespace CFLMedCab.Http.Model
         /// 商品名称
         /// </summary>
         [JsonIgnore]
-        public string CommodityName { get; set; }
+        public string CommodityName { get; set; } 
         /// <summary>
         /// 商品数量
         /// </summary>

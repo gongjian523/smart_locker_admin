@@ -13,7 +13,7 @@ namespace CFLMedCab.Http.Bll
     /// <summary>
     /// 商品库存变更记录信资料
     /// </summary>
-    class CommodityInventoryChangeBll : BaseBll<CommodityInventoryChangeBll>
+    public class CommodityInventoryChangeBll : BaseBll<CommodityInventoryChangeBll>
     {
         /// <summary>
         /// 创建商品库存变更记录
@@ -22,10 +22,10 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseData<CommodityInventoryChange> createCommodityInventoryChange(List<CommodityInventoryChange> changes)
         {
-            return HttpHelper.GetInstance().Post<CommodityInventoryChange, PostParam<CommodityInventoryChange>>(new PostParam<CommodityInventoryChange>()
+            return HttpHelper.GetInstance().Post<CommodityInventoryChange>(new PostParam<CommodityInventoryChange>()
             {
                 objects = changes
-            }, HttpHelper.GetCreateUrl(typeof(CommodityInventoryChange).Name));
+            });
         }
     }
 }

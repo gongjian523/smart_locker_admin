@@ -1,7 +1,9 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +13,7 @@ namespace CFLMedCab.Http.Model
     /// <summary>
     /// 关联领用单表
     /// </summary>
+    [JsonObject(MemberSerialization.OptOut)]
     public class ConsumingOrder : BaseModel
     {
         /// <summary>
@@ -34,9 +37,14 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string Status { get; set; }
         /// <summary>
-        /// 
+        /// 所在库房
         /// </summary>
         public string StoreHouseId { get; set; }
+        /// <summary>
+        /// 所在库房名称
+        /// </summary>
+        [JsonIgnore]
+        public string StoreHouseName { get; set; }
         /// <summary>
         /// 手术领用
         /// </summary>
@@ -44,7 +52,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int auto_id { get; set; }
+        public object auto_id { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -56,7 +64,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int is_deleted { get; set; }
+        public object is_deleted { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -87,5 +95,46 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string updated_by { get; set; }
 
+    }
+    public enum ConsumingOrderStatus
+    {
+        /// <summary>
+        /// 未领用
+        /// </summary>
+        [Description("未领用")]
+        未领用 = 0,
+
+        /// <summary>
+        /// 领用中
+        /// </summary>
+        [Description("领用中")]
+        领用中 = 1,
+
+        /// <summary>
+        /// 已完成
+        /// </summary>
+        [Description("已完成")]
+        已完成 = 2
+    }
+
+    public enum ConsumingOrderType
+    {
+        /// <summary>
+        /// 一般领用
+        /// </summary>
+        [Description("一般领用")]
+        一般领用 = 0,
+
+        /// <summary>
+        /// 手术领用
+        /// </summary>
+        [Description("手术领用")]
+        手术领用 = 1,
+
+        /// <summary>
+        /// 医嘱处方领用
+        /// </summary>
+        [Description("医嘱处方领用")]
+        医嘱处方领用 = 2
     }
 }

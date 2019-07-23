@@ -591,14 +591,18 @@ namespace CFLMedCab.Http.Helper
 
 			var handleEventWait = new HandleEventWait();
 			BaseData<T> ret = null;
-			LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
+
+
+            LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
 				NullValueHandling = NullValueHandling.Ignore
 			};
 
-			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+            var temp = JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting);
+
+            JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 

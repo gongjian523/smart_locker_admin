@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.param;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using static CFLMedCab.Http.Bll.ConsumingBll;
 
 namespace UnitTestProject
 {
@@ -90,10 +92,10 @@ namespace UnitTestProject
         /// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
         /// </summary>
         [TestMethod]
-        public void ConsumingOrderTestMethod()
+        public void ConsumingQueryOrderTestMethod()
         {
             //根据通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的id，以及markId（作废标识）。（如果领⽤用单作废标识为【是】则弹窗提醒⼿手术单作废，跳转回前⻚页）
-            var temp = ConsumingBll.GetInstance().GetConsumingOrder("U20190722000048");
+            var temp = ConsumingBll.GetInstance().GetConsumingOrder("U20190723000051");
             Console.WriteLine(temp.body.objects[0].id);
             /*            var id = "AQACQqweDg8BAAAAlQ6o8NWbsxUtQwQA";*/
             //通过【关联领⽤用单】(ConsumingOrder.id= ConsumingGoodsDetail.ConsumingOrderId）从表格 【领⽤用商品明细】中查询获取领⽤用商品的列列表信息。
@@ -102,19 +104,53 @@ namespace UnitTestProject
             //通过【商品编码】从表格【商品库存管理理】中查询商品详情获得商品名称。
             var details = ConsumingBll.GetInstance().GetPrescriptionOrderGoodsDetail(temp);
             Console.WriteLine(details);
-        }
 
- /*       [TestMethod]
+        }
+        [TestMethod]
+        public void ConsumingPostOrderTestMethod()
+        {
+            //测试移动端 创建【领⽤用单】，且领⽤用状态为 ‘已完成’。
+            var temp = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
+            {
+                FinishDate = "2019-07-23T09:31:00Z",//完成时间
+                Status = ConsumingOrderStatus.已完成.ToString(),//领用状态
+                StoreHouseId = null,//领用库房【暂未知数据来源】
+                Type = ConsumingOrderType.一般领用.ToString()
+            });
+            Console.WriteLine(temp);
+/*
+            var puttemp = ConsumingBll.GetInstance().UpdateConsumingOrderStatus(new ConsumingOrder()
+            {
+                id = "AQACQqweDg8BAAAAv0_s8_fnsxXXagQA",
+                Status = ConsumingOrderStatus.未领用.ToString(),
+                version = "0"
+            }) ;
+
+            Console.WriteLine(puttemp);*/
+        }
+        /// <summary>
+        /// 测试商品库存变更记录创建
+        /// </summary>
+        [TestMethod]
         public void CommodityInventoryChangeTestMethod()
         {
-            var changes = new List<CommodityInventoryChange>()
+
+            var temp = CommodityInventoryChangeBll.GetInstance().createCommodityInventoryChange(new List<CommodityInventoryChange>()
             {
                 new CommodityInventoryChange()
                 {
-                    C
+                    CommodityCodeId = "AQACQqweDg8BAAAAq09Zts9esxXkLwQA",//商品码【扫描】
+                    SourceBill = new SourceBill()//来源单据
+                    {
+                        object_name = "ConsumingOrder",
+                        object_id = "AQACQqweDg8BAAAAv0_s8_fnsxXXagQA"
+                    },
+                    ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
                 }
-            }
-        }*/
+            });
+
+            Console.WriteLine(temp);
+        }
 
     }
 

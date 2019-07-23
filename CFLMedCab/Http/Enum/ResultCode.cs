@@ -31,6 +31,12 @@ namespace CFLMedCab.Http.Enum
         [Description("Request_Exception")]
         Business_Exception = -3,
 
+        /// <summary>
+        /// 参数异常
+        /// </summary>
+        [Description("Request_Exception")]
+        Parameter_Exception = -4,
+
 		/// <summary>
 		/// OK
 		/// </summary>
