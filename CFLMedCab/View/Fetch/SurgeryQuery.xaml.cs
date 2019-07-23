@@ -61,7 +61,7 @@ namespace CFLMedCab.View.Fetch
             }
 
             //根据领用单查找手术单
-                List<SurgeryOrderDto> surgeryOrderDtos = fetchOrderBll.GetSurgeryOrderDto(new SurgeryOrderApo { SurgeryOrderCode= value }).Data;
+            List<SurgeryOrderDto> surgeryOrderDtos = fetchOrderBll.GetSurgeryOrderDto(new SurgeryOrderApo { SurgeryOrderCode= value }).Data;
             if (surgeryOrderDtos .Count>0)
             {
                 EnterSurgeryDetailEvent(this, surgeryOrderDtos.First());

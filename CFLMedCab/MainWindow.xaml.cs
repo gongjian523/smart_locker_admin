@@ -290,7 +290,7 @@ namespace CFLMedCab
 #if LOCALSDK
             CurrentUser user = new CurrentUser();
 #else
-            User user = new User();
+            User user = null;
 #endif
 
             string info = "等待检测指静脉的时候发生错误";
@@ -340,27 +340,21 @@ namespace CFLMedCab
 
 #else
 
-                    BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchLogin(Convert.ToBase64String(macthfeature));
+                    //BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchLogin(Convert.ToBase64String(macthfeature));
 
                     BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
                     {
                         regfeature = Convert.ToBase64String(macthfeature)
                     });
 
-                    //BaseSingleData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
-                    //{
-                    //    regfeature = "MTExMQ=="
-                    //});
-
                     if (data.code == 0)
                     {
-                        //user = data.body.user;
-                        user.name = "aaa";
+                        user = data.body.user;
 
-                        //ApplicationState.SetAccessToken(data.body.System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.regfeature); access_token);
-                        //ApplicationState.SetAccessToken(data.body.refresh_token);
+                        ApplicationState.SetAccessToken(data.body.accessToken);
+                        ApplicationState.SetAccessToken(data.body.refresh_token);
 
-                        //HttpHelper.GetInstance().SetHeaders(data.body.access_token);
+                        HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
                     }
                     else
                     {
@@ -374,7 +368,7 @@ namespace CFLMedCab
 #if LOCALSDK 
             if (e == -1 || user.id == 0)
 #else
-            if (e == -1 || user.name !="")
+            if (e == -1 || user ==null)
 #endif
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
@@ -396,17 +390,21 @@ namespace CFLMedCab
             }
             else
             {
-                ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
+                
 
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     LoginBkView.Visibility = Visibility.Hidden;
 #if LOCALSDK
+                    ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
                     SetNavBtnVisiblity(user.role);
-#else
-                    SetNavBtnVisiblity(user.Role);
-#endif
                     tbNameText.Text = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+#else
+                    ApplicationState.SetUserInfo(user);
+                    SetNavBtnVisiblity(user.Role);
+                    tbNameText.Text = user.name;
+#endif
+
                 }));
             }
             
