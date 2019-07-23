@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -237,6 +237,7 @@
     <Compile Include="Http\Model\ShelfTask.cs" />
     <Compile Include="Http\Model\ShelfTaskCommodityDetail.cs" />
     <Compile Include="Http\Model\StoreHouse.cs" />
+    <Compile Include="Http\Model\TaskOrder.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="Infrastructure\BootUpHelper\BootUpHelper.cs" />
     <Compile Include="Infrastructure\ComName.cs" />

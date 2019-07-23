@@ -2,8 +2,13 @@
 using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -104,6 +109,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 return;
             }
 
+#if LOCALSDK
             if (ReplenishOrderViewList.Where(item => item.code == value).ToList().Count == 0)
             {
                 MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
@@ -111,6 +117,39 @@ namespace CFLMedCab.View.ReplenishmentOrder
             }
 
             EnterReplenishmentDetailEvent(this, ReplenishOrderViewList.Where(item => item.code == value).First());
+#else
+
+            //TaskOrder taskOrder = JsonConvert.DeserializeObject<TaskOrder>(value);
+
+            string name = "OS20190721000052";
+
+            //if (taskOrder.name == null)
+            //    name = value;
+            //else
+            //    name = taskOrder.name;
+
+            BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);
+
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
+            if(!isSuccess)
+            {
+                MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
+
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess2);
+            if (!isSuccess2)
+            {
+                MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            EnterReplenishmentDetailEvent(this, ReplenishOrderViewList.Where(item => item.code == value).First());
+
+
+#endif
         }
 
         /// <summary>

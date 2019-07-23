@@ -862,7 +862,6 @@ namespace CFLMedCab
             replenishment.EnterReplenishmentDetailOpenEvent += new Replenishment.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
 
             ContentFrame.Navigate(replenishment);
-
         }
 
         /// <summary>

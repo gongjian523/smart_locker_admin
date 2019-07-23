@@ -295,7 +295,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		}
 #endif
 
-            public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
+        public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
 		{
 			Console.ReadKey();
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
