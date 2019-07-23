@@ -256,11 +256,11 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="baseDataShelfTask">最后结果集</param>
 		/// <returns></returns>
-		public BaseData<ShelfTask> PutShelfTask(BaseData<ShelfTask> baseDataShelfTask, AbnormalCauses abnormalCauses)
+		public BasePutData<ShelfTask> PutShelfTask(BaseData<ShelfTask> baseDataShelfTask, AbnormalCauses abnormalCauses)
 		{
 
 			//校验是否含有数据，如果含有数据，有就继续下一步
-			BaseData<ShelfTask> retBaseDataShelfTask = HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess1);
+			BasePutData<ShelfTask> retBasePutDataShelfTask = HttpHelper.GetInstance().ResultCheckPutByBase(baseDataShelfTask, out bool isSuccess1);
 
 			if (isSuccess1)
 			{
@@ -270,10 +270,10 @@ namespace CFLMedCab.Http.Bll
 					shelfTask.AbnormalCauses = abnormalCauses.ToString();
 				}
 				//put修改上架工单
-				retBaseDataShelfTask = HttpHelper.GetInstance().Put(shelfTask);
+				retBasePutDataShelfTask = HttpHelper.GetInstance().Put(shelfTask);
 			}
 
-			return retBaseDataShelfTask;
+			return retBasePutDataShelfTask;
 		}
 
 	}

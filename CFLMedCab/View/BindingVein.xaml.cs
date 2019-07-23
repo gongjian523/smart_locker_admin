@@ -241,7 +241,7 @@ namespace CFLMedCab.View
             userBll.UpdateCurrentUsers(user);
             this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
 #else
-            BaseData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
+			BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
             {
                 regfeature = Convert.ToBase64String(regfeature),
                 finger_name = "finger1"

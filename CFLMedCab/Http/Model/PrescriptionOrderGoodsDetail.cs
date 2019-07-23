@@ -47,19 +47,11 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public Int32 auto_id { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
         public string created_at { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public string created_by { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public Int32 is_deleted { get; set; }
         /// <summary>
         /// 
         /// </summary>

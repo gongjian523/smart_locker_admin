@@ -319,7 +319,7 @@ namespace CFLMedCab.Http.Helper
         /// <param name="handleEventWait">处理http线程类</param>
         /// <param name="result">字符串结果</param>
         /// <param name="ret">返回处理后结果</param>
-        private void ResultHand<T>(ResultHandleType resultHandleType, HandleEventWait handleEventWait, string result, out BaseSingleData<T> ret)
+        private void ResultHand<T>(ResultHandleType resultHandleType, HandleEventWait handleEventWait, string result, out BasePostData<T> ret)
         {
             ret = null;
 
@@ -327,13 +327,13 @@ namespace CFLMedCab.Http.Helper
             {
                 case ResultHandleType.请求正常:
 
-                    ret = JsonConvert.DeserializeObject<BaseSingleData<T>>(result);
+                    ret = JsonConvert.DeserializeObject<BasePostData<T>>(result);
                     handleEventWait.Set();
 
                     break;
                 case ResultHandleType.请求异常:
 
-                    ret = new BaseSingleData<T>
+                    ret = new BasePostData<T>
                     {
                         code = (int)ResultCode.Request_Exception,
                         message = result
@@ -345,7 +345,7 @@ namespace CFLMedCab.Http.Helper
 
                     if (handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
                     {
-                        ret = new BaseSingleData<T>
+                        ret = new BasePostData<T>
                         {
                             code = (int)ResultCode.Request_Exception,
                             message = result
@@ -359,10 +359,108 @@ namespace CFLMedCab.Http.Helper
 
         }
 
-        /// <summary>
-        /// http线程阻塞操作类
-        /// </summary>
-        private class HandleEventWait {
+		/// <summary>
+		/// 通用返回结果处理类
+		/// </summary>
+		/// <typeparam name="T">结果消息体类型</typeparam>
+		/// <param name="resultHandleType">结果处理类型</param>
+		/// <param name="handleEventWait">处理http线程类</param>
+		/// <param name="result">字符串结果</param>
+		/// <param name="ret">返回处理后结果</param>
+		private void ResultHand<T>(ResultHandleType resultHandleType, HandleEventWait handleEventWait, string result, out BaseSinglePostData<T> ret)
+		{
+			ret = null;
+
+			switch (resultHandleType)
+			{
+				case ResultHandleType.请求正常:
+
+					ret = JsonConvert.DeserializeObject<BaseSinglePostData<T>>(result);
+					handleEventWait.Set();
+
+					break;
+				case ResultHandleType.请求异常:
+
+					ret = new BaseSinglePostData<T>
+					{
+						code = (int)ResultCode.Request_Exception,
+						message = result
+					};
+					handleEventWait.Set();
+
+					break;
+				case ResultHandleType.请求超时:
+
+					if (handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
+					{
+						ret = new BaseSinglePostData<T>
+						{
+							code = (int)ResultCode.Request_Exception,
+							message = result
+						};
+					}
+
+					break;
+				default:
+					break;
+			}
+
+		}
+
+
+		/// <summary>
+		/// 通用返回结果处理类
+		/// </summary>
+		/// <typeparam name="T">结果消息体类型</typeparam>
+		/// <param name="resultHandleType">结果处理类型</param>
+		/// <param name="handleEventWait">处理http线程类</param>
+		/// <param name="result">字符串结果</param>
+		/// <param name="ret">返回处理后结果</param>
+		private void ResultHand<T>(ResultHandleType resultHandleType, HandleEventWait handleEventWait, string result, out BasePutData<T> ret)
+		{
+			ret = null;
+
+			switch (resultHandleType)
+			{
+				case ResultHandleType.请求正常:
+
+					ret = JsonConvert.DeserializeObject<BasePutData<T>>(result);
+					handleEventWait.Set();
+
+					break;
+				case ResultHandleType.请求异常:
+
+					ret = new BasePutData<T>
+					{
+						code = (int)ResultCode.Request_Exception,
+						message = result
+					};
+					handleEventWait.Set();
+
+					break;
+				case ResultHandleType.请求超时:
+
+					if (handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
+					{
+						ret = new BasePutData<T>
+						{
+							code = (int)ResultCode.Request_Exception,
+							message = result
+						};
+					}
+
+					break;
+				default:
+					break;
+			}
+
+		}
+
+
+		/// <summary>
+		/// http线程阻塞操作类
+		/// </summary>
+		private class HandleEventWait {
 
 			private readonly EventWaitHandle eventWaitHandle;
 
@@ -523,10 +621,10 @@ namespace CFLMedCab.Http.Helper
         /// </summary>
         /// <param name="url">已经拼接好的url</param>
         /// <returns></returns>
-        public BaseSingleData<T> Get<T,K>(string urlPrefix, K queryParam) where T: class
+        public BasePostData<T> Get<T,K>(string urlPrefix, K queryParam) where T: class
         {
             var handleEventWait = new HandleEventWait();
-            BaseSingleData<T> ret = null;
+			BasePostData<T> ret = null;
 
             string url = GetCommonQueryUrl(urlPrefix, queryParam);
 
@@ -552,11 +650,11 @@ namespace CFLMedCab.Http.Helper
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public BaseData<T> Post<T>(T postParam) where T : class
+        public BasePostData<T> Post<T>(T postParam) where T : class
 		{
 
 			var handleEventWait = new HandleEventWait();
-			BaseData<T> ret = null;
+			BasePostData<T> ret = null;
 			LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
@@ -586,11 +684,11 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="postParam">通用post参数</param>
 		/// <returns></returns>
-		public BaseData<T> Post<T>(PostParam<T> postParam) where T : class
+		public BasePostData<T> Post<T>(PostParam<T> postParam) where T : class
 		{
 
 			var handleEventWait = new HandleEventWait();
-			BaseData<T> ret = null;
+			BasePostData<T> ret = null;
 
 
             LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
@@ -624,11 +722,11 @@ namespace CFLMedCab.Http.Helper
 		/// <param name="url"></param>
 		/// <param name="postParam">post参数</param>
 		/// <returns></returns>
-		public BaseData<T> Post<T, K>(K postParam, string url) where T : class
+		public BasePostData<T> Post<T, K>(K postParam, string url) where T : class
 		{
 
 			var handleEventWait = new HandleEventWait();
-			BaseData<T> ret = null;
+			BasePostData<T> ret = null;
 
 			LogUtils.Debug($"post的url为：{url} ; post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
@@ -659,10 +757,10 @@ namespace CFLMedCab.Http.Helper
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public BaseData<T> Post<T>(string url) where T : class
+        public BasePostData<T> Post<T>(string url) where T : class
         {
             var handleEventWait = new HandleEventWait();
-            BaseData<T> ret = null;
+			BasePostData<T> ret = null;
 
             JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).OnSuccess(result =>
             {
@@ -684,10 +782,10 @@ namespace CFLMedCab.Http.Helper
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public BaseSingleData<T> Post<T>(string url, bool single) where T : class
+        public BaseSinglePostData<T> Post<T>(string url, bool single) where T : class
         {
             var handleEventWait = new HandleEventWait();
-            BaseSingleData<T> ret = null;
+			BaseSinglePostData<T> ret = null;
 
             JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).OnSuccess(result =>
             {
@@ -704,15 +802,45 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-        // <summary>
-        /// 同步获取post请求结果
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public BaseSingleData<T> Post<T,K>(string url, K postParam , bool BaseSingleDataType) where T : class
+		// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public BaseSinglePostData<T> Post<T, K>(string url, K postParam, bool isSingle) where T : class
+		{
+			var handleEventWait = new HandleEventWait();
+			BaseSinglePostData<T> ret = null;
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			JumpKick.HttpLib.Http.Post(url).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			return ret;
+		}
+
+		// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public BasePostData<T> Post<T,K>(string url, K postParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
-            BaseSingleData<T> ret = null;
+			BasePostData<T> ret = null;
 
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
@@ -740,10 +868,10 @@ namespace CFLMedCab.Http.Helper
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
-        public BaseSingleData<T> Post<T, K>(string url, K postParam,  IDictionary<string, string> headerParam) where T : class
+        public BasePostData<T> Post<T, K>(string url, K postParam,  IDictionary<string, string> headerParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
-            BaseSingleData<T> ret = null;
+			BasePostData<T> ret = null;
 
             JsonSerializerSettings jsetting = new JsonSerializerSettings
             {
@@ -765,17 +893,46 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
+		// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public BaseSinglePostData<T> Post<T, K>(string url, K postParam, IDictionary<string, string> headerParam, bool isS) where T : class
+		{
+			var handleEventWait = new HandleEventWait();
+			BaseSinglePostData<T> ret = null;
 
-        /// <summary>
-        /// 同步获取post请求结果
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public BaseData<T> Put<T>(T putParam) where T : BaseModel
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			JumpKick.HttpLib.Http.Post(url).Headers(headerParam).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			return ret;
+		}
+
+		/// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public BasePutData<T> Put<T>(T putParam) where T : BaseModel
 		{
 
 			var handleEventWait = new HandleEventWait();
-			BaseData<T> ret = null;
+			BasePutData<T> ret = null;
 			LogUtils.Debug($"put请求参数为{JsonConvert.SerializeObject(putParam)}");
 
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
@@ -860,6 +1017,112 @@ namespace CFLMedCab.Http.Helper
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="K"></typeparam>
 		/// <param name="baseData"></param>
+		/// <param name="isSuccess"></param>
+		/// <returns></returns>
+		public BasePutData<T> ResultCheckPutByBase<T>(BaseData<T> baseData, out bool isSuccess)
+		{
+			isSuccess = false;
+
+			BasePutData<T> basePutData = null;
+
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null && baseData.body.global_offset > 0)
+				{
+					isSuccess = true;
+				}
+				//结果集正常，但为空
+				else
+				{
+					basePutData = new BasePutData<T>
+					{
+						code = (int)ResultCode.Result_Exception,
+						message = ResultCode.Result_Exception.ToString()
+					};
+				}
+			}
+			else
+			{
+				basePutData = new BasePutData<T>
+				{
+					code = baseData.code,
+					message = baseData.message
+				};
+			}
+
+			return basePutData;
+
+		}
+
+
+
+		/// <summary>
+		/// 检查结果是否正确
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <param name="isSuccess"></param>
+		/// <returns></returns>
+		public BasePostData<T> ResultCheck<T>(BasePostData<T> baseData, out bool isSuccess)
+		{
+			isSuccess = false;
+
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null && baseData.body.Count > 0)
+				{
+					isSuccess = true;
+				}
+				//结果集正常，但为空
+				else
+				{
+					baseData.code = (int)ResultCode.Result_Exception;
+					baseData.message = ResultCode.Result_Exception.ToString();
+				}
+			}
+
+			return baseData;
+
+		}
+
+
+		/// <summary>
+		/// 检查结果是否正确
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <param name="isSuccess"></param>
+		/// <returns></returns>
+		public BasePutData<T> ResultCheck<T>(BasePutData<T> baseData, out bool isSuccess)
+		{
+			isSuccess = false;
+
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null)
+				{
+					isSuccess = true;
+				}
+				//结果集正常，但为空
+				else
+				{
+					baseData.code = (int)ResultCode.Result_Exception;
+					baseData.message = ResultCode.Result_Exception.ToString();
+				}
+			}
+
+			return baseData;
+
+		}
+
+		/// <summary>
+		/// 检查结果是否正确
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
 		/// <returns></returns>
 		public BaseData<T> ResultCheck<T>(BaseData<T> baseData)
 		{
@@ -920,17 +1183,61 @@ namespace CFLMedCab.Http.Helper
 			return ret;
 		}
 
-        /// <summary>
+
+		/// <summary>
 		/// 检查结果是否正确,用于多次表关联的校验
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <typeparam name="K"></typeparam>
 		/// <param name="baseData"></param>
 		/// <returns></returns>
-		public BaseSingleData<T> ResultCheck<T, K>(Func<HttpHelper, BaseSingleData<T>> func, BaseSingleData<K> baseData)
+		public BaseSinglePostData<T> ResultCheck<T, K>(Func<HttpHelper, BaseSinglePostData<T>> func, BaseSinglePostData<K> baseData)
+		{
+
+			BaseSinglePostData<T> ret;
+
+			//结果集正常
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null)
+				{
+					ret = func(this);
+				}
+				//结果集正常，但为空
+				else
+				{
+					ret = new BaseSinglePostData<T>
+					{
+						code = (int)ResultCode.Result_Exception,
+						message = ResultCode.Result_Exception.ToString()
+					};
+				}
+			}
+			//结果集异常
+			else
+			{
+				ret = new BaseSinglePostData<T>()
+				{
+					code = baseData.code,
+					description = baseData.description,
+					message = baseData.message
+				};
+			}
+
+			return ret;
+		}
+
+		/// <summary>
+		/// 检查结果是否正确,用于多次表关联的校验
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <returns></returns>
+		public BasePostData<T> ResultCheck<T, K>(Func<HttpHelper, BasePostData<T>> func, BasePostData<K> baseData)
         {
 
-            BaseSingleData<T> ret;
+			BasePostData<T> ret;
 
             //结果集正常
             if (baseData.code == (int)ResultCode.OK)
@@ -942,7 +1249,7 @@ namespace CFLMedCab.Http.Helper
                 //结果集正常，但为空
                 else
                 {
-                    ret = new BaseSingleData<T>
+                    ret = new BasePostData<T>
                     {
                         code = (int)ResultCode.Result_Exception,
                         message = ResultCode.Result_Exception.ToString()
@@ -952,7 +1259,7 @@ namespace CFLMedCab.Http.Helper
             //结果集异常
             else
             {
-                ret = new BaseSingleData<T>()
+                ret = new BasePostData<T>()
                 {
                     code = baseData.code,
                     description = baseData.description,
@@ -963,14 +1270,57 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-        /// <summary>
-        /// 检查结果是否正确,用于多次表关联的校验
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <typeparam name="K"></typeparam>
-        /// <param name="baseData"></param>
-        /// <returns></returns>
-        public string ResultCheck<T>(Func<HttpHelper, string> func, BaseSingleData<T> data)
+		/// <summary>
+		/// 检查结果是否正确,用于多次表关联的校验
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <returns></returns>
+		public BasePostData<T> ResultCheck<T, K>(Func<HttpHelper, BasePostData<T>> func, BaseSinglePostData<K> baseData)
+		{
+
+			BasePostData<T> ret;
+
+			//结果集正常
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null)
+				{
+					ret = func(this);
+				}
+				//结果集正常，但为空
+				else
+				{
+					ret = new BasePostData<T>
+					{
+						code = (int)ResultCode.Result_Exception,
+						message = ResultCode.Result_Exception.ToString()
+					};
+				}
+			}
+			//结果集异常
+			else
+			{
+				ret = new BasePostData<T>()
+				{
+					code = baseData.code,
+					description = baseData.description,
+					message = baseData.message
+				};
+			}
+
+			return ret;
+		}
+
+		/// <summary>
+		/// 检查结果是否正确,用于多次表关联的校验
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <returns></returns>
+		public string ResultCheck<T>(Func<HttpHelper, string> func, BasePostData<T> data)
         {
 
             string ret;

@@ -20,7 +20,7 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="changes"></param>
         /// <returns></returns>
-        public BaseData<CommodityInventoryChange> createCommodityInventoryChange(List<CommodityInventoryChange> changes)
+        public BasePostData<CommodityInventoryChange> createCommodityInventoryChange(List<CommodityInventoryChange> changes)
         {
             return HttpHelper.GetInstance().Post<CommodityInventoryChange>(new PostParam<CommodityInventoryChange>()
             {

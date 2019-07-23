@@ -167,7 +167,7 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public BaseData<ConsumingOrder> CreateConsumingOrder(ConsumingOrder order)
+        public BasePostData<ConsumingOrder> CreateConsumingOrder(ConsumingOrder order)
         {
             return HttpHelper.GetInstance().Post<ConsumingOrder>(new PostParam<ConsumingOrder>()
             {
@@ -179,14 +179,14 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public BaseData<ConsumingOrder> UpdateConsumingOrderStatus(ConsumingOrder order)
+        public BasePutData<ConsumingOrder> UpdateConsumingOrderStatus(ConsumingOrder order)
         {
 
             if (null == order.id || order.Status == null)
             {
-                return new BaseData<ConsumingOrder>()
+                return new BasePutData<ConsumingOrder>()
                 {
-                    code = (Int32)ResultCode.Parameter_Exception,
+                    code = (int)ResultCode.Parameter_Exception,
                     message = ResultCode.Parameter_Exception.ToString()
                 };
             }

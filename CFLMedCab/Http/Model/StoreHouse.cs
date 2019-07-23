@@ -33,10 +33,7 @@ namespace CFLMedCab.Http.Model
 		/// 科室库
 		/// </summary>
 		public string Type { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public Int32 auto_id { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -45,12 +42,6 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string created_by { get; set; }
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		public Int32 is_deleted { get; set; }
-		
 		/// <summary>
 		/// 
 		/// </summary>

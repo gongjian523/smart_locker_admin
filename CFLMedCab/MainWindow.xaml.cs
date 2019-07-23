@@ -340,7 +340,7 @@ namespace CFLMedCab
 
 #else
 
-                    BaseData<string> data = UserLoginBll.GetInstance().VeinmatchLogin(Convert.ToBase64String(macthfeature));
+                    BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchLogin(Convert.ToBase64String(macthfeature));
 
 
                     //BaseSingleData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam {
