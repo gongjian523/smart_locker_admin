@@ -80,19 +80,11 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int auto_id { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
         public string created_at { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public string created_by { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int is_deleted { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -112,7 +104,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int unusedAmount { get; set; }
+        public object unusedAmount { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -124,6 +116,6 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int usedAmount { get; set; }
+        public object usedAmount { get; set; }
     }
 }

@@ -8,24 +8,6 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
-/*    /// <summary>
-    /// 商品库存管理资料视图
-    /// </summary>
-    public class CommodityInventoryDetailView : CommodityInventoryDetail
-    {
-        /// <summary>
-        /// 商品名称
-        /// </summary>
-        public string CommodityName { get; set; }
-        /// <summary>
-        /// 设备名称
-        /// </summary>
-        public string EquipmentName { get; set; }
-        /// <summary>
-        /// 所在库房名称
-        /// </summary>
-        public string StoreHouseName { get; set; }
-    }*/
     /// <summary>
     /// 商品库存管理理资料表
     /// </summary>
@@ -87,10 +69,7 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string UserId { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int auto_id { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -99,10 +78,7 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string created_by { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int is_deleted { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -122,7 +98,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int unusedAmount { get; set; }
+        public object unusedAmount { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -134,6 +110,6 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int usedAmount { get; set; }
+        public object usedAmount { get; set; }
     }
 }

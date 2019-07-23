@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -209,6 +209,8 @@
     <Compile Include="Http\Enum\ResultCode.cs" />
     <Compile Include="Http\Enum\ResultHandleType.cs" />
     <Compile Include="Http\Model\Base\BaseModel.cs" />
+    <Compile Include="Http\Model\Base\BaseSinglePostData.cs" />
+    <Compile Include="Http\Model\Base\BasePutData.cs" />
     <Compile Include="Http\Model\CommodityInventoryDetail.cs" />
     <Compile Include="Http\Model\Common\SourceBill.cs" />
     <Compile Include="Http\Model\Commodity.cs" />
@@ -222,7 +224,7 @@
     <Compile Include="Http\Model\Enum\ShelfTaskStatus.cs" />
     <Compile Include="Http\Model\Equipment.cs" />
     <Compile Include="Http\Model\login\CaptchaToken.cs" />
-    <Compile Include="Http\Model\Base\BaseSingleData.cs" />
+    <Compile Include="Http\Model\Base\BasePostData.cs" />
     <Compile Include="Http\Model\login\Token.cs" />
     <Compile Include="Http\Model\login\VeinMatch.cs" />
     <Compile Include="Http\Model\OperationOrderGoodsDetail.cs" />

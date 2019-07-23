@@ -19,27 +19,6 @@ namespace CFLMedCab.Http.Bll
     /// </summary>
     public class ConsumingBll : BaseBll<ConsumingBll>
     {
-        public enum ConsumingOrderStatus
-        {
-            /// <summary>
-            /// 出库
-            /// </summary>
-            [Description("未领用")]
-            未领用 = 0,
-
-            /// <summary>
-            /// 入库
-            /// </summary>
-            [Description("领用中")]
-            领用中 = 1,
-
-            /// <summary>
-            /// 入库
-            /// </summary>
-            [Description("已完成")]
-            已完成 = 2
-
-        }
         /// <summary>
         /// 根据领用单码查询领用单信息
         /// </summary>
@@ -48,7 +27,7 @@ namespace CFLMedCab.Http.Bll
         public BaseData<ConsumingOrder> GetConsumingOrder(string consumingOrderName)
         {
             //获取待完成上架工单
-            return HttpHelper.GetInstance().Get<ConsumingOrder>(new QueryParam
+            var detail =  HttpHelper.GetInstance().Get<ConsumingOrder>(new QueryParam
             {
                 view_filter =
                 {
@@ -73,6 +52,21 @@ namespace CFLMedCab.Http.Bll
                     }
                 }
             });
+            //校验是否含有数据，如果含有数据，拼接具体字段
+            HttpHelper.GetInstance().ResultCheck(detail, out bool isSuccess);
+
+            if (isSuccess)
+            {
+                detail.body.objects.ForEach(it =>
+                {
+                    //拼接库房名称
+                    if (!string.IsNullOrEmpty(it.StoreHouseId))
+                    {
+                        it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
+                    }
+                });
+            }
+            return detail;
         }
         /// <summary>
         /// 来源单据解析为【⼿手术单管理理】(ConsumingOrder.SourceBill.object_name=‘OperationOrder’ )：
@@ -117,7 +111,8 @@ namespace CFLMedCab.Http.Bll
                     if (!string.IsNullOrEmpty(it.CommodityId))
                     {
                         it.CommodityName = GetNameById<Commodity>(it.CommodityId);
-                    }
+                    };
+                    
                 });
             }
 
@@ -166,6 +161,40 @@ namespace CFLMedCab.Http.Bll
             }
             return baseCommodityInventoryDetail;
 
+        }
+        /// <summary>
+        /// 移动端 创建【领⽤用单】，且领⽤用状态为 ‘已完成’。
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public BasePostData<ConsumingOrder> CreateConsumingOrder(ConsumingOrder order)
+        {
+            return HttpHelper.GetInstance().Post<ConsumingOrder>(new PostParam<ConsumingOrder>()
+            {
+                objects = new List<ConsumingOrder>() { order }
+            });
+        }
+        /// <summary>
+        /// 移动端 通过【领⽤用单编号】 查找更更新【领⽤用单】的领⽤用状态为 ‘已完成’
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public BasePutData<ConsumingOrder> UpdateConsumingOrderStatus(ConsumingOrder order)
+        {
+
+            if (null == order.id || order.Status == null)
+            {
+                return new BasePutData<ConsumingOrder>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
+            return HttpHelper.GetInstance().Put<ConsumingOrder>(new ConsumingOrder()
+            {
+                id = order.id,//ID
+                Status = order.Status//状态
+            });
         }
     }
 

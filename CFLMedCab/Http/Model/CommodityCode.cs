@@ -29,21 +29,12 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public Int32 auto_id { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
 		public string created_at { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
 		public string created_by { get; set; }
 		
-		/// <summary>
-		/// 
-		/// </summary>
-		public Int32 is_deleted { get; set; }
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -98,7 +89,7 @@ namespace CFLMedCab.Http.Model
 		/// 操作类型 0 出库 1 入库
 		/// </summary>
 		[JsonIgnore]
-		public Int32 operate_type { get; set; }
+		public int operate_type { get; set; }
 
 		/// <summary>
 		/// 商品名称（一类）

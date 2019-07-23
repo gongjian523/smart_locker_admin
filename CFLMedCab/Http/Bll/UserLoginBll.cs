@@ -22,7 +22,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="param">请求参数</param>
 		/// <returns></returns>
-		public BaseData<string> VeinmatchBinding(VeinbindingPostParam param)
+		public BasePostData<string> VeinmatchBinding(VeinbindingPostParam param)
 		{
 			return HttpHelper.GetInstance().Post<string, VeinbindingPostParam>(param, HttpHelper.GetVeinmatchBindingUrl());
 		}
@@ -32,7 +32,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="param">请求参数</param>
 		/// <returns></returns>
-		public BaseSingleData<VeinMatch> VeinmatchLogin(VeinmatchPostParam param)
+		public BaseSinglePostData<VeinMatch> VeinmatchLogin(VeinmatchPostParam param)
 		{
             System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.regfeature);
             return HttpHelper.GetInstance().Post<VeinMatch, VeinmatchPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param, true);
@@ -44,7 +44,7 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="param">请求参数</param>
         /// <returns></returns>
-        public BaseData<string> VeinmatchLogin(string regfeature)
+        public BasePostData<string> VeinmatchLogin(string regfeature)
         {
             //匿名类
             System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + regfeature);
@@ -118,18 +118,18 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="account"></param>
         /// <returns></returns>
-        public BaseSingleData<UserToken> GetUserToken(SignInParam siParam)
+        public BaseSinglePostData<UserToken> GetUserToken(SignInParam siParam)
         {
-            BaseSingleData<Token> dataSignIn = HttpHelper.GetInstance().Post<Token, SignInParam>(HttpHelper.GetSignInUrl(), siParam, true);
+			BaseSinglePostData<Token> dataSignIn = HttpHelper.GetInstance().Post<Token, SignInParam>(HttpHelper.GetSignInUrl(), siParam, true);
 
-            //根据账户获取用户数据
-            BaseSingleData<UserToken> dataUserToken = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
+			//根据账户获取用户数据
+			BaseSinglePostData<UserToken> dataUserToken = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 
                 UserSignInParam bodyPara = new UserSignInParam();
                 IDictionary<string, string> headerParam = new Dictionary<string, string>();
                 headerParam.Add("Authorization", dataSignIn.body.token);
 
-                return hh.Post<UserToken, UserSignInParam>(HttpHelper.GetUserSignInUrl(), bodyPara, headerParam);
+                return hh.Post<UserToken, UserSignInParam>(HttpHelper.GetUserSignInUrl(), bodyPara, headerParam, true);
 
             }, dataSignIn);
 
@@ -140,7 +140,7 @@ namespace CFLMedCab.Http.Bll
         /// 获取图形验证码
         /// </summary>
         /// <returns></returns>
-        public BaseSingleData<CaptchaToken> GetCaptchaImageToken()
+        public BaseSinglePostData<CaptchaToken> GetCaptchaImageToken()
         {
              return HttpHelper.GetInstance().Post<CaptchaToken>(HttpHelper.GetCaptchaTokeUrl(),true);
         }
