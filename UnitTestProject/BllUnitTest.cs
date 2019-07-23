@@ -21,13 +21,15 @@ namespace UnitTestProject
 				Password = "lidi123123"
 			});
 
-			var data2 = UserLoginBll.GetInstance().VeinmatchBinding(new VeinmatchPostParam
+			var data2 = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
 			{
                 regfeature = "544a5",
                 finger_name = "test"
             });
 
-			var data3 = UserLoginBll.GetInstance().VeinmatchLogin("544a5");
+			var data3 = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam {
+                regfeature = "544a5"
+            });
 		}
 
 		[TestMethod]
