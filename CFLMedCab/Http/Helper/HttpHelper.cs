@@ -925,7 +925,7 @@ namespace CFLMedCab.Http.Helper
 		}
 
 		/// <summary>
-		/// 同步获取post请求结果
+		/// 同步获取put请求结果
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
@@ -940,8 +940,11 @@ namespace CFLMedCab.Http.Helper
 			{
 				NullValueHandling = NullValueHandling.Ignore
 			};
-
-			JumpKick.HttpLib.Http.Post(GetUpdateUrl(typeof(T).Name, putParam.id)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(putParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+            //id仅用作路径URL拼接
+            var id = putParam.id;
+            //去掉put参数中的id值
+            putParam.id = null;
+			JumpKick.HttpLib.Http.Put(GetUpdateUrl(typeof(T).Name, id)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(putParam, Formatting.Indented, jsetting)).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 

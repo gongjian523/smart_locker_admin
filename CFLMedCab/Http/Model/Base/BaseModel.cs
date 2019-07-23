@@ -16,7 +16,6 @@ namespace CFLMedCab.Http.Model.Base
 		/// <summary>
 		/// id
 		/// </summary>
-        [JsonIgnore]
 		public string id { get; set; }
 
 		/// <summary>
