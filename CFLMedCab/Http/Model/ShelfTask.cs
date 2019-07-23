@@ -8,6 +8,7 @@ namespace CFLMedCab.Http.Model
 	/// <summary>
 	/// 上架任务（工单）
 	/// </summary>
+	[JsonObject(MemberSerialization.OptOut)]
 	public class ShelfTask : BaseModel
 	{
 		/// <summary>
@@ -63,6 +64,12 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string updated_by { get; set; }
+
+		/// <summary>
+		/// 该任务单总数
+		/// </summary>
+		[JsonIgnore]
+		public int NeedShelfTotalNumber { get; set; }
 
 	}
 }

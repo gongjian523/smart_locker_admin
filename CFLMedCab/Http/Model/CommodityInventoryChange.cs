@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,7 +10,8 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
-	public class CommodityInventoryChange: BaseModel
+    [JsonObject(MemberSerialization.OptOut)]
+    public class CommodityInventoryChange: BaseModel
 	{
         public string CommodityCodeId { get; set; }
         /// <summary>

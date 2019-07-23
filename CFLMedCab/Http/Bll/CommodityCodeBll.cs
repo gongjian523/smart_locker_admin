@@ -257,7 +257,7 @@ namespace CFLMedCab.Http.Bll
 			{
 				baseDataCommodityCode.body.objects.ForEach(it =>
 				{
-					CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.id == it.id).Single();
+					CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.id == it.id).First();
 					it.operate_type = simpleCommodityCode.operate_type;
 					it.CommodityName = simpleCommodityCode.CommodityName;
 					it.name = simpleCommodityCode.name;
