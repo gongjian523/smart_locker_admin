@@ -9,7 +9,7 @@ namespace CFLMedCab.Http.Model.param
 	/// <summary>
 	/// 指静脉绑定,参数
 	/// </summary>
-	public class VeinmatchPostParam
+	public class VeinbindingPostParam
 	{
 		/// <summary>
 		///  3 个指静脉特征 
@@ -22,4 +22,17 @@ namespace CFLMedCab.Http.Model.param
 		public string finger_name { get; set; }
 
 	}
+
+
+    /// <summary>
+    /// 指静脉绑定,参数
+    /// </summary>
+    public class VeinmatchPostParam
+    {
+        /// <summary>
+        ///  3 个指静脉特征 
+        /// </summary>
+        public string regfeature { get; set; }
+
+    }
 }

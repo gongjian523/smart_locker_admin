@@ -153,6 +153,9 @@ namespace CFLMedCab.View
 
                 HttpHelper.GetInstance().SetHeaders(data1.body.access_token);
 
+                ApplicationState.SetAccessToken(data1.body.access_token);
+                ApplicationState.SetRefreshToken(data1.body.refresh_token);
+
                 Task.Factory.StartNew(Binding);
             }
 #endif
@@ -238,10 +241,10 @@ namespace CFLMedCab.View
             userBll.UpdateCurrentUsers(user);
             this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
 #else
-            BaseData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinmatchPostParam
+            BaseData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
             {
                 regfeature = Convert.ToBase64String(regfeature),
-                finger_name = "fingerSSS"
+                finger_name = "finger1"
             });
 
             if(data.code == 0)

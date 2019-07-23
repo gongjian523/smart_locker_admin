@@ -22,9 +22,9 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="param">请求参数</param>
 		/// <returns></returns>
-		public BaseData<string> VeinmatchBinding(VeinmatchPostParam param)
+		public BaseData<string> VeinmatchBinding(VeinbindingPostParam param)
 		{
-			return HttpHelper.GetInstance().Post<string, VeinmatchPostParam>(param, HttpHelper.GetVeinmatchBindingUrl());
+			return HttpHelper.GetInstance().Post<string, VeinbindingPostParam>(param, HttpHelper.GetVeinmatchBindingUrl());
 		}
 
 		/// <summary>
@@ -32,18 +32,30 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="param">请求参数</param>
 		/// <returns></returns>
-		public BaseData<string> VeinmatchLogin(string regfeature)
+		public BaseSingleData<VeinMatch> VeinmatchLogin(VeinmatchPostParam param)
 		{
-			//匿名类
-			return HttpHelper.GetInstance().Post<string, object>(new { regfeature }, HttpHelper.GetVeinmatchLoginUrl());
+            System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.regfeature);
+            return HttpHelper.GetInstance().Post<VeinMatch, VeinmatchPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param, true);
 		}
 
-		/// <summary>
-		/// 获取token，根据用户参数
-		/// </summary>
-		/// <param name="account"></param>
-		/// <returns></returns>
-		public BaseData<string> GetUserToken(Account account)
+
+        /// <summary>
+        /// 指静脉识别 
+        /// </summary>
+        /// <param name="param">请求参数</param>
+        /// <returns></returns>
+        public BaseData<string> VeinmatchLogin(string regfeature)
+        {
+            //匿名类
+            return HttpHelper.GetInstance().Post<string, object>(new { regfeature }, HttpHelper.GetVeinmatchLoginUrl());
+        }
+
+        /// <summary>
+        /// 获取token，根据用户参数
+        /// </summary>
+        /// <param name="account"></param>
+        /// <returns></returns>
+        public BaseData<string> GetUserToken(Account account)
 		{
 			//获取账户数据
 			BaseData<Account> baseDataAccount = HttpHelper.GetInstance().Get<Account>(new QueryParam
@@ -98,7 +110,7 @@ namespace CFLMedCab.Http.Bll
 			}, baseDataUser);
 
 		}
-
+   
 
         /// <summary>
         /// 获取token，根据用户参数

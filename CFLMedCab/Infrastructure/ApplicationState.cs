@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.Http.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,8 @@ using System.Threading.Tasks;
 namespace CFLMedCab.Infrastructure
 {
     enum ApplicationKey{
-        CurUser,
+        CurUser,   //本地数据库中的查询到用户信息
+        User,      //从主系统查询到的用户信息
         CurGoods,
         EquipId,   //设备id
         CodeMCab,  //主柜编码(名字)
@@ -18,25 +20,14 @@ namespace CFLMedCab.Infrastructure
         COM_SLocker,
         COM_MRFid,
         COM_SRFid,
-        COM_MVein
+        COM_MVein,
+        AccessToken,
+        RefreshToken,
          };
+
 
     public static class ApplicationState
     {
-
-        //private static Dictionary<string, object> _values =
-        //    new Dictionary<string, object>();
-
-        //public static void SetValue(string key, object value)
-        //{
-        //    _values.Add(key, value);
-        //}
-
-        //public static T GetValue<T>(string key)
-        //{
-        //    return (T)_values[key];
-        //}
-
         private static Dictionary<int, object> _values =
             new Dictionary<int, object>();
 
@@ -54,5 +45,41 @@ namespace CFLMedCab.Infrastructure
         {
             return (T)_values[key];
         }
+
+        public static void SetAccessToken(string accessToken)
+        {
+            SetValue((int)ApplicationKey.AccessToken, accessToken);
+            return;
+        }
+
+        public static string  GetAccessToken()
+        {
+            return GetValue<string>((int)ApplicationKey.AccessToken);
+        }
+
+
+        public static void SetRefreshToken(string token)
+        {
+            SetValue((int)ApplicationKey.RefreshToken, token);
+            return;
+        }
+
+        public static string GetRefreshToken()
+        {
+            return GetValue<string>((int)ApplicationKey.RefreshToken);
+        }
+
+
+        public static void SetUserInfo(User user)
+        {
+            SetValue((int)ApplicationKey.User, user);
+            return;
+        }
+
+        public static User GetUserInfo()
+        {
+            return GetValue<User>((int)ApplicationKey.User);
+        }
+
     }
 }
