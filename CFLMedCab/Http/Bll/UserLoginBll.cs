@@ -47,6 +47,7 @@ namespace CFLMedCab.Http.Bll
         public BaseData<string> VeinmatchLogin(string regfeature)
         {
             //匿名类
+            System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + regfeature);
             return HttpHelper.GetInstance().Post<string, object>(new { regfeature }, HttpHelper.GetVeinmatchLoginUrl());
         }
 

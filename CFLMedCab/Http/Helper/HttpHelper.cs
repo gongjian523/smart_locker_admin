@@ -628,7 +628,9 @@ namespace CFLMedCab.Http.Helper
 
 			LogUtils.Debug($"post的url为：{url} ; post请求参数为{JsonConvert.SerializeObject(postParam)}");
 
-			JsonSerializerSettings jsetting = new JsonSerializerSettings
+            System.Diagnostics.Debug.WriteLine("Post: " + JsonConvert.SerializeObject(postParam));
+
+            JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
 				NullValueHandling = NullValueHandling.Ignore
 			};

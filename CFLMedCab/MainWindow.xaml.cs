@@ -340,14 +340,21 @@ namespace CFLMedCab
 
 #else
 
-                    BaseData<string> data = UserLoginBll.GetInstance().VeinmatchLogin(Convert.ToBase64String(macthfeature));
+                    HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
+                    //BaseData<string> data = UserLoginBll.GetInstance().VeinmatchLogin(Convert.ToBase64String(macthfeature));
+                    //BaseData<string> data = UserLoginBll.GetInstance().VeinmatchLogin("MTExMQ==");
 
+                    BaseSingleData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
+                    {
+                        regfeature = Convert.ToBase64String(macthfeature)
+                    });
 
-                    //BaseSingleData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam {
-                    //    regfeature = Convert.ToBase64String(macthfeature)
+                    //BaseSingleData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
+                    //{
+                    //    regfeature = "MTExMQ=="
                     //});
 
-                    if(data.code == 0)
+                    if (data.code == 0)
                     {
                         //user = data.body.user;
                         user.name = "aaa";
@@ -1510,7 +1517,7 @@ namespace CFLMedCab
             test.InitUsersInfo();
 
 #if TESTENV
-            //LoginBkView.Visibility = Visibility.Hidden;
+            LoginBkView.Visibility = Visibility.Hidden;
         
             CurrentUser user = userBll.GetTestUser();        
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
