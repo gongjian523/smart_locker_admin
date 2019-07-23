@@ -59,7 +59,6 @@ namespace CFLMedCab.BLL
                 inventoryOrder.type = (int)InventoryType.Auto;
             }
 
-            //inventoryOrder.code = System.Guid.NewGuid().ToString("N");
             inventoryOrder.code = "INV" + DateTime.Now.ToString("yyyyMMddHHmm") + ran.Next(9999);
 
             //生成记录
@@ -193,24 +192,5 @@ namespace CFLMedCab.BLL
         {
             return inventoryDal.GetInventoryPlan();
         }
-
-
-        /// <summary>
-        /// 获取所有库存商品
-        /// </summary>
-        /// <param name="basePageDataApo"></param>
-        /// <returns></returns>
-        //public BasePageDataDto<GoodsDto> GetPageGoods(BasePageDataApo basePageDataApo)
-        //{
-        //    return new BasePageDataDto<GoodsDto>()
-        //    {
-        //        PageIndex = basePageDataApo.PageIndex,
-        //        PageSize = basePageDataApo.PageSize,
-        //        Data = inventoryDal.GetGoods(basePageDataApo, out int totalCount),
-        //        TotalCount = totalCount
-        //    };
-        //}
-
-
     }
 }
