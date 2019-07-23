@@ -26,6 +26,6 @@ namespace CFLMedCab.Http.Model.Base
 		/// <summary>
 		/// 版本
 		/// </summary>
-		public string version { get; set; }
+		public object version { get; set; }
 	}
 }

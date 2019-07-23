@@ -111,7 +111,7 @@ namespace UnitTestProject
         [TestMethod]
         public void ConsumingPostOrderTestMethod()
         {
-            //测试移动端 创建【领⽤用单】，且领⽤用状态为 ‘已完成’。
+/*            //测试移动端 创建【领用单】，且领⽤用状态为 ‘已完成’。
             var temp = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
             {
                 FinishDate = "2019-07-23T09:31:00Z",//完成时间
@@ -119,16 +119,17 @@ namespace UnitTestProject
                 StoreHouseId = null,//领用库房【暂未知数据来源】
                 Type = ConsumingOrderType.一般领用.ToString()
             });
-            Console.WriteLine(temp);
-/*
+            Console.WriteLine(temp);*/
+            //移动端 通过【领⽤用单编号】 查找更更新【领⽤用单】的领⽤用状态为 ‘已完成’
+
             var puttemp = ConsumingBll.GetInstance().UpdateConsumingOrderStatus(new ConsumingOrder()
             {
                 id = "AQACQqweDg8BAAAAv0_s8_fnsxXXagQA",
                 Status = ConsumingOrderStatus.未领用.ToString(),
-                version = "0"
-            }) ;
+                version = 4//必须和当前数据版本保持一致
+            });
 
-            Console.WriteLine(puttemp);*/
+            Console.WriteLine(puttemp);
         }
         /// <summary>
         /// 测试商品库存变更记录创建
@@ -152,6 +153,20 @@ namespace UnitTestProject
             });
 
             Console.WriteLine(temp);
+        }
+
+        [TestMethod]
+        public void RollbackTestMethod()
+        {
+/*            var name = "L00000010";
+            var temp = RollbackBll.GetInstance().GetGoodsLocation(name);
+            Console.WriteLine(temp);
+*/
+            var commodityCode = "C00000053";
+            var temp2 = RollbackBll.GetInstance().GetCommodity(commodityCode);
+
+            Console.WriteLine(temp2);
+
         }
 
     }

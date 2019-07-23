@@ -26,6 +26,7 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseData<ConsumingOrder> GetConsumingOrder(string consumingOrderName)
         {
+            
             //获取待完成上架工单
             var detail =  HttpHelper.GetInstance().Get<ConsumingOrder>(new QueryParam
             {
@@ -193,7 +194,8 @@ namespace CFLMedCab.Http.Bll
             return HttpHelper.GetInstance().Put<ConsumingOrder>(new ConsumingOrder()
             {
                 id = order.id,//ID
-                Status = order.Status//状态
+                Status = order.Status,//状态
+                version = order.version//版本
             });
         }
     }
