@@ -16,7 +16,7 @@ namespace CFLMedCab.Http.Model
 		/// id
 		/// </summary>
 		[SugarColumn(IsIdentity = true, IsPrimaryKey = true)]
-		public string id { get; set; }
+		public int id { get; set; }
 
 		/// <summary>
 		/// name

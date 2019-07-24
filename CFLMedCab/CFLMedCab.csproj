@@ -209,6 +209,7 @@
     <Compile Include="DTO\Surgery\SurgeryOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderDto.cs" />
     <Compile Include="Http\Enum\AbnormalCauses.cs" />
+    <Compile Include="Http\Enum\AbnormalDisplay.cs" />
     <Compile Include="Http\Enum\DocumentStatus.cs" />
     <Compile Include="Http\Enum\ResultCode.cs" />
     <Compile Include="Http\Enum\ResultHandleType.cs" />

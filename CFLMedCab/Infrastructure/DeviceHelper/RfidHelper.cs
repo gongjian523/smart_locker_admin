@@ -168,6 +168,49 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 		}
 
+#if TESTENV
+        public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess)
+        {
+            isGetSuccess = true;
+
+            var ret = new HashSet<CommodityEps>()
+                {
+                    new CommodityEps
+                    {
+                        CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+                        CommodityCodeName = "QR00000035",
+                        CommodityName = "止血包",
+                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                        EquipmentName = "E00000008",
+                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                        GoodsLocationName = "L00000013"
+                    }
+                };
+
+            return ret;
+        }
+
+        public static HashSet<CommodityEps> GetEpcDataJsonReplenishment(out bool isGetSuccess)
+        {
+            isGetSuccess = true;
+
+            var ret = new HashSet<CommodityEps>()
+                {
+                    new CommodityEps
+                    {
+                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+                        CommodityCodeName = "QR00000038",
+                        CommodityName = "止血包",
+                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                        EquipmentName = "E00000008",
+                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                        GoodsLocationName = "L00000013"
+                    }
+                };
+
+            return ret;
+        }
+#else
 		/// <summary>
 		/// 根据eps json获取eps对象数据
 		/// </summary>
@@ -180,9 +223,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			isGetSuccess = true;
 
 			string com1 = "COM1";
-
+#if DUALCAB
             string com4 = "COM4";
-
+#endif
 
 			HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
 
@@ -210,6 +253,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
+#if DUALCAB
 			GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
 			if (isCom4Connect)
 			{
@@ -233,6 +277,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
+#endif
 
 			WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
@@ -240,13 +285,13 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			return currentEpcDataHs;
 
 		}
+#endif
 
-
-		/// <summary>
-		/// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
-		/// </summary>
+        /// <summary>
+        /// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
+        /// </summary>
 #if TESTENV
-		public static Hashtable GetEpcData(out bool isGetSuccess)
+        public static Hashtable GetEpcData(out bool isGetSuccess)
         {
             isGetSuccess = true;
             TestGoods testGoods = new TestGoods();

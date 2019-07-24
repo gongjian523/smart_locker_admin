@@ -947,11 +947,26 @@ namespace CFLMedCab
         private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
         {
             bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+
+            ApplicationState.SetGoodsInfo(new HashSet<CommodityEps>()
+                {
+                    new CommodityEps
+                    {
+                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+                        CommodityCodeName = "QR00000038",
+                        CommodityName = "止血包",
+                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                        EquipmentName = "E00000008",
+                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                        GoodsLocationName = "L00000013"
+                    }
+                });
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out isGetSuccess);
             ShelfTask shelfTask = testROPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, ht);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, hs);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 

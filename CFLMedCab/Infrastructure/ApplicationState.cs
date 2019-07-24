@@ -10,7 +10,8 @@ namespace CFLMedCab.Infrastructure
     enum ApplicationKey{
         CurUser,   //本地数据库中的查询到用户信息
         User,      //从主系统查询到的用户信息
-        CurGoods,
+        CurGoods,  //本地数据库中的查询到商品信息
+        Goods,  //从主系统中的查询到商品信息
         EquipId,   //设备id
         CodeMCab,  //主柜编码(名字)
         CodeSCab,  //副柜编码(名字)
@@ -79,6 +80,18 @@ namespace CFLMedCab.Infrastructure
         public static User GetUserInfo()
         {
             return GetValue<User>((int)ApplicationKey.User);
+        }
+
+
+        public static void SetGoodsInfo(HashSet<CommodityEps> hs)
+        {
+            SetValue((int)ApplicationKey.Goods, hs);
+            return;
+        }
+
+        public static HashSet<CommodityEps> GetGoodsInfo()
+        {
+            return GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
         }
 
     }
