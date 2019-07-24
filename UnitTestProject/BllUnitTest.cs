@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;

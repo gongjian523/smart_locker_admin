@@ -8,7 +8,6 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <cvt:SelectedItemIndexBkColorBrushConverter x:Key="SelectedItemIndexBkColorBrushConverter"/>
         <DataTemplate x:Key="replenishOrder">
             <Grid Margin="20 0">
                 <Border Style="{StaticResource CenterRadiusBorder}">

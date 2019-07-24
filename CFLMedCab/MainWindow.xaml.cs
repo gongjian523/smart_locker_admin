@@ -947,11 +947,11 @@ namespace CFLMedCab
         private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
         {
             bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out isGetSuccess);
             ShelfTask shelfTask = testROPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, ht);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, hs);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
