@@ -177,6 +177,27 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 {
                     new CommodityEps
                     {
+                        CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+                        CommodityCodeName = "QR00000035",
+                        CommodityName = "止血包",
+                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                        EquipmentName = "E00000008",
+                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                        GoodsLocationName = "L00000013"
+                    }
+                };
+
+            return ret;
+        }
+
+        public static HashSet<CommodityEps> GetEpcDataJsonReplenishment(out bool isGetSuccess)
+        {
+            isGetSuccess = true;
+
+            var ret = new HashSet<CommodityEps>()
+                {
+                    new CommodityEps
+                    {
                         CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
                         CommodityCodeName = "QR00000038",
                         CommodityName = "止血包",
@@ -184,7 +205,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                         EquipmentName = "E00000008",
                         GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
                         GoodsLocationName = "L00000013"
-
                     }
                 };
 
@@ -267,11 +287,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		}
 #endif
 
-		/// <summary>
-		/// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
-		/// </summary>
+        /// <summary>
+        /// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
+        /// </summary>
 #if TESTENV
-		public static Hashtable GetEpcData(out bool isGetSuccess)
+        public static Hashtable GetEpcData(out bool isGetSuccess)
         {
             isGetSuccess = true;
             TestGoods testGoods = new TestGoods();

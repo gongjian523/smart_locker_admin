@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Model;
+﻿using CFLMedCab.Http.Model;
+using CFLMedCab.Model;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -64,41 +65,40 @@ namespace CFLMedCab.Infrastructure.DbHelper
                 Console.WriteLine();
             };
 
-   //         //创建领用单表
-   //         Db.CodeFirst.InitTables<FetchOrder>();
-   //         Db.CodeFirst.InitTables<FetchOrderdtl>();
+            //创建领用单表
+            Db.CodeFirst.InitTables<FetchOrder>();
+            Db.CodeFirst.InitTables<FetchOrderdtl>();
 
-   //         //创建物品和库存变化表
-   //         Db.CodeFirst.InitTables<Goods>();
-   //         Db.CodeFirst.InitTables<GoodsChageOrder>();
-   //         Db.CodeFirst.InitTables<GoodsChageOrderdtl>();
+            //创建物品和库存变化表
+            Db.CodeFirst.InitTables<Goods>();
+            Db.CodeFirst.InitTables<GoodsChageOrder>();
+            Db.CodeFirst.InitTables<GoodsChageOrderdtl>();
 
+            //创建补货入库表
+            Db.CodeFirst.InitTables<ReplenishOrder>();
+            Db.CodeFirst.InitTables<ReplenishSubOrder>();
+            Db.CodeFirst.InitTables<ReplenishSubOrderdtl>();
 
+            //创建拣货出库表
+            //Db.CodeFirst.InitTables<InventoryOrder>();
+            Db.CodeFirst.InitTables<InventoryOrderdtl>();
+            Db.CodeFirst.InitTables<InventoryPlanLDB>();
 
-   //         //创建补货入库表
-   //         Db.CodeFirst.InitTables<ReplenishOrder>();
-			//Db.CodeFirst.InitTables<ReplenishSubOrder>();
-			//Db.CodeFirst.InitTables<ReplenishSubOrderdtl>();
+            //创建退货出库表
+            Db.CodeFirst.InitTables<PickingOrder>();
+            Db.CodeFirst.InitTables<PickingSubOrder>();
+            Db.CodeFirst.InitTables<PickingSubOrderdtl>();
 
-   //         //创建拣货出库表
-   //         Db.CodeFirst.InitTables<InventoryOrder>();
-   //         Db.CodeFirst.InitTables<InventoryOrderdtl>();
-   //         Db.CodeFirst.InitTables<InventoryPlanLDB>();
+            //创建手术表
+            Db.CodeFirst.InitTables<SurgeryOrder>();
+            Db.CodeFirst.InitTables<SurgeryOrderdtl>();
 
-   //         //创建退货出库表
-   //         Db.CodeFirst.InitTables<PickingOrder>();
-   //         Db.CodeFirst.InitTables<PickingSubOrder>();
-   //         Db.CodeFirst.InitTables<PickingSubOrderdtl>();
+            //创建用户表
+            Db.CodeFirst.InitTables<CurrentUser>();
 
+            //本地库存变化表
+            Db.CodeFirst.InitTables<LocalCommodityCode>();
 
-   //         //创建手术表
-   //         Db.CodeFirst.InitTables<SurgeryOrder>();
-   //         Db.CodeFirst.InitTables<SurgeryOrderdtl>();
-
-   //         //创建用户表
-   //         Db.CodeFirst.InitTables<CurrentUser>();
-
-			   	
         }
 
         public static string GetCurrentProjectPath

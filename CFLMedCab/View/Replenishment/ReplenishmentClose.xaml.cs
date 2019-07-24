@@ -44,6 +44,9 @@ namespace CFLMedCab.View.ReplenishmentOrder
         private ShelfTask shelfTask;
         private HashSet<CommodityEps> after;
 
+        BaseData<CommodityCode> bdCommodityCode;
+        BaseData<ShelfTaskCommodityDetail> bdCommodityDetail;
+
         private Timer endTimer;
 
         private string code;
@@ -54,34 +57,34 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public ReplenishmentClose(ShelfTask task, HashSet<CommodityEps> hs)
         {
             InitializeComponent();
+
+            endTimer = new Timer(Contant.ClosePageEndTimer);
+            endTimer.AutoReset = false;
+            endTimer.Enabled = true;
+            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+
             //操作人
-            operatorName.Content = ApplicationState.GetUserInfo().name;
+            //operatorName.Content = ApplicationState.GetUserInfo().name;
             //工单号
-            orderNum.Content = task.name;
+            //orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             shelfTask = task;
 
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = hs;
 
-            BaseData<CommodityCode> commodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
 
-            BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
-
-            //ShelfBll.GetInstance().GetShelfTaskChange(commodityCode, shelfTask, commodityDetail);
+            bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
+            ShelfBll.GetInstance().GetShelfTaskChange(bdCommodityCode, shelfTask, bdCommodityDetail);
 
             //inNum.Content = operateGoodsNum;
             //abnormalInNum.Content = storageGoodsExNum;
             //abnormalOutNum.Content = outStorageGoodsExNum;
-            listView.DataContext = commodityDetail.body.objects;
+            listView.DataContext = bdCommodityDetail.body.objects;
 
             //code = model.name;
             //actInNum = operateGoodsNum;
-
-            endTimer = new Timer(Contant.ClosePageEndTimer);
-            endTimer.AutoReset = false;
-            endTimer.Enabled = true;
-            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
         }
 
         /// <summary>

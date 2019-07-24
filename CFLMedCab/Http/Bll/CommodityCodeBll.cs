@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.APO.Inventory;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
@@ -242,32 +243,47 @@ namespace CFLMedCab.Http.Bll
 				commodityCodeIds.Add(HttpUtility.UrlEncode(it.id));
 			});
 
-			BaseData<CommodityCode> baseDataCommodityCode = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
-			{
-				@in =
-				{
-					field = "id",
-					in_list =  commodityCodeIds
-				}
-			});
+            BaseData<CommodityCode> baseDataCommodityCode;
 
-			HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
+            if (commodityCodeIds.Count > 0)
+            {
+                baseDataCommodityCode = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
+                {
+                    @in =
+                {
+                    field = "id",
+                    in_list =  commodityCodeIds
+                }
+                });
 
-			if (isSuccess)
-			{
-				baseDataCommodityCode.body.objects.ForEach(it =>
-				{
-					CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.id == it.id).First();
-					it.operate_type = simpleCommodityCode.operate_type;
-					it.CommodityName = simpleCommodityCode.CommodityName;
-					it.name = simpleCommodityCode.name;
-					it.EquipmentId = simpleCommodityCode.EquipmentId;
-					it.EquipmentName = simpleCommodityCode.EquipmentName;
-					it.GoodsLocationId = simpleCommodityCode.GoodsLocationId;
-					it.GoodsLocationName = simpleCommodityCode.GoodsLocationName;
-					it.operate_type = simpleCommodityCode.operate_type;
-				});
-			}
+                HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
+
+                if (isSuccess)
+                {
+                    baseDataCommodityCode.body.objects.ForEach(it =>
+                    {
+                        CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.id == it.id).First();
+                        it.operate_type = simpleCommodityCode.operate_type;
+                        it.CommodityName = simpleCommodityCode.CommodityName;
+                        it.name = simpleCommodityCode.name;
+                        it.EquipmentId = simpleCommodityCode.EquipmentId;
+                        it.EquipmentName = simpleCommodityCode.EquipmentName;
+                        it.GoodsLocationId = simpleCommodityCode.GoodsLocationId;
+                        it.GoodsLocationName = simpleCommodityCode.GoodsLocationName;
+                        it.operate_type = simpleCommodityCode.operate_type;
+                    });
+                }
+            }
+            else
+            {
+                baseDataCommodityCode = new BaseData<CommodityCode>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
+
+			
 
 			return baseDataCommodityCode;
 

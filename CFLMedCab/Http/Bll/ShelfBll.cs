@@ -243,7 +243,6 @@ namespace CFLMedCab.Http.Bll
 		public void GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, ShelfTask shelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
 		{
 
-
 			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
 
 			if (isSuccess)
