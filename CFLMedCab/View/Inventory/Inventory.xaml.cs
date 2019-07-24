@@ -177,7 +177,7 @@ namespace CFLMedCab.View.Inventory
 
         public void SetNextAutoInvTime()
         {
-            List<InventoryPlan> inventoryPlans = inventoryBll.GetInventoryPlan().Where(it => it.status == 0).ToList();
+            List<InventoryPlanLDB> inventoryPlans = inventoryBll.GetInventoryPlan().Where(it => it.status == 0).ToList();
 
             if(inventoryPlans.Count == 0)
             {

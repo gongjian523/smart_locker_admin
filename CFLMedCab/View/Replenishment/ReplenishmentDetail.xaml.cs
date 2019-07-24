@@ -1,6 +1,9 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -27,22 +30,25 @@ namespace CFLMedCab.View.ReplenishmentOrder
     public partial class ReplenishmentDetail : UserControl
     {
         //进入补货单详情开门状态页面
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishOrderDto e);
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ShelfTask e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         //进入补货单列表页面
         public delegate void EnterReplenishmentHandler(object sender, RoutedEventArgs e);
         public event EnterReplenishmentHandler EnterReplenishmentEvent;
-        ReplenishBll replenishBll = new ReplenishBll();
-        ReplenishOrderDto entity = new ReplenishOrderDto();
 
-        public ReplenishmentDetail(ReplenishOrderDto model)
+        ShelfTask entity = new ShelfTask();
+
+        public ReplenishmentDetail(ShelfTask model)
         {
             InitializeComponent();
             entity = model;    
             operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
-            orderNum.Content = model.code;
-            listView.DataContext = replenishBll.GetReplenishOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_order_code = model.code }).Data;
+            orderNum.Content = model.name;
+
+            BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(model);
+
+            listView.DataContext = commodityDetail.body.objects;
         }
 
         /// <summary>

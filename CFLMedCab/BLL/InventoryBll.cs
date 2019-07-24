@@ -166,7 +166,7 @@ namespace CFLMedCab.BLL
         /// 新建盘点计划
         /// </summary>
         /// <returns></returns>
-        public void InventoryPlan(List<InventoryPlan> list)
+        public void InventoryPlan(List<InventoryPlanLDB> list)
         {
             inventoryDal.InsertInventoryPlan(list);
         }
@@ -175,7 +175,7 @@ namespace CFLMedCab.BLL
         /// 更新盘点计划
         /// </summary>
         /// <returns></returns>
-        public void UpdateInventoryPlan(List<InventoryPlan> list)
+        public void UpdateInventoryPlan(List<InventoryPlanLDB> list)
         {
             //更新已有的计划
             var oldlist = list.Where(item => item.id != 0).ToList();
@@ -188,7 +188,7 @@ namespace CFLMedCab.BLL
                 inventoryDal.InsertInventoryPlan(newlist);
         }
 
-        public List<InventoryPlan> GetInventoryPlan()
+        public List<InventoryPlanLDB> GetInventoryPlan()
         {
             return inventoryDal.GetInventoryPlan();
         }

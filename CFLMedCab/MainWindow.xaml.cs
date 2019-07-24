@@ -80,11 +80,12 @@ namespace CFLMedCab
             }
         }
 
+        private LoadingData loadingDataPage;
 
 #if TESTENV
         private System.Timers.Timer testTimer;
         private SurgeryOrderDto testSOPara = new SurgeryOrderDto();
-        private ReplenishOrderDto testROPara = new ReplenishOrderDto();
+        private ShelfTask testROPara = new ShelfTask();
         private PickingOrderDto testPOPara = new PickingOrderDto();
 #endif
 
@@ -139,6 +140,8 @@ namespace CFLMedCab
             InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
             InventoryTimer.Start();
 
+            loadingDataPage = new LoadingData();
+
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -181,7 +184,7 @@ namespace CFLMedCab
 
         private void onInventoryTimer(object sender, EventArgs e)
         {
-            List <InventoryPlan> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
+            List <InventoryPlanLDB> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
 
             foreach(var item in listPan)
             {
@@ -861,6 +864,9 @@ namespace CFLMedCab
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
             replenishment.EnterReplenishmentDetailOpenEvent += new Replenishment.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
 
+            replenishment.ShowLoadDataEvent += new Replenishment.ShowLoadDataHandler(onShowLoadingData);
+            replenishment.HideLoadDataEvent += new Replenishment.HideLoadDataHandler(onHideLoadingData);
+
             ContentFrame.Navigate(replenishment);
         }
 
@@ -869,7 +875,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentDetail(object sender, ReplenishOrderDto e)
+        private void onEnterReplenishmentDetail(object sender, ShelfTask e)
         {
             ReplenishmentDetail replenishmentDetail = new ReplenishmentDetail(e);
             replenishmentDetail.EnterReplenishmentDetailOpenEvent += new ReplenishmentDetail.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
@@ -883,7 +889,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentDetailOpen(object sender, ReplenishOrderDto e)
+        private void onEnterReplenishmentDetailOpen(object sender, ShelfTask e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -941,14 +947,14 @@ namespace CFLMedCab
         {
             bool isGetSuccess;
             Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-            ReplenishOrderDto replenishOrderDto = testROPara;
+            ShelfTask shelfTask = testROPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishOrderDto, ht);
-                replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
-                replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
+                //ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishOrderDto, ht);
+                //replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
+                //replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
-                FullFrame.Navigate(replenishmentClose);
+                //FullFrame.Navigate(replenishmentClose);
             }));
         }
 #else
@@ -1201,9 +1207,9 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterInventoryDetail(object sender, InventoryDetailPara e)
         {
-            InventoryDetail inventoryDetail = new InventoryDetail(e);
-            inventoryDetail.EnterAddProductEvent += new InventoryDetail.EnterAddProductHandler(onEnterPopAddProduct);
-            inventoryDetail.EnterInventoryEvent += new InventoryDetail.EnterInventoryHandler(onEnterInvtory);
+            InventoryDtl inventoryDetail = new InventoryDtl(e);
+            //InventoryDtl.EnterAddProductEvent += new InventoryDtl.EnterAddProductHandler(onEnterPopAddProduct);
+            //InventoryDtl.EnterInventoryEvent += new InventoryDtl.EnterInventoryHandler(onEnterInvtory);
 
             ContentFrame.Navigate(inventoryDetail);
         }
@@ -1412,7 +1418,6 @@ namespace CFLMedCab
             }));
         }
 
-
         /// <summary>
         /// 开门提示框关闭
         /// </summary>
@@ -1420,11 +1425,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopOpen(object sender, RoutedEventArgs e)
         {
-            //App.Current.Dispatcher.Invoke((Action)(() =>
-            //{
-            //    PopFrame.Visibility = Visibility.Hidden;
-            //    MaskView.Visibility = Visibility.Hidden;
-            //}));
             ClosePop();
         }
 
@@ -1457,6 +1457,35 @@ namespace CFLMedCab
             {
                 PopFrame.Visibility = Visibility.Hidden;
                 MaskView.Visibility = Visibility.Hidden;
+            }));
+        }
+
+        /// <summary>
+        /// 弹出关门提示框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onShowLoadingData(object sender, bool e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(loadingDataPage);
+            }));
+        }
+
+        /// <summary>
+        /// 弹出关门提示框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onHideLoadingData(object sender, bool e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ClosePop();
             }));
         }
 
