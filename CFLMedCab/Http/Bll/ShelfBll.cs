@@ -19,31 +19,6 @@ namespace CFLMedCab.Http.Bll
 	{
 
 		/// <summary>
-		/// 异常原因
-		/// </summary>
-		public enum AbnormalCauses
-		{
-			/// <summary>
-			/// 待上架
-			/// </summary>
-			[Description("商品缺失 ")]
-			商品缺失 = 1,
-
-			/// <summary>
-			/// 已完成 
-			/// </summary>
-			[Description("商品损坏")]
-			商品损坏 = 2,
-
-			/// <summary>
-			/// 异常
-			/// </summary>
-			[Description("商品遗失")]
-			商品遗失 = 3
-
-		}
-
-		/// <summary>
 		/// 根据上架单号获取任务单详情
 		/// </summary>
 		/// <param name="shelfTaskName"></param>

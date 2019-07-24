@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -35,6 +36,9 @@ namespace UnitTestProject
             });
 		}
 
+		/// <summary>
+		/// 上架业务测试方法
+		/// </summary>
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
@@ -83,10 +87,63 @@ namespace UnitTestProject
 			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask);
 
 		}
-        /// <summary>
-        /// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
-        /// </summary>
-        [TestMethod]
+
+		/// <summary>
+		/// 拣货业务测试方法
+		/// </summary>
+		[TestMethod]
+		public void PickBllTestMethod()
+		{
+
+			BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+						CommodityCodeName = "QR00000038",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
+
+					}
+				},
+
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+						CommodityCodeName = "QR00000035",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
+
+					}
+				}
+			);
+
+
+			BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask("ST20190721000031");
+
+			BaseData<PickCommodity> baseDataPickTaskCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(baseDataPickTask);
+
+			BaseData<PickTask> baseDataPickTaskChange = PickBll.GetInstance().GetPickTaskChange(baseDataCommodityCode, baseDataPickTask, baseDataPickTaskCommodityDetail);
+
+
+			BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(baseDataPickTaskChange, AbnormalCauses.商品损坏 );
+			//BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(baseDataCommodityCode, baseDataPickTask);
+
+		}
+
+		/// <summary>
+		/// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
+		/// </summary>
+		[TestMethod]
         public void ConsumingQueryOrderTestMethod()
         {
             //根据通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的id，以及markId（作废标识）。（如果领⽤用单作废标识为【是】则弹窗提醒⼿手术单作废，跳转回前⻚页）
