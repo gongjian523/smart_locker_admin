@@ -411,7 +411,7 @@ namespace CFLMedCab.Http.Bll
 					});
 				});
 
-				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().createCommodityInventoryChange(CommodityInventoryChanges);
+				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
 			}
 			else
 			{
