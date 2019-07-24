@@ -74,10 +74,10 @@ namespace UnitTestProject
 
 			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
 
-			BaseData<ShelfTask> baseDataShelfTaskChange = ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
+			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0], baseDataShelfTaskCommodityDetail);
 
 			//BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(baseDataShelfTaskChange, AbnormalCauses.商品损坏 );
-			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask);
+			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0]);
 
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
@@ -136,10 +136,10 @@ namespace UnitTestProject
 
 			BaseData<PickCommodity> baseDataPickTaskCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(baseDataPickTask);
 
-			BaseData<PickTask> baseDataPickTaskChange = PickBll.GetInstance().GetPickTaskChange(baseDataCommodityCode, baseDataPickTask, baseDataPickTaskCommodityDetail);
+			PickBll.GetInstance().GetPickTaskChange(baseDataCommodityCode, baseDataPickTask.body.objects[0], baseDataPickTaskCommodityDetail);
 
 
-			BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(baseDataPickTaskChange, AbnormalCauses.商品损坏 );
+			BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(baseDataPickTask.body.objects[0], AbnormalCauses.商品损坏 );
 			//BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(baseDataCommodityCode, baseDataPickTask);
 
 		}
