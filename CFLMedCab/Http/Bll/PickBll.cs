@@ -239,29 +239,43 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="baseDataPickTask"></param>
 		/// <param name="baseDataPickTaskCommodityDetail"></param>
 		/// <returns></returns>
-		public BaseData<PickTask> GetPickTaskChange(BaseData<CommodityCode> baseDatacommodityCode, BaseData<PickTask> baseDataPickTask, BaseData<PickCommodity> baseDataPickTaskCommodityDetail)
+		public void GetPickTaskChange(BaseData<CommodityCode> baseDatacommodityCode, PickTask pickTask, BaseData<PickCommodity> baseDataPickTaskCommodityDetail)
 		{
 
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			BaseData<PickTask> retBaseDataPickTask = HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess1);
 
-			HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(baseDataPickTaskCommodityDetail, out bool isSuccess);
 
-			if (isSuccess1 && isSuccess2)
+			if (isSuccess)
 			{
 				var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects;
 
-				var pickTask = baseDataPickTask.body.objects[0];
-
 				var sfdCommodityIds = pickTaskCommodityDetails.Select(it => it.CommodityId).ToList();
 
-				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess3);
+				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
 
 				var commodityCodes = new List<CommodityCode>();
 
-				if (isSuccess3)
+				if (isSuccess1)
 				{
 					commodityCodes = baseDatacommodityCode.body.objects;
+
+					commodityCodes.ForEach(it => {
+						if (it.operate_type == (int)OperateType.入库)
+						{
+							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+						}
+						else
+						{
+							if (sfdCommodityIds.Contains(it.CommodityId))
+							{
+								it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+							}
+							else
+							{
+								it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+							}
+						}
+					});
 				}
 
 				var cccIds = commodityCodes.Select(it => it.CommodityId).ToList();
@@ -300,7 +314,6 @@ namespace CFLMedCab.Http.Bll
 				
 			}
 
-			return retBaseDataPickTask;
 		}
 
 		/// <summary>
@@ -308,58 +321,19 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="baseDataPickTask">最后结果集</param>
 		/// <returns></returns>
-		public BasePutData<PickTask> PutPickTask(BaseData<PickTask> baseDataPickTask, AbnormalCauses abnormalCauses)
+		public BasePutData<PickTask> PutPickTask(PickTask pickTask, AbnormalCauses abnormalCauses)
 		{
 
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			BasePutData<PickTask> retBasePutDataPickTask = HttpHelper.GetInstance().ResultCheckPutByBase(baseDataPickTask, out bool isSuccess1);
-
-			if (isSuccess1)
+			//put修改拣货工单
+			return HttpHelper.GetInstance().Put(new PickTask
 			{
-				var pickTask = baseDataPickTask.body.objects[0];
-				//if (pickTask.BillStatus == DocumentStatus.异常.ToString())
-				//{
-				//	pickTask.AbnormalCauses = abnormalCauses.ToString();
-				//}
-
-				//put修改拣货工单
-				retBasePutDataPickTask = HttpHelper.GetInstance().Put(new PickTask
-				{
-					id = pickTask.id,
-					BillStatus = pickTask.BillStatus,
-					//AbnormalCauses = pickTask.AbnormalCauses,
-					version = pickTask.version
-				});
-			}
-
-			return retBasePutDataPickTask;
+				id = pickTask.id,
+				BillStatus = pickTask.BillStatus,
+				//AbnormalCauses = pickTask.AbnormalCauses,
+				version = pickTask.version
+			});
 		}
 
-		/// <summary>
-		/// 更新拣货任务单
-		/// </summary>
-		/// <param name="baseDataPickTask">最后结果集</param>
-		/// <returns></returns>
-		public BasePutData<PickTask> PutPickTask(BaseData<PickTask> baseDataPickTask)
-		{
-
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			BasePutData<PickTask> retBasePutDataPickTask = HttpHelper.GetInstance().ResultCheckPutByBase(baseDataPickTask, out bool isSuccess1);
-
-			if (isSuccess1)
-			{
-				var pickTask = baseDataPickTask.body.objects[0];
-				//put修改拣货工单
-				retBasePutDataPickTask = HttpHelper.GetInstance().Put(new PickTask
-				{
-					id = pickTask.id,
-					BillStatus = pickTask.BillStatus,
-					version = pickTask.version
-				});
-			}
-
-			return retBasePutDataPickTask;
-		}
 
 		/// <summary>
 		/// 拣货的库存变化
@@ -367,18 +341,15 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="baseDatacommodityCode"></param>
 		/// <param name="pickTask"></param>
 		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> CreatePickTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, BaseData<PickTask> baseDataPickTask)
+		public BasePostData<CommodityInventoryChange> CreatePickTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, PickTask pickTask)
 		{
 
 			BasePostData<CommodityInventoryChange> retBaseSinglePostDataCommodityInventoryChange = null;
 
 			//校验是否含有数据，如果含有数据，有就继续下一步
-			baseDataCommodityCode = HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess1);
+			baseDataCommodityCode = HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
 
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			baseDataPickTask = HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess2);
-
-			if (isSuccess1 && isSuccess2)
+			if (isSuccess)
 			{
 
 				var CommodityCodes = baseDataCommodityCode.body.objects;
@@ -405,7 +376,7 @@ namespace CFLMedCab.Http.Bll
 						SourceBill = new SourceBill()//来源单据
 						{
 							object_name = typeof(PickTask).Name,
-							object_id = baseDataPickTask.body.objects[0].id
+							object_id = pickTask.id
 						},
 						ChangeStatus = changeStatus
 					});

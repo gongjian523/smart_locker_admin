@@ -39,8 +39,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
 
-        ReplenishBll replenishBll = new ReplenishBll();
-        GoodsBll goodsBll = new GoodsBll();
 
         private ReplenishOrderDto replenishOrderDto;
         private Hashtable after;
@@ -57,7 +55,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             InitializeComponent();
             //操作人
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetUserInfo().name;
             //工单号
             orderNum.Content = model.code;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");

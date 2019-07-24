@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -50,6 +51,66 @@ namespace UnitTestProject
 						EquipmentName = "E00000008",
 						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
 						GoodsLocationName = "L00000013"
+					}
+				},
+
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+						CommodityCodeName = "QR00000035",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
+					}
+				}
+			);
+
+
+			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
+
+			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
+
+			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0], baseDataShelfTaskCommodityDetail);
+
+			//BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(baseDataShelfTaskChange, AbnormalCauses.商品损坏 );
+			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0]);
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+		
+			string ret = JsonConvert.SerializeObject(new ShelfTask
+			{
+				Status = "上架",
+				AbnormalCauses = "商品缺失",
+				AbnormalDescribe = "异常描述"
+			}, Formatting.Indented, jsetting);
+		}
+
+	    /// <summary>
+		/// 拣货业务测试方法
+		/// </summary>
+		[TestMethod]
+		public void PickBllTestMethod()
+		{
+
+			BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
+				new HashSet<CommodityEps>()
+				{
+					new CommodityEps
+					{
+						CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+						CommodityCodeName = "QR00000038",
+						CommodityName = "止血包",
+						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+						EquipmentName = "E00000008",
+						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+						GoodsLocationName = "L00000013"
 
 					}
 				},
@@ -71,29 +132,22 @@ namespace UnitTestProject
 			);
 
 
-			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("ST-44");
+			BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask("ST20190721000031");
 
-			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
+			BaseData<PickCommodity> baseDataPickTaskCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(baseDataPickTask);
+
+			PickBll.GetInstance().GetPickTaskChange(baseDataCommodityCode, baseDataPickTask.body.objects[0], baseDataPickTaskCommodityDetail);
 
 
-			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
+			BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(baseDataPickTask.body.objects[0], AbnormalCauses.商品损坏 );
+			//BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(baseDataCommodityCode, baseDataPickTask);
 
-			JsonSerializerSettings jsetting = new JsonSerializerSettings
-			{
-				NullValueHandling = NullValueHandling.Ignore
-			};
-		
-			string ret = JsonConvert.SerializeObject(new ShelfTask
-			{
-				Status = "上架",
-				AbnormalCauses = "商品缺失",
-				AbnormalDescribe = "异常描述"
-			}, Formatting.Indented, jsetting);
 		}
-        /// <summary>
-        /// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
-        /// </summary>
-        [TestMethod]
+
+		/// <summary>
+		/// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
+		/// </summary>
+		[TestMethod]
         public void ConsumingQueryOrderTestMethod()
         {
             //根据通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的id，以及markId（作废标识）。（如果领⽤用单作废标识为【是】则弹窗提醒⼿手术单作废，跳转回前⻚页）

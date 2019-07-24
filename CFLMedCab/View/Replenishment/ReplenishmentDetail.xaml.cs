@@ -2,6 +2,7 @@
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
@@ -47,6 +48,13 @@ namespace CFLMedCab.View.ReplenishmentOrder
             orderNum.Content = model.name;
 
             BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(model);
+
+            HttpHelper.GetInstance().ResultCheck(commodityDetail, out bool isSuccess);
+            if (!isSuccess)
+            {
+                MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
             listView.DataContext = commodityDetail.body.objects;
         }
