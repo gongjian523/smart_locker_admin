@@ -97,5 +97,12 @@ namespace CFLMedCab.Http.Model
 		[JsonIgnore]
 		public string CommodityName { get; set; }
 
+		/// <summary>
+		/// 异常显示逻辑
+		/// </summary>
+		[JsonIgnore]
+		public string AbnormalDisplay { get; set; }
+
+
 	}
 }

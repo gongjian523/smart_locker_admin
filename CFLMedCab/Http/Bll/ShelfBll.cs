@@ -246,7 +246,7 @@ namespace CFLMedCab.Http.Bll
 			//校验是否含有数据，如果含有数据，有就继续下一步
 			BaseData<ShelfTask> retBaseDataShelfTask = HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess1);
 
-			HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess2);
 
 			if (isSuccess1 && isSuccess2)
 			{
@@ -263,6 +263,25 @@ namespace CFLMedCab.Http.Bll
 				if (isSuccess3)
 				{
 					commodityCodes = baseDatacommodityCode.body.objects;
+
+					commodityCodes.ForEach(it=> {
+						if (it.operate_type == (int)OperateType.出库)
+						{
+							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+						}
+						else
+						{
+							if (sfdCommodityIds.Contains(it.CommodityId))
+							{
+								it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+							}
+							else
+							{
+								it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+							}
+						}
+					});
+
 				}
 
 				var cccIds = commodityCodes.Select(it => it.CommodityId).ToList();
@@ -297,8 +316,6 @@ namespace CFLMedCab.Http.Bll
 					shelfTask.Status = DocumentStatus.异常.ToString();
 					
 				}
-
-				
 			}
 
 			return retBaseDataShelfTask;

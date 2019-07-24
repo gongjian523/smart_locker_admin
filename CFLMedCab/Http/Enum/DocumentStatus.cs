@@ -29,7 +29,13 @@ namespace CFLMedCab.Http.Enum
 		/// 异常
 		/// </summary>
 		[Description("异常")]
-		异常 = 3
+		异常 = 3,
+
+		/// <summary>
+		/// 待上架
+		/// </summary>
+		[Description("待拣货")]
+		待拣货 = 4
 
 	}
 }

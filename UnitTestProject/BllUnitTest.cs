@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
-using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -9,7 +8,6 @@ using CFLMedCab.Http.Model.param;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using static CFLMedCab.Http.Bll.ConsumingBll;
-using static CFLMedCab.Http.Bll.ShelfBll;
 
 namespace UnitTestProject
 {
@@ -36,9 +34,6 @@ namespace UnitTestProject
    //         });
 		}
 
-		/// <summary>
-		/// 上架业务测试方法
-		/// </summary>
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
@@ -73,6 +68,7 @@ namespace UnitTestProject
 				}
 			);
 
+
 			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
 
 			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
@@ -82,9 +78,20 @@ namespace UnitTestProject
 			//BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(baseDataShelfTaskChange, AbnormalCauses.商品损坏 );
 			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask);
 
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+		
+			string ret = JsonConvert.SerializeObject(new ShelfTask
+			{
+				Status = "上架",
+				AbnormalCauses = "商品缺失",
+				AbnormalDescribe = "异常描述"
+			}, Formatting.Indented, jsetting);
 		}
 
-		/// <summary>
+	    /// <summary>
 		/// 拣货业务测试方法
 		/// </summary>
 		[TestMethod]
@@ -118,6 +125,7 @@ namespace UnitTestProject
 						EquipmentName = "E00000008",
 						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
 						GoodsLocationName = "L00000013"
+
 					}
 				}
 			);
@@ -177,7 +185,7 @@ namespace UnitTestProject
             Console.WriteLine(puttemp);
         }
         /// <summary>
-        /// 测试商品库存变更记录创建
+        /// 测试领用部分商品库存变更记录创建
         /// </summary>
         [TestMethod]
         public void CommodityInventoryChangeTestMethod()
@@ -211,6 +219,15 @@ namespace UnitTestProject
             var temp2 = RollbackBll.GetInstance().GetCommodity(commodityCode);
 
             Console.WriteLine(temp2);
+
+        }
+        [TestMethod]
+        public void InventoryTestMethod()
+        {
+            var taskName = "IT20190723000015";
+            var temp = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(taskName);
+            Console.WriteLine(temp);
+
 
         }
 

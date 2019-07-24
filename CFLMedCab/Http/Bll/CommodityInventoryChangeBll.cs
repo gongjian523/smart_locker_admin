@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Http.Helper;
+﻿using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
@@ -22,6 +23,14 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BasePostData<CommodityInventoryChange> createCommodityInventoryChange(List<CommodityInventoryChange> changes)
         {
+            if(null == changes || changes.Count <= 0)
+            {
+                return new BasePostData<CommodityInventoryChange>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
             return HttpHelper.GetInstance().Post<CommodityInventoryChange>(new PostParam<CommodityInventoryChange>()
             {
                 objects = changes
