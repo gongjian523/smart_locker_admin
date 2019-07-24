@@ -17,21 +17,21 @@ namespace UnitTestProject
 		[TestMethod]
 		public void UserLoginBllTestMethod()
 		{
-			var data1 = UserLoginBll.GetInstance().GetUserToken(new Account
-			{
-				Phone = "18888888888",
-				Password = "lidi123123"
-			});
+			//var data1 = UserLoginBll.GetInstance().GetUserToken(new Account
+			//{
+			//	Phone = "18888888888",
+			//	Password = "lidi123123"
+			//});
 
-			var data2 = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
-			{
-                regfeature = "544a5",
-                finger_name = "test"
-            });
+			//var data2 = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
+			//{
+   //             regfeature = "544a5",
+   //             finger_name = "test"
+   //         });
 
-			var data3 = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam {
-                regfeature = "544a5"
-            });
+			//var data3 = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam {
+   //             regfeature = "544a5"
+   //         });
 		}
 
 		[TestMethod]

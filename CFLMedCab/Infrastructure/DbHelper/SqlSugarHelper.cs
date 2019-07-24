@@ -73,10 +73,6 @@ namespace CFLMedCab.Infrastructure.DbHelper
    //         Db.CodeFirst.InitTables<GoodsChageOrder>();
    //         Db.CodeFirst.InitTables<GoodsChageOrderdtl>();
 
-   //         //创建盘点数据表
-   //         Db.CodeFirst.InitTables<InventoryOrder>();
-   //         Db.CodeFirst.InitTables<InventoryOrderdtl>();
-   //         Db.CodeFirst.InitTables<InventoryPlan>();
 
 
    //         //创建补货入库表
@@ -87,7 +83,7 @@ namespace CFLMedCab.Infrastructure.DbHelper
    //         //创建拣货出库表
    //         Db.CodeFirst.InitTables<InventoryOrder>();
    //         Db.CodeFirst.InitTables<InventoryOrderdtl>();
-   //         Db.CodeFirst.InitTables<InventoryPlan>();
+   //         Db.CodeFirst.InitTables<InventoryPlanLDB>();
 
    //         //创建退货出库表
    //         Db.CodeFirst.InitTables<PickingOrder>();

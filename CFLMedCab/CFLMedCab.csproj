@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -250,6 +250,7 @@
     <Compile Include="Http\Model\ShelfTask.cs" />
     <Compile Include="Http\Model\ShelfTaskCommodityDetail.cs" />
     <Compile Include="Http\Model\StoreHouse.cs" />
+    <Compile Include="Http\Model\TaskOrder.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="Infrastructure\BootUpHelper\BootUpHelper.cs" />
     <Compile Include="Infrastructure\ComName.cs" />
@@ -304,6 +305,9 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\LoadingData.xaml.cs">
+      <DependentUpon>LoadingData.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SystemSetting.xaml.cs">
       <DependentUpon>SystemSetting.xaml</DependentUpon>
     </Compile>
@@ -337,8 +341,8 @@
     <Compile Include="View\Inventory\Inventory.xaml.cs">
       <DependentUpon>Inventory.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Inventory\InventoryDetail.xaml.cs">
-      <DependentUpon>InventoryDetail.xaml</DependentUpon>
+    <Compile Include="View\Inventory\InventoryDtl.xaml.cs">
+      <DependentUpon>InventoryDtl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Inventory\InventoryPlanDetail.xaml.cs">
       <DependentUpon>InventoryPlanDetail.xaml</DependentUpon>
@@ -436,6 +440,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\LoadingData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\SystemSetting.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -476,7 +484,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Inventory\InventoryDetail.xaml">
+    <Page Include="View\Inventory\InventoryDtl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

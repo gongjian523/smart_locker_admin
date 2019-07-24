@@ -140,36 +140,36 @@ namespace CFLMedCab.DAL
         /// 插入盘点计划
         /// </summary>
         /// <returns></returns>
-        public void InsertInventoryPlan(List<InventoryPlan> list)
+        public void InsertInventoryPlan(List<InventoryPlanLDB> list)
         {
-            Db.Insertable<InventoryPlan>(list).ExecuteCommand();
+            Db.Insertable<InventoryPlanLDB>(list).ExecuteCommand();
         }
 
         /// <summary>
         /// 更新盘点计划(列表)
         /// </summary>
         /// <returns></returns>
-        public void UpdateInventoryPlan(List<InventoryPlan> list)
+        public void UpdateInventoryPlan(List<InventoryPlanLDB> list)
         {
-            Db.Updateable<InventoryPlan>(list).ExecuteCommand();
+            Db.Updateable<InventoryPlanLDB>(list).ExecuteCommand();
         }
 
         /// <summary>
         /// 更新盘点计划(单个）
         /// </summary>
         /// <returns></returns>
-        public void UpdateInventoryPlan(InventoryPlan item)
+        public void UpdateInventoryPlan(InventoryPlanLDB item)
         {
-            Db.Updateable<InventoryPlan>(item).ExecuteCommand();
+            Db.Updateable<InventoryPlanLDB>(item).ExecuteCommand();
         }
 
         /// <summary>
         /// 获取盘点计划
         /// </summary>
         /// <returns></returns>
-        public List<InventoryPlan> GetInventoryPlan()
+        public List<InventoryPlanLDB> GetInventoryPlan()
         {
-            return Db.Queryable<InventoryPlan>().OrderBy(it => it.inventorytime_str, OrderByType.Desc).ToList();
+            return Db.Queryable<InventoryPlanLDB>().OrderBy(it => it.inventorytime_str, OrderByType.Desc).ToList();
         }
 
         ///// <summary>

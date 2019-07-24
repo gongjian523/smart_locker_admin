@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Model
 {
-    public class InventoryPlan
+    public class InventoryPlanLDB
     {
         /// <summary>
         /// 计划编号

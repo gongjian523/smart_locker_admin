@@ -28,7 +28,7 @@ namespace CFLMedCab.View.Inventory
 
         InventoryBll inventoryBll = new InventoryBll();
 
-        List<InventoryPlan> list = new List<InventoryPlan>();
+        List<InventoryPlanLDB> list = new List<InventoryPlanLDB>();
 
         public InventoryPlanDetail()
         {
@@ -96,7 +96,7 @@ namespace CFLMedCab.View.Inventory
             }
 
 
-            list.Add(new InventoryPlan
+            list.Add(new InventoryPlanLDB
             {
                 id = 0,
                 code = "P" + DateTime.Now.ToString("HHmmss") + ran.Next(9999),

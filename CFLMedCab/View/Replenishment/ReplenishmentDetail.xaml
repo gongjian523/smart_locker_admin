@@ -79,28 +79,28 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="单品码"  Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                    <GridViewColumn Header="待上架数量"  Width="{Binding ElementName=column2,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="货位" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn Header="已上架数量" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding position}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="失效期"  Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn Header="设备"  Width="{Binding ElementName=column4,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_date,StringFormat='{}{0:yyyy-MM-dd}'}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="领用属性"  Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                    <GridViewColumn Header="货位码"  Width="{Binding ElementName=column5,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}"/>

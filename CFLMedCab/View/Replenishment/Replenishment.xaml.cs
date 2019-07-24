@@ -2,8 +2,14 @@
 using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -29,13 +35,18 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class Replenishment : UserControl
     {
-        public delegate void EnterReplenishmentDetailHandler(object sender, ReplenishOrderDto e);
+        public delegate void EnterReplenishmentDetailHandler(object sender, ShelfTask e);
         public event EnterReplenishmentDetailHandler EnterReplenishmentDetailEvent;
 
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ReplenishOrderDto e);
+        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ShelfTask e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
-        ReplenishBll replenishBll = new ReplenishBll();
+        public delegate void ShowLoadDataHandler(object sender, bool e);
+        public event ShowLoadDataHandler ShowLoadDataEvent;
+
+        public delegate void HideLoadDataHandler(object sender, bool e);
+        public event HideLoadDataHandler HideLoadDataEvent;
+
         public Replenishment()
         {
             InitializeComponent();
@@ -44,8 +55,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
             InitData();
         }
 
-        private ObservableCollection<ReplenishOrderDto> _replenishOrderView = new ObservableCollection<ReplenishOrderDto>();
-        public ObservableCollection<ReplenishOrderDto> ReplenishOrderViewList
+        private ObservableCollection<ShelfTask> _replenishOrderView = new ObservableCollection<ShelfTask>();
+        public ObservableCollection<ShelfTask> ReplenishOrderViewList
         {
             get
             {
@@ -64,8 +75,23 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             ReplenishOrderViewList.Clear();
 
-            List<ReplenishOrderDto> replenishOrders = replenishBll.GetReplenishOrderDto(new BasePageDataApo()).Data;
-            replenishOrders.ForEach(replenishOrder => ReplenishOrderViewList.Add(replenishOrder));
+            //ShowLoadDataEvent(this, true);
+            BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask();
+            //HideLoadDataEvent(this, true);
+
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
+            if (!isSuccess)
+            {
+                MessageBox.Show("此拣货工单中失败！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            List<ShelfTask> tasks = baseDataShelfTask.body.objects;
+            tasks.ForEach(task => {
+                DateTime dt = Convert.ToDateTime(task.created_at); 
+                task.created_at = dt.ToString("yyyy年MM月dd日");               
+                ReplenishOrderViewList.Add(task);
+            });
         }
         
         /// <summary>
@@ -75,8 +101,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEnterDetailOpen(object sender, RoutedEventArgs e)
         {
-            ReplenishOrderDto replenishShortOrder = (ReplenishOrderDto)((Button)sender).Tag;
-            EnterReplenishmentDetailOpenEvent(this, replenishShortOrder);
+            ShelfTask shelfTask = (ShelfTask)((Button)sender).Tag;
+            EnterReplenishmentDetailOpenEvent(this, shelfTask);
         }
 
         /// <summary>
@@ -86,8 +112,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEnterDetail(object sender, RoutedEventArgs e)
         {
-            ReplenishOrderDto replenishShortOrder = (ReplenishOrderDto)((Button)sender).Tag;
-            EnterReplenishmentDetailEvent(this, replenishShortOrder);
+            ShelfTask shelfTask = (ShelfTask)((Button)sender).Tag;
+            EnterReplenishmentDetailEvent(this, shelfTask);
         }
 
         /// <summary>
@@ -97,20 +123,39 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
-            var value = tbInputNumbers.Text;
-            if (string.IsNullOrWhiteSpace(value))
+            string inputStr = tbInputNumbers.Text;
+            if (string.IsNullOrWhiteSpace(inputStr))
             {
                 MessageBox.Show("拣货工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
-            if (ReplenishOrderViewList.Where(item => item.code == value).ToList().Count == 0)
+            TaskOrder taskOrder;
+            string name;
+            try
+            {
+                taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
+                name = taskOrder.name;
+            }
+            catch
+            {
+                name = inputStr;
+            }
+
+            name = "OS20190721000052";
+
+            //ShowLoadDataEvent(this, true);
+            BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);
+            //HideLoadDataEvent(this, true);
+
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
+            if(!isSuccess)
             {
                 MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
-            EnterReplenishmentDetailEvent(this, ReplenishOrderViewList.Where(item => item.code == value).First());
+            EnterReplenishmentDetailEvent(this, baseDataShelfTask.body.objects[0]);
         }
 
         /// <summary>

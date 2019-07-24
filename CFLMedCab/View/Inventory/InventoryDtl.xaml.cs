@@ -24,7 +24,7 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// InventoryConfirm.xaml 的交互逻辑
     /// </summary>
-    public partial class InventoryDetail : UserControl,INotifyPropertyChanged
+    public partial class InventoryDtl : UserControl,INotifyPropertyChanged
     {
 
         public delegate void EnterInventoryHandler(object sender, RoutedEventArgs e);
@@ -60,7 +60,7 @@ namespace CFLMedCab.View.Inventory
         }
 
 
-        public InventoryDetail(InventoryDetailPara para)
+        public InventoryDtl(InventoryDetailPara para)
         {
             InitializeComponent();
 
