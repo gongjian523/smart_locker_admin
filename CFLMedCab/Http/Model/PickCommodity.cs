@@ -2,28 +2,31 @@
 using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
 	/// <summary>
-	/// 上架任务商品明细
+	/// 拣选商品管理理资料
 	/// </summary>
 	[JsonObject(MemberSerialization.OptOut)]
-	public class ShelfTaskCommodityDetail : BaseModel
+	public class PickCommodity:BaseModel
 	{
 		/// <summary>
-		/// 已上架数量量
+		/// 
 		/// </summary>
-		public int AlreadyShelfNumber { get; set; }
+		public string AllotId { get; set; }
 		/// <summary>
-		/// 商品id
+		/// 
 		/// </summary>
 		public string CommodityId { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
 		public string EquipmentId { get; set; }
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -31,11 +34,15 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int NeedShelfNumber { get; set; }
+		public int Number { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
-		public string ShelfTaskId { get; set; }
+		public int PickNumber { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string PickTaskId { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -44,6 +51,7 @@ namespace CFLMedCab.Http.Model
 		/// 定数包
 		/// </summary>
 		public string Type { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -52,7 +60,6 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string created_by { get; set; }
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -101,6 +108,5 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		[JsonIgnore]
 		public string CommodityName { get; set; }
-
 	}
 }

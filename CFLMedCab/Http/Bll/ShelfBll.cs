@@ -19,31 +19,6 @@ namespace CFLMedCab.Http.Bll
 	{
 
 		/// <summary>
-		/// 异常原因
-		/// </summary>
-		public enum AbnormalCauses
-		{
-			/// <summary>
-			/// 待上架
-			/// </summary>
-			[Description("商品缺失 ")]
-			商品缺失 = 1,
-
-			/// <summary>
-			/// 已完成 
-			/// </summary>
-			[Description("商品损坏")]
-			商品损坏 = 2,
-
-			/// <summary>
-			/// 异常
-			/// </summary>
-			[Description("商品遗失")]
-			商品遗失 = 3
-
-		}
-
-		/// <summary>
 		/// 根据上架单号获取任务单详情
 		/// </summary>
 		/// <param name="shelfTaskName"></param>
@@ -234,9 +209,21 @@ namespace CFLMedCab.Http.Bll
 					}
 
 					//拼接库房名字
-					if (!string.IsNullOrEmpty(it.EquipmentId))
+					if (!string.IsNullOrEmpty(it.StoreHouseId))
 					{
 						it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
+					}
+
+					//拼接货位名字
+					if (!string.IsNullOrEmpty(it.GoodsLocationId))
+					{
+						it.GoodsLocationName = GetNameById<GoodsLocation>(it.GoodsLocationId);
+					}
+
+					//拼接商品名字
+					if (!string.IsNullOrEmpty(it.CommodityId))
+					{
+						it.CommodityName = GetNameById<Commodity>(it.CommodityId);
 					}
 
 				});
@@ -267,7 +254,7 @@ namespace CFLMedCab.Http.Bll
 
 				var shelfTask = baseDataShelfTask.body.objects[0];
 
-				var sfdCommoditys = shelfTaskCommodityDetails.Select(it => it.Commodity).ToList();
+				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).ToList();
 
 				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess3);
 
@@ -278,10 +265,10 @@ namespace CFLMedCab.Http.Bll
 					commodityCodes = baseDatacommodityCode.body.objects;
 				}
 
-				var cccNames = commodityCodes.Select(it => it.CommodityName).ToList();
+				var cccIds = commodityCodes.Select(it => it.CommodityId).ToList();
 
 				//是否名称全部一致
-				bool isAllContains = sfdCommoditys.All(cccNames.Contains) && sfdCommoditys.Count == cccNames.Count;
+				bool isAllContains = sfdCommodityIds.All(cccIds.Contains) && sfdCommodityIds.Count == cccIds.Count;
 
 				if (isAllContains)
 				{
@@ -290,7 +277,7 @@ namespace CFLMedCab.Http.Bll
 
 					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
 					{
-						if (stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityName == stcd.Commodity).Count())
+						if (stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
 						{
 							shelfTask.Status = DocumentStatus.异常.ToString();
 							isAllNormal = false;

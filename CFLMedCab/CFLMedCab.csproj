@@ -162,6 +162,7 @@
     <Compile Include="Http\Bll\CommodityInventoryChangeBll.cs" />
     <Compile Include="Http\Bll\ConsumingBll.cs" />
     <Compile Include="Http\Bll\RollbackBll.cs" />
+    <Compile Include="Http\Bll\PickBll.cs" />
     <Compile Include="Http\Bll\ShelfBll.cs" />
     <Compile Include="Http\Bll\UserLoginBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="DTO\Stock\GoodsChageOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderdtlDto.cs" />
     <Compile Include="DTO\Surgery\SurgeryOrderDto.cs" />
+    <Compile Include="Http\Enum\AbnormalCauses.cs" />
     <Compile Include="Http\Enum\DocumentStatus.cs" />
     <Compile Include="Http\Enum\ResultCode.cs" />
     <Compile Include="Http\Enum\ResultHandleType.cs" />
@@ -222,9 +224,11 @@
     <Compile Include="Http\Model\ConsumingGoodsDetail.cs" />
     <Compile Include="Http\Model\ConsumingOrder.cs" />
     <Compile Include="Http\Model\Enum\OperateType.cs" />
+    <Compile Include="Http\Model\Enum\PickTaskStatus.cs" />
     <Compile Include="Http\Model\Enum\ShelfTaskStatus.cs" />
     <Compile Include="Http\Model\Equipment.cs" />
     <Compile Include="Http\Model\GoodsLocation.cs" />
+    <Compile Include="Http\Model\Local\LocalCommodityCode.cs" />
     <Compile Include="Http\Model\login\CaptchaToken.cs" />
     <Compile Include="Http\Model\Base\BasePostData.cs" />
     <Compile Include="Http\Model\login\Token.cs" />
@@ -235,6 +239,8 @@
     <Compile Include="Http\Model\param\SignInParam.cs" />
     <Compile Include="Http\Model\param\TokenQueryParam.cs" />
     <Compile Include="Http\Model\param\VeinmatchPostParam.cs" />
+    <Compile Include="Http\Model\PickCommodity.cs" />
+    <Compile Include="Http\Model\PickTask.cs" />
     <Compile Include="Http\Model\PrescriptionOrderGoodsDetail.cs" />
     <Compile Include="Http\Model\ShelfTask.cs" />
     <Compile Include="Http\Model\ShelfTaskCommodityDetail.cs" />

@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CFLMedCab.Http.Enum
+{
+	/// <summary>
+	/// 异常原因
+	/// </summary>
+	public enum AbnormalCauses
+	{
+		/// <summary>
+		/// 待上架
+		/// </summary>
+		[Description("商品缺失 ")]
+		商品缺失 = 1,
+
+		/// <summary>
+		/// 已完成 
+		/// </summary>
+		[Description("商品损坏")]
+		商品损坏 = 2,
+
+		/// <summary>
+		/// 异常
+		/// </summary>
+		[Description("商品遗失")]
+		商品遗失 = 3
+	}
+}

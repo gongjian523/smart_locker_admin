@@ -2,6 +2,8 @@
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure.DbHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,11 +69,42 @@ namespace CFLMedCab.Http.Bll
 			}
 		}
 
+		/// <summary>
+		/// 插入变化后的商品信息
+		/// </summary>
+		/// <param name="baseDataCommodityCode">所有数据</param>
+		/// <param name="sourceBill">业务类型</param>
+		/// <returns></returns>
+		public bool InsertLocalCommodityCodeInfo(BaseData<CommodityCode> baseDataCommodityCode, string sourceBill)
+		{
+			var result = false;
+
+			//校验是否含有数据，如果含有数据，有就继续下一步
+			baseDataCommodityCode = HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
+
+			if (isSuccess)
+			{
+				List<LocalCommodityCode> localCommodityCodes = baseDataCommodityCode.body.objects.MapToListIgnoreId<CommodityCode, LocalCommodityCode>();
+
+				localCommodityCodes.ForEach(it =>
+				{
+					it.sourceBill = sourceBill;
+				});
+
+				//事务防止多插入产生脏数据
+				result = SqlSugarHelper.GetInstance().Db.Ado.UseTran(() =>
+				{
+
+					SqlSugarHelper.GetInstance().Db.Insertable(localCommodityCodes).ExecuteCommand();
+
+				}).IsSuccess;
+
+			}
+
+			return result;
+		}
+
 
 	}
-
-
-	//PutCommodityInventoryChange(string List<string>)
-
 
 }
