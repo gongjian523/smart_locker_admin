@@ -240,27 +240,23 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="baseDataShelfTask"></param>
 		/// <param name="baseDataShelfTaskCommodityDetail"></param>
 		/// <returns></returns>
-		public BaseData<ShelfTask> GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, BaseData<ShelfTask> baseDataShelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
+		public void GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, ShelfTask shelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
 		{
 
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			BaseData<ShelfTask> retBaseDataShelfTask = HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess1);
 
-			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
 
-			if (isSuccess1 && isSuccess2)
+			if (isSuccess)
 			{
 				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
 
-				var shelfTask = baseDataShelfTask.body.objects[0];
-
 				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).ToList();
 
-				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess3);
+				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
 
 				var commodityCodes = new List<CommodityCode>();
 
-				if (isSuccess3)
+				if (isSuccess1)
 				{
 					commodityCodes = baseDatacommodityCode.body.objects;
 
@@ -318,65 +314,28 @@ namespace CFLMedCab.Http.Bll
 				}
 			}
 
-			return retBaseDataShelfTask;
 		}
+
 
 		/// <summary>
 		/// 更新上架任务单
 		/// </summary>
 		/// <param name="baseDataShelfTask">最后结果集</param>
 		/// <returns></returns>
-		public BasePutData<ShelfTask> PutShelfTask(BaseData<ShelfTask> baseDataShelfTask, AbnormalCauses abnormalCauses)
+		public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask, AbnormalCauses abnormalCauses)
 		{
-
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			BasePutData<ShelfTask> retBasePutDataShelfTask = HttpHelper.GetInstance().ResultCheckPutByBase(baseDataShelfTask, out bool isSuccess1);
-
-			if (isSuccess1)
+			if (shelfTask.Status == DocumentStatus.异常.ToString())
 			{
-				var shelfTask = baseDataShelfTask.body.objects[0];
-				if (shelfTask.Status == DocumentStatus.异常.ToString())
-				{
-					shelfTask.AbnormalCauses = abnormalCauses.ToString();
-				}
-
-				//put修改上架工单
-				retBasePutDataShelfTask = HttpHelper.GetInstance().Put(new ShelfTask
-				{
-					id = shelfTask.id,
-					Status = shelfTask.Status,
-					AbnormalCauses = shelfTask.AbnormalCauses,
-					version = shelfTask.version
-				});
+				shelfTask.AbnormalCauses = abnormalCauses.ToString();
 			}
 
-			return retBasePutDataShelfTask;
-		}
-
-		/// <summary>
-		/// 更新上架任务单
-		/// </summary>
-		/// <param name="baseDataShelfTask">最后结果集</param>
-		/// <returns></returns>
-		public BasePutData<ShelfTask> PutShelfTask(BaseData<ShelfTask> baseDataShelfTask)
-		{
-
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			BasePutData<ShelfTask> retBasePutDataShelfTask = HttpHelper.GetInstance().ResultCheckPutByBase(baseDataShelfTask, out bool isSuccess1);
-
-			if (isSuccess1)
+			return HttpHelper.GetInstance().Put(new ShelfTask
 			{
-				var shelfTask = baseDataShelfTask.body.objects[0];
-				//put修改上架工单
-				retBasePutDataShelfTask = HttpHelper.GetInstance().Put(new ShelfTask
-				{
-					id = shelfTask.id,
-					Status = shelfTask.Status,
-					version = shelfTask.version
-				});
-			}
-
-			return retBasePutDataShelfTask;
+				id = shelfTask.id,
+				Status = shelfTask.Status,
+				AbnormalCauses = shelfTask.AbnormalCauses,
+				version = shelfTask.version
+			});
 		}
 
 		/// <summary>
@@ -385,18 +344,15 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="baseDatacommodityCode"></param>
 		/// <param name="shelfTask"></param>
 		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> CreateShelfTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, BaseData<ShelfTask> baseDataShelfTask)
+		public BasePostData<CommodityInventoryChange> CreateShelfTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, ShelfTask shelfTask)
 		{
 
 			BasePostData<CommodityInventoryChange> retBaseSinglePostDataCommodityInventoryChange = null;
 
 			//校验是否含有数据，如果含有数据，有就继续下一步
-			baseDataCommodityCode = HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess1);
+			baseDataCommodityCode = HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
 
-			//校验是否含有数据，如果含有数据，有就继续下一步
-			baseDataShelfTask = HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess2);
-
-			if (isSuccess1 && isSuccess2)
+			if (isSuccess)
 			{
 
 				var CommodityCodes = baseDataCommodityCode.body.objects;
@@ -423,7 +379,7 @@ namespace CFLMedCab.Http.Bll
 						SourceBill = new SourceBill()//来源单据
 						{
 							object_name = typeof(ShelfTask).Name,
-							object_id = baseDataShelfTask.body.objects[0].id
+							object_id = shelfTask.id
 						},
 						ChangeStatus = changeStatus
 					});
