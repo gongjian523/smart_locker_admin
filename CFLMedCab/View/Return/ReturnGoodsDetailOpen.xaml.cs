@@ -1,5 +1,9 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DTO.Picking;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -24,17 +28,24 @@ namespace CFLMedCab.View.Return
     /// </summary>
     public partial class ReturnGoodsDetailOpen : UserControl
     {
-        private PickingOrderDto pickingOrderDto;
-        PickingBll pickingBll = new PickingBll();
-        public ReturnGoodsDetailOpen(PickingOrderDto model)
+        public ReturnGoodsDetailOpen(PickTask task)
         {
             InitializeComponent();
-            pickingOrderDto = model;
             //操作人
             operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
             //工单号
-            orderNum.Content = model.code;
-            listView.DataContext = pickingBll.GetPickingOrderdtlDto(new PickingSubOrderdtlApo { picking_order_code = model.code }).Data;
+            orderNum.Content = task.name;
+
+            BaseData<PickCommodity> bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(task);
+
+            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess);
+            if (!isSuccess)
+            {
+                MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            listView.DataContext = bdCommodityDetail.body.objects;
         }
     }
 }

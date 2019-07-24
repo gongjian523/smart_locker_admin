@@ -1,7 +1,12 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Picking;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -25,14 +30,11 @@ namespace CFLMedCab.View.Return
     /// </summary>
     public partial class ReturnGoods : UserControl
     {
-        public delegate void EnterReturnGoodsDetailHandler(object sender, PickingOrderDto e);
+        public delegate void EnterReturnGoodsDetailHandler(object sender, PickTask e);
         public event EnterReturnGoodsDetailHandler EnterReturnGoodsDetailEvent;
 
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingOrderDto e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickTask e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
-
-        PickingBll pickingBll = new PickingBll();
-
 
         public ReturnGoods()
         {
@@ -44,8 +46,8 @@ namespace CFLMedCab.View.Return
             InitData();
         }
 
-        private ObservableCollection<PickingOrderDto> _pickingOrderView = new ObservableCollection<PickingOrderDto>();
-        public ObservableCollection<PickingOrderDto> PickingOrderList
+        private ObservableCollection<PickTask> _pickingOrderView = new ObservableCollection<PickTask>();
+        public ObservableCollection<PickTask> PickingOrderList
         {
             get
             {
@@ -63,8 +65,24 @@ namespace CFLMedCab.View.Return
         private void InitData()
         {
             PickingOrderList.Clear();
-            List<PickingOrderDto> pickingOrders =  pickingBll.GetPickingOrderDto(new APO.BasePageDataApo()).Data; 
-            pickingOrders.ForEach(pickingOrder => PickingOrderList.Add(pickingOrder));
+
+            //ShowLoadDataEvent(this, true);
+            BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask();
+            //HideLoadDataEvent(this, true);
+
+            HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);
+            if (!isSuccess)
+            {
+                MessageBox.Show("此拣货工单中失败！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            List<PickTask> tasks = baseDataPickTask.body.objects;
+            tasks.ForEach(task => {
+                DateTime dt = Convert.ToDateTime(task.created_at);
+                task.created_at = dt.ToString("yyyy年MM月dd日");
+                PickingOrderList.Add(task);
+            });
         }
 
         /// <summary>
@@ -74,8 +92,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnterDetail(object sender, RoutedEventArgs e)
         {
-            PickingOrderDto pickingShortOrder = (PickingOrderDto)((Button)sender).Tag;
-            EnterReturnGoodsDetailEvent(this, pickingShortOrder);
+            PickTask pickTask = (PickTask)((Button)sender).Tag;
+            EnterReturnGoodsDetailEvent(this, pickTask);
         }
 
         /// <summary>
@@ -85,8 +103,8 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnterDetailOpen(object sender, RoutedEventArgs e)
         {
-            PickingOrderDto pickingShortOrder = (PickingOrderDto)((Button)sender).Tag;
-            EnterReturnGoodsDetailOpenEvent(this, pickingShortOrder);
+            PickTask pickTask = (PickTask)((Button)sender).Tag;
+            EnterReturnGoodsDetailOpenEvent(this, pickTask);
         }
 
         /// <summary>
@@ -96,20 +114,41 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
-            var value = tbInputNumbers.Text;
-            if (string.IsNullOrWhiteSpace(value))
+            string inputStr = tbInputNumbers.Text;
+            if (string.IsNullOrWhiteSpace(inputStr))
             {
                 MessageBox.Show("拣货工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
-            if (PickingOrderList.Where(item => item.code == value).ToList().Count == 0)
+            TaskOrder taskOrder;
+            string name;
+            try
+            {
+                taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
+                name = taskOrder.name;
+            }
+            catch
+            {
+                name = inputStr;
+            }
+
+//#if TESTENV
+            name = "ST20190721000031";
+//#endif
+
+            //ShowLoadDataEvent(this, true);
+            BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask(name);
+            //HideLoadDataEvent(this, true);
+
+            HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);
+            if (!isSuccess)
             {
                 MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
-            EnterReturnGoodsDetailEvent(this, PickingOrderList.Where(item => item.code == value).First());
+            EnterReturnGoodsDetailEvent(this, baseDataPickTask.body.objects[0]);
         }
 
         /// <summary>

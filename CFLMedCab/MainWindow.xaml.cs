@@ -86,7 +86,7 @@ namespace CFLMedCab
         private System.Timers.Timer testTimer;
         private SurgeryOrderDto testSOPara = new SurgeryOrderDto();
         private ShelfTask testROPara = new ShelfTask();
-        private PickingOrderDto testPOPara = new PickingOrderDto();
+        private PickTask testPOPara = new PickTask();
 #endif
 
         public MainWindow()
@@ -914,13 +914,11 @@ namespace CFLMedCab
 #else
 
 #if DUALCAB
-            List<string> listCom = replenishBll.GetReplenishOrderPositons(new ReplenishSubOrderdtlApo { replenish_order_code = e.code});
-            if (listCom.Count == 0)
-                return;
+            //TODO
+            List<string> listCom = ComName.GetAllLockerCom();
 #else
-           List<string> listCom = ComName.GetAllLockerCom();
+            List<string> listCom = ComName.GetAllLockerCom();
 #endif
-
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
             delegateGetMsg.userData = e;
@@ -997,14 +995,14 @@ namespace CFLMedCab
             EnterInvotoryOngoing();
 
             bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out isGetSuccess);
 
             //关闭盘点中弹窗
             ClosePop();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose((ReplenishOrderDto)delegateGetMsg.userData, ht);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose((ShelfTask)delegateGetMsg.userData, hs);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -1038,7 +1036,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnGoodsDetail(object sender, PickingOrderDto e)
+        private void onEnterReturnGoodsDetail(object sender, PickTask e)
         {
             ReturnGoodsDetail returnGoodsDetail = new ReturnGoodsDetail(e);
             returnGoodsDetail.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsDetail.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
@@ -1053,7 +1051,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnGoodsDetailOpen(object sender, PickingOrderDto e)
+        private void onEnterReturnGoodsDetailOpen(object sender, PickTask e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -1108,13 +1106,12 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnGoodsCloseTestEvent(object sender, EventArgs e)
         {
-            //Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
-            Hashtable ht = new Hashtable();
-            PickingOrderDto pickingSubOrderDto = testPOPara;
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out bool isGetSuccess);
+            PickTask pickTask = testPOPara;
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(pickingSubOrderDto, ht);
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(pickTask, hs);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
 

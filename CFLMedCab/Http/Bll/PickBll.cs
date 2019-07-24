@@ -245,39 +245,36 @@ namespace CFLMedCab.Http.Bll
 
 			HttpHelper.GetInstance().ResultCheck(baseDataPickTaskCommodityDetail, out bool isSuccess);
 
-			if (isSuccess)
+            HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
+
+            if (isSuccess && isSuccess1)
 			{
 				var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects;
 
 				var sfdCommodityIds = pickTaskCommodityDetails.Select(it => it.CommodityId).ToList();
-
-				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
-
+		
 				var commodityCodes = new List<CommodityCode>();
 
-				if (isSuccess1)
-				{
-					commodityCodes = baseDatacommodityCode.body.objects;
+				commodityCodes = baseDatacommodityCode.body.objects;
 
-					commodityCodes.ForEach(it => {
-						if (it.operate_type == (int)OperateType.入库)
+				commodityCodes.ForEach(it => {
+					if (it.operate_type == (int)OperateType.入库)
+					{
+						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+					}
+					else
+					{
+						if (sfdCommodityIds.Contains(it.CommodityId))
 						{
-							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+							it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
 						}
 						else
 						{
-							if (sfdCommodityIds.Contains(it.CommodityId))
-							{
-								it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
-							}
-							else
-							{
-								it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-							}
+							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
 						}
-					});
-				}
-
+					}
+				});
+				
 				var cccIds = commodityCodes.Select(it => it.CommodityId).ToList();
 
 				//是否名称全部一致

@@ -195,11 +195,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             isGetSuccess = true;
 
             var ret = new HashSet<CommodityEps>()
-                {
+               {
                     new CommodityEps
                     {
-                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
-                        CommodityCodeName = "QR00000038",
+                        CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+                        CommodityCodeName = "QR00000035",
                         CommodityName = "止血包",
                         EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
                         EquipmentName = "E00000008",

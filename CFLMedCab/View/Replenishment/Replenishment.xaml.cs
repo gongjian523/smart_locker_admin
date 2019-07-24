@@ -82,7 +82,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
             if (!isSuccess)
             {
-                MessageBox.Show("此拣货工单中失败！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("此上架工单中失败！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
@@ -126,7 +126,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             string inputStr = tbInputNumbers.Text;
             if (string.IsNullOrWhiteSpace(inputStr))
             {
-                MessageBox.Show("拣货工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("上架工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
@@ -151,7 +151,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
             if(!isSuccess)
             {
-                MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("此上架工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 

@@ -3,6 +3,7 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
@@ -49,9 +50,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         private Timer endTimer;
 
-        private string code;
-        private int actInNum;
-
         bool bExit;
 
         public ReplenishmentClose(ShelfTask task, HashSet<CommodityEps> hs)
@@ -66,7 +64,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             //操作人
             //operatorName.Content = ApplicationState.GetUserInfo().name;
             //工单号
-            //orderNum.Content = task.name;
+            orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             shelfTask = task;
 
@@ -74,17 +72,33 @@ namespace CFLMedCab.View.ReplenishmentOrder
             after = hs;
 
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
+            if(bdCommodityCode.code != 0)
+            {
+                return;
+            }
 
             bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
             ShelfBll.GetInstance().GetShelfTaskChange(bdCommodityCode, shelfTask, bdCommodityDetail);
 
-            //inNum.Content = operateGoodsNum;
-            //abnormalInNum.Content = storageGoodsExNum;
-            //abnormalOutNum.Content = outStorageGoodsExNum;
-            listView.DataContext = bdCommodityDetail.body.objects;
+            int inCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
+            int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1 && item.AbnormalDisplay == "异常").ToList().Count;
+            int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
 
-            //code = model.name;
-            //actInNum = operateGoodsNum;
+            inNum.Content = inCnt;
+            abnormalInNum.Content = abnormalInCnt;
+            abnormalOutNum.Content = abnormalOutCnt;
+            listView.DataContext = bdCommodityCode.body.objects;
+
+            if(abnormalInCnt == 0 && abnormalOutCnt == 0)
+            {
+                normalBtmView.Visibility = Visibility.Visible;
+                abnormalBtmView.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                normalBtmView.Visibility = Visibility.Collapsed;
+                abnormalBtmView.Visibility = Visibility.Visible;
+            }
         }
 
         /// <summary>
@@ -94,8 +108,18 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            //todo 判断条件还要修改
-            if (abnormalInNum.Content == inNum.Content)
+            bool bNormal = true;
+
+            foreach(var item in bdCommodityDetail.body.objects)
+            {
+                item.PlanShelfNumber = item.NeedShelfNumber - item.AlreadyShelfNumber;
+                item.CurShelfNumber = bdCommodityCode.body.objects.Where(i => i.CommodityName == item.CommodityName).ToList().Count;
+
+                if (item.PlanShelfNumber != item.CurShelfNumber)
+                    bNormal = true;
+            }
+
+            if (bNormal)
             {
                 endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
@@ -108,11 +132,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 normalView.Visibility = Visibility.Collapsed;
                 abnormalView.Visibility = Visibility.Visible;
 
-                codeLb.Content = code;
-                statusLb.Content = "异常";
-                //TODO
-                plaPickNumLb.Content = "";
-                actPickNumLb.Content = actInNum;
+                listView2.DataContext = bdCommodityDetail.body.objects;
             }
         }
 
@@ -143,8 +163,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         private void EndOperation(bool bEixt)
         {
-            //replenishBll.UpdateReplenishStatus(replenishOrderDto.code, goodsDetails);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, AbnormalCauses.商品损坏);
+            BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+
+            ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bEixt);
         }
 
