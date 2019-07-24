@@ -26,7 +26,14 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseData<ConsumingOrder> GetConsumingOrder(string consumingOrderName)
         {
-            
+            if (null == consumingOrderName)
+            {
+                return new BaseData<ConsumingOrder>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
             //获取待完成上架工单
             var detail =  HttpHelper.GetInstance().Get<ConsumingOrder>(new QueryParam
             {
@@ -77,6 +84,16 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseData<OperationOrderGoodsDetail> GetOperationOrderGoodsDetail(BaseData<ConsumingOrder> baseDataConsumingOrder)
         {
+            //校验是否含有数据，如果含有数据，拼接具体字段
+            HttpHelper.GetInstance().ResultCheck(baseDataConsumingOrder, out bool isSuccess);
+            if (!isSuccess)
+            {
+                return new BaseData<OperationOrderGoodsDetail>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
             if (!"OperationOrder".Equals(baseDataConsumingOrder.body.objects[0].SourceBill.object_name))
             {
                 return new BaseData<OperationOrderGoodsDetail>()
@@ -102,9 +119,9 @@ namespace CFLMedCab.Http.Bll
             }, baseDataConsumingOrder);
 
             //校验是否含有数据，如果含有数据，拼接具体字段
-            HttpHelper.GetInstance().ResultCheck(baseOperationOrderGoodsDetail, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(baseOperationOrderGoodsDetail, out bool isSuccess2);
 
-            if (isSuccess)
+            if (isSuccess2)
             {
                 baseOperationOrderGoodsDetail.body.objects.ForEach(it =>
                 {
@@ -128,6 +145,16 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseData<PrescriptionOrderGoodsDetail> GetPrescriptionOrderGoodsDetail(BaseData<ConsumingOrder> baseDataConsumingOrder)
         {
+            //校验是否含有数据，如果含有数据，拼接具体字段
+            HttpHelper.GetInstance().ResultCheck(baseDataConsumingOrder, out bool isSuccess);
+            if (!isSuccess)
+            {
+                return new BaseData<PrescriptionOrderGoodsDetail>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
             if (!"PrescriptionBill".Equals(baseDataConsumingOrder.body.objects[0].SourceBill.object_name))
             {
                 return new BaseData<PrescriptionOrderGoodsDetail>()
@@ -146,9 +173,9 @@ namespace CFLMedCab.Http.Bll
             });
 
             //校验是否含有数据，如果含有数据，拼接具体字段
-            HttpHelper.GetInstance().ResultCheck(baseCommodityInventoryDetail, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(baseCommodityInventoryDetail, out bool isSuccess2);
 
-            if (isSuccess)
+            if (isSuccess2)
             {
                 baseCommodityInventoryDetail.body.objects.ForEach(it =>
                 {
@@ -170,6 +197,14 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BasePostData<ConsumingOrder> CreateConsumingOrder(ConsumingOrder order)
         {
+            if (null == order)
+            {
+                return new BasePostData<ConsumingOrder>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
             return HttpHelper.GetInstance().Post<ConsumingOrder>(new PostParam<ConsumingOrder>()
             {
                 objects = new List<ConsumingOrder>() { order }
@@ -183,7 +218,7 @@ namespace CFLMedCab.Http.Bll
         public BasePutData<ConsumingOrder> UpdateConsumingOrderStatus(ConsumingOrder order)
         {
 
-            if (null == order.id || order.Status == null)
+            if (null == order ||null == order.id || null == order.Status || null == order.version)
             {
                 return new BasePutData<ConsumingOrder>()
                 {

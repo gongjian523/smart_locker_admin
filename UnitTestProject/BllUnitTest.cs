@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using CFLMedCab.Http.Bll;
-using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -9,7 +8,6 @@ using CFLMedCab.Http.Model.param;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using static CFLMedCab.Http.Bll.ConsumingBll;
-using static CFLMedCab.Http.Bll.ShelfBll;
 
 namespace UnitTestProject
 {
@@ -36,9 +34,6 @@ namespace UnitTestProject
             });
 		}
 
-		/// <summary>
-		/// 上架业务测试方法
-		/// </summary>
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
@@ -76,74 +71,29 @@ namespace UnitTestProject
 			);
 
 
-			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
+			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("ST-44");
 
 			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
 
-			BaseData<ShelfTask> baseDataShelfTaskChange = ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
 
+			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
 
-			//BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(baseDataShelfTaskChange, AbnormalCauses.商品损坏 );
-			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask);
-
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+		
+			string ret = JsonConvert.SerializeObject(new ShelfTask
+			{
+				Status = "上架",
+				AbnormalCauses = "商品缺失",
+				AbnormalDescribe = "异常描述"
+			}, Formatting.Indented, jsetting);
 		}
-
-		/// <summary>
-		/// 拣货业务测试方法
-		/// </summary>
-		[TestMethod]
-		public void PickBllTestMethod()
-		{
-
-			BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
-				new HashSet<CommodityEps>()
-				{
-					new CommodityEps
-					{
-						CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
-						CommodityCodeName = "QR00000038",
-						CommodityName = "止血包",
-						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-						EquipmentName = "E00000008",
-						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-						GoodsLocationName = "L00000013"
-
-					}
-				},
-
-				new HashSet<CommodityEps>()
-				{
-					new CommodityEps
-					{
-						CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-						CommodityCodeName = "QR00000035",
-						CommodityName = "止血包",
-						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-						EquipmentName = "E00000008",
-						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-						GoodsLocationName = "L00000013"
-
-					}
-				}
-			);
-
-
-			BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask("ST20190721000031");
-
-			BaseData<PickCommodity> baseDataPickTaskCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(baseDataPickTask);
-
-			BaseData<PickTask> baseDataPickTaskChange = PickBll.GetInstance().GetPickTaskChange(baseDataCommodityCode, baseDataPickTask, baseDataPickTaskCommodityDetail);
-
-
-			BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(baseDataPickTaskChange, AbnormalCauses.商品损坏 );
-			//BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(baseDataCommodityCode, baseDataPickTask);
-
-		}
-
-		/// <summary>
-		/// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
-		/// </summary>
-		[TestMethod]
+        /// <summary>
+        /// 测试通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的详情【ID，markId(作废标识)】
+        /// </summary>
+        [TestMethod]
         public void ConsumingQueryOrderTestMethod()
         {
             //根据通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的id，以及markId（作废标识）。（如果领⽤用单作废标识为【是】则弹窗提醒⼿手术单作废，跳转回前⻚页）
@@ -182,7 +132,7 @@ namespace UnitTestProject
             Console.WriteLine(puttemp);
         }
         /// <summary>
-        /// 测试商品库存变更记录创建
+        /// 测试领用部分商品库存变更记录创建
         /// </summary>
         [TestMethod]
         public void CommodityInventoryChangeTestMethod()
@@ -216,6 +166,15 @@ namespace UnitTestProject
             var temp2 = RollbackBll.GetInstance().GetCommodity(commodityCode);
 
             Console.WriteLine(temp2);
+
+        }
+        [TestMethod]
+        public void InventoryTestMethod()
+        {
+            var taskName = "IT20190723000015";
+            var temp = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(taskName);
+            Console.WriteLine(temp);
+
 
         }
 
