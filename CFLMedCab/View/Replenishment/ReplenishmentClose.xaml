@@ -230,7 +230,7 @@
                     </Grid>
                 </Border>
                 <Border  Style="{StaticResource BottomRadiusBorder}" Grid.Row="4">
-                    <Button Style="{StaticResource CommonYesButton}" x:Name="SubmitBtn" Content="提交"  Width="220" Click="onSubmit"/>
+                        <Button Style="{StaticResource CommonYesButton}" x:Name="SubmitBtn" Content="提交"  Width="220" Click="onSubmit"/>
                 </Border>
             </Grid>
         </Border>

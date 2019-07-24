@@ -55,7 +55,6 @@ namespace UnitTestProject
 						EquipmentName = "E00000008",
 						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
 						GoodsLocationName = "L00000013"
-
 					}
 				},
 
@@ -70,18 +69,15 @@ namespace UnitTestProject
 						EquipmentName = "E00000008",
 						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
 						GoodsLocationName = "L00000013"
-
 					}
 				}
 			);
-
 
 			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
 
 			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
 
 			BaseData<ShelfTask> baseDataShelfTaskChange = ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask, baseDataShelfTaskCommodityDetail);
-
 
 			//BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(baseDataShelfTaskChange, AbnormalCauses.商品损坏 );
 			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask);
@@ -122,7 +118,6 @@ namespace UnitTestProject
 						EquipmentName = "E00000008",
 						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
 						GoodsLocationName = "L00000013"
-
 					}
 				}
 			);

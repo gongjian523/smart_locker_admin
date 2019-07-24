@@ -422,9 +422,7 @@ namespace CFLMedCab.Http.Bll
 					message = baseDataCommodityCode.message
 				};
 			}
-
 			return retBaseSinglePostDataCommodityInventoryChange;
-
 		}
 
 	}

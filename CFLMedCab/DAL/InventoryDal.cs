@@ -169,6 +169,7 @@ namespace CFLMedCab.DAL
         /// <returns></returns>
         public List<InventoryPlanLDB> GetInventoryPlan()
         {
+           
             return Db.Queryable<InventoryPlanLDB>().OrderBy(it => it.inventorytime_str, OrderByType.Desc).ToList();
         }
 

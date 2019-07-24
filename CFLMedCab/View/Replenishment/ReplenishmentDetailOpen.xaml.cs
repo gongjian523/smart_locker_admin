@@ -1,6 +1,9 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DTO.Replenish;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -25,14 +28,23 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class ReplenishmentDetailOpen : UserControl
     {
-        ReplenishBll replenishBll = new ReplenishBll();
-
         public ReplenishmentDetailOpen(ShelfTask model)
         {
             InitializeComponent();
             operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
             orderNum.Content = model.name;
-            //listView.DataContext = replenishBll.GetReplenishOrderdtlDto(new ReplenishSubOrderdtlApo { replenish_order_code = model.code }).Data;
+
+            BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(model);
+
+            HttpHelper.GetInstance().ResultCheck(commodityDetail, out bool isSuccess);
+            if (!isSuccess)
+            {
+                MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            listView.DataContext = commodityDetail.body.objects;
+
         }
     }
 }

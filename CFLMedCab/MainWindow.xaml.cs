@@ -184,6 +184,7 @@ namespace CFLMedCab
 
         private void onInventoryTimer(object sender, EventArgs e)
         {
+            return;
             List <InventoryPlanLDB> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
 
             foreach(var item in listPan)
@@ -950,11 +951,11 @@ namespace CFLMedCab
             ShelfTask shelfTask = testROPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                //ReplenishmentClose replenishmentClose = new ReplenishmentClose(replenishOrderDto, ht);
-                //replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
-                //replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, ht);
+                replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
+                replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
 
-                //FullFrame.Navigate(replenishmentClose);
+                FullFrame.Navigate(replenishmentClose);
             }));
         }
 #else
