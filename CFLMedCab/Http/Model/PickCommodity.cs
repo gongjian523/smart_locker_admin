@@ -96,5 +96,17 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		[JsonIgnore]
 		public string StoreHouseName { get; set; }
+
+		/// <summary>
+		/// 货位名
+		/// </summary>
+		[JsonIgnore]
+		public string GoodsLocationName { get; set; }
+
+		/// <summary>
+		/// 商品名
+		/// </summary>
+		[JsonIgnore]
+		public string CommodityName { get; set; }
 	}
 }

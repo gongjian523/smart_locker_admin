@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
 
@@ -11,39 +12,71 @@ namespace CFLMedCab.Http.Model
 	public class ShelfTaskCommodityDetail : BaseModel
 	{
 		/// <summary>
-		/// 上架任务单id
-		/// </summary>
-		public string ShelfTaskId { get; set; }
-
-		/// <summary>
-		/// 商品
-		/// </summary>
-		public string Commodity { get; set; }
-
-		/// <summary>
-		/// 已上架数量
+		/// 已上架数量量
 		/// </summary>
 		public int AlreadyShelfNumber { get; set; }
-
 		/// <summary>
-		/// 待上架数量
+		/// 商品id
 		/// </summary>
-		public int NeedShelfNumber { get; set; }
-
+		public string CommodityId { get; set; }
 		/// <summary>
-		/// 商品类型
-		/// </summary>
-		public string Type { get; set; }
-
-		/// <summary>
-		/// 设备
+		/// 
 		/// </summary>
 		public string EquipmentId { get; set; }
 
 		/// <summary>
-		/// 上架库房
+		/// 
+		/// </summary>
+		public string GoodsLocationId { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public int NeedShelfNumber { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ShelfTaskId { get; set; }
+		/// <summary>
+		/// 
 		/// </summary>
 		public string StoreHouseId { get; set; }
+		/// <summary>
+		/// 定数包
+		/// </summary>
+		public string Type { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string created_at { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string created_by { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string owner { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public Permission permission { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string record_type { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string system_mod_stamp { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string updated_at { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string updated_by { get; set; }
 
 		/// <summary>
 		/// 设备名
@@ -57,6 +90,17 @@ namespace CFLMedCab.Http.Model
 		[JsonIgnore]
 		public string StoreHouseName { get; set; }
 
+		/// <summary>
+		/// 货位名
+		/// </summary>
+		[JsonIgnore]
+		public string GoodsLocationName { get; set; }
+
+		/// <summary>
+		/// 商品名
+		/// </summary>
+		[JsonIgnore]
+		public string CommodityName { get; set; }
 
 	}
 }

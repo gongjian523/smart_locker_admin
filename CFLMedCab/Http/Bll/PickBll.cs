@@ -208,9 +208,21 @@ namespace CFLMedCab.Http.Bll
 					}
 
 					//拼接库房名字
-					if (!string.IsNullOrEmpty(it.EquipmentId))
+					if (!string.IsNullOrEmpty(it.StoreHouseId))
 					{
 						it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
+					}
+
+					//拼接货位名字
+					if (!string.IsNullOrEmpty(it.GoodsLocationId))
+					{
+						it.GoodsLocationName = GetNameById<GoodsLocation>(it.GoodsLocationId);
+					}
+
+					//拼接商品名字
+					if (!string.IsNullOrEmpty(it.CommodityId))
+					{
+						it.CommodityName = GetNameById<Commodity>(it.CommodityId);
 					}
 
 				});
