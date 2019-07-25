@@ -108,18 +108,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            bool bNormal = true;
 
-            foreach(var item in bdCommodityDetail.body.objects)
-            {
-                item.PlanShelfNumber = item.NeedShelfNumber - item.AlreadyShelfNumber;
-                item.CurShelfNumber = bdCommodityCode.body.objects.Where(i => i.CommodityName == item.CommodityName).ToList().Count;
-
-                if (item.PlanShelfNumber != item.CurShelfNumber)
-                    bNormal = true;
-            }
-
-            if (bNormal)
+            if (bdCommodityDetail.body.objects.Where(item => item.PlanShelfNumber > item.CurShelfNumber).Count() > 0)
             {
                 endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);

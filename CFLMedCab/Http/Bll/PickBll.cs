@@ -292,7 +292,6 @@ namespace CFLMedCab.Http.Bll
 							pickTask.BillStatus = DocumentStatus.异常.ToString();
 							isAllNormal = false;
 							break;
-
 						}
 					}
 
@@ -308,8 +307,14 @@ namespace CFLMedCab.Http.Bll
 					
 				}
 
-				
-			}
+                foreach (PickCommodity stcd in pickTaskCommodityDetails)
+                {
+                    stcd.CurShelfNumber = commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
+                    stcd.PlanShelfNumber = stcd.Number - stcd.PickNumber;
+                }
+
+
+            }
 
 		}
 
@@ -379,7 +384,7 @@ namespace CFLMedCab.Http.Bll
 					});
 				});
 
-				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().createCommodityInventoryChange(CommodityInventoryChanges);
+				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
 			}
 			else
 			{

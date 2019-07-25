@@ -26,16 +26,22 @@ namespace CFLMedCab.Http.Enum
 		Request_Exception = -1,
 
         /// <summary>
-        /// Business_Exception
+        /// Business_Exception 业务异常
         /// </summary>
-        [Description("Request_Exception")]
+        [Description("Business_Exception")]
         Business_Exception = -3,
 
         /// <summary>
         /// 参数异常
         /// </summary>
-        [Description("Request_Exception")]
+        [Description("Parameter_Exception")]
         Parameter_Exception = -4,
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Description("Discard_Exception")]
+        Discard_Exception = -5,
 
 		/// <summary>
 		/// OK

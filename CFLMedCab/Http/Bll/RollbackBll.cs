@@ -87,7 +87,12 @@ namespace CFLMedCab.Http.Bll
                         in_list =  { HttpUtility.UrlEncode(CommodityCode) }
                     }
             });
+
+            //校验数据正确性
+            HttpHelper.GetInstance().ResultCheck(baseCommodity, out bool isSuccess);
+
             return baseCommodity ;
         }
+
     }
 }

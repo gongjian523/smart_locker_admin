@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using System;
+using System.Collections.Generic;
 
 namespace CFLMedCab.Http.Model
 {
@@ -20,7 +21,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string InventoryPlanId { get; set; }
+		public List<string> InventoryPlanId { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>

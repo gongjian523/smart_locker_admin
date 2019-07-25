@@ -253,8 +253,6 @@ namespace CFLMedCab.Http.Bll
 
 				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).ToList();
 
-			
-
 				var commodityCodes = baseDatacommodityCode.body.objects;
 
 					commodityCodes.ForEach(it=> {
@@ -275,14 +273,12 @@ namespace CFLMedCab.Http.Bll
 						}
 					});
 
-				
-
 				var cccIds = commodityCodes.Select(it => it.CommodityId).ToList();
 
 				//是否名称全部一致
 				bool isAllContains = sfdCommodityIds.All(cccIds.Contains) && sfdCommodityIds.Count == cccIds.Count;
 
-				if (isAllContains)
+                if (isAllContains)
 				{
 
 					bool isAllNormal = true;
@@ -309,7 +305,13 @@ namespace CFLMedCab.Http.Bll
 					shelfTask.Status = DocumentStatus.异常.ToString();
 					
 				}
-			}
+
+                foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
+                {
+                    stcd.CurShelfNumber = commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
+                    stcd.PlanShelfNumber = stcd.NeedShelfNumber - stcd.AlreadyShelfNumber;
+                }
+            }
 
 		}
 
@@ -382,7 +384,7 @@ namespace CFLMedCab.Http.Bll
 					});
 				});
 
-				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().createCommodityInventoryChange(CommodityInventoryChanges);
+				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
 			}
 			else
 			{

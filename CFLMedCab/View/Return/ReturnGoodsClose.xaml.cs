@@ -50,6 +50,7 @@ namespace CFLMedCab.View.Return
         BaseData<CommodityCode> bdCommodityCode;
         BaseData<PickCommodity> bdCommodityDetail;
 
+        bool bAbnormal = false;
         bool bExit;
 
         public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs)
@@ -84,6 +85,17 @@ namespace CFLMedCab.View.Return
             abnormalOutNum.Content = abnormalOutCnt;
             listView.DataContext = bdCommodityCode.body.objects;
 
+            if (abnormalInCnt == 0 && abnormalOutCnt == 0)
+            {
+                normalBtmView.Visibility = Visibility.Visible;
+                abnormalBtmView.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                normalBtmView.Visibility = Visibility.Collapsed;
+                abnormalBtmView.Visibility = Visibility.Visible;
+            }
+
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
             endTimer.Enabled = true;
@@ -97,18 +109,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            bool bNormal = true;
-
-            foreach (var item in bdCommodityDetail.body.objects)
-            {
-                //item.PlanShelfNumber = item.NeedShelfNumber - item.AlreadyShelfNumber;
-                //item.CurShelfNumber = bdCommodityCode.body.objects.Where(i => i.CommodityName == item.CommodityName).ToList().Count;
-
-                //if (item.PlanShelfNumber != item.CurShelfNumber)
-                //    bNormal = true;
-            }
-
-            if (bNormal)
+            if (bdCommodityDetail.body.objects.Where(item => item.PlanShelfNumber > item.CurShelfNumber).Count() > 0)
             {
                 endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
