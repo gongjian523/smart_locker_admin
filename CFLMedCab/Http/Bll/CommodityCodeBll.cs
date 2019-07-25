@@ -116,6 +116,8 @@ namespace CFLMedCab.Http.Bll
 						EquipmentName = currentEps.EquipmentName,
 						GoodsLocationId = currentEps.GoodsLocationId,
 						GoodsLocationName = currentEps.GoodsLocationName,
+						StoreHouseId = currentEps.StoreHouseId,
+						StoreHouseName = currentEps.StoreHouseName,
 						operate_type = (int)OperateType.出库
 					});
 				}
@@ -211,6 +213,61 @@ namespace CFLMedCab.Http.Bll
 		/// 根据商品码集合获取完整商品属性集合
 		/// </summary>
 		/// <returns></returns>
+		public BaseData<CommodityCode> GetCommodityCode(HashSet<CommodityEps> commodityEpss)
+		{
+
+			if (commodityEpss == null && commodityEpss.Count <= 0)
+			{
+				return new BaseData<CommodityCode>()
+				{
+					code = (int)ResultCode.Parameter_Exception,
+					message = ResultCode.Parameter_Exception.ToString()
+				};
+			} 
+
+			var commodityCodeIds = new List<string>(commodityEpss.Count);
+
+			foreach (CommodityEps commodityEps in commodityEpss)
+			{
+				
+				commodityCodeIds.Add(HttpUtility.UrlEncode(commodityEps.CommodityCodeId));
+			}
+
+
+
+			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
+			{
+				@in =
+				{
+					field = "id",
+					in_list =  commodityCodeIds
+				}
+			});
+
+			HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+			if (isSuccess)
+			{
+				baseData.body.objects.ForEach(it=> 
+				{
+					var currentEps = commodityEpss.Where(cit => cit.CommodityCodeId == it.id).First();
+
+					it.CommodityName = currentEps.CommodityName;
+					it.EquipmentId = currentEps.EquipmentId;
+					it.EquipmentName = currentEps.EquipmentName;
+					it.GoodsLocationId = currentEps.GoodsLocationId;
+					it.GoodsLocationName = currentEps.GoodsLocationName;
+					it.StoreHouseId = currentEps.StoreHouseId;
+					it.StoreHouseName = currentEps.StoreHouseName;
+				});
+			}
+
+			return baseData;
+		}
+
+		/// <summary>
+		/// 根据商品码集合获取完整商品属性集合
+		/// </summary>
+		/// <returns></returns>
 		public BaseData<CommodityCode> GetCommodityCode(List<string> commodityCodeIds)
 		{
 
@@ -230,6 +287,9 @@ namespace CFLMedCab.Http.Bll
 
 			return HttpHelper.GetInstance().ResultCheck(baseData);
 		}
+
+
+
 
 		/// <summary>
 		/// 根据商品码集合获取完整商品属性集合
