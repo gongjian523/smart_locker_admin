@@ -270,6 +270,24 @@ namespace UnitTestProject
         [TestMethod]
         public void InventoryTestMethod()
         {
+
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			string ret = JsonConvert.SerializeObject(new InventoryOrder
+			{
+				ConfirmDate = DateTime.Now.ToString("s")
+			}, Formatting.Indented, jsetting);
+
+			var taskName = "IT20190723000015";
+            var temp = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(taskName);
+            Console.WriteLine(temp);
+
+			
+
 /*            //通过【盘点任务名称】从表格【盘点任务】中查询获取盘点任务id。• 通过【盘点任务单】（InventoryTask.id =InventoryOrder.InventoryTaskId）从表格【盘点单】中查询获得盘点单列列表
             var taskName = "IT20190723000015";
             var inventoryOrders = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(taskName);
@@ -307,7 +325,9 @@ namespace UnitTestProject
                 }
             });
 
-        }
+
+
+		}
 
     }
 

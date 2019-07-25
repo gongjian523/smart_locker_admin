@@ -95,6 +95,8 @@ namespace CFLMedCab.Http.Bll
 						EquipmentName = currentEps.EquipmentName,
 						GoodsLocationId = currentEps.GoodsLocationId,
 						GoodsLocationName = currentEps.GoodsLocationName,
+						StoreHouseId = currentEps.StoreHouseId,
+						StoreHouseName = currentEps.StoreHouseName,
 						operate_type = (int)OperateType.入库
 					});
 				}
@@ -270,6 +272,8 @@ namespace CFLMedCab.Http.Bll
                         it.EquipmentName = simpleCommodityCode.EquipmentName;
                         it.GoodsLocationId = simpleCommodityCode.GoodsLocationId;
                         it.GoodsLocationName = simpleCommodityCode.GoodsLocationName;
+						it.StoreHouseId = simpleCommodityCode.StoreHouseId;
+						it.StoreHouseName = simpleCommodityCode.StoreHouseName;
                         it.operate_type = simpleCommodityCode.operate_type;
                     });
                 }
