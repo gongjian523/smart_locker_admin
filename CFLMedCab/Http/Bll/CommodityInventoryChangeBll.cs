@@ -43,7 +43,6 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="baseDataCommodityCode"></param>
         /// <param name="sourceBill"></param>
-        /// <param name="rollbackSourceBill"></param>
         /// <returns></returns>
         public BasePostData<CommodityInventoryChange> CreateCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, SourceBill sourceBill)
         {
@@ -77,7 +76,7 @@ namespace CFLMedCab.Http.Bll
                         temp.ChangeStatus = CommodityInventoryChangeStatus.正常.ToString();
                         temp.EquipmentId = commodityCode.EquipmentId;
                         temp.GoodsLocationId = commodityCode.GoodsLocationId;
-                        //temp.StoreHouseId = commodityCode.StoreHouseId;
+                        temp.StoreHouseId = commodityCode.StoreHouseId;
                         break;
                 }
                 changes.Add(temp);
@@ -88,8 +87,6 @@ namespace CFLMedCab.Http.Bll
         /// 根据商品码变更列表和来源单据创建库存变更记录资料（回退）
         /// </summary>
         /// <param name="baseDataCommodityCode"></param>
-        /// <param name="sourceBill"></param>
-        /// <param name="rollbackSourceBill"></param>
         /// <returns></returns>
         public BasePostData<CommodityInventoryChange> CreateCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode)
         {

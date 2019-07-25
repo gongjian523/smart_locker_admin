@@ -104,7 +104,10 @@ namespace CFLMedCab.Http.Bll
 			return result;
 		}
 
-
+        public string GetDateTimeNow()
+        {
+            return DateTime.Now.ToString("s") + "Z";
+        }
 	}
 
 }
