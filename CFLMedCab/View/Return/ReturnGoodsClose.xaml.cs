@@ -2,6 +2,10 @@
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Picking;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
@@ -31,51 +35,54 @@ namespace CFLMedCab.View.Return
     public partial class ReturnGoodsClose : UserControl
     {
         //进入拣货单详情开门状态页面
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickingOrderDto e);
+        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickTask e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
-
         private Timer endTimer;
 
-        PickingBll pickingBll = new PickingBll();
-        GoodsBll goodsBll = new GoodsBll();
+        private PickTask pickTask;
+        private HashSet<CommodityEps> after;
 
-        private PickingOrderDto pickingOrderDto;
-        private Hashtable after;
-        private List<GoodsDto> goodsDetails;
-
-        private string code;
-        private int actInNum; 
+        BaseData<CommodityCode> bdCommodityCode;
+        BaseData<PickCommodity> bdCommodityDetail;
 
         bool bExit;
 
-        public ReturnGoodsClose(PickingOrderDto model, Hashtable hashtable)
+        public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs)
         {
             InitializeComponent();
-            pickingOrderDto = model;
+            pickTask = task;
             //操作人
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            //operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
             ////工单号
-            orderNum.Content = model.code;
+            orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
 
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            after = hashtable;
-            List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
-            goodsDetails = pickingBll.GetPickingSubOrderdtlOperateDto(model.code, goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+            after = hs;
 
-            listView.DataContext = goodsDetails;
-            inNum.Content = operateGoodsNum;
-            abnormalInNum.Content = storageGoodsExNum;
-            abnormalOutNum.Content = outStorageGoodsExNum;
-            listView.DataContext = goodsDetails;
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
+            if (bdCommodityCode.code != 0)
+            {
+                return;
+            }
 
-            code = model.code;
-            actInNum = operateGoodsNum;
+            bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
+
+            PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
+
+            int outCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
+            int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1 && item.AbnormalDisplay == "异常").ToList().Count;
+            int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
+
+            outNum.Content = outCnt;
+            abnormalInNum.Content = abnormalInCnt;
+            abnormalOutNum.Content = abnormalOutCnt;
+            listView.DataContext = bdCommodityCode.body.objects;
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
@@ -90,8 +97,18 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            //todo 判断条件还要修改
-            if(abnormalInNum.Content == inNum.Content)
+            bool bNormal = true;
+
+            foreach (var item in bdCommodityDetail.body.objects)
+            {
+                //item.PlanShelfNumber = item.NeedShelfNumber - item.AlreadyShelfNumber;
+                //item.CurShelfNumber = bdCommodityCode.body.objects.Where(i => i.CommodityName == item.CommodityName).ToList().Count;
+
+                //if (item.PlanShelfNumber != item.CurShelfNumber)
+                //    bNormal = true;
+            }
+
+            if (bNormal)
             {
                 endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
@@ -104,11 +121,6 @@ namespace CFLMedCab.View.Return
                 normalView.Visibility = Visibility.Collapsed;
                 abnormalView.Visibility = Visibility.Visible;
 
-                codeLb.Content = code;
-                statusLb.Content = "异常";
-                //TODO
-                plaPickNumLb.Content = "";
-                actPickNumLb.Content = actInNum;
             }
         }
 
@@ -120,7 +132,7 @@ namespace CFLMedCab.View.Return
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
             endTimer.Close();
-            EnterReturnGoodsDetailOpenEvent(this, pickingOrderDto);
+            EnterReturnGoodsDetailOpenEvent(this, pickTask);
             return;
         }
 
@@ -139,8 +151,10 @@ namespace CFLMedCab.View.Return
 
         private void EndOperation(bool bEixt)
         {
-            pickingBll.UpdatePickingStatus(pickingOrderDto.code, goodsDetails);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask, AbnormalCauses.商品损坏);
+            BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
+
+            ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bEixt);
         }
 

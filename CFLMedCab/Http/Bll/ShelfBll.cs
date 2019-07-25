@@ -245,19 +245,17 @@ namespace CFLMedCab.Http.Bll
 
 			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
 
-			if (isSuccess)
+            HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
+
+            if (isSuccess && isSuccess1)
 			{
 				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
 
 				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).ToList();
 
-				HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
+			
 
-				var commodityCodes = new List<CommodityCode>();
-
-				if (isSuccess1)
-				{
-					commodityCodes = baseDatacommodityCode.body.objects;
+				var commodityCodes = baseDatacommodityCode.body.objects;
 
 					commodityCodes.ForEach(it=> {
 						if (it.operate_type == (int)OperateType.出库)
@@ -277,7 +275,7 @@ namespace CFLMedCab.Http.Bll
 						}
 					});
 
-				}
+				
 
 				var cccIds = commodityCodes.Select(it => it.CommodityId).ToList();
 

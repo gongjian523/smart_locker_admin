@@ -44,7 +44,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             InitializeComponent();
             entity = model;    
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            //operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
             orderNum.Content = model.name;
 
             BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(model);
