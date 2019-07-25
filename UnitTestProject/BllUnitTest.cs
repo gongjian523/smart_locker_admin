@@ -242,9 +242,11 @@ namespace UnitTestProject
                     }
                 }
             );
+            //货物领用
             SourceBill sourceBill = new SourceBill()
             {
-                object_name = "ConsumingReturnOrder"
+                object_name = "ConsumingOrder",
+                object_id = ""
             };
             var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDataCommodityCode, sourceBill);
             Console.WriteLine(changes);

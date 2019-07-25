@@ -251,7 +251,7 @@ namespace CFLMedCab.Http.Bll
 			{
 				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
 
-				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).ToList();
+				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
 
 				var commodityCodes = baseDatacommodityCode.body.objects;
 
@@ -273,7 +273,7 @@ namespace CFLMedCab.Http.Bll
 						}
 					});
 
-				var cccIds = commodityCodes.Select(it => it.CommodityId).ToList();
+				var cccIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
 
 				//是否名称全部一致
 				bool isAllContains = sfdCommodityIds.All(cccIds.Contains) && sfdCommodityIds.Count == cccIds.Count;
