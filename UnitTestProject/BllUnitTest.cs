@@ -224,12 +224,25 @@ namespace UnitTestProject
         [TestMethod]
         public void InventoryTestMethod()
         {
-            var taskName = "IT20190723000015";
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			string ret = JsonConvert.SerializeObject(new InventoryOrder
+			{
+				ConfirmDate = DateTime.Now.ToString("s")
+			}, Formatting.Indented, jsetting);
+
+			var taskName = "IT20190723000015";
             var temp = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(taskName);
             Console.WriteLine(temp);
 
+			
 
-        }
+
+		}
 
     }
 

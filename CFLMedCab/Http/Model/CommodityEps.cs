@@ -41,6 +41,16 @@ namespace CFLMedCab.Http.Model
 		public string GoodsLocationName { get; set; }
 
 		/// <summary>
+		/// 库房id
+		/// </summary>
+		public string StoreHouseId { get; set; }
+
+		/// <summary>
+		/// 库房Name
+		/// </summary>
+		public string StoreHouseName { get; set; }
+
+		/// <summary>
 		/// 重写equal，用于hashset区分
 		/// </summary>
 		/// <param name="obj"></param>
