@@ -3,6 +3,7 @@ using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -98,5 +99,55 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string updated_by { get; set; }
+    }
+    /// <summary>
+    /// 盘点单状态
+    /// </summary>
+    public enum InventoryOrderStatus
+    {
+        ///待盘点 盘点中 待确认 已确认
+        /// <summary>
+        /// 待盘点
+        /// </summary>
+        [Description("待盘点")]
+        待盘点 = 0,
+
+        /// <summary>
+        /// 盘点中
+        /// </summary>
+        [Description("盘点中")]
+        盘点中 = 1,
+
+        /// <summary>
+        /// 待确认
+        /// </summary>
+        [Description("待确认")]
+        待确认 = 2,
+
+        /// <summary>
+        /// 已确认
+        /// </summary>
+        [Description("已确认")]
+        已确认 = 3
+
+    }
+    /// <summary>
+    /// 盘点单类型
+    /// </summary>
+    public enum InventoryOrderType
+    {
+
+        /// <summary>
+        /// 手动创建
+        /// </summary>
+        [Description("手动创建")]
+        手动创建 = 0,
+
+        /// <summary>
+        /// 自动创建
+        /// </summary>
+        [Description("自动创建")]
+        自动创建 = 1
+
     }
 }

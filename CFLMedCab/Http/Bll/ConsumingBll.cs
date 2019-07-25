@@ -74,6 +74,12 @@ namespace CFLMedCab.Http.Bll
                     }
                 });
             }
+            //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
+            if ("是".Equals(detail.body.objects[0].markId))
+            {
+                detail.code = (int)ResultCode.Result_Exception;
+                detail.message = ResultCode.Result_Exception.ToString();
+            }
             return detail;
         }
         /// <summary>
@@ -233,6 +239,14 @@ namespace CFLMedCab.Http.Bll
                 version = order.version//版本
             });
         }
+/*
+        public BaseData<ConsumingOrder> SubmitConsumingChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode,)
+        {
+            var order = CreateConsumingOrder(new ConsumingOrder()
+            {
+                FinishDate = "2019-07-"
+            });
+        }*/
     }
 
 }

@@ -95,21 +95,20 @@ namespace CFLMedCab.Http.Bll
                     HttpHelper.GetInstance().ResultCheck(orders, out bool isSuccess2);
                     if (isSuccess2)
                     {
-                        
                         orders.body.objects.ForEach(order =>
                         {
                             //根据所在盘点货位获取所在货位名称
-                            if (string.IsNullOrEmpty(order.GoodsLocationId))
+                            if (!string.IsNullOrEmpty(order.GoodsLocationId))
                             {
                                 order.GoodsLocationName = GetNameById<GoodsLocation>(order.GoodsLocationId);
                             }
                             //根据所在设备编号查询设备名称
-                            if (string.IsNullOrEmpty(order.EquipmentId))
+                            if (!string.IsNullOrEmpty(order.EquipmentId))
                             {
                                 order.EquipmentName = GetNameById<Equipment>(order.EquipmentId);
                             }
                             //根据盘点库房编号查询盘点库房名称
-                            if (string.IsNullOrEmpty(order.StoreHouseId))
+                            if (!string.IsNullOrEmpty(order.StoreHouseId))
                             {
                                 order.StoreHouseName = GetNameById<StoreHouse>(order.StoreHouseId);
                             }
@@ -134,7 +133,7 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="order"></param>
         /// <returns></returns>
-        public BasePutData<InventoryOrder> updateInventoryOrderStatus(InventoryOrder order)
+        public BasePutData<InventoryOrder> UpdateInventoryOrderStatus(InventoryOrder order)
         {
 
             if (null == order || null == order.id || null == order.Status || null == order.version)
@@ -240,14 +239,14 @@ namespace CFLMedCab.Http.Bll
             if (isSuccess)
             {
                 //根据自动盘点计划Id查询盘点计划相关信息
-                if (!string.IsNullOrEmpty(equipment.body.objects[0].InventoryPlanId))
+                if (null != equipment.body.objects[0].InventoryPlanId && equipment.body.objects[0].InventoryPlanId.Count>0)
                 {
                     plans = HttpHelper.GetInstance().Get<InventoryPlan>(new QueryParam
                     {
                         @in =
                         {
-                            field = "InventoryTaskId",
-                            in_list =  { HttpUtility.UrlEncode(equipment.body.objects[0].InventoryPlanId) }
+                            field = "id",
+                            in_list =  BllHelper.ParamUrlEncode(equipment.body.objects[0].InventoryPlanId)
                         }
                     });
                     //校验是否含有数据，如果含有数据，拼接具体字段
