@@ -62,6 +62,18 @@ namespace CFLMedCab.Http.Model
 		public string updated_by { get; set; }
 
 		/// <summary>
+		/// 库房id
+		/// </summary>
+		[JsonIgnore]
+		public string StoreHouseId { get; set; }
+
+		/// <summary>
+		/// 库房Name
+		/// </summary>
+		[JsonIgnore]
+		public string StoreHouseName { get; set; }
+
+		/// <summary>
 		/// 设备id
 		/// </summary>
 		[JsonIgnore]
@@ -103,6 +115,10 @@ namespace CFLMedCab.Http.Model
 		[JsonIgnore]
 		public string AbnormalDisplay { get; set; }
 
+		/// <summary>
+		/// 商品库存编码id
+		/// </summary>
+		public string CommodityInventoryId { get; set; }
 
 	}
 }

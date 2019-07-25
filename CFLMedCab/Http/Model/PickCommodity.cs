@@ -108,5 +108,18 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		[JsonIgnore]
 		public string CommodityName { get; set; }
-	}
+
+        /// <summary>
+        /// 商品名
+        /// </summary>
+        [JsonIgnore]
+        public int PlanShelfNumber { get; set; }
+
+
+        /// <summary>
+        /// 商品名
+        /// </summary>
+        [JsonIgnore]
+        public int CurShelfNumber { get; set; }
+    }
 }

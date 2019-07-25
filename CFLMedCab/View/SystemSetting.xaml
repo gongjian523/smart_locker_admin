@@ -20,16 +20,24 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="请输入主货柜编号"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
-                    <Label x:Name="lbSCabName" Content="请输入副货柜编号"  Grid.Column="1"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
-                    <TextBox x:Name="tbMCabName" Grid.Row="1"  Height="48" Width="500" TextWrapping="Wrap" FontSize="20" 
+                    <Label Content="请输入库房编号"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
+                    <Label x:Name="lbHouseName" Content="请输入设备编号"  Grid.Column="1"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
+                    <TextBox x:Name="tbHouseName" Grid.Row="1"  Height="48" Width="500" TextWrapping="Wrap" FontSize="20" 
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  />
-                    <TextBox x:Name="tbSCabName" Grid.Row="1"  Grid.Column="1" Height="48"  Width="500" TextWrapping="Wrap" FontSize="20"
+                    <TextBox x:Name="tbEquipName" Grid.Row="1"  Grid.Column="1" Height="48"  Width="500" TextWrapping="Wrap" FontSize="20"
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
+                    <Label Grid.Row="2" Content="请输入主货柜编号"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
+                    <Label x:Name="lbSCabName" Grid.Row="2" Content="请输入副货柜编号"  Grid.Column="1"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
+                    <TextBox x:Name="tbMCabName" Grid.Row="3"  Height="48" Width="500" TextWrapping="Wrap" FontSize="20" 
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  />
+                    <TextBox x:Name="tbSCabName" Grid.Row="3"  Grid.Column="1" Height="48"  Width="500" TextWrapping="Wrap" FontSize="20"
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
                 </Grid>
             </Border >

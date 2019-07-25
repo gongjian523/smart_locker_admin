@@ -2,6 +2,10 @@
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
@@ -39,29 +43,29 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterReturnFetchHandler(object sender, RoutedEventArgs e);
         public event EnterReturnFetchHandler EnterReturnFetch;
 
-        private Hashtable after = new Hashtable();
-        private List<GoodsDto> goodsChageOrderdtls= new List<GoodsDto>();
-
-        private GoodsBll goodsBll = new GoodsBll();
-        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        private HashSet<CommodityEps> after;
+        BaseData<CommodityCode> bdCommodityCode;
 
         private Timer endTimer;
 
-        public ReturnFetchView(Hashtable hashtable)
+        public ReturnFetchView(HashSet<CommodityEps> hashtable)
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetUserInfo().name;
 
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = hashtable;
-            List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);//获取关柜之后的库存变化信息
-            goodsChageOrderdtls = fetchOrderBll.GetGoBackFetchOrderdtlOperateDto(goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
 
-            listView.DataContext = goodsChageOrderdtls;
-            returnNum.Content = operateGoodsNum;
-            abnormalInNum.Content = storageGoodsExNum;
-            abnormalOutNum.Content = outStorageGoodsExNum;
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
+            if (bdCommodityCode.code != 0)
+            {
+                return;
+            }
+
+            listView.DataContext = bdCommodityCode.body.objects;
+            returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type==1).Count();
+            fetchNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
@@ -93,7 +97,6 @@ namespace CFLMedCab.View.Fetch
             EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
 
-
         /// <summary>
         /// 结束定时器超时
         /// </summary>
@@ -106,11 +109,15 @@ namespace CFLMedCab.View.Fetch
             }));
         }
 
-
         private void EndOperation(bool bExit)
         {
-            fetchOrderBll.UpdateGoBackFetchOrder(goodsChageOrderdtls);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            BasePostData<CommodityInventoryChange> bdCommodityInventoryChange 
+                = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, new SourceBill {
+                    object_name = "ConsumingReturnOrder",
+                    object_id = ""
+                });
+
+            ApplicationState.SetGoodsInfo(after);
 
             EnterPopCloseEvent(this, bExit);
         }

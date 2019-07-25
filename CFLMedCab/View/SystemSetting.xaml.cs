@@ -35,6 +35,9 @@ namespace CFLMedCab.View
             SerialComList.Add("COM8");
             SerialComList.Add("COM9");
 
+            tbHouseName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.HouseId);
+            tbEquipName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
+
             tbMCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.CodeMCab) ;
             tbSCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.CodeSCab);
 
@@ -61,6 +64,9 @@ namespace CFLMedCab.View
 
         private void onSave(object sender, RoutedEventArgs e)
         {
+            ApplicationState.SetValue((int)ApplicationKey.EquipId, tbEquipName.Text);
+            ApplicationState.SetValue((int)ApplicationKey.HouseId, tbHouseName.Text);
+
             ApplicationState.SetValue((int)ApplicationKey.CodeMCab, tbMCabName.Text);
             ApplicationState.SetValue((int)ApplicationKey.CodeSCab, tbSCabName.Text);
 

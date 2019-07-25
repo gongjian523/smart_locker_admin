@@ -830,18 +830,17 @@ namespace CFLMedCab
                 return;
             }
 #endif
-
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
             //关闭盘点中弹窗
             ClosePop();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnFetchView returnFetchView = new ReturnFetchView(ht);
+                ReturnFetchView returnFetchView = new ReturnFetchView(hs);
                 returnFetchView.EnterPopCloseEvent += new ReturnFetchView.EnterPopCloseHandler(onEnterPopClose);
                 returnFetchView.EnterReturnFetch += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
                 FullFrame.Navigate(returnFetchView);

@@ -12,6 +12,7 @@ namespace CFLMedCab.Infrastructure
         User,      //从主系统查询到的用户信息
         CurGoods,  //本地数据库中的查询到商品信息
         Goods,  //从主系统中的查询到商品信息
+        HouseId,   //库房id
         EquipId,   //设备id
         CodeMCab,  //主柜编码(名字)
         CodeSCab,  //副柜编码(名字)

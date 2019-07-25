@@ -4,6 +4,7 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,7 +107,10 @@ namespace CFLMedCab.Http.Bll
             {
                 ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
                 {
-                    Status = ConsumingOrderStatus.已完成.ToString()
+                    Status = ConsumingOrderStatus.已完成.ToString(),
+                    StoreHouseId = ApplicationState.GetValue<String>(int ApplicationKey.h)
+
+
                 }); ;
 
             }

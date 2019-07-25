@@ -89,8 +89,36 @@ namespace CFLMedCab.Http.Bll
                         {
                             field = "InventoryTaskId",
                             in_list =  { HttpUtility.UrlEncode(task.body.objects[0].id) }
-                        }
-                    });
+                        },
+						view_filter =
+						{
+							filter =
+							{
+								logical_relation = "1 AND 2",
+								expressions =
+								{
+									new QueryParam.Expressions
+									{
+										field = "InventoryTaskId",
+										@operator = "==",
+										operands =  {$"'{ HttpUtility.UrlEncode(task.body.objects[0].id) }'"}
+									},
+									new QueryParam.Expressions
+									{
+										field = "Status",
+										@operator = "==",
+										operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
+									},
+									new QueryParam.Expressions
+									{
+										field = "EquipmentId",
+										@operator = "==",
+										operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
+									}
+							}
+						}
+					}	
+					});
                     //校验是否含有数据，如果含有数据，拼接具体字段
                     HttpHelper.GetInstance().ResultCheck(orders, out bool isSuccess2);
                     if (isSuccess2)
@@ -275,7 +303,7 @@ namespace CFLMedCab.Http.Bll
                     message = ResultCode.Parameter_Exception.ToString()
                 };
             }
-            var inventoryOrders = HttpHelper.GetInstance().Post<InventoryOrder>(new PostParam<InventoryOrder>()
+            var inventoryOrders = HttpHelper.GetInstance().Post(new PostParam<InventoryOrder>()
             {
                 objects = orders
             });
@@ -283,6 +311,91 @@ namespace CFLMedCab.Http.Bll
             return inventoryOrders;
         }
 
+		/// <summary>
+		/// 【智能柜】 自动盘点更新盘点单管理和其商品明细
+		/// </summary>
+		/// <param name="orders"></param>
+		/// <returns></returns>
+		public BasePostData<InventoryDetail> CreateInventoryOrderAndDetail(List<CommodityCode> commodityCodes)
+		{
+			if (null == commodityCodes || commodityCodes.Count <= 0)
+			{
+				return new BasePostData<InventoryDetail>()
+				{
+					code = (int)ResultCode.Parameter_Exception,
+					message = ResultCode.Parameter_Exception.ToString()
+				};
+			}
 
-    }
+			var inventoryOrders = HttpHelper.GetInstance().Post(new PostParam<InventoryOrder>()
+			{
+				objects = { new InventoryOrder {
+					ConfirmDate = DateTime.Now.ToString("s"),
+					Status = DocumentStatus.已完成.ToString()
+					//TODO: 需要当前设备id，货位id和库房id
+					
+				} }
+			});
+
+			var inventoryDetails = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
+			{
+
+				BaseData<CommodityInventoryDetail> CommodityInventoryDetails = null;
+
+				if (commodityCodes.Count > 0)
+				{
+					var commodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+
+					 CommodityInventoryDetails = hh.Get<CommodityInventoryDetail>(new QueryParam
+					{
+						@in =
+						{
+							field = "CommodityId",
+							in_list = commodityIds
+						}
+					});
+				}
+
+				if (CommodityInventoryDetails != null)
+				{
+					hh.ResultCheck(CommodityInventoryDetails, out bool isSuccess);
+
+					if (isSuccess)
+					{
+						commodityCodes.ForEach(it=> 
+						{
+							it.CommodityInventoryId = CommodityInventoryDetails.body.objects.Where(cit => cit.CommodityId == it.CommodityId).First().id;
+						});
+						
+					}
+
+				}
+
+				List<InventoryDetail> inventoryDetailList = new List<InventoryDetail>();
+
+				commodityCodes.ForEach(it =>
+				{
+					inventoryDetailList.Add(new InventoryDetail
+					{
+						CommodityInventoryId = it.CommodityInventoryId,
+						InventoryOrderId = inventoryOrders.body[0].id,
+						CommodityCodeId = it.id
+
+					});
+				});
+
+				
+
+				return hh.Post(new PostParam<InventoryDetail>()
+				 {
+					objects = inventoryDetailList
+				});
+
+
+			}, inventoryOrders);
+
+			return inventoryDetails;
+		}
+
+	}
 }
