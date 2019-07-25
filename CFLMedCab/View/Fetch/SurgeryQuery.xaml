@@ -24,9 +24,6 @@
                         <Label Width="30"/>
                         <Button Style="{StaticResource CommonYesButton}" Content="查询"  Click="EnterDetail_Click"/>
                     </StackPanel>
-                    <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                        <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-                    </Grid>
                 </Grid>
             </Border>
         </Grid>

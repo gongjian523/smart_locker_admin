@@ -32,26 +32,13 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Border Background="{StaticResource ManuInvBrush}" Margin="40,40,20,0" CornerRadius="4,4,4,4" Padding="20">
+        <Border Background="#FFFFFF" Margin="40,40,20,0" CornerRadius="4,4,4,4" Padding="20">
             <Grid>
                 <Label HorizontalAlignment="Center" Margin="0,68,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
                 <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,150,0,0" BorderThickness="0"  Width="226"  Height="64"  
                         Background="#FFFFFF"  Foreground="{StaticResource ManuInvBrush}" FontSize="28" Content="盘点"  Click="onEnterPopInventory" />
             </Grid>
         </Border>
-        <Border Grid.Column="1" Background="{StaticResource AutoInvBrush}" Margin="20,40,40,0" CornerRadius="4,4,4,4"  Padding="20">
-            <Grid>
-                <Label HorizontalAlignment="Center" Margin="0,48,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="自动盘点" />
-                <Label Name="inventoryTime" HorizontalAlignment="Center" Margin="0,110,0,0"  Content="{Binding NextInvContent}" FontSize="20" FontWeight="Regular" Foreground="#FFFFFF"/>
-                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,145,0,0" BorderThickness="0"  Width="226"  Height="64"  
-                        Background="#FFFFFF"  Foreground="{StaticResource AutoInvBrush}" FontSize="28" Content="盘点计划设置"  Click="onEnterPopInventoryPlan" />
-            </Grid>
-        </Border>
-
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="40,40,40,40" CornerRadius="4,4,4,4" Padding="20">
             <Grid>
                 <Grid.RowDefinitions>

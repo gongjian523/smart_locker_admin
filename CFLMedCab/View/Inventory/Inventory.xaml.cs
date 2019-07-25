@@ -65,7 +65,7 @@ namespace CFLMedCab.View.Inventory
         {
             InitializeComponent();
 
-            GetInventoryList();
+            // GetInventoryList();
 
             SetNextAutoInvTime();
 
