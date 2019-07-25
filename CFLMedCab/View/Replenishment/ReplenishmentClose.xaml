@@ -13,7 +13,7 @@
         <cvt:ExceptionFlagStrConverter x:Key="ExceptionFlagStrConverter"/>
     </UserControl.Resources>
     <Grid>
-        <Border Style="{StaticResource CommonBlueBorder}" x:Name="normalView" Visibility="Hidden">
+        <Border Style="{StaticResource CommonBlueBorder}" x:Name="normalView">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
@@ -52,7 +52,6 @@
                     <Grid x:Name="GridValue">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
-                            <RowDefinition Height="Auto"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Border Style="{StaticResource TipBorder}" Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
@@ -149,12 +148,9 @@
                         </Grid>
                     </Grid>
                 </Border>
-                <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                    <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-                </Grid>
             </Grid>
         </Border>
-        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView" Visibility="Visible">
+        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView" Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
