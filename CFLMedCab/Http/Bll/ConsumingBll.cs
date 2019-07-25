@@ -292,8 +292,7 @@ namespace CFLMedCab.Http.Bll
                             CommodityCodeId = normal.id,
                             SourceBill = new Model.Common.SourceBill()
                             {
-                                object_name = "ConsumingOrder",
-                                object_id = order.body[0].id
+                                object_name = "ConsumingReturnOrder",
                             },
                             ChangeStatus = CommodityInventoryChangeStatus.正常.ToString()
                         });
@@ -324,8 +323,7 @@ namespace CFLMedCab.Http.Bll
                             CommodityCodeId = normal.id,
                             SourceBill = new Model.Common.SourceBill()
                             {
-                                object_name = "ConsumingOrder",
-                                object_id = order.body[0].id
+                                object_name = "ConsumingReturnOrder",
                             },
                             ChangeStatus = CommodityInventoryChangeStatus.正常.ToString()
                         });

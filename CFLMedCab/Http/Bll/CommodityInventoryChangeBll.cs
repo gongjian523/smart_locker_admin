@@ -39,7 +39,7 @@ namespace CFLMedCab.Http.Bll
             });
         }
         /// <summary>
-        /// 根据商品码变更列表和来源单据创建库存变更记录资料(领用)
+        /// 根据商品码变更列表和来源单据创建库存变更记录资料(有单领用)
         /// </summary>
         /// <param name="baseDataCommodityCode"></param>
         /// <param name="sourceBill"></param>
@@ -105,41 +105,51 @@ namespace CFLMedCab.Http.Bll
             var count = baseDataCommodityCode.body.objects.Select(it => it.operate_type == 0).Count();
             if(count > 0)//当出库数量大于0说明在领用需要创建领用单
             {
-                ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
+                var consumingOrder = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
                 {
                     Status = ConsumingOrderStatus.已完成.ToString(),
-                    StoreHouseId = ApplicationState.GetValue<String>(int ApplicationKey.h)
+                    StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),
+                    Type = ConsumingOrderType.一般领用.ToString()
 
-
-                }); ;
-
+                });
+                //校验数据是否正常
+                HttpHelper.GetInstance().ResultCheck(consumingOrder, out bool isSuccess);
+                if (isSuccess)
+                {
+                    baseDataCommodityCode.body.objects.Where(it=>it.operate_type == 0).ToList().ForEach(commodityCode =>
+                    {
+                        var temp = new CommodityInventoryChange()
+                        {
+                            CommodityCodeId = commodityCode.id,
+                            //出库变更更后库房、变更更后设备、变更更后货位 value 值都为null。
+                            SourceBill = new SourceBill()
+                            {
+                                object_name = "ConsumingOrder",
+                                object_id = consumingOrder.body[0].id
+                            },
+                            ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
+                        };
+                        changes.Add(temp);
+                    });
+                }
             }
-            baseDataCommodityCode.body.objects.ForEach(commodityCode =>
+            baseDataCommodityCode.body.objects.Where(it => it.operate_type == 1).ToList().ForEach(commodityCode =>
             {
                 var temp = new CommodityInventoryChange()
                 {
                     CommodityCodeId = commodityCode.id,
+                    SourceBill = new SourceBill()
+                    {
+                        object_name = "ConsumingReturnOrder",
+                    },
+                    ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                    EquipmentId = commodityCode.EquipmentId,
+                    GoodsLocationId = commodityCode.GoodsLocationId,
+                    StoreHouseId = commodityCode.StoreHouseId,
                 };
-                switch (commodityCode.operate_type)
-                {
-                    case 0:
-                        //出库变更更后库房、变更更后设备、变更更后货位 value 值都为null。
-                        temp.SourceBill = sourceBill;
-                        temp.ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString();
-                        break;
-                    case 1:
-                        temp.SourceBill = new SourceBill()
-                        {
-                            object_name = "ConsumingReturnOrder",
-                        };
-                        temp.ChangeStatus = CommodityInventoryChangeStatus.正常.ToString();
-                        temp.EquipmentId = commodityCode.EquipmentId;
-                        temp.GoodsLocationId = commodityCode.GoodsLocationId;
-                        //temp.StoreHouseId = commodityCode.StoreHouseId;
-                        break;
-                }
                 changes.Add(temp);
             });
+
             return CreateCommodityInventoryChange(changes);
         }
     }

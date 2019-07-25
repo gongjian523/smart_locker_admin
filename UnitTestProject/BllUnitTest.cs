@@ -242,18 +242,13 @@ namespace UnitTestProject
                     }
                 }
             );
-            //货物回退
-            SourceBill rollbackSourceBill = new SourceBill()
-            {
-                object_name = "ConsumingReturnOrder"
-            };
             //货物领用
             SourceBill sourceBill = new SourceBill()
             {
                 object_name = "ConsumingOrder",
                 object_id = ""
             };
-            var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDataCommodityCode, sourceBill,rollbackSourceBill);
+            var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDataCommodityCode, sourceBill);
             Console.WriteLine(changes);
 
         }
