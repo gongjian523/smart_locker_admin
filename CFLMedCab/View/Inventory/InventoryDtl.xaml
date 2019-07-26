@@ -49,21 +49,17 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-
                     <Label Content="盘点单号" Grid.Column="0" Grid.Row="0" Style="{StaticResource lblTitle1}" />
                     <Label Content="{Binding Code}" Grid.Column="0" Grid.Row="1" Name="surgeryNum" Style="{StaticResource lblTitle2}"/>
                     <Label Grid.Column="1" Grid.Row="0" Content="盘点时间" Style="{StaticResource lblTitle3}"/>
                     <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding CreateTime,StringFormat='{}{0:yyyy年MM月dd日 HH:mm}',ConverterCulture=zh-CN}" Style="{StaticResource tbTitle4_0}"/>
-
                     <Label Grid.Column="2" Grid.Row="0" Content="盘点类型" Style="{StaticResource lblTitle3}"/>
                     <Label Grid.Column="2" Grid.Row="1" Content="{Binding Type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Style="{StaticResource lblTitle4_1}"/>
-
                     <Label Grid.Column="3" Grid.Row="0" Content="盘点状态" Style="{StaticResource lblTitle3}"/>
-                    <Label Grid.Column="3" Grid.Row="1" Content="{Binding Status, Converter= {StaticResource InventoryStatusStrConverter} }" Style="{StaticResource lblTitle4_1}"/>
-
+                    <!--<Label Grid.Column="3" Grid.Row="1" Content="{Binding Status, Converter= {StaticResource InventoryStatusStrConverter} }" Style="{StaticResource lblTitle4_1}"/>-->
+                    <Label Grid.Column="3" Grid.Row="1" Content="已完成" Style="{StaticResource lblTitle4_1}"/>
                 </Grid>
             </Border>
-
             <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="1">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -83,15 +79,13 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <!--<ColumnDefinition Width="*"/>-->
-
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
                             <Grid Grid.Column="2" x:Name="column3"/>
                             <Grid Grid.Column="3" x:Name="column4"/>
-                            <!--<Grid Grid.Column="4" x:Name="column5"/>-->
-
+                            <Grid Grid.Column="4" x:Name="column5"/>
                         </Grid>
                         <ListView  ItemsSource="{Binding}"  Name="goodsDtllistConfirmView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource DefaultListView}" >
                             <ListView.View>
@@ -106,7 +100,7 @@
                                     <GridViewColumn Header="商品编号" Width="{Binding ElementName=column2,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CommodityCodeName}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding name}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
@@ -117,32 +111,24 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-
-                                    <GridViewColumn Header="操作"   Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn Header="质量状态"  Width="{Binding ElementName=column4,Path=ActualWidth}" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Grid HorizontalAlignment="Center"  Visibility="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type UserControl},AncestorLevel=1},Path= btnType, Converter={StaticResource  InventoryConfirmBtnVisiblityConverter}}" >
+                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding QStatus, Converter={StaticResource InventoryActualSwichStaConverter}}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="操作"   Width="{Binding ElementName=column5,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                    <Button Style="{StaticResource ListButton}" x:Name="BtnConfirm" Content="删除"  Click="onDelete" CommandParameter="{Binding Path=CommodityCodeName}" />
+                                                    <Button Style="{StaticResource ListButton}" x:Name="BtnConfirm" Content="删除"  Click="onDelete" CommandParameter="{Binding Path=name}" />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <!--<GridViewColumn Header="账面库存" Width="{Binding ElementName=column4,Path=ActualWidth}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding book_inventory}"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="实际库存"  Width="{Binding ElementName=column5,Path=ActualWidth}" >
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <Grid HorizontalAlignment="Center"  Visibility="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type UserControl},AncestorLevel=1},Path= btnType, Converter={StaticResource  InventoryConfirmBtnVisiblityConverter}}" >
-                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding actual_inventory, Converter={StaticResource InventoryActualSwichStaConverter}}"  HorizontalAlignment="Center"/>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>-->
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -151,7 +137,6 @@
                     <Button Style="{StaticResource AddButton}" x:Name="btnAddProduct" Grid.Column="2" Grid.Row="1" Content="新增实际库存商品"  Height="48"    Click="onAddProduct" HorizontalAlignment="Right"/>
                 </Grid>
             </Border>
-
             <Border  Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
                 <Grid>
                     <Grid.ColumnDefinitions>

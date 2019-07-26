@@ -40,7 +40,7 @@ namespace CFLMedCab.View.Inventory
         public delegate void BackInventoryHandler(object sender, RoutedEventArgs e);
         public event BackInventoryHandler BackInventoryEvent;
 
-        public delegate void OpenDoorHandler(object sender, RoutedEventArgs e);
+        public delegate void OpenDoorHandler(object sender, string e);
         public event OpenDoorHandler OpenDoorEvent;
 
         public string Code { get; set; }
@@ -50,7 +50,7 @@ namespace CFLMedCab.View.Inventory
 
         private InventoryTask inventoryTask;
         private InventoryOrder inventoryOrder;
-        private List<CommodityEps> list = new List<CommodityEps>();
+        private List<CommodityCode> list = new List<CommodityCode>();
 
         public InventoryDtl(InventoryTask task)
         {
@@ -66,7 +66,7 @@ namespace CFLMedCab.View.Inventory
 
             goodsDtllistConfirmView.DataContext = list;
 
-            Timer timer = new Timer(1000);
+            Timer timer = new Timer(100);
             timer.AutoReset = false;
             timer.Enabled = true;
             timer.Elapsed += new ElapsedEventHandler(onLoadData);
@@ -97,9 +97,10 @@ namespace CFLMedCab.View.Inventory
 #else
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 #endif
+            list = CommodityCodeBll.GetInstance().GetCommodityCode(hs).body.objects.ToList();
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                list = hs.ToList();
                 goodsDtllistConfirmView.DataContext = list;
                 goodsDtllistConfirmView.Items.Refresh();
             }));
@@ -125,6 +126,8 @@ namespace CFLMedCab.View.Inventory
                 MessageBox.Show("盘点任务单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
+
+            List<CommodityCode> adds = new List<CommodityCode>();
 #if TESTENV
             CommodityEps commodityEps = new CommodityEps
             {
@@ -136,20 +139,34 @@ namespace CFLMedCab.View.Inventory
                 GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
                 GoodsLocationName = "L00000013"
             };
+
+            HashSet<CommodityEps> addHs = new HashSet<CommodityEps>();
+            addHs.Add(commodityEps);
+
+            adds = CommodityCodeBll.GetInstance().GetCommodityCode(addHs).body.objects.ToList();
 #else
-            CommodityEps commodityEps;
             try
             {
-                commodityEps = JsonConvert.DeserializeObject<CommodityEps>(inputStr);
+                CommodityEps commodityEps = JsonConvert.DeserializeObject<CommodityEps>(inputStr);
+
+                HashSet<CommodityEps> addHs = new HashSet<CommodityEps>();
+                addHs.Add(commodityEps);
+
+                adds = CommodityCodeBll.GetInstance().GetCommodityCode(addHs).body.objects.ToList();
             }
             catch
             {
-                //TODO
-                //commodityEps = 
+                BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(inputStr);
+                if (bdCommodityCode.code != 0)
+                {
+                    MessageBox.Show("获取商品信息失败" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+                adds.Add(bdCommodityCode.body.objects[0]);
             }
 #endif
 
-            if (list.Where(item => item.CommodityCodeName == commodityEps.CommodityCodeName).Count() > 0)
+            if (list.Where(item => item.name == adds[0].name).Count() > 0)
             {
                 MessageBox.Show("此商品已经在列表中！", "温馨提示", MessageBoxButton.OK);
                 return;
@@ -159,7 +176,7 @@ namespace CFLMedCab.View.Inventory
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    list.Add(commodityEps);
+                    list.AddRange(adds);
                     goodsDtllistConfirmView.Items.Refresh();
                 }));
             }));
@@ -173,31 +190,23 @@ namespace CFLMedCab.View.Inventory
         private void onSubmit(object sender, RoutedEventArgs e)
         {
             BasePutData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().UpdateInventoryOrderStatus(inventoryOrder);
-            if(bdInventoryOrder.code != 0)
+            if (bdInventoryOrder.code != 0)
             {
-                MessageBox.Show("更新盘点任务单失败！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("更新盘点任务单失败!" + bdInventoryOrder.message, "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
+            BasePostData<InventoryDetail> bdInventoryDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrder.id);
 
+            if (bdInventoryDetail.code == 0)
+            {
+                MessageBox.Show("提交盘点任务单成功!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
+                BackInventoryEvent(this, null);
+            }
+            else
+                MessageBox.Show("创建盘点商品明细失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
 
-            //public BasePostData<InventoryDetail> CreateInventoryDetail(List<InventoryDetail> details)
-            //{
-            //    if (null == details || details.Count <= 0)
-            //    {
-            //        return new BasePostData<InventoryDetail>()
-            //        {
-            //            code = (int)ResultCode.Parameter_Exception,
-            //            message = ResultCode.Parameter_Exception.ToString()
-            //        };
-            //    }
-            //    var inventoryDetails = HttpHelper.GetInstance().Post<InventoryDetail>(new PostParam<InventoryDetail>()
-            //    {
-            //        objects = details
-            //    });
-
-            //    return inventoryDetails;
-            //}
+            return;
         }
 
         /// <summary>
@@ -216,7 +225,7 @@ namespace CFLMedCab.View.Inventory
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                list.RemoveAll(item => item.CommodityCodeName == (string)btnItem.CommandParameter);
+                list.RemoveAll(item => item.name == (string)btnItem.CommandParameter);
                 goodsDtllistConfirmView.Items.Refresh();
             }));
         }
@@ -228,7 +237,18 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onOpenDoor(object sender, RoutedEventArgs e)
         {
-            OpenDoorEvent(this, null);
+            SetButtonVisibility(false);
+            OpenDoorEvent(this, inventoryOrder.GoodsLocationName);
+        }
+
+        public void SetButtonVisibility(bool bVisible)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                btnSubmit.Visibility = bVisible ? Visibility.Visible : Visibility.Hidden;
+                btnCancel.Visibility = bVisible ? Visibility.Visible : Visibility.Hidden;
+                btnOpenDoor.Visibility = bVisible ? Visibility.Visible : Visibility.Hidden;
+            }));
         }
 
         /// <summary>
@@ -243,5 +263,8 @@ namespace CFLMedCab.View.Inventory
                 onAddProduct(this, null);
             }
         }
+
+
+
     }
 }

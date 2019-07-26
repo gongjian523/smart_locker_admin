@@ -67,7 +67,7 @@ namespace CFLMedCab
         private int cabClosedNum;
 #endif
 
-        private Inventory inventoryHandler;
+        private InventoryDtl inventoryDetailHandler;
 
         private TestGoods test = new TestGoods();
 
@@ -1129,15 +1129,14 @@ namespace CFLMedCab
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
             //关闭盘点中弹窗
             ClosePop();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickingOrderDto)delegateGetMsg.userData, ht);
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickTask)delegateGetMsg.userData, hs);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
 
@@ -1162,7 +1161,6 @@ namespace CFLMedCab
             inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
 
             ContentFrame.Navigate(inventory);
-            inventoryHandler = inventory;
         }
 
         /// <summary>
@@ -1180,6 +1178,9 @@ namespace CFLMedCab
             inventoryDetail.EnterPopInventoryEvent += new InventoryDtl.EnterPopInventoryHandler(onEnterPopInventory);
             inventoryDetail.HidePopInventoryEvent += new InventoryDtl.HidePopInventoryHandler(onHidePopInventory);
             inventoryDetail.BackInventoryEvent += new InventoryDtl.BackInventoryHandler(onBackInventory);
+            inventoryDetail.OpenDoorEvent += new InventoryDtl.OpenDoorHandler(onInventoryDoorOpen);
+
+            inventoryDetailHandler = inventoryDetail;
 
             FullFrame.Navigate(inventoryDetail);
         }
@@ -1193,6 +1194,7 @@ namespace CFLMedCab
         {
             btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Visible;
+            inventoryDetailHandler = null;
         }
 
 
@@ -1232,8 +1234,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterPopInventory(object sender, System.EventArgs e)
         {
-            
-
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 InventoryOngoing inventoryOngoing = new InventoryOngoing();
@@ -1253,6 +1253,59 @@ namespace CFLMedCab
         {
             ClosePop();
         }
+
+        /// <summary>
+        /// 盘点过程中开门
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onInventoryDoorOpen(object sender, string e)
+        {
+
+#if TESTENV
+            testTimer = new System.Timers.Timer(3000);
+            testTimer.AutoReset = false;
+            testTimer.Enabled = true;
+            testTimer.Elapsed += new ElapsedEventHandler(onInventoryDoorCloseTest);
+#else
+            string lockerCom = ComName.GetLockerComByCabName((string)e);
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onInventoryDoorClose);
+#endif
+        }
+
+
+#if TESTENV
+        /// <summary>
+        /// 盘点过程中关门事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onInventoryDoorCloseTest(object sender, EventArgs e)
+        {
+            inventoryDetailHandler.SetButtonVisibility(true);
+        }
+#else
+        /// <summary>
+        /// 盘点过程中关门事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onInventoryDoorClose(object sender, bool isClose)
+        {
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
+            if (inventoryDetailHandler == null)
+                return;
+
+            inventoryDetailHandler.SetButtonVisibility(true);
+        }
+#endif
 
         /// <summary>
         /// 库存查询
@@ -1471,7 +1524,7 @@ namespace CFLMedCab
             Task.Factory.StartNew(vein.DetectFinger);
 #endif
 #endif
-            inventoryHandler = null;
+            inventoryDetailHandler = null;
 
         }
 
@@ -1487,7 +1540,7 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Hidden;
             Taskbar.HideTask(true);
 
-            inventoryHandler = null;
+            inventoryDetailHandler = null;
         }
 
 #region test

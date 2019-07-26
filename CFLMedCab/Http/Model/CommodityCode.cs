@@ -120,5 +120,11 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string CommodityInventoryId { get; set; }
 
-	}
+        /// <summary>
+        /// 是否损坏
+        /// </summary>
+        [JsonIgnore]
+        public string QStatus { get; set; }
+
+    }
 }

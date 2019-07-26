@@ -184,7 +184,7 @@ namespace CFLMedCab.Http.Bll
             var inventoryOrder = HttpHelper.GetInstance().Put<InventoryOrder>(new InventoryOrder()
             {
                 id = order.id,
-                Status = order.Status,
+                Status = "已完成",
                 version = order.version
             }) ;
 
@@ -219,6 +219,81 @@ namespace CFLMedCab.Http.Bll
             return inventoryDetails;
         }
 
+        /// <summary>
+        /// 【手动盘点】 逐一创建【盘点商品明细】。
+        /// InventoryDetail所需字段：
+        /// CommodityInventoryId 商品编码
+        /// InventoryOrderId 关联盘点单
+        /// Statis 质量状态 【正常 损坏】
+        /// Type 类型 【账面存在 盘点缺失 盘点新增】
+        /// </summary>
+        /// <param name="details"></param>
+        /// <returns></returns>
+        public BasePostData<InventoryDetail> CreateInventoryDetail(List<CommodityCode> commodityCodes, string inventoryOrderId)
+        {
+            if (null == commodityCodes || commodityCodes.Count <= 0)
+            {
+                return new BasePostData<InventoryDetail>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
+
+            BaseData<CommodityInventoryDetail> CommodityInventoryDetails = null;
+
+            if (commodityCodes.Count > 0)
+            {
+                var commodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+
+                CommodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventoryDetail>(new QueryParam
+                {
+                    @in =
+                        {
+                            field = "CommodityId",
+                            in_list = commodityIds
+                        }
+                });
+            }
+
+            if (CommodityInventoryDetails == null)
+            {
+                return new BasePostData<InventoryDetail>()
+                {
+                    code = (int)ResultCode.Business_Exception,
+                    message = ResultCode.Business_Exception.ToString()
+                };
+            }
+            else
+            {
+                HttpHelper.GetInstance().ResultCheck(CommodityInventoryDetails, out bool isSuccess);
+
+                if (isSuccess)
+                {
+                    commodityCodes.ForEach(it =>
+                    {
+                        it.CommodityInventoryId = CommodityInventoryDetails.body.objects.Where(cit => cit.CommodityId == it.CommodityId).First().id;
+                    });
+                }
+            }
+
+            List<InventoryDetail> inventoryDetailList = new List<InventoryDetail>();
+
+            commodityCodes.ForEach(it =>
+            {
+                inventoryDetailList.Add(new InventoryDetail
+                {
+                    CommodityInventoryId = it.CommodityInventoryId,
+                    InventoryOrderId = inventoryOrderId,
+                    CommodityCodeId = it.id
+                });
+            });
+
+            return HttpHelper.GetInstance().Post(new PostParam<InventoryDetail>()
+            {
+                objects = inventoryDetailList
+            });
+        }
 
         /// <summary>
         /// 

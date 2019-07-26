@@ -229,11 +229,8 @@ namespace CFLMedCab.Http.Bll
 
 			foreach (CommodityEps commodityEps in commodityEpss)
 			{
-				
 				commodityCodeIds.Add(HttpUtility.UrlEncode(commodityEps.CommodityCodeId));
 			}
-
-
 
 			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
 			{
@@ -258,7 +255,8 @@ namespace CFLMedCab.Http.Bll
 					it.GoodsLocationName = currentEps.GoodsLocationName;
 					it.StoreHouseId = currentEps.StoreHouseId;
 					it.StoreHouseName = currentEps.StoreHouseName;
-				});
+                    it.QStatus = "正常";
+                });
 			}
 
 			return baseData;
@@ -313,6 +311,7 @@ namespace CFLMedCab.Http.Bll
                     it.GoodsLocationName = currentEps.GoodsLocationName;
                     it.StoreHouseId = currentEps.StoreHouseId;
                     it.StoreHouseName = currentEps.StoreHouseName;
+                    it.QStatus = "正常";
                 });
             }
 

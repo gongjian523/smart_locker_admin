@@ -7,7 +7,7 @@ namespace CFLMedCab.Converter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if ((int)value == 1)
+            if ((string)value == "正常")
                 return true;
             else
                 return false;
@@ -16,9 +16,9 @@ namespace CFLMedCab.Converter
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
             if ((bool)value == true)
-                return 1;
+                return "正常";
             else
-                return 0;
+                return "损坏";
         }
     }
 }

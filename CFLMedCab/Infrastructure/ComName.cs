@@ -80,7 +80,6 @@ namespace CFLMedCab.Infrastructure
                 return "";
         }
 
-
         public static string GetCabNameByCode(string code, Hashtable ht)
         {
             foreach (string key in ht.Keys)
