@@ -396,7 +396,7 @@ namespace CFLMedCab.Http.Bll
 				
 
 				return hh.Post(new PostParam<InventoryDetail>()
-				 {
+				{
 					objects = inventoryDetailList
 				});
 

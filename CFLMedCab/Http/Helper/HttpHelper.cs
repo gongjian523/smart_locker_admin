@@ -1188,6 +1188,51 @@ namespace CFLMedCab.Http.Helper
 			return ret;
 		}
 
+		/// <summary>
+		/// 检查结果是否正确,用于多次表关联的校验
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="K"></typeparam>
+		/// <param name="baseData"></param>
+		/// <returns></returns>
+		public BaseData<T> ResultCheck<T, K>(Func<HttpHelper, BaseData<T>> func, BaseData<K> baseData, out bool isSuccess)
+		{
+			isSuccess = false;
+
+			BaseData<T> ret;
+
+			//结果集正常
+			if (baseData.code == (int)ResultCode.OK)
+			{
+				if (baseData.body != null && baseData.body.global_offset > 0)
+				{
+					isSuccess = true;
+					ret = func(this);
+				}
+				//结果集正常，但为空
+				else
+				{
+					ret = new BaseData<T>
+					{
+						code = (int)ResultCode.Result_Exception,
+						message = ResultCode.Result_Exception.ToString()
+					};
+				}
+			}
+			//结果集异常
+			else
+			{
+				ret = new BaseData<T>()
+				{
+					code = baseData.code,
+					description = baseData.description,
+					message = baseData.message
+				};
+			}
+
+			return ret;
+		}
+
 
 		/// <summary>
 		/// 检查结果是否正确,用于多次表关联的校验
