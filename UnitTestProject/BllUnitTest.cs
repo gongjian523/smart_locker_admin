@@ -6,6 +6,11 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure.QuartzHelper;
+using CFLMedCab.Infrastructure.QuartzHelper.job;
+using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
+using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
+using CFLMedCab.Infrastructure.QuartzHelper.trigger;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using static CFLMedCab.Http.Bll.ConsumingBll;
@@ -327,5 +332,18 @@ namespace UnitTestProject
                 }
             });
 		}
-    }
+
+		/// <summary>
+		/// 定时任务相关测试类
+		/// </summary>
+		[TestMethod]
+		public void QuartzTestMethod()
+		{
+
+			CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
+
+			System.Threading.Thread.Sleep(2000000);
+
+		}
+	}
 }
