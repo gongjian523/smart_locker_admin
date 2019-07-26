@@ -199,16 +199,6 @@ namespace CFLMedCab
                     bool isGetSuccess;
                     Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
 
-                    List<GoodsDto> list = goodsBll.GetInvetoryGoodsDto(ht);
-                    inventoryBll.NewInventory(list,InventoryType.Auto);
-
-                    if (inventoryHandler != null)
-                    {
-                        App.Current.Dispatcher.Invoke((Action)(() => {
-                            inventoryHandler.RefreshInventoryList();
-                            inventoryHandler.SetNextAutoInvTime();
-                        }));
-                    }
                     return;
                 }
                 Console.WriteLine("onInventoryTimer:" + timeSpan.TotalMinutes);
@@ -993,8 +983,7 @@ namespace CFLMedCab
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            bool isGetSuccess;
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
             //关闭盘点中弹窗
             ClosePop();
@@ -1010,9 +999,9 @@ namespace CFLMedCab
         }
 #endif
 
-#endregion
+        #endregion
 
-#region  ReturnGoods
+        #region  ReturnGoods
         /// <summary>
         /// 进入退货出库页面
         /// </summary>
@@ -1170,13 +1159,70 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Visible;
 
             Inventory inventory = new Inventory();
-            inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
-            inventory.HidePopInventoryEvent += new Inventory.HidePopInventoryHandler(onHidePopInventory);
-            inventory.EnterPopInventoryPlanEvent += new Inventory.EnterPopInventoryPlanHandler(onEnterPopInventoryPlan);
             inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
 
             ContentFrame.Navigate(inventory);
             inventoryHandler = inventory;
+        }
+
+        /// <summary>
+        /// 关闭库存盘点正在进行中
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterInventoryDetail(object sender, InventoryTask e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            NaviView.Visibility = Visibility.Hidden;
+
+            InventoryDtl inventoryDetail = new InventoryDtl(e);
+
+            inventoryDetail.EnterPopInventoryEvent += new InventoryDtl.EnterPopInventoryHandler(onEnterPopInventory);
+            inventoryDetail.HidePopInventoryEvent += new InventoryDtl.HidePopInventoryHandler(onHidePopInventory);
+            inventoryDetail.BackInventoryEvent += new InventoryDtl.BackInventoryHandler(onBackInventory);
+
+            FullFrame.Navigate(inventoryDetail);
+        }
+
+        /// <summary>
+        /// 回到盘点页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onBackInventory(object sender, RoutedEventArgs e)
+        {
+            btnBackHP.Visibility = Visibility.Visible;
+            NaviView.Visibility = Visibility.Visible;
+        }
+
+
+        /// <summary>
+        /// 进入添加单品码弹出框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterPopAddProduct(object sender, RoutedEventArgs e)
+        {
+            AddProduct addProduct = new AddProduct();
+            addProduct.HidePopAddProductEvent += new AddProduct.HidePopAddProductHandler (onHidePopAddProduct);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Visible;
+                MaskView.Visibility = Visibility.Visible;
+
+                PopFrame.Navigate(addProduct);
+            }));
+        }
+
+        /// <summary>
+        /// 关闭添加单品码弹出框
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onHidePopAddProduct(object sender, RoutedEventArgs e)
+        {
+            ClosePop();
         }
 
         /// <summary>
@@ -1186,10 +1232,11 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterPopInventory(object sender, System.EventArgs e)
         {
-            InventoryOngoing inventoryOngoing = new InventoryOngoing();
+            
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                InventoryOngoing inventoryOngoing = new InventoryOngoing();
                 PopFrame.Visibility = Visibility.Visible;
                 MaskView.Visibility = Visibility.Visible;
 
@@ -1204,103 +1251,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onHidePopInventory(object sender, System.EventArgs e)
         {
-            //App.Current.Dispatcher.Invoke((Action)(() =>
-            //{
-            //    PopFrame.Visibility = Visibility.Hidden;
-            //    MaskView.Visibility = Visibility.Hidden;        
-            //}));         
-            ClosePop();
-        }
-
-        /// <summary>
-        /// 关闭库存盘点正在进行中
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnterInventoryDetail(object sender, InventoryDetailPara e)
-        {
-            InventoryDtl inventoryDetail = new InventoryDtl(e);
-            //InventoryDtl.EnterAddProductEvent += new InventoryDtl.EnterAddProductHandler(onEnterPopAddProduct);
-            //InventoryDtl.EnterInventoryEvent += new InventoryDtl.EnterInventoryHandler(onEnterInvtory);
-
-            ContentFrame.Navigate(inventoryDetail);
-        }
-
-
-        /// <summary>
-        /// 弹出盘点计划
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnterPopInventoryPlan(object sender, System.EventArgs e)
-        {
-            InventoryPlanDetail inventoryPlanDetail = new InventoryPlanDetail();
-            inventoryPlanDetail.HidePopInventoryPlanEvent += new InventoryPlanDetail.HidePopInventoryPlanHandler(onHidePopInventoryPlan);
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
-
-                PopFrame.Navigate(inventoryPlanDetail);
-            }));
-        }
-
-        /// <summary>
-        /// 关闭盘点计划
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onHidePopInventoryPlan(object sender, System.EventArgs e)
-        {
-            //App.Current.Dispatcher.Invoke((Action)(() =>
-            //{
-            //    PopFrame.Visibility = Visibility.Hidden;
-            //    MaskView.Visibility = Visibility.Hidden;
-            //}));
-            ClosePop();
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                if (inventoryHandler != null)
-                    inventoryHandler.SetNextAutoInvTime();
-            }));
-        }
-
-
-        /// <summary>
-        /// 进入添加单品码弹出框
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnterPopAddProduct(object sender, InventoryDetailPara e)
-        {
-            AddProduct addProduct = new AddProduct(e);
-            addProduct.HidePopAddProductEvent += new AddProduct.HidePopAddProductHandler (onHidePopAddProduct);
-            addProduct.EnterInventoryDetailEvent += new AddProduct.EnterInventoryDetailHandler(onEnterInventoryDetail);
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
-
-                PopFrame.Navigate(addProduct);
-            }));
-        }
-
-
-        /// <summary>
-        /// 关闭添加单品码弹出框
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onHidePopAddProduct(object sender, RoutedEventArgs e)
-        {
-            //App.Current.Dispatcher.Invoke((Action)(() =>
-            //{
-            //    PopFrame.Visibility = Visibility.Hidden;
-            //    MaskView.Visibility = Visibility.Hidden;
-            //}));
             ClosePop();
         }
 
@@ -1335,11 +1285,6 @@ namespace CFLMedCab
 
         private void colseStockDetailedEvent(object sender, RoutedEventArgs e)
         {
-            //App.Current.Dispatcher.Invoke((Action)(() =>
-            //{
-            //    PopFrame.Visibility = Visibility.Hidden;
-            //    MaskView.Visibility = Visibility.Hidden;
-            //}));
             ClosePop();
         }
 #endregion

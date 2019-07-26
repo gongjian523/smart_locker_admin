@@ -1,7 +1,11 @@
 ﻿using AutoMapper;
 using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
-using CFLMedCab.Model;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Infrastructure.DeviceHelper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -9,6 +13,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -24,93 +29,87 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// InventoryConfirm.xaml 的交互逻辑
     /// </summary>
-    public partial class InventoryDtl : UserControl,INotifyPropertyChanged
+    public partial class InventoryDtl : UserControl
     {
+        public delegate void EnterPopInventoryHandler(object sender, RoutedEventArgs e);
+        public event EnterPopInventoryHandler EnterPopInventoryEvent;
 
-        public delegate void EnterInventoryHandler(object sender, RoutedEventArgs e);
-        public event EnterInventoryHandler EnterInventoryEvent;
+        public delegate void HidePopInventoryHandler(object sender, RoutedEventArgs e);
+        public event HidePopInventoryHandler HidePopInventoryEvent;
 
-        public delegate void EnterAddProductHandler(object sender, InventoryDetailPara e);
-        public event EnterAddProductHandler EnterAddProductEvent;
+        public delegate void BackInventoryHandler(object sender, RoutedEventArgs e);
+        public event BackInventoryHandler BackInventoryEvent;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        InventoryBll inventoryBll = new InventoryBll();
-        GoodsBll goodsBll = new GoodsBll();
-
-        InventoryDetailPara order = new InventoryDetailPara();
-        List<InventoryOrderdtl> dtlList = new List<InventoryOrderdtl>();
-
+        public delegate void OpenDoorHandler(object sender, RoutedEventArgs e);
+        public event OpenDoorHandler OpenDoorEvent;
 
         public string Code { get; set; }
         public DateTime CreateTime { get; set; }
         public int Type { get; set; }
+        public int Status { get; set; }
 
-        private int _status;
-        public int Status
-        {
-            get { return _status; }
-            set
-            {
-                if (value == _status)
-                    return;
-                _status = value;
-                NotifyPropertyChanged("Status");
-            }
-        }
+        private InventoryTask inventoryTask;
+        private InventoryOrder inventoryOrder;
+        private List<CommodityEps> list = new List<CommodityEps>();
 
-
-        public InventoryDtl(InventoryDetailPara para)
+        public InventoryDtl(InventoryTask task)
         {
             InitializeComponent();
 
-            order = para;
-            //DataContext = order;
             DataContext = this;
-            Code = order.code;
-            CreateTime = order.create_time;
-            Type = order.type;
-            Status = order.status;
+            Code = task.name;
+            CreateTime = DateTime.Now;
+            Type = 1;
+            Status = 0;
 
-            dtlList = inventoryBll.GetInventoryDetailsByInventoryId(para.id);
+            inventoryTask = task;
 
-            //添加收到增加的商品
-            if (order.alreadyAddCodes == null)
-                order.alreadyAddCodes = new HashSet<string>();
-            
-            if(order.newlyAddCodes == null)
-                order.newlyAddCodes = new HashSet<string>();
-            else
-                order.alreadyAddCodes.UnionWith(order.newlyAddCodes);
+            goodsDtllistConfirmView.DataContext = list;
 
-            if (order.alreadyAddCodes.Count > 0)
+            Timer timer = new Timer(1000);
+            timer.AutoReset = false;
+            timer.Enabled = true;
+            timer.Elapsed += new ElapsedEventHandler(onLoadData);
+        }
+
+
+        /// <summary>
+        /// 新增实际库存商品
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onLoadData(object sender, EventArgs e)
+        {
+            EnterPopInventoryEvent(this, null);
+
+            BaseData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(inventoryTask.name);
+
+            if(bdInventoryOrder.code != 0)
             {
-                var addGoodList = goodsBll.GetInvetoryGoodsDto(order.alreadyAddCodes);
-
-                var config = new MapperConfiguration(x => x.CreateMap<GoodsDto, InventoryOrderdtl>()
-                                                .ForMember(d => d.goods_id, o => o.MapFrom(s => s.id)));
-                IMapper mapper = new Mapper(config);
-                var listDtl = mapper.Map<List<InventoryOrderdtl>>(addGoodList);
-
-                foreach (InventoryOrderdtl item in listDtl)
-                {
-                    item.id = 0;
-                    item.inventory_order_id = para.id;
-                    item.goods_type = (int)GoodsInventoryStatus.Manual;
-                    item.book_inventory = 0;
-                    item.actual_inventory = 1;
-                    item.num_differences = 1;
-
-                    dtlList.Add(item);
-                }
+                HidePopInventoryEvent(this, null);
+                MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
+                return;
             }
 
-            goodsDtllistConfirmView.DataContext = dtlList;
-            goodsDtllistCheckView.DataContext = dtlList;
+            inventoryOrder = bdInventoryOrder.body.objects[0];
+#if TESTENV
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
+#else
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+#endif
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                list = hs.ToList();
+                goodsDtllistConfirmView.DataContext = list;
+                goodsDtllistConfirmView.Items.Refresh();
+            }));
 
-            hideButtons(order.btnType == 0 ? true : false);
-            goodsDtllistConfirmView.Visibility = order.btnType == 0 ? Visibility.Visible : Visibility.Collapsed;
-            goodsDtllistCheckView.Visibility = order.btnType != 0 ? Visibility.Visible : Visibility.Collapsed;
+            HidePopInventoryEvent(this, null);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                codeInputTb.Focus();
+            }));
         }
 
         /// <summary>
@@ -120,7 +119,50 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onAddProduct(object sender, RoutedEventArgs e)
         {
-            EnterAddProductEvent(this, order);
+            string inputStr = codeInputTb.Text;
+            if (string.IsNullOrWhiteSpace(inputStr))
+            {
+                MessageBox.Show("盘点任务单号不可以为空！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+#if TESTENV
+            CommodityEps commodityEps = new CommodityEps
+            {
+                CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+                CommodityCodeName = "QR00000035",
+                CommodityName = "止血包",
+                EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                EquipmentName = "E00000008",
+                GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                GoodsLocationName = "L00000013"
+            };
+#else
+            CommodityEps commodityEps;
+            try
+            {
+                commodityEps = JsonConvert.DeserializeObject<CommodityEps>(inputStr);
+            }
+            catch
+            {
+                //TODO
+                //commodityEps = 
+            }
+#endif
+
+            if (list.Where(item => item.CommodityCodeName == commodityEps.CommodityCodeName).Count() > 0)
+            {
+                MessageBox.Show("此商品已经在列表中！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    list.Add(commodityEps);
+                    goodsDtllistConfirmView.Items.Refresh();
+                }));
+            }));
         }
 
         /// <summary>
@@ -128,17 +170,34 @@ namespace CFLMedCab.View.Inventory
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onConfirm(object sender, RoutedEventArgs e)
+        private void onSubmit(object sender, RoutedEventArgs e)
         {
-            inventoryBll.ConfirmInventory((InventoryOrder)order);
-            inventoryBll.UpdateInventoryDetails(dtlList);
-            hideButtons(false);
+            BasePutData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().UpdateInventoryOrderStatus(inventoryOrder);
+            if(bdInventoryOrder.code != 0)
+            {
+                MessageBox.Show("更新盘点任务单失败！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
-            goodsDtllistConfirmView.Visibility = Visibility.Collapsed;
-            goodsDtllistCheckView.Visibility = Visibility.Visible;
 
-            Status = 1;
-            goodsDtllistCheckView.Items.Refresh();
+
+            //public BasePostData<InventoryDetail> CreateInventoryDetail(List<InventoryDetail> details)
+            //{
+            //    if (null == details || details.Count <= 0)
+            //    {
+            //        return new BasePostData<InventoryDetail>()
+            //        {
+            //            code = (int)ResultCode.Parameter_Exception,
+            //            message = ResultCode.Parameter_Exception.ToString()
+            //        };
+            //    }
+            //    var inventoryDetails = HttpHelper.GetInstance().Post<InventoryDetail>(new PostParam<InventoryDetail>()
+            //    {
+            //        objects = details
+            //    });
+
+            //    return inventoryDetails;
+            //}
         }
 
         /// <summary>
@@ -148,22 +207,41 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onCancel(object sender, RoutedEventArgs e)
         {
-            EnterInventoryEvent(this, null);
+            BackInventoryEvent(this, null);
         }
 
-        private void hideButtons(bool visible)
+        private void onDelete(object sender, RoutedEventArgs e)
         {
-            btnAddProduct.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
-            btnCancel.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
-            btnConfirm.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
+            Button btnItem = sender as Button;
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                list.RemoveAll(item => item.CommodityCodeName == (string)btnItem.CommandParameter);
+                goodsDtllistConfirmView.Items.Refresh();
+            }));
         }
 
-        // This method is called by the Set accessor of each property.  
-        // The CallerMemberName attribute that is applied to the optional propertyName  
-        // parameter causes the property name of the caller to be substituted as an argument.  
-        private void NotifyPropertyChanged([CallerMemberName]String propertyName = "")
+        /// <summary>
+        /// 取消
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onOpenDoor(object sender, RoutedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            OpenDoorEvent(this, null);
+        }
+
+        /// <summary>
+        /// 扫码查询事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SearchBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                onAddProduct(this, null);
+            }
         }
     }
 }

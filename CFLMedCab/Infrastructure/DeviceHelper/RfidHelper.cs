@@ -210,6 +210,37 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
             return ret;
         }
+
+        public static HashSet<CommodityEps> GetEpcDataJsonInventory(out bool isGetSuccess)
+        {
+            isGetSuccess = true;
+
+            var ret = new HashSet<CommodityEps>()
+               {
+                    //new CommodityEps
+                    //{
+                    //    CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+                    //    CommodityCodeName = "QR00000035",
+                    //    CommodityName = "止血包",
+                    //    EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                    //    EquipmentName = "E00000008",
+                    //    GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                    //    GoodsLocationName = "L00000013"
+                    //},
+                    new CommodityEps
+                    {
+                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+                        CommodityCodeName = "QR00000038",
+                        CommodityName = "止血包",
+                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                        EquipmentName = "E00000008",
+                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                        GoodsLocationName = "L00000013"
+                    }
+                };
+            return ret;
+        }
+
 #else
 		/// <summary>
 		/// 根据eps json获取eps对象数据

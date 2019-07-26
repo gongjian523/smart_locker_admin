@@ -25,22 +25,12 @@ namespace CFLMedCab.View.Inventory
         public delegate void HidePopAddProductHandler(object sender, RoutedEventArgs e);
         public event HidePopAddProductHandler HidePopAddProductEvent;
 
-        public delegate void EnterInventoryDetailHandler(object sender, InventoryDetailPara e);
-        public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
-
-
-        GoodsBll goodsBll = new GoodsBll();
-        InventoryBll inventoryBll = new InventoryBll();
-
-        InventoryDetailPara inventoryPara = new InventoryDetailPara();
-        List<AddGoodsCode> codeList = new List<AddGoodsCode>();
-
-        public AddProduct(InventoryDetailPara dtlPara)
+        public AddProduct()
         {
             InitializeComponent();
 
-            inventoryPara = dtlPara;
-            listView.DataContext = codeList;
+            //inventoryPara = dtlPara;
+            //listView.DataContext = codeList;
 
             codeInputTb.Focus();
         }
@@ -48,15 +38,6 @@ namespace CFLMedCab.View.Inventory
         private void onSave(object sender, RoutedEventArgs e)
         {
             HashSet<string> hs = new HashSet<string>();
-
-            if(inventoryPara.newlyAddCodes != null)
-                inventoryPara.newlyAddCodes.Clear();
-            else
-                inventoryPara.newlyAddCodes = new HashSet<string>();
-
-            foreach (var code in codeList)
-                inventoryPara.newlyAddCodes.Add(code.code);
-            EnterInventoryDetailEvent(this, inventoryPara);
 
             HidePopAddProductEvent(this, null);
         }
@@ -85,37 +66,37 @@ namespace CFLMedCab.View.Inventory
         {
             string inputStr = codeInputTb.Text;
             
-            if(!goodsBll.IsGoodsInfoExsits(inputStr))
-            {
-                codeInputTb.Text = "无法查询到商品信息";
-                return;
-            }
+            //if(!goodsBll.IsGoodsInfoExsits(inputStr))
+            //{
+            //    codeInputTb.Text = "无法查询到商品信息";
+            //    return;
+            //}
 
-            if(inventoryBll.IsGoodsInInventoryOrder(inventoryPara.id, inputStr))
-            {
-                codeInputTb.Text = "此商品已经在盘存单中";
-                return;
-            }
+            //if(inventoryBll.IsGoodsInInventoryOrder(inventoryPara.id, inputStr))
+            //{
+            //    codeInputTb.Text = "此商品已经在盘存单中";
+            //    return;
+            //}
 
-            if(inventoryPara.alreadyAddCodes != null)
-            {
-                if (inventoryPara.alreadyAddCodes.Contains(inputStr))
-                {
-                    codeInputTb.Text = "此商品已经添加";
-                    return;
-                }
-            }
+            //if(inventoryPara.alreadyAddCodes != null)
+            //{
+            //    if (inventoryPara.alreadyAddCodes.Contains(inputStr))
+            //    {
+            //        codeInputTb.Text = "此商品已经添加";
+            //        return;
+            //    }
+            //}
 
-            if (codeList.Where(item => item.code == inputStr).ToList().Count > 0)
-            {
-                codeInputTb.Text = "此商品已经添加";
-                return;
-            }
+            //if (codeList.Where(item => item.code == inputStr).ToList().Count > 0)
+            //{
+            //    codeInputTb.Text = "此商品已经添加";
+            //    return;
+            //}
 
-            codeList.Add(new AddGoodsCode {
-                code = inputStr,
-                title = "单品码"
-            });
+            //codeList.Add(new AddGoodsCode {
+            //    code = inputStr,
+            //    title = "单品码"
+            //});
             codeInputTb.Text = "";
 
             listView.Items.Refresh();

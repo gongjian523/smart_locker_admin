@@ -92,6 +92,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 task.created_at = dt.ToString("yyyy年MM月dd日");               
                 ReplenishOrderViewList.Add(task);
             });
+
+            tbInputNumbers.Focus();
         }
         
         /// <summary>

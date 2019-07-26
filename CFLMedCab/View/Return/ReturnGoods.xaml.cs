@@ -83,6 +83,8 @@ namespace CFLMedCab.View.Return
                 task.created_at = dt.ToString("yyyy年MM月dd日");
                 PickingOrderList.Add(task);
             });
+
+            tbInputNumbers.Focus();
         }
 
         /// <summary>

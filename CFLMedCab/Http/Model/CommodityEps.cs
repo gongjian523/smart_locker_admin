@@ -57,8 +57,20 @@ namespace CFLMedCab.Http.Model
 		/// <returns></returns>
 		public override bool Equals(object obj)
 		{
-			CommodityEps e = obj as CommodityEps;
-			return CommodityCodeName == e.CommodityCodeName;
+           if (obj == null)
+           {
+                return false;
+           }
+
+           if ((obj.GetType().Equals(this.GetType())) == false)
+           {
+               return false;
+           }
+
+           CommodityEps temp = (CommodityEps)obj;
+
+           return CommodityCodeName.Equals(temp.CommodityCodeName);
+           
 		}
 
 		/// <summary>
@@ -66,9 +78,9 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <returns></returns>
-		public override Int32 GetHashCode()
+		public override int GetHashCode()
 		{
-			return CommodityCodeName.GetHashCode() * 100 + CommodityCodeName.GetHashCode();
+			return CommodityCodeName.GetHashCode();
 		}
 
 

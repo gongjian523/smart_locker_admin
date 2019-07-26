@@ -33,10 +33,17 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Border Background="#FFFFFF" Margin="40,40,20,0" CornerRadius="4,4,4,4" Padding="20">
-            <Grid>
-                <Label HorizontalAlignment="Center" Margin="0,68,0,0" FontSize="39" FontWeight="Regular" Foreground="#FFFFFF" Content="手动盘点" />
-                <Button Style="{DynamicResource RoundButton}"  HorizontalAlignment="Center"  Margin="0,150,0,0" BorderThickness="0"  Width="226"  Height="64"  
-                        Background="#FFFFFF"  Foreground="{StaticResource ManuInvBrush}" FontSize="28" Content="盘点"  Click="onEnterPopInventory" />
+            <Grid x:Name="myGrid">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Label Content="请输入盘点任务单号或扫描二维码" Grid.Row="0"  Style="{StaticResource lblTitle1}"/>
+                <TextBox x:Name="tbInputNumbers" Grid.Row="1"  Height="48" Margin="0 15"  TextWrapping="Wrap" Text="IT20190723000015" 
+                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                             Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
+                <Button Grid.Row="2" Style="{StaticResource CommonYesButton}" Content="查询"  HorizontalAlignment="Right" Click="onEnterInventoryDetail"/>
             </Grid>
         </Border>
         <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="40,40,40,40" CornerRadius="4,4,4,4" Padding="20">
@@ -45,14 +52,7 @@
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-
-                <Grid Grid.Row="0">
-                    <StackPanel Orientation="Horizontal" Margin="0,0,80,0">
-                        <RadioButton x:Name="BtnUnconfirmed" Style="{StaticResource FrameNavButton}"  Width="140"  Content="待确认"  FontSize="34" FontWeight="Bold" IsChecked="True" Click="onLoadInventory"/>
-                        <RadioButton x:Name="BtnConfirmed"  Style="{StaticResource FrameNavButton}"  Width="140"  Content="已确认"  FontSize="34" FontWeight="Bold" Click="onLoadInventory"/>
-                        <RadioButton x:Name="BtnAll" Style="{StaticResource FrameNavButton}"  Width="140"  Content="全部"  FontSize="34" FontWeight="Bold" Click="onLoadInventory" Visibility="Hidden"/>
-                    </StackPanel>
-                </Grid>
+                <Label  Style="{StaticResource lblTitle1}" Content="自动盘点计划"  HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Center" />
                 <Grid Grid.Row="1" x:Name="ContentView" Margin="0,20">
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -63,7 +63,6 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="1.5*"/>
-                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -72,7 +71,6 @@
                         <Grid Grid.Column="4" x:Name="column5"/>
                         <Grid Grid.Column="5" x:Name="column6"/>
                         <Grid Grid.Column="6" x:Name="column7"/>
-                        <Grid Grid.Column="7" x:Name="column8"/>
                     </Grid>
                     <ListView  x:Name="inventoryListView" VerticalAlignment="Top"   
                                ItemsSource="{Binding}"  HorizontalAlignment="Left"  
@@ -129,18 +127,6 @@
                                         <DataTemplate>
                                             <!--<TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding confirm_time,StringFormat='{}{0:yyyy-MM-dd}'}"/>-->
                                             <TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding confirm_time,Converter={StaticResource DateStrConverter}}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column8,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <Button Style="{StaticResource ListButton}" x:Name="BtnConfirm" Content="确认"  Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" 
-                                                        Visibility="{Binding status,Converter={StaticResource InventoryConfirmBtnVisiblityConverter}}"/>
-                                                <Button Style="{StaticResource ListButton}" x:Name="BtnDetail" Content="查看"   Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" 
-                                                        Visibility="{Binding status,Converter={StaticResource InventoryConfirmVerBtnVisiblityConverter}}"/>
-                                            </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

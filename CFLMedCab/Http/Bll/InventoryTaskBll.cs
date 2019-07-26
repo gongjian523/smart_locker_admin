@@ -209,6 +209,13 @@ namespace CFLMedCab.Http.Bll
 
             return inventoryDetails;
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="equipmentNameOrId"></param>
+        /// <returns></returns>
         public BaseData<Equipment> GetEquipmentByEquipmentNameOrId(string equipmentNameOrId)
         {
             if (null == equipmentNameOrId)
@@ -383,9 +390,7 @@ namespace CFLMedCab.Http.Bll
 
 					});
 				});
-
-				
-
+			
 				return hh.Post(new PostParam<InventoryDetail>()
 				 {
 					objects = inventoryDetailList
