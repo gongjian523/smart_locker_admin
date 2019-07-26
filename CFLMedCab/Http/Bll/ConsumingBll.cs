@@ -5,6 +5,7 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.Enum;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -250,9 +251,9 @@ namespace CFLMedCab.Http.Bll
             //创建领用单
             var order = CreateConsumingOrder(new ConsumingOrder()
             {
-                FinishDate = "2019-07-25T09:09:00Z",//完成时间
+                FinishDate = GetDateTimeNow(),//完成时间
                 Status = ConsumingOrderStatus.已完成.ToString(),//领用状态
-                StoreHouseId = null,//领用库房
+                StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
                 Type = ConsumingOrderType.一般领用.ToString()//领用类型
             });
             //校验数据是否正常
@@ -290,7 +291,7 @@ namespace CFLMedCab.Http.Bll
                         changeList.Add(new CommodityInventoryChange()
                         {
                             CommodityCodeId = normal.id,
-                            SourceBill = new Model.Common.SourceBill()
+                            SourceBill = new SourceBill()
                             {
                                 object_name = "ConsumingReturnOrder",
                             },
@@ -306,7 +307,7 @@ namespace CFLMedCab.Http.Bll
                     changeList.Add(new CommodityInventoryChange()
                     {
                         CommodityCodeId = loss.id,
-                        SourceBill = new Model.Common.SourceBill()
+                        SourceBill = new SourceBill()
                         {
                             object_name = "ConsumingOrder",
                             object_id = order.body[0].id
@@ -321,7 +322,7 @@ namespace CFLMedCab.Http.Bll
                         changeList.Add(new CommodityInventoryChange()
                         {
                             CommodityCodeId = normal.id,
-                            SourceBill = new Model.Common.SourceBill()
+                            SourceBill = new SourceBill()
                             {
                                 object_name = "ConsumingReturnOrder",
                             },

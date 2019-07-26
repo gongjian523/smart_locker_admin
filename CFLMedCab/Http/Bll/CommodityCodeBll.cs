@@ -426,11 +426,47 @@ namespace CFLMedCab.Http.Bll
 			return HttpHelper.GetInstance().ResultCheck(baseData);
 		}
 
-        /// <summary>
-        /// 通过单品码查询商品信息是否存在
-        /// </summary>
-        /// <returns></returns>
-        public bool IsCommodityInfoExsits(string commodityCodeId)
+		/// <summary>
+		/// 根据商品码获取完整商品属性集合
+		/// </summary>
+		/// <returns></returns>
+		public BaseData<CommodityCode> GetCommodityCodeByName(string commodityCodeName)
+		{
+			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
+			{
+				@in =
+				{
+					field = "name",
+					in_list =  { HttpUtility.UrlEncode(commodityCodeName) }
+				}
+			});
+
+			var baseDataCommodity = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
+			{
+				return hh.Get<Commodity>(new QueryParam
+				{
+					@in =
+					{
+						field = "id",
+						in_list =  { HttpUtility.UrlEncode(baseData.body.objects[0].CommodityId) }
+					}
+				});
+
+			}, baseData, out bool isSuccess);
+
+			if (isSuccess)
+			{
+				baseData.body.objects[0].CommodityName = baseDataCommodity.body.objects[0].name;
+			}
+
+			return baseData;
+		}
+
+		/// <summary>
+		/// 通过单品码查询商品信息是否存在
+		/// </summary>
+		/// <returns></returns>
+		public bool IsCommodityInfoExsits(string commodityCodeId)
         {
             
 			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam

@@ -3,6 +3,7 @@ using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +38,7 @@ namespace CFLMedCab.Http.Bll
                     filter =
                     {
                         logical_relation = "1 AND 2",
+                        //logical_relation = "1 AND 2 AND 3",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -51,6 +53,13 @@ namespace CFLMedCab.Http.Bll
                                 @operator = "==",
                                 operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
                             }
+                            //,
+                            //new QueryParam.Expressions
+                            //{
+                            //    field = "Operator",
+                            //    @operator = "==",
+                            //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
+                            //}
                         }
                     }
                 }
@@ -392,7 +401,7 @@ namespace CFLMedCab.Http.Bll
 				});
 			
 				return hh.Post(new PostParam<InventoryDetail>()
-				 {
+				{
 					objects = inventoryDetailList
 				});
 
