@@ -23,6 +23,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 商品编号
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public int goods_id { get; set; }
 
         /// <summary>
@@ -33,6 +34,7 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 商品编码
         /// </summary>
+        [SugarColumn(IsNullable = true)]
         public string goods_code { get; set; }
 
         /// <summary>

@@ -1159,12 +1159,35 @@ namespace CFLMedCab
 
             Inventory inventory = new Inventory();
             inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
+            inventory.EnterInventoryDetailLocalEvent += new Inventory.EnterInventoryDetailLcoalHandler(onEnterInventoryDetailLocal);
 
             ContentFrame.Navigate(inventory);
         }
 
+
+
         /// <summary>
-        /// 关闭库存盘点正在进行中
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterInventoryDetailLocal(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            NaviView.Visibility = Visibility.Hidden;
+
+            InventoryDtlLocal inventoryDetailLocal = new InventoryDtlLocal();
+
+            inventoryDetailLocal.EnterPopInventoryEvent += new InventoryDtlLocal.EnterPopInventoryHandler(onEnterPopInventory);
+            inventoryDetailLocal.HidePopInventoryEvent += new InventoryDtlLocal.HidePopInventoryHandler(onHidePopInventory);
+            inventoryDetailLocal.BackInventoryEvent += new InventoryDtlLocal.BackInventoryHandler(onBackInventory);
+
+            FullFrame.Navigate(inventoryDetailLocal);
+        }
+
+
+        /// <summary>
+        /// 进入盘点详情页面
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

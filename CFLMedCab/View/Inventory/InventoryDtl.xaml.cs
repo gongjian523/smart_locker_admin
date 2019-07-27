@@ -99,17 +99,16 @@ namespace CFLMedCab.View.Inventory
 #endif
             list = CommodityCodeBll.GetInstance().GetCommodityCode(hs).body.objects.ToList();
 
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                goodsDtllistConfirmView.DataContext = list;
-                goodsDtllistConfirmView.Items.Refresh();
-            }));
 
             HidePopInventoryEvent(this, null);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                goodsDtllistConfirmView.DataContext = list;
+                goodsDtllistConfirmView.Items.Refresh();
+
                 codeInputTb.Focus();
+
             }));
         }
 

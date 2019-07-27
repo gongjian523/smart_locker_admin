@@ -31,109 +31,100 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Border Background="#FFFFFF" Margin="40,40,20,0" CornerRadius="4,4,4,4" Padding="20">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Background="{StaticResource ManuInvBrush}" Margin="40,40,20,0" CornerRadius="4,4,4,4" Padding="20">
             <Grid x:Name="myGrid">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-                <Label Content="请输入盘点任务单号或扫描二维码" Grid.Row="0"  Style="{StaticResource lblTitle1}"/>
+                <Label Content="请输入盘点任务单号或扫描二维码" Grid.Row="0"  Style="{StaticResource lblTitle1}"  Foreground="#FFFFFF" />
                 <TextBox x:Name="tbInputNumbers" Grid.Row="1"  Height="48" Margin="0 15"  TextWrapping="Wrap" Text="IT20190724000016" 
-                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
-                             Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
-                <Button Grid.Row="2" Style="{StaticResource CommonYesButton}" Content="查询"  HorizontalAlignment="Right" Click="onEnterInventoryDetail"/>
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="22" 
+                            Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
+
+                <Button Grid.Row="2"  Style="{DynamicResource RoundButton}"  HorizontalAlignment="Right"  Margin="0,1,0,0" BorderThickness="0"  Width="200"  Height="50"  
+                        Background="#FFFFFF"  Foreground="{StaticResource ManuInvBrush}" FontSize="28" Content="查询"  Click="onEnterInventoryDetail" />
             </Grid>
         </Border>
-        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="40,40,40,40" CornerRadius="4,4,4,4" Padding="20">
+        <Border Grid.Column="1" Background="{StaticResource AutoInvBrush}" Margin="20,40,40,0" CornerRadius="4,4,4,4"  Padding="20">
             <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Label  Style="{StaticResource lblTitle1}" Content="自动盘点计划"  HorizontalAlignment="Left" Margin="0,10,0,0" VerticalAlignment="Center" />
-                <Grid Grid.Row="1" x:Name="ContentView" Margin="0,20">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2.5*" />
-                            <ColumnDefinition Width="1.5*" />
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="1.5*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid Grid.Column="0" x:Name="column1"/>
-                        <Grid Grid.Column="1" x:Name="column2"/>
-                        <Grid Grid.Column="2" x:Name="column3"/>
-                        <Grid Grid.Column="3" x:Name="column4"/>
-                        <Grid Grid.Column="4" x:Name="column5"/>
-                        <Grid Grid.Column="5" x:Name="column6"/>
-                        <Grid Grid.Column="6" x:Name="column7"/>
-                    </Grid>
-                    <ListView  x:Name="inventoryListView" VerticalAlignment="Top"   
+                <Label HorizontalAlignment="Center"  Margin="0,35,0,0" FontSize="35" FontWeight="Bold" Foreground="#FFFFFF" Content="自动盘点计划" />
+                <Label Name="inventoryTime" HorizontalAlignment="Center" Margin="0,100,0,0"  Content="{Binding NextInvContent}" FontSize="24" FontWeight="Regular" Foreground="#FFFFFF"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Background="#FFFFFF" Margin="40,40,40,40" CornerRadius="4,4,4,4" Padding="20,0">
+            <Grid Grid.Row="1" x:Name="ContentView" Margin="0,20">
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0" x:Name="column1"/>
+                    <Grid Grid.Column="1" x:Name="column2"/>
+                    <Grid Grid.Column="2" x:Name="column3"/>
+                    <Grid Grid.Column="3" x:Name="column4"/>
+                <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" >
+                    <Label Content="本地盘点记录" Style="{StaticResource lblTitle5}"/>
+                </Border>
+                <ListView Grid.Row="1" Grid.ColumnSpan="5"  x:Name="inventoryListView" VerticalAlignment="Top"   
                                ItemsSource="{Binding}"  HorizontalAlignment="Left"  
                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                                Style="{StaticResource DefaultListView}"
                                >
-                        <ListView.View>
-                            <GridView >
-                                <GridViewColumn Header="盘点单号" Width="{Binding ElementName=column1,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}" />
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="盘点日期" Width="{Binding ElementName=column2,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding create_time,StringFormat='{}{0:yyyy-MM-dd}'}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="盘点类型" Width="{Binding ElementName=column3,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding type, Converter={StaticResource InventoryTypeStrConverter}}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="盘点单状态"  Width="{Binding ElementName=column4,Path=ActualWidth}" >
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding status,  Converter= {StaticResource InventoryStatusStrConverter}}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="盘点人"  Width="{Binding ElementName=column5,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding operator_name}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="确认人"    Width="{Binding ElementName=column6,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <!--<l:EditBox Height="25" Value="{Binding Path=inspector_name}" />-->
-                                            <TextBlock   Style="{StaticResource TextBlockCommon}" Text="{Binding inspector_name}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="确认日期"  Width="{Binding ElementName=column7,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <!--<TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding confirm_time,StringFormat='{}{0:yyyy-MM-dd}'}"/>-->
-                                            <TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding confirm_time,Converter={StaticResource DateStrConverter}}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                            </GridView>
-                        </ListView.View>
-                    </ListView>
-                </Grid>
+                    <ListView.View>
+                        <GridView >
+                            <GridViewColumn Header="盘点单号" Width="{Binding ElementName=column1,Path=ActualWidth}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="盘点日期" Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding create_time,StringFormat='{}{0:yyyy-MM-dd}'}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="盘点人"  Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding operator_name}"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                            <GridViewColumn Header="操作"   Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                            <Button Style="{StaticResource ListButton}" x:Name="BtnDetail" Content="查看"   Click="onEnterInventoryDetail" CommandParameter="{Binding Path=id}" 
+                                                        Visibility="{Binding status,Converter={StaticResource InventoryConfirmVerBtnVisiblityConverter}}"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
+                <Button  Grid.Row="2"  Grid.ColumnSpan="5"  Style="{StaticResource CommonYesButton}" x:Name="LocalInventoryBtn" Content="本地盘点"  Width="220"  Click="onEnterInventoryDetailLocal"/>
             </Grid>
         </Border>
     </Grid>

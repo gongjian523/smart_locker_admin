@@ -306,6 +306,9 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\Inventory\InventoryDtlLocal.xaml.cs">
+      <DependentUpon>InventoryDtlLocal.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\LoadingData.xaml.cs">
       <DependentUpon>LoadingData.xaml</DependentUpon>
     </Compile>
@@ -441,6 +444,9 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Inventory\InventoryDtlLocal.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </Page>
     <Page Include="View\LoadingData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -80,7 +80,7 @@ namespace CFLMedCab.Infrastructure.DbHelper
             Db.CodeFirst.InitTables<ReplenishSubOrderdtl>();
 
             //创建拣货出库表
-            //Db.CodeFirst.InitTables<InventoryOrder>();
+            //Db.CodeFirst.InitTables<InventoryOrderLDB>();
             Db.CodeFirst.InitTables<InventoryOrderdtl>();
             Db.CodeFirst.InitTables<InventoryPlanLDB>();
 

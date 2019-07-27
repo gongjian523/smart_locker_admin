@@ -38,15 +38,44 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterInventoryDetailHandler(object sender, InventoryTask e);
         public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
 
+        public delegate void EnterInventoryDetailLcoalHandler(object sender, RoutedEventArgs e);
+        public event EnterInventoryDetailLcoalHandler EnterInventoryDetailLocalEvent;
+
+        InventoryBll inventoryBll = new InventoryBll();
+        List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
+
         public Inventory()
         {
             InitializeComponent();
+#if TESTENV
+            BaseData<InventoryPlan> bdInventoryPlan = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId("E00000008");
+#else
+            BaseData<InventoryPlan> bdInventoryPlan = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId(ApplicationState.GetEquipName());
+#endif
+
+            if(bdInventoryPlan.code != 0)
+            {
+                inventoryTime.Content = "无法获取盘点计划";
+            }
+            else
+            {
+                InventoryPlan plan = bdInventoryPlan.body.objects[0];
+
+                if (plan.CheckPeriod == "每日")
+                    inventoryTime.Content = plan.CheckPeriod + " " + plan.InventoryTime;
+                else if (plan.CheckPeriod == "每周")
+                    inventoryTime.Content = plan.CheckPeriod + plan.InventoryWeekday + " " + plan.InventoryTime;
+                else if (plan.CheckPeriod == "每月")
+                    inventoryTime.Content = plan.CheckPeriod + plan.InventoryDay + " " + plan.InventoryTime;
+                else
+                    inventoryTime.Content = "";
+            }
             DataContext = this;
         }
 
 
         /// <summary>
-        /// 盘点
+        /// 进入盘点详情事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -85,12 +114,38 @@ namespace CFLMedCab.View.Inventory
             }));
         }
 
+        /// <summary>
+        /// 进入盘点详情事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterInventoryDetailLocal(object sender, RoutedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                EnterInventoryDetailLocalEvent(this,null);
+            }));
+        }
+
+
         private void SearchBox_OnKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Down)
             {
                 onEnterInventoryDetail(this, null);
             }
+        }
+
+
+        private void GetInventoryList()
+        {
+            inventoryOrderDtos = inventoryBll.GetInventoryOrder(new InventoryOrderApo
+            {
+                PageSize = 0,
+            }).Data;
+
+            inventoryListView.DataContext = inventoryOrderDtos;
+            inventoryListView.Items.Refresh();
         }
     }
     
