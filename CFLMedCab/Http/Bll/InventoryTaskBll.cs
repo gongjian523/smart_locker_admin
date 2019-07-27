@@ -418,14 +418,25 @@ namespace CFLMedCab.Http.Bll
 				};
 			}
 
+			string now = GetDateTimeNow();
+
+			List<InventoryOrder> inventoryOrderList = new List<InventoryOrder>();
+
+			commodityCodes.Select(it => it.GoodsLocationId).Distinct().ToList().ForEach(goodsLocationId => {
+
+				inventoryOrderList.Add(new InventoryOrder
+				{
+					ConfirmDate = now,
+					Status = DocumentStatus.已完成.ToString(),
+					//TODO: 需要当前设备id，货位id和库房id
+					GoodsLocationId = goodsLocationId
+				});
+
+			});
+
 			var inventoryOrders = HttpHelper.GetInstance().Post(new PostParam<InventoryOrder>()
 			{
-				objects = { new InventoryOrder {
-					ConfirmDate = DateTime.Now.ToString("s"),
-					Status = DocumentStatus.已完成.ToString()
-					//TODO: 需要当前设备id，货位id和库房id
-					
-				} }
+				objects = inventoryOrderList
 			});
 
 			var inventoryDetails = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
@@ -466,10 +477,12 @@ namespace CFLMedCab.Http.Bll
 
 				commodityCodes.ForEach(it =>
 				{
+
+
 					inventoryDetailList.Add(new InventoryDetail
 					{
 						CommodityInventoryId = it.CommodityInventoryId,
-						InventoryOrderId = inventoryOrders.body[0].id,
+						InventoryOrderId = inventoryOrders.body.Where(iit => iit.GoodsLocationId == it.GoodsLocationId).Select(iit => iit.id).First(),
 						CommodityCodeId = it.id
 
 					});
