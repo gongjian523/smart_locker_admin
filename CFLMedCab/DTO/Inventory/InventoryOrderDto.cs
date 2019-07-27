@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.DTO.Inventory
 {
-    public class InventoryOrderDto : InventoryOrder
+    public class InventoryOrderDto : InventoryOrderLDB
     {
     }
 }

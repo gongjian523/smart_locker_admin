@@ -38,8 +38,14 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterInventoryDetailHandler(object sender, InventoryTask e);
         public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
 
-        public delegate void EnterInventoryDetailLcoalHandler(object sender, RoutedEventArgs e);
+        public delegate void EnterInventoryDetailLcoalHandler(object sender, int e);
         public event EnterInventoryDetailLcoalHandler EnterInventoryDetailLocalEvent;
+
+        public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
+        public event EnterPopInventoryHandler EnterPopInventoryEvent;
+
+        public delegate void HidePopInventoryHandler(object sender, System.EventArgs e);
+        public event HidePopInventoryHandler HidePopInventoryEvent;
 
         InventoryBll inventoryBll = new InventoryBll();
         List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
@@ -71,6 +77,8 @@ namespace CFLMedCab.View.Inventory
                     inventoryTime.Content = "";
             }
             DataContext = this;
+
+            GetInventoryList();
         }
 
 
@@ -121,12 +129,44 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onEnterInventoryDetailLocal(object sender, RoutedEventArgs e)
         {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                EnterInventoryDetailLocalEvent(this,null);
-            }));
-        }
 
+            Button btnItem = sender as Button;
+            int id;
+
+            if (btnItem.Name == "LocalInventoryBtn")
+            {
+                EnterPopInventoryEvent(this, null);
+
+#if TESTENV
+                HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
+#else
+                HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+#endif
+                List<GoodsDto> list = new List<GoodsDto>();
+                foreach (var item in hs.ToList())
+                {
+                    GoodsDto goodItem = new GoodsDto
+                    {
+                        name = item.CommodityName,
+                        code = item.CommodityCodeName,
+                        position = item.GoodsLocationName
+                    };
+                    list.Add(goodItem);
+                }
+
+                id = inventoryBll.NewInventory(list, InventoryType.Manual);
+
+                GetInventoryList();
+
+                HidePopInventoryEvent(this, null);
+            }
+            else
+            {
+                id = (int)btnItem.CommandParameter;
+            }
+             
+            EnterInventoryDetailLocalEvent(this, id);
+        }
 
         private void SearchBox_OnKeyDown(object sender, KeyEventArgs e)
         {

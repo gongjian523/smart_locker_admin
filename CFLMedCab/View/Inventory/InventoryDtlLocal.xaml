@@ -25,7 +25,7 @@
         </Style>
         <cvt:InventoryStatusStrConverter x:Key="InventoryStatusStrConverter"/>
         <cvt:InventoryTypeStrConverter x:Key="InventoryTypeStrConverter"/>
-        <cvt:InventoryActualSwichStaConverter x:Key="InventoryActualSwichStaConverter"/>
+        <cvt:InventoryActualSwichStaIntConverter x:Key="InventoryActualSwichStaIntConverter"/>
         <cvt:InventoryConfirmBtnVisiblityConverter x:Key="InventoryConfirmBtnVisiblityConverter"/>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
     </UserControl.Resources>
@@ -57,10 +57,11 @@
                     <TextBlock Grid.Column="1" Grid.Row="1" Text="{Binding CreateTime,StringFormat='{}{0:yyyy年MM月dd日 HH:mm}',ConverterCulture=zh-CN}" Style="{StaticResource tbTitle4_0}"/>
 
                     <Label Grid.Column="2" Grid.Row="0" Content="盘点类型" Style="{StaticResource lblTitle3}"/>
-                    <Label Grid.Column="2" Grid.Row="1" Content="{Binding Type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Style="{StaticResource lblTitle4_1}"/>
+                    <!--<Label Grid.Column="2" Grid.Row="1" Content="{Binding Type ,  Converter= {StaticResource InventoryTypeStrConverter}}" Style="{StaticResource lblTitle4_1}"/>-->
+                    <Label Grid.Column="2" Grid.Row="1" Content="本地盘点" Style="{StaticResource lblTitle4_1}"/>
 
-                    <Label Grid.Column="3" Grid.Row="0" Content="盘点状态" Style="{StaticResource lblTitle3}"/>
-                    <Label Grid.Column="3" Grid.Row="1" Content="{Binding Status, Converter= {StaticResource InventoryStatusStrConverter} }" Style="{StaticResource lblTitle4_1}"/>
+                    <Label Grid.Column="3" Grid.Row="0" Content="盘点状态" Style="{StaticResource lblTitle3}" Visibility="Hidden"/>
+                    <Label Grid.Column="3" Grid.Row="1" Content="{Binding Status, Converter= {StaticResource InventoryStatusStrConverter} }" Style="{StaticResource lblTitle4_1}" Visibility="Hidden"/>
 
                 </Grid>
             </Border>
@@ -84,16 +85,16 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <!--<ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>-->
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
                             <Grid Grid.Column="2" x:Name="column3"/>
                             <Grid Grid.Column="3" x:Name="column4"/>
                             <Grid Grid.Column="4" x:Name="column5"/>
-                            <Grid Grid.Column="5" x:Name="column6"/>
-                            <Grid Grid.Column="6" x:Name="column7"/>
+                            <!--<Grid Grid.Column="5" x:Name="column6"/>
+                            <Grid Grid.Column="6" x:Name="column7"/>-->
                         </Grid>
                         <!--<ListView Grid.Row="1"  ItemsSource="{Binding}"  Name="goodsDtllistConfirmView" HorizontalAlignment="Left" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Style="{StaticResource DefaultListView}" >
                             <ListView.View>
@@ -144,7 +145,7 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Grid HorizontalAlignment="Center"  Visibility="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type UserControl},AncestorLevel=1},Path= btnType, Converter={StaticResource  InventoryConfirmBtnVisiblityConverter}}" >
-                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding actual_inventory, Converter={StaticResource InventoryActualSwichStaConverter}}"  HorizontalAlignment="Center"/>
+                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding actual_inventory, Converter={StaticResource InventoryActualSwichStaIntConverter}}"  HorizontalAlignment="Center"/>
                                                 </Grid>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
@@ -201,7 +202,7 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Grid HorizontalAlignment="Center"   >
-                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding actual_inventory, Converter={StaticResource InventoryActualSwichStaConverter}}"  HorizontalAlignment="Center"/>
+                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding actual_inventory, Converter={StaticResource InventoryActualSwichStaIntConverter}}"  HorizontalAlignment="Center"/>
                                                 </Grid>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>

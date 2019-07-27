@@ -25,7 +25,7 @@
         </Style>
         <cvt:InventoryStatusStrConverter x:Key="InventoryStatusStrConverter"/>
         <cvt:InventoryTypeStrConverter x:Key="InventoryTypeStrConverter"/>
-        <cvt:InventoryActualSwichStaConverter x:Key="InventoryActualSwichStaConverter"/>
+        <cvt:InventoryActualSwichStaStringConverter x:Key="InventoryActualSwichStaStringConverter"/>
         <cvt:InventoryConfirmBtnVisiblityConverter x:Key="InventoryConfirmBtnVisiblityConverter"/>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
     </UserControl.Resources>
@@ -115,7 +115,7 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <Grid HorizontalAlignment="Center"  Visibility="{Binding RelativeSource={RelativeSource FindAncestor,AncestorType={x:Type UserControl},AncestorLevel=1},Path= btnType, Converter={StaticResource  InventoryConfirmBtnVisiblityConverter}}" >
-                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding QStatus, Converter={StaticResource InventoryActualSwichStaConverter}}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    <CheckBox Name="Checker1" Style="{StaticResource SliderCheckBox}"  IsChecked="{Binding QStatus, Converter={StaticResource InventoryActualSwichStaStringConverter}}"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                 </Grid>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>

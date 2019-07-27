@@ -52,15 +52,15 @@ namespace CFLMedCab.DAL
         /// 生成盘点记录
         /// </summary>
         /// <returns></returns>
-        public int NewInventory(InventoryOrder inventoryOrder) {
-            return Db.Insertable<InventoryOrder>(inventoryOrder).ExecuteReturnEntity().id;
+        public int NewInventory(InventoryOrderLDB inventoryOrder) {
+            return Db.Insertable<InventoryOrderLDB>(inventoryOrder).ExecuteReturnEntity().id;
         }
 
         /// <summary>
         /// 确认盘点记录
         /// </summary>
-        public void ConfirmInventory(InventoryOrder inventoryOrder) {
-            Db.Updateable<InventoryOrder>(inventoryOrder).ExecuteCommand();
+        public void ConfirmInventory(InventoryOrderLDB inventoryOrder) {
+            Db.Updateable<InventoryOrderLDB>(inventoryOrder).ExecuteCommand();
         }
 
 
@@ -74,7 +74,7 @@ namespace CFLMedCab.DAL
             List<InventoryOrderDto> data;
 
             //查询语句
-            var queryable = Db.Queryable<InventoryOrder>()
+            var queryable = Db.Queryable<InventoryOrderLDB>()
                 .Where(it => it.status == pageDataApo.status)
                 .OrderBy(it => it.create_time, OrderByType.Desc)
                 .Select<InventoryOrderDto>();
@@ -91,6 +91,16 @@ namespace CFLMedCab.DAL
                 totalCount = data.Count();
             }
             return data;
+        }
+
+        public List<InventoryOrderDto> GetInventoryOrdersByInventoryId(int invertoryOrderId)
+        {
+            var list = Db.Queryable<InventoryOrderLDB>()
+                .Where(it => it.id == invertoryOrderId)
+                .OrderBy(it => it.create_time, OrderByType.Desc)
+                .Select<InventoryOrderDto>()
+                .ToList();
+            return list;
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
+using CFLMedCab.DTO.Inventory;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
@@ -29,22 +30,12 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class InventoryDtlLocal : UserControl, INotifyPropertyChanged
     {
-        //public delegate void EnterAddProductHandler(object sender, InventoryDetailPara e);
-        //public event EnterAddProductHandler EnterAddProductEvent;
-
-        public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
-        public event EnterPopInventoryHandler EnterPopInventoryEvent;
-
-        public delegate void HidePopInventoryHandler(object sender, System.EventArgs e);
-        public event HidePopInventoryHandler HidePopInventoryEvent;
-
         public delegate void BackInventoryHandler(object sender, RoutedEventArgs e);
         public event BackInventoryHandler BackInventoryEvent;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         InventoryBll inventoryBll = new InventoryBll();
-        GoodsBll goodsBll = new GoodsBll();
 
         List<InventoryOrderdtl> dtlList = new List<InventoryOrderdtl>();
         List<GoodsDto> list = new List<GoodsDto>();
@@ -67,99 +58,22 @@ namespace CFLMedCab.View.Inventory
         }
 
 
-        public InventoryDtlLocal()
+        public InventoryDtlLocal(int inventoryId)
         {
             InitializeComponent();
 
+            DataContext = this;
 
-            Timer timer = new Timer(100);
-            timer.AutoReset = false;
-            timer.Enabled = true;
-            timer.Elapsed += new ElapsedEventHandler(onLoadData);
+            InventoryOrderDto order = inventoryBll.GetInventoryOrdersByInventoryId(inventoryId)[0];
+            List<InventoryOrderdtl> dtlList = inventoryBll.GetInventoryDetailsByInventoryId(inventoryId);
 
-            //order = para;
-            ////DataContext = order;
-            //DataContext = this;
-            //Code = order.code;
-            //CreateTime = order.create_time;
+            Code = order.code;
+            CreateTime = order.create_time;
             //Type = order.type;
             //Status = order.status;
 
-            //dtlList = inventoryBll.GetInventoryDetailsByInventoryId(para.id);
-
-            ////添加收到增加的商品
-            //if (order.alreadyAddCodes == null)
-            //    order.alreadyAddCodes = new HashSet<string>();
-
-            //if (order.newlyAddCodes == null)
-            //    order.newlyAddCodes = new HashSet<string>();
-            //else
-            //    order.alreadyAddCodes.UnionWith(order.newlyAddCodes);
-
-            //if (order.alreadyAddCodes.Count > 0)
-            //{
-            //    var addGoodList = goodsBll.GetInvetoryGoodsDto(order.alreadyAddCodes);
-
-            //    var config = new MapperConfiguration(x => x.CreateMap<GoodsDto, InventoryOrderdtl>()
-            //                                    .ForMember(d => d.goods_id, o => o.MapFrom(s => s.id)));
-            //    IMapper mapper = new Mapper(config);
-            //    var listDtl = mapper.Map<List<InventoryOrderdtl>>(addGoodList);
-
-            //    foreach (InventoryOrderdtl item in listDtl)
-            //    {
-            //        item.id = 0;
-            //        item.inventory_order_id = para.id;
-            //        item.goods_type = (int)GoodsInventoryStatus.Manual;
-            //        item.book_inventory = 0;
-            //        item.actual_inventory = 1;
-            //        item.num_differences = 1;
-
-            //        dtlList.Add(item);
-            //    }
-            //}
-
             goodsDtllistCheckView.DataContext = dtlList;
 
-
-        }
-
-
-        /// <summary>
-        /// 新增实际库存商品
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onLoadData(object sender, EventArgs e)
-        {
-            EnterPopInventoryEvent(this, null);
-
-#if TESTENV
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
-#else
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
-#endif
-            
-            foreach(var item in hs.ToList())
-            {
-                GoodsDto goodItem = new GoodsDto {
-                    name = item.CommodityName,
-                    code = item.CommodityCodeName,
-                };
-                list.Add(goodItem);
-            }
-
-            int id = inventoryBll.NewInventory(list, InventoryType.Manual);
-
-            HidePopInventoryEvent(this, null);
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                //goodsDtllistConfirmView.DataContext = list;
-                //goodsDtllistConfirmView.Items.Refresh();
-
-                //codeInputTb.Focus();
-
-            }));
         }
 
         /// <summary>

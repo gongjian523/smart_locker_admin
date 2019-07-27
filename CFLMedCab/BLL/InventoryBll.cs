@@ -38,7 +38,7 @@ namespace CFLMedCab.BLL
         public int NewInventory(List<GoodsDto> list,  InventoryType type)
         {
 
-            InventoryOrder inventoryOrder = new InventoryOrder();
+            InventoryOrderLDB inventoryOrder = new InventoryOrderLDB();
             var ran = new Random();
 
             inventoryOrder.create_time = System.DateTime.Now;
@@ -73,7 +73,7 @@ namespace CFLMedCab.BLL
         /// <summary>
         /// 更新盘点记录
         /// </summary>
-        public void ConfirmInventory(InventoryOrder inventoryOrder)
+        public void ConfirmInventory(InventoryOrderLDB inventoryOrder)
         {
             //设置状态为已确认
             inventoryOrder.status = (int)InventoryStatus.Confirm;
@@ -132,6 +132,15 @@ namespace CFLMedCab.BLL
         public List<InventoryOrderdtl> GetInventoryDetailsByInventoryId(int invertoryOrderId)
         {
             return inventoryDal.GetInventoryDetailsByInventoryId(invertoryOrderId);
+        }
+
+        /// <summary>
+        /// 通过盘点单号获取盘点记录
+        /// </summary>
+        /// <returns></returns>
+        public List<InventoryOrderDto> GetInventoryOrdersByInventoryId(int invertoryOrderId)
+        {
+            return inventoryDal.GetInventoryOrdersByInventoryId(invertoryOrderId);
         }
 
 

@@ -1160,26 +1160,23 @@ namespace CFLMedCab
             Inventory inventory = new Inventory();
             inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
             inventory.EnterInventoryDetailLocalEvent += new Inventory.EnterInventoryDetailLcoalHandler(onEnterInventoryDetailLocal);
+            inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
+            inventory.HidePopInventoryEvent += new Inventory.HidePopInventoryHandler(onHidePopInventory);
 
             ContentFrame.Navigate(inventory);
         }
-
-
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterInventoryDetailLocal(object sender, RoutedEventArgs e)
+        private void onEnterInventoryDetailLocal(object sender, int e)
         {
             HomePageView.Visibility = Visibility.Hidden;
             NaviView.Visibility = Visibility.Hidden;
 
-            InventoryDtlLocal inventoryDetailLocal = new InventoryDtlLocal();
-
-            inventoryDetailLocal.EnterPopInventoryEvent += new InventoryDtlLocal.EnterPopInventoryHandler(onEnterPopInventory);
-            inventoryDetailLocal.HidePopInventoryEvent += new InventoryDtlLocal.HidePopInventoryHandler(onHidePopInventory);
+            InventoryDtlLocal inventoryDetailLocal = new InventoryDtlLocal(e);
             inventoryDetailLocal.BackInventoryEvent += new InventoryDtlLocal.BackInventoryHandler(onBackInventory);
 
             FullFrame.Navigate(inventoryDetailLocal);
