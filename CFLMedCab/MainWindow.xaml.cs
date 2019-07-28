@@ -1495,7 +1495,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onShowLoadingData(object sender, bool e)
+        private void onShowLoadingData(object sender, RoutedEventArgs e)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -1511,7 +1511,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onHideLoadingData(object sender, bool e)
+        private void onHideLoadingData(object sender, RoutedEventArgs e)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {

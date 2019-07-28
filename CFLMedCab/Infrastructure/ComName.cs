@@ -33,10 +33,18 @@ namespace CFLMedCab.Infrastructure
 
         public static List<string> GetAllLockerCom()
         {
-            return(new List<string> {
-                "COM2",
-                "COM5"
-            });
+            //return(new List<string> {
+            //    "COM2",
+            //    "COM5"
+            //});
+
+            List<string> list = new List<string>();
+
+            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker));
+#if DUALCAB
+            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker));
+#endif
+            return list;
         }
 
         public static string GetRfidCom(string pos)

@@ -41,10 +41,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void EnterReplenishmentDetailOpenHandler(object sender, ShelfTask e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
-        public delegate void ShowLoadDataHandler(object sender, bool e);
+        public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
         public event ShowLoadDataHandler ShowLoadDataEvent;
 
-        public delegate void HideLoadDataHandler(object sender, bool e);
+        public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
         public event HideLoadDataHandler HideLoadDataEvent;
 
         public Replenishment()
@@ -146,9 +146,9 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
             name = "OS20190721000052";
 
-            //ShowLoadDataEvent(this, true);
+            ShowLoadDataEvent(this, null);
             BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);
-            //HideLoadDataEvent(this, true);
+            HideLoadDataEvent(this, null);
 
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
             if(!isSuccess)
