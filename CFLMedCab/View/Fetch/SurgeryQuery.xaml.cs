@@ -2,7 +2,11 @@
 using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Model;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,19 +29,34 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class SurgeryQuery : UserControl
     {
-
-        public delegate void EnterSurgeryDetailHandler(object sender, SurgeryOrderDto surgeryOrderDto);
+        public delegate void EnterSurgeryDetailHandler(object sender, FetchParam fetchParam);
         public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
         
         public delegate void EnterSurgeryNoNumOpenHandler(object sender, RoutedEventArgs e);
         public event EnterSurgeryNoNumOpenHandler EnterSurgeryNoNumOpenEvent;
-        
+
+        public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
+        public event ShowLoadDataHandler ShowLoadDataEvent;
+
+        public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
+        public event HideLoadDataHandler HideLoadDataEvent;
+
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
-        public SurgeryQuery()
+        public SurgeryQuery(ConsumingOrderType type)
         {
             InitializeComponent();
 
-            tbOddNumbers.Focus();
+            if(type == ConsumingOrderType.医嘱处方领用)
+            {
+                lbInputCode.Content = "请输入医嘱处方领号或扫描医嘱处方领单二维码";
+                btnNoCode.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                lbInputCode.Content = "请输入手术单号或扫描手术单二维码";
+                btnNoCode.Visibility = Visibility.Visible;
+            }
+            lbInputCode.Focus();
         }
     
         /// <summary>
@@ -47,30 +66,72 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
-            var value = tbOddNumbers.Text;
-            if (string.IsNullOrWhiteSpace(value))
+            var inputStr = tbInputCode.Text;
+            if (string.IsNullOrWhiteSpace(inputStr))
             {
-                MessageBox.Show("手术单号不可以为空！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
-            if(!fetchOrderBll.IsUnDoneGoodsInSurgeryOrder(value))
+            TaskOrder taskOrder;
+            string name;
+            try
             {
-                MessageBox.Show("此手术单中商品已经领取完毕！", "温馨提示", MessageBoxButton.OK);
+                taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
+                name = taskOrder.name;
+            }
+            catch
+            {
+                name = inputStr;
+            }
+
+            name = "U20190723000051";
+
+            ShowLoadDataEvent(this, null);
+
+            FetchParam fetchParam = new FetchParam();
+            fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
+
+            if (fetchParam.bdConsumingOrder.code == 0)
+            {
+                if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
+                {
+                    fetchParam.bdOperationOrderGoodsDetail = 
+                        ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
+                }
+                else
+                {
+                    fetchParam.bdPrescriptionOrderGoodsDetail = 
+                        ConsumingBll.GetInstance().GetPrescriptionOrderGoodsDetail(fetchParam.bdConsumingOrder);
+                }
+            }
+
+            HideLoadDataEvent(this, null);
+
+            if (fetchParam.bdConsumingOrder.code != 0)
+            {
+                MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
-            //根据领用单查找手术单
-            List<SurgeryOrderDto> surgeryOrderDtos = fetchOrderBll.GetSurgeryOrderDto(new SurgeryOrderApo { SurgeryOrderCode= value }).Data;
-            if (surgeryOrderDtos .Count>0)
+            if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
             {
-                EnterSurgeryDetailEvent(this, surgeryOrderDtos.First());
+                if (fetchParam.bdOperationOrderGoodsDetail.code != 0)
+                {
+                    MessageBox.Show("无法获取手术单详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
             }
             else
             {
-                MessageBox.Show("手术单号不存在！", "温馨提示", MessageBoxButton.OK);
-                return;
+                if (fetchParam.bdPrescriptionOrderGoodsDetail.code != 0)
+                {
+                    MessageBox.Show("无法获取医嘱处方单详情！" + fetchParam.bdPrescriptionOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
             }
+
+            EnterSurgeryDetailEvent(this, fetchParam);
         }
         
         /// <summary>

@@ -611,9 +611,21 @@ namespace CFLMedCab
             HomePageView.Visibility = Visibility.Hidden;
             btnBackHP.Visibility = Visibility.Visible;
 
-            SurgeryQuery surgeryQuery = new SurgeryQuery();
+            ConsumingOrderType type;
+            if (((System.Windows.Controls.Button)sender).Name == "NavBtnEnterSurgery")
+                type = ConsumingOrderType.手术领用;
+            else
+                type = ConsumingOrderType.医嘱处方领用;
+
+            SurgeryQuery surgeryQuery = new SurgeryQuery(type);
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
+
+            surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
+            surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);
+
+
+
             ContentFrame.Navigate(surgeryQuery);
         }
         /// <summary>
@@ -621,12 +633,12 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fetchOrder"></param>
-        private void onEnterSurgeryDetail(object sender, SurgeryOrderDto model)
+        private void onEnterSurgeryDetail(object sender, FetchParam fetchParam)
         {
-            SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(model);
-            surgeryOrderDetail.EnterSurgeryNumOpenEvent += new SurgeryOrderDetail.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
-            surgeryOrderDetail.EnterSurgeryConsumablesDetailEvent += new SurgeryOrderDetail.EnterSurgeryConsumablesDetailHandler(EnterSurgeryConsumablesDetailEvent);
-            ContentFrame.Navigate(surgeryOrderDetail);
+            //SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(model);
+            //surgeryOrderDetail.EnterSurgeryNumOpenEvent += new SurgeryOrderDetail.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
+            //surgeryOrderDetail.EnterSurgeryConsumablesDetailEvent += new SurgeryOrderDetail.EnterSurgeryConsumablesDetailHandler(EnterSurgeryConsumablesDetailEvent);
+            //ContentFrame.Navigate(surgeryOrderDetail);
         }
 
         /// <summary>
@@ -636,9 +648,9 @@ namespace CFLMedCab
         /// <param name="fetchOrder"></param>
         public void EnterSurgeryConsumablesDetailEvent(object sender, SurgeryOrderDto model)
         {
-            ConsumablesDetails consumablesDetails = new ConsumablesDetails(model);
-            consumablesDetails.EnterSurgeryDetailEvent += new ConsumablesDetails.EnterSurgeryDetailHandler(onEnterSurgeryDetail);
-            ContentFrame.Navigate(consumablesDetails);
+            //ConsumablesDetails consumablesDetails = new ConsumablesDetails(model);
+            //consumablesDetails.EnterSurgeryDetailEvent += new ConsumablesDetails.EnterSurgeryDetailHandler(onEnterSurgeryDetail);
+            //ContentFrame.Navigate(consumablesDetails);
         }
 
         /// <summary>
