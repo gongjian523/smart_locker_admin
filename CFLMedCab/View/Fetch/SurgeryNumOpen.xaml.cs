@@ -3,6 +3,7 @@ using CFLMedCab.BLL;
 using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Http.Model;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -18,20 +19,23 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class SurgeryNumOpen : UserControl
     {
-        private SurgeryOrderDto surgeryOrderDto;
-        private GoodsBll goodsBll = new GoodsBll();
-        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
-        public SurgeryNumOpen(SurgeryOrderDto model)
+        public SurgeryNumOpen(FetchParam fetchParam)
         {
             InitializeComponent();
-            surgeryOrderDto = model;
-            surgeryNum.Content = model.code;
-            time.Content = model.surgery_time.ToString("yyyy年MM月dd日");
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);
-            listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }, out int stockGoodsNum, out int notStockGoodsNum).Data;
-            inStock.Content = stockGoodsNum;
-            noStock.Content = notStockGoodsNum;
+
+            lbCodeContent.Content = fetchParam.bdConsumingOrder.body.objects[0].name;
+            lbStatusContent.Content = fetchParam.bdConsumingOrder.body.objects[0].Status;
+
+            if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
+            {
+                lbCodeTitle.Content = "手术单号";
+                listView.DataContext = fetchParam.bdOperationOrderGoodsDetail.body.objects;
+            }
+            else
+            {
+                lbCodeTitle.Content = "医嘱处方单号";
+                listView.DataContext = fetchParam.bdPrescriptionOrderGoodsDetail.body.objects;
+            }
         }
         
     }

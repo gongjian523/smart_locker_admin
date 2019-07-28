@@ -29,14 +29,14 @@
                         <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
 
-                    <Label Content="手术领用单号" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle1}"/>
-                    <Label Content="Label" Grid.Column="0" Grid.Row="1" Name="surgeryNum"  Style="{StaticResource lblTitle2}"/>
+                    <Label Name="lbCodeTitle"  Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle1}"/>
+                    <Label Name="lbCodeContent" Grid.Column="0" Grid.Row="1"  Style="{StaticResource lblTitle2}"/>
 
-                        <Label  Content="使用状态" Grid.Column="1"   Grid.Row="0" Style="{StaticResource lblTitle3}"/>
-                        <Label   Content="领用中" Grid.Column="1"   Grid.Row="1" Name="state"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label  Content="使用状态" Grid.Column="1"   Grid.Row="0" Style="{StaticResource lblTitle3}"/>
+                    <Label  Name="lbStatusContent" Grid.Column="1"   Grid.Row="1" Style="{StaticResource lblTitle4_0}"/>
 
-                        <Label  Content="手术时间"  Grid.Column="2"  Grid.Row="0" Style="{StaticResource lblTitle3}"/>
-                    <Label  Content="手术时间" Grid.Column="2"  Grid.Row="1"  Name="time"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label  Content="手术时间"  Grid.Column="2"  Grid.Row="0" Style="{StaticResource lblTitle3}" Visibility="Hidden"/>
+                    <Label  Content="手术时间" Grid.Column="2"  Grid.Row="1"  Name="time"  Style="{StaticResource lblTitle4_0}" Visibility="Hidden"/>
                 </Grid>
             </Border>
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1">
@@ -53,14 +53,14 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <!--<ColumnDefinition Width="*"/>-->
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
                         <Grid Grid.Column="2" x:Name="column3"/>
-                        <Grid Grid.Column="3" x:Name="column4"/>
+                        <!--<Grid Grid.Column="3" x:Name="column4"/>-->
                     </Grid>
-                    <Border Grid.Row="0" Grid.Column="1" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Style="{StaticResource TipBorder}">
+                    <Border Grid.Row="0" Grid.Column="1" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Style="{StaticResource TipBorder}" Visibility="Hidden">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="该手术领用单待领用耗材如下，其中" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="inStock" Style="{StaticResource lblTitleRed}"/>
@@ -76,25 +76,25 @@
                                 <GridViewColumn Header="商品名称" Width="{Binding ElementName=column1,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding name}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CommodityName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="领用属性"  Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <!--<GridViewColumn Header="领用属性"  Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
-                                <GridViewColumn Header="待领用数量" Width="{Binding ElementName=column3,Path=ActualWidth}" >
+                                </GridViewColumn>-->
+                                <GridViewColumn Header="待领用数量" Width="{Binding ElementName=column2,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding not_fetch_num}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Number}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stock_num}"/>

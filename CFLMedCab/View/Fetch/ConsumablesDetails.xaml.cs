@@ -4,6 +4,7 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Http.Model;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -29,21 +30,23 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class ConsumablesDetails : UserControl
     {
-        public delegate void EnterSurgeryDetailHandler(object sender, SurgeryOrderDto e);
+        public delegate void EnterSurgeryDetailHandler(object sender, ConsumingOrder e);
         public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
-       
+
+        private ConsumingOrder consumingOrder;
+
         private SurgeryOrderDto surgeryOrderDto;
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
-        public ConsumablesDetails(SurgeryOrderDto model)
+        public ConsumablesDetails(ConsumingOrder model)
         {
             InitializeComponent();
-            surgeryOrderDto = model;
-            surgeryNum.Content = model.code;
-            time.Content = model.surgery_time.ToString("yyyy年MM月dd日"); ;
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);//盘点所有数据
-            listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }).Data;
+            //surgeryOrderDto = model;
+            //surgeryNum.Content = model.code;
+            //time.Content = model.surgery_time.ToString("yyyy年MM月dd日"); ;
+            //Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
+            //List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);//盘点所有数据
+            //listView.DataContext = fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodsDtos }).Data;
         }
 
         /// <summary>
@@ -53,7 +56,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void Return(object sender, RoutedEventArgs e)
         {
-            EnterSurgeryDetailEvent(this, surgeryOrderDto);
+            EnterSurgeryDetailEvent(this, consumingOrder);
 
         }
     }

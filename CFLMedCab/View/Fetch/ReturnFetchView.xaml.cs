@@ -60,6 +60,7 @@ namespace CFLMedCab.View.Fetch
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
             if (bdCommodityCode.code != 0)
             {
+                MessageBox.Show("没有检测到任何商品变化！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 

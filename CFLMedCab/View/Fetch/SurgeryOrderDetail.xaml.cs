@@ -4,6 +4,9 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
@@ -30,38 +33,29 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class SurgeryOrderDetail : UserControl
     {
-        public delegate void EnterSurgeryConsumablesDetailHandler(object sender, SurgeryOrderDto surgeryOrderDto);
-        public event EnterSurgeryConsumablesDetailHandler EnterSurgeryConsumablesDetailEvent;
-
-        public delegate void EnterSurgeryNumOpenHandler(object sender, SurgeryOrderDto surgeryOrderDto);
+        public delegate void EnterSurgeryNumOpenHandler(object sender, FetchParam fetchParam);
         public event EnterSurgeryNumOpenHandler EnterSurgeryNumOpenEvent;
 
-        private SurgeryOrderDto surgeryOrderDto;
-        private GoodsBll goodsBll = new GoodsBll();
-        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        private FetchParam param;
 
-        public SurgeryOrderDetail(SurgeryOrderDto model)
+        public SurgeryOrderDetail(FetchParam fetchParam)
         {
             InitializeComponent();
-            surgeryOrderDto = model;
-            surgeryNum.Content = model.code;
-            time.Content = model.surgery_time.ToString("yyyy年MM月dd日");
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            List<GoodsDto> goodsDtos = goodsBll.GetInvetoryGoodsDto(before);
-            listView.DataContext= fetchOrderBll.GetSurgeryOrderdtlDto(new SurgeryOrderApo { SurgeryOrderCode= surgeryOrderDto.code, GoodsDtos=goodsDtos }, out int stockGoodsNum, out int notStockGoodsNum).Data;
-            inStock.Content = stockGoodsNum;
-            noStock.Content = notStockGoodsNum;
-        }
+            param = fetchParam;
 
+            lbCodeContent.Content = fetchParam.bdConsumingOrder.body.objects[0].name;
+            lbStatusContent.Content = fetchParam.bdConsumingOrder.body.objects[0].Status;
 
-        /// <summary>
-        /// 手术耗材详情
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EnterSurgeryDetail(object sender, RoutedEventArgs e)
-        {
-            EnterSurgeryConsumablesDetailEvent(this, surgeryOrderDto);
+            if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
+            {
+                lbCodeTitle.Content = "手术单号";
+                listView.DataContext = fetchParam.bdOperationOrderGoodsDetail.body.objects;
+            }
+            else
+            {
+                lbCodeTitle.Content = "医嘱处方单号";
+                listView.DataContext = fetchParam.bdPrescriptionOrderGoodsDetail.body.objects;
+            }
         }
 
         /// <summary>
@@ -71,7 +65,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void EnterSurgeryNumOpen(object sender, RoutedEventArgs e)
         {
-            EnterSurgeryNumOpenEvent(this, surgeryOrderDto);
+            EnterSurgeryNumOpenEvent(this, param);
         }
     }
 }

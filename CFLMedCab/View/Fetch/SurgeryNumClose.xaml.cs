@@ -5,6 +5,9 @@ using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.DTO.Surgery;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
@@ -35,7 +38,7 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class SurgeryNumClose : UserControl
     {
-        public delegate void EnterSurgeryNumOpenHandler(object sender, SurgeryOrderDto surgeryOrderDto);
+        public delegate void EnterSurgeryNumOpenHandler(object sender, FetchParam fetchParam);
         public event EnterSurgeryNumOpenHandler EnterSurgeryNumOpenEvent;
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, bool e);
@@ -43,42 +46,31 @@ namespace CFLMedCab.View.Fetch
 
         private Timer endTimer;
 
-        private SurgeryOrderDto surgeryOrderDto;
-        private Hashtable after;
-        //领用商品信息
-        private List<GoodsDto> goodsChageOrderdtls;
-        //当前柜子里面的商品
-        private List<GoodsDto> goodDtos;
-        //手术领用详细单变化信息
-        private List<SurgeryOrderdtlDto> surgeryOrderdtlDtos;
-        private GoodsBll goodsBll = new GoodsBll();
-        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        private FetchParam fetchParam;
+        private HashSet<CommodityEps> after;
+        private BaseData<CommodityCode> bdCommodityCode;
 
-        public SurgeryNumClose(SurgeryOrderDto model, Hashtable hashtable)
+        public SurgeryNumClose(FetchParam param, HashSet<CommodityEps> afterEps)
         {
             InitializeComponent();
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+
+            fetchParam = param;
+
+            operatorName.Content = ApplicationState.GetUserInfo().name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            surgeryOrderDto = model;
-            surgeryNum.Content = model.code;
+            type.Content = param.bdConsumingOrder.body.objects[0].Type;
+            surgeryNum.Content = param.bdConsumingOrder.body.objects[0].name;
 
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            after = hashtable;
-            //盘点当前柜子里的商品
-            goodDtos = goodsBll.GetInvetoryGoodsDto(hashtable);
-            //获取库存变化信息
-            goodsChageOrderdtls = goodsBll.GetCompareGoodsDto(before, hashtable);
-            //组装变化信息的异常情况
-            goodsChageOrderdtls = fetchOrderBll.GetSurgeryGoodsOperateDto(goodsChageOrderdtls, model.code, out int currentOperateNum, out int storageOperateExNum, out int notStorageOperateExNum);
-            //手术领用详细单变化信息
-            surgeryOrderdtlDtos = fetchOrderBll.GetSurgeryOrderdtlOperateDto(new SurgeryOrderApo { GoodsDtos = goodDtos, SurgeryOrderCode = model.code, OperateGoodsDtos = goodsChageOrderdtls }, out int notFetchGoodsNum).Data;
+            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+            after = afterEps;
 
-            listView.DataContext = surgeryOrderdtlDtos.Where(it => it.not_fetch_num > 0);//手术领用详细单变化信息绑定
-            listView1.DataContext = goodsChageOrderdtls;
-            inNum.Content = currentOperateNum;//领用数
-            abnormalInNum.Content = storageOperateExNum;//异常入库
-            abnormalOutNum.Content = notStorageOperateExNum;//异常出库
-            waitNum.Content = notFetchGoodsNum;//待领用数
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
+            listView1.DataContext = bdCommodityCode.body.objects;
+
+            //inNum.Content = currentOperateNum;//领用数
+            //abnormalInNum.Content = storageOperateExNum;//异常入库
+            //abnormalOutNum.Content = notStorageOperateExNum;//异常出库
+            //waitNum.Content = notFetchGoodsNum;//待领用数
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
@@ -94,7 +86,7 @@ namespace CFLMedCab.View.Fetch
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
             endTimer.Close();
-            EnterSurgeryNumOpenEvent(this, surgeryOrderDto);
+            EnterSurgeryNumOpenEvent(this, fetchParam);
         }
 
         /// <summary>
@@ -123,27 +115,27 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            fetchOrderBll.UpdateSurgeryOrderdtl(new SurgeryOrderApo { SurgeryOrderCode = surgeryOrderDto.code, GoodsDtos = goodDtos, OperateGoodsDtos = goodsChageOrderdtls }, surgeryOrderdtlDtos);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            if(bdCommodityCode.code != 0)
+            {
+                ApplicationState.SetGoodsInfo(after);
+                EnterPopCloseEvent(this, bExit);
+            }
+
+            BasePostData<CommodityInventoryChange> bdBasePostData =
+                ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0]);
+
+            if (bdBasePostData.code != 0)
+            {
+                MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+            }
+
+            ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bExit);
         }
 
         private void onConfirmed(object sender, RoutedEventArgs e)
         {
-            GoodsDto goodsDto = (GoodsDto)((CheckBox)sender).Tag;
-            bool bCheck = (bool)((CheckBox)sender).IsChecked;
 
-            foreach (var item in goodsChageOrderdtls)
-            {
-                if(item.code == goodsDto.code)
-                {
-                    item.exception_flag = bCheck ? (int)ExceptionFlag.正常 : (int)ExceptionFlag.异常;
-                    item.exception_flag_description = bCheck ? ExceptionFlag.正常.ToString() : ExceptionFlag.异常.ToString();
-                    item.exception_description = bCheck ? "" : item.exception_description_bak;
-
-                    break;
-                }
-            }
         }
 
     }

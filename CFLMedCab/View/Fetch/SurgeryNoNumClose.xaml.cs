@@ -1,6 +1,9 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Constant;
@@ -38,24 +41,23 @@ namespace CFLMedCab.View.Fetch
 
         private Timer endTimer;
 
-        private Hashtable after;
-        private List<GoodsDto> goodsChageOrderdtls;
-        private GoodsBll goodsBll = new GoodsBll();
-        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
-        public SurgeryNoNumClose(Hashtable hashtable)
+        private HashSet<CommodityEps> after;
+        private BaseData<CommodityCode> bdCommodityCode;
+
+        public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, ConsumingOrderType type)
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetUserInfo().name;
 
-            Hashtable before = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-            after = hashtable;
-            List<GoodsDto> goodDtos = goodsBll.GetCompareGoodsDto(before, hashtable);
-            goodsChageOrderdtls = fetchOrderBll.GetSurgeryFetchOrderdtlOperateDto(goodDtos, out int operateGoodsNum, out int storageGoodsExNum, out int outStorageGoodsExNum);
+            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+            after = afterEps;
 
-            listView.DataContext = goodsChageOrderdtls;
-            inNum.Content = operateGoodsNum;
-            abnormalInNum.Content = outStorageGoodsExNum;
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
+            listView.DataContext = bdCommodityCode.body.objects;
+            lbTypeContent.Content = type;
+            inNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+            abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
@@ -100,7 +102,14 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            fetchOrderBll.InsertFetchAndGoodsChangeInfo(goodsChageOrderdtls, RequisitionType.无单手术领用, null);
+            BasePostData<CommodityInventoryChange> bdBasePostData =
+                ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode);
+
+            if (bdBasePostData.code != 0)
+            {
+                MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+            }
+
             ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
             EnterPopCloseEvent(this, bExit);
         }

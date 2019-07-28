@@ -84,7 +84,7 @@ namespace CFLMedCab
 
 #if TESTENV
         private System.Timers.Timer testTimer;
-        private SurgeryOrderDto testSOPara = new SurgeryOrderDto();
+        private FetchParam testFetchPara = new FetchParam();
         private ShelfTask testROPara = new ShelfTask();
         private PickTask testPOPara = new PickTask();
 #endif
@@ -585,24 +585,24 @@ namespace CFLMedCab
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
             //关闭盘点中弹窗
             ClosePop();
             
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose(ht);
+                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose(hs, ConsumingOrderType.手术领用);
                 surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
                 FullFrame.Navigate(surgeryNoNumClose);
             }));
         }
-#endregion
+        #endregion
 
-#region 有手术单领用
+        #region 有手术单领用和医嘱处方领用
         /// <summary>
-        /// 手术领用
+        /// 手术领用医嘱处方领用
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -635,10 +635,9 @@ namespace CFLMedCab
         /// <param name="fetchOrder"></param>
         private void onEnterSurgeryDetail(object sender, FetchParam fetchParam)
         {
-            //SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(model);
-            //surgeryOrderDetail.EnterSurgeryNumOpenEvent += new SurgeryOrderDetail.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
-            //surgeryOrderDetail.EnterSurgeryConsumablesDetailEvent += new SurgeryOrderDetail.EnterSurgeryConsumablesDetailHandler(EnterSurgeryConsumablesDetailEvent);
-            //ContentFrame.Navigate(surgeryOrderDetail);
+            SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(fetchParam);
+            surgeryOrderDetail.EnterSurgeryNumOpenEvent += new SurgeryOrderDetail.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
+            ContentFrame.Navigate(surgeryOrderDetail);
         }
 
         /// <summary>
@@ -646,7 +645,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="fetchOrder"></param>
-        public void EnterSurgeryConsumablesDetailEvent(object sender, SurgeryOrderDto model)
+        public void EnterSurgeryConsumablesDetailEvent(object sender, BaseData<ConsumingOrder> bdOrder)
         {
             //ConsumablesDetails consumablesDetails = new ConsumablesDetails(model);
             //consumablesDetails.EnterSurgeryDetailEvent += new ConsumablesDetails.EnterSurgeryDetailHandler(onEnterSurgeryDetail);
@@ -658,11 +657,11 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void EnterSurgeryNumOpenEvent(object sender, SurgeryOrderDto model)
+        private void EnterSurgeryNumOpenEvent(object sender, FetchParam fetchParam)
         {
             NaviView.Visibility = Visibility.Hidden;
 
-            SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(model);
+            SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(fetchParam);
             FullFrame.Navigate(surgeryNumOpen);
 
             MaskView.Visibility = Visibility.Visible;
@@ -676,11 +675,11 @@ namespace CFLMedCab
             testTimer.AutoReset = false;
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onEnterSurgeryNumLockerTestEvent);
-            testSOPara = model;
+            testFetchPara = fetchParam;
 #else
 
 #if DUALCAB
-            List<string> listCom = fetchOrderBll.GetSurgeryOrderdtlPosition(model.code);
+            List<string> listCom = ComName.GetAllLockerCom();
             if (listCom.Count == 0)
                 return;
 #else
@@ -689,7 +688,7 @@ namespace CFLMedCab
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-            delegateGetMsg.userData = model;
+            delegateGetMsg.userData = fetchParam;
 
 #if DUALCAB
             cabClosedNum = 1;
@@ -698,7 +697,7 @@ namespace CFLMedCab
             {
                 LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
                 delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-                delegateGetMsg2.userData = model;
+                delegateGetMsg2.userData = fetchParam;
                 cabClosedNum = 2;
             }
 #endif
@@ -715,12 +714,12 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNumLockerTestEvent(object sender, EventArgs e)
         {
-            //Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
-            Hashtable ht = new Hashtable();
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(testSOPara, ht);
+                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(testFetchPara, hs);
                 surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
 
@@ -757,17 +756,17 @@ namespace CFLMedCab
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+            HashSet<CommodityEps> ht = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
             //关闭盘点中弹窗
             ClosePop();
 
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            SurgeryOrderDto surgeryOrderDto = (SurgeryOrderDto)delegateGetMsg.userData;
+            FetchParam fetchParam = (FetchParam)delegateGetMsg.userData;
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(surgeryOrderDto,ht);
+                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(fetchParam, ht);
                 surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
                 FullFrame.Navigate(surgeryNumClose);
@@ -1074,7 +1073,7 @@ namespace CFLMedCab
             testPOPara = e;
 #else
 #if DUALCAB
-            List<string> listCom = pickingBll.GetPickingOrderPositons(new PickingSubOrderdtlApo { picking_order_code = e.code });
+            List<string> listCom = ComName.GetAllLockerCom();
             if (listCom.Count == 0)
                 return;
 #else
@@ -1503,7 +1502,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 弹出关门提示框
+        /// 弹出获取数据提示框
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1519,7 +1518,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 弹出关门提示框
+        /// 弹出获取数据提示框
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
