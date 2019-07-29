@@ -1,15 +1,9 @@
 ﻿using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
-using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
 using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
-using CFLMedCab.Infrastructure.QuartzHelper.trigger;
-using CFLMedCab.Infrastructure.ToolHelper;
-using Newtonsoft.Json;
 using Quartz;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CFLMedCab.Infrastructure.QuartzHelper.job
@@ -32,23 +26,20 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 			{
 				var inventoryPlan = baseDataInventoryPlan.body.objects.First();
 				string cronStr = QuartzUtils.GetQuartzCron(inventoryPlan);
-				if (!CustomizeScheduler.GetInstance().JobIsExist(cronStr, GroupName.ExecuteInventoryPlan.ToString()))
-				{
-					LogUtils.Debug($"已执行自动盘点的计划任务：{JsonConvert.SerializeObject(baseDataInventoryPlan)}");
-					CustomizeScheduler.GetInstance().SchedulerStart<ExecuteInventoryPlanJoB>(CustomizeTrigger.GetExecuteInventoryPlanTrigger(cronStr), GroupName.ExecuteInventoryPlan, cronStr);
-				}
+				//cronStr = "0 43 11 * * ?";
+				CustomizeScheduler.GetInstance().CreateUpdateTriggerAsync(cronStr);
 
-				System.Threading.Thread.Sleep(7000);
+				//System.Threading.Thread.Sleep(10000);
 
-				if (!CustomizeScheduler.GetInstance().JobIsExist(cronStr, GroupName.ExecuteInventoryPlan.ToString()))
-				{
-					LogUtils.Debug($"已执行自动盘点的计划任务：{JsonConvert.SerializeObject(baseDataInventoryPlan)}");
-					CustomizeScheduler.GetInstance().SchedulerStart<ExecuteInventoryPlanJoB>(CustomizeTrigger.GetExecuteInventoryPlanTrigger(cronStr), GroupName.ExecuteInventoryPlan, cronStr);
-				}
+				//cronStr = "0 44 11 * * ?";
+				//CustomizeScheduler.GetInstance().CreateUpdateTriggerAsync(cronStr);
+
 
 			}
 
 			return null;
 		}
+
 	}
+
 }

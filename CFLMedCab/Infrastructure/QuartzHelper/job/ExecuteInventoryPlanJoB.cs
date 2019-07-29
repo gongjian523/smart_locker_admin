@@ -36,7 +36,6 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 				}
 			}
 
-	
 			return null;
 			
 		}

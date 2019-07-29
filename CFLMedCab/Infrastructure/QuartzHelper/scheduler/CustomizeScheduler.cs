@@ -1,4 +1,6 @@
-﻿using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
+﻿using CFLMedCab.Infrastructure.QuartzHelper.job;
+using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
+using CFLMedCab.Infrastructure.QuartzHelper.trigger;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Impl.Matchers;
@@ -95,7 +97,7 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.scheduler
 		/// <param name="trigger"></param>
 		/// <param name="groupName"></param>
 		/// <param name="jobDetailName"></param>
-		public void SchedulerStart<T>(ITrigger trigger, GroupName groupName, string jobDetailName) where T : IJob
+		public async Task SchedulerStartAsync<T>(ITrigger trigger, GroupName groupName, string jobDetailName) where T : IJob
 		{
 			if (Scheduler == null)
 			{
@@ -104,44 +106,36 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.scheduler
 
 			IJobDetail jobDetail = JobBuilder.Create<T>().WithIdentity(jobDetailName, groupName.ToString()).Build();
 			//将任务与触发器添加到调度器中
-			Scheduler.ScheduleJob(jobDetail, trigger);
+			await Scheduler.ScheduleJob(jobDetail, trigger);
 			//开始执行
-			Scheduler.Start();
+			await Scheduler.Start();
 
 		}
 
+
 		/// <summary>
-		/// 判断任务名是否正在运行
+		/// 根据cron创建或更新任务
 		/// </summary>
-		/// <param name="jobName"></param>
+		/// <param name="cron"></param>
 		/// <returns></returns>
-		public bool JobIsExist(string jobName, string groupName) 
+		public async Task CreateUpdateTriggerAsync(string cron)
 		{
 
-			bool ret = false;
-
-			if (Scheduler != null)
+			var triggerName = $"{GroupName.ExecuteInventoryPlan.ToString()}Trigger";
+			var triggerGroupName = GroupName.ExecuteInventoryPlan.ToString();
+			var trigger = await Scheduler.GetTrigger(new TriggerKey(triggerName, triggerGroupName));
+			if (trigger == null)
 			{
-				//Scheduler.GetJobKeys(GroupMatcher<JobKey>.GroupEquals(groupName));
+				await SchedulerStartAsync<ExecuteInventoryPlanJoB>(CustomizeTrigger.GetExecuteInventoryPlanTrigger(cron), GroupName.ExecuteInventoryPlan, cron);
 
-				var jobExecutionContexts = Scheduler.GetCurrentlyExecutingJobs();
-				if (jobExecutionContexts.Result != null && jobExecutionContexts.Result.Count > 0)
-				{
-				
-					var jobExecutionContext = jobExecutionContexts.Result.Where(it => it.Trigger.Key.Name == groupName).FirstOrDefault();
-
-					if (jobExecutionContext != null)
-					{
-						ret = jobName.Equals(jobExecutionContext.JobDetail.Key.Name);
-					}
-
-					
-				}
-				
 			}
-
-			return ret;
-
+			else
+			{
+				var triggerNew = TriggerBuilder.Create().WithIdentity(triggerName, triggerGroupName).ForJob(trigger.JobKey).WithCronSchedule(cron).Build();
+			    await Scheduler.RescheduleJob(trigger.Key, triggerNew);
+			}
+			
+			
 		}
 
 		/// <summary>
