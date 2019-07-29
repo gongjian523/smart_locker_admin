@@ -244,21 +244,6 @@ namespace CFLMedCab.BLL
 
 
         /// <summary>
-        /// 获取上架单中需要抗柜门的串口
-        /// </summary>
-        /// <param name="pageDataApo">当前操作数据dto</param>
-        /// <returns></returns>
-        public List<string> GetReplenishOrderPositons(ReplenishSubOrderdtlApo pageDataApo)
-        {
-            HashSet<string> listCom = new HashSet<string>();
-            var list = replenishDal.GetReplenishOrderdtlDto(pageDataApo, out int totalCount);
-
-            list.ForEach(item => listCom.Add(ComName.GetLockerCom(item.position)));
-
-            return listCom.ToList();
-        }
-
-        /// <summary>
         /// 模拟补货单 
         /// </summary>
         /// <param name="rfid">单品码的RFID</param>

@@ -679,11 +679,11 @@ namespace CFLMedCab
 #else
 
 #if DUALCAB
-            List<string> listCom = ComName.GetAllLockerCom();
+            List<string> listCom = ApplicationState.GetAllLockerCom();
             if (listCom.Count == 0)
                 return;
 #else
-           List<string> listCom = ComName.GetAllLockerCom();
+            List<string> listCom = ApplicationState.GetAllLockerCom();
 #endif
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
@@ -915,9 +915,9 @@ namespace CFLMedCab
 
 #if DUALCAB
             //TODO
-            List<string> listCom = ComName.GetAllLockerCom();
+            List<string> listCom = ApplicationState.GetAllLockerCom();
 #else
-            List<string> listCom = ComName.GetAllLockerCom();
+            List<string> listCom = ApplicationState.GetAllLockerCom();
 #endif
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
@@ -1073,11 +1073,11 @@ namespace CFLMedCab
             testPOPara = e;
 #else
 #if DUALCAB
-            List<string> listCom = ComName.GetAllLockerCom();
+            List<string> listCom = ApplicationState.GetAllLockerCom();
             if (listCom.Count == 0)
                 return;
 #else
-            List<string> listCom = ComName.GetAllLockerCom();
+            List<string> listCom = ApplicationState.GetAllLockerCom();
 #endif
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
@@ -1299,7 +1299,7 @@ namespace CFLMedCab
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onInventoryDoorCloseTest);
 #else
-            string lockerCom = ComName.GetLockerComByCabName((string)e);
+            string lockerCom = ApplicationState.GetLockerComByCabName((string)e);
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onInventoryDoorClose);
