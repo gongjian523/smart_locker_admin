@@ -1,4 +1,7 @@
 ﻿using CFLMedCab.Controls;
+using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
@@ -42,8 +45,8 @@ namespace CFLMedCab.View
 
             //tbMCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.MCabName) ;
             //tbSCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.SCabName);
-            tbMCabName.Text = ApplicationState.GetHouseName();
-            tbSCabName.Text = ApplicationState.GetEquipName();
+            tbMCabName.Text = ApplicationState.GetMCabName();
+            tbSCabName.Text = ApplicationState.GetSCabName();
 
             //MLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
             //SLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
@@ -80,7 +83,7 @@ namespace CFLMedCab.View
             //ApplicationState.SetValue((int)ApplicationKey.MCabName, tbMCabName.Text);
             //ApplicationState.SetValue((int)ApplicationKey.SCabName, tbSCabName.Text);
             ApplicationState.SetMCabName(tbMCabName.Text.ToString());
-            ApplicationState.SetSCabName(tbMCabName.Text.ToString());
+            ApplicationState.SetSCabName(tbSCabName.Text.ToString());
 
             //ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, MLockerCB.SelectedItem);
             //ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, SLockerCB.SelectedItem);
@@ -94,6 +97,55 @@ namespace CFLMedCab.View
 
             //ApplicationState.SetValue((int)ApplicationKey.COM_MVein, MVeinCB.SelectedItem);
             ApplicationState.SetMVeinCOM(MVeinCB.SelectedItem.ToString());
+
+            BaseData<string> bdEquip =  ConsumingBll.GetInstance().GetIdByName<Equipment>(tbEquipName.Text.ToString());
+            BaseData<string> bdHouse = ConsumingBll.GetInstance().GetIdByName<StoreHouse>(tbHouseName.Text.ToString());
+            BaseData<string> bdMCab = ConsumingBll.GetInstance().GetIdByName<Equipment>(tbMCabName.Text.ToString());
+            BaseData<string> bdSCab = ConsumingBll.GetInstance().GetIdByName<Equipment>(tbSCabName.Text.ToString());
+
+            string err = "无法获取";
+
+            if(bdEquip.code == 0)
+            {
+                ApplicationState.SetEquipId(bdEquip.body.objects[0]);
+            }
+            else
+            {
+                err += "设备ID、";
+            }
+
+            if (bdHouse.code == 0)
+            {
+                ApplicationState.SetHouseId(bdHouse.body.objects[0]);
+            }
+            else
+            {
+                err += "库房ID、";
+            }
+
+            if (bdMCab.code == 0)
+            {
+                ApplicationState.SetMCabId(bdMCab.body.objects[0]);
+            }
+            else
+            {
+                err += "主货架ID、";
+            }
+
+            if (bdSCab.code == 0)
+            {
+                ApplicationState.SetSCabId(bdSCab.body.objects[0]);
+            }
+            else
+            {
+                err += "副货架ID、";
+            }
+
+            if(err != "无法获取")
+            {
+                MessageBox.Show(err.Remove(err.Length - 1) + "!", "温馨提示", MessageBoxButton.OK);
+            }
+            return;
         }
 
         private void onItemChanged(object sender, RoutedEventArgs e)

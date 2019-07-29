@@ -960,7 +960,8 @@ namespace CFLMedCab
                     }
                 });
 
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out isGetSuccess);
+            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out isGetSuccess);
+            HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
             ShelfTask shelfTask = testROPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -1105,7 +1106,8 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnGoodsCloseTestEvent(object sender, EventArgs e)
         {
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out bool isGetSuccess);
+            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
             PickTask pickTask = testPOPara;
 
             App.Current.Dispatcher.Invoke((Action)(() =>

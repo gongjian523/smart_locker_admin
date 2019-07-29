@@ -69,13 +69,40 @@ namespace CFLMedCab.Http.Bll
 			}
 		}
 
-		/// <summary>
-		/// 插入变化后的商品信息
-		/// </summary>
-		/// <param name="baseDataCommodityCode">所有数据</param>
-		/// <param name="sourceBill">业务类型</param>
-		/// <returns></returns>
-		public bool InsertLocalCommodityCodeInfo(BaseData<CommodityCode> baseDataCommodityCode, string sourceBill)
+        /// <summary>
+        /// 通用业务，通过name查询id,如果出错，返回出错信息
+        /// </summary>
+        public BaseData<string> GetIdByName<K>(string name) where K : BaseModel
+        {
+            BaseData<string> baseDataRet = new BaseData<string>();
+
+            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+            {
+                @in =
+                {
+                field = "name",
+                in_list =  { HttpUtility.UrlEncode(name) }
+                }
+            });
+
+            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+            baseDataRet.code = baseData.code;
+            baseDataRet.message = baseData.message;
+
+            if (isSuccess)
+            {
+                baseDataRet.body.objects[0] = baseData.body.objects[0].name;
+            }
+            return baseDataRet;
+        }
+
+        /// <summary>
+        /// 插入变化后的商品信息
+        /// </summary>
+        /// <param name="baseDataCommodityCode">所有数据</param>
+        /// <param name="sourceBill">业务类型</param>
+        /// <returns></returns>
+        public bool InsertLocalCommodityCodeInfo(BaseData<CommodityCode> baseDataCommodityCode, string sourceBill)
 		{
 			var result = false;
 
