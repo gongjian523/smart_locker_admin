@@ -141,7 +141,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			if (isGetSuccess)
 			{
-	
 				DelegateGetMsg delegateGetMsg = new DelegateGetMsg(com, clientConn);
 				// 订阅标签上报事件
 				clientConn.DataReceived += new SerialDataReceivedEventHandler(delegateGetMsg.OnDataReceivedLockNonblocking);
@@ -152,7 +151,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				return null;
 			}
-
 		}
 
 
@@ -164,9 +162,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			isGetSuccess = true;
 
-			string com2 = "COM2";
+            //string com2 = "COM2";
+            string com2 = ApplicationState.GetMLockerCOM();
 #if DUALCAB
-            string com5 = "COM5";
+            //string com5 = "COM5";
+            string com5 = ApplicationState.GetSLockerCOM();
 #endif
 
             Hashtable currentLockerDataHt = new Hashtable();

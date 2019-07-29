@@ -27,9 +27,7 @@ namespace CFLMedCab.Infrastructure
         COM_MVein,
         AccessToken,
         RefreshToken,
-        InvPlan,
          };
-
 
     public static class ApplicationState
     {
@@ -51,6 +49,68 @@ namespace CFLMedCab.Infrastructure
             return (T)_values[key];
         }
 
+        #region the serial name of the lockers
+        public static void SetMLockerCOM(string com)
+        {
+            SetValue((int)ApplicationKey.COM_MLocker, com);
+            return;
+        }
+
+        public static string GetMLockerCOM()
+        {
+            return GetValue<string>((int)ApplicationKey.COM_MLocker);
+        }
+
+        public static void SetSLockerCOM(string com)
+        {
+            SetValue((int)ApplicationKey.COM_SLocker, com);
+            return;
+        }
+
+        public static string GetSLockerCOM()
+        {
+            return GetValue<string>((int)ApplicationKey.COM_SLocker);
+        }
+        #endregion
+
+        #region the serial name of the RFid
+        public static void SetMRfidCOM(string com)
+        {
+            SetValue((int)ApplicationKey.COM_MRFid, com);
+            return;
+        }
+
+        public static string GetMRfidCOM()
+        {
+            return GetValue<string>((int)ApplicationKey.COM_MRFid);
+        }
+
+        public static void SetSRfidCOM(string com)
+        {
+            SetValue((int)ApplicationKey.COM_SRFid, com);
+            return;
+        }
+
+        public static string GetSRfidCOM()
+        {
+            return GetValue<string>((int)ApplicationKey.COM_SRFid);
+        }
+        #endregion
+
+        #region the serial name of the Vein
+        public static void SetMVeinCOM(string com)
+        {
+            SetValue((int)ApplicationKey.COM_MVein, com);
+            return;
+        }
+
+        public static string GetMVeinCOM()
+        {
+            return GetValue<string>((int)ApplicationKey.COM_MVein);
+        }
+        #endregion
+
+        #region Token
         public static void SetAccessToken(string accessToken)
         {
             SetValue((int)ApplicationKey.AccessToken, accessToken);
@@ -73,8 +133,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.RefreshToken);
         }
+        #endregion
 
-
+        #region user info from mian system
         public static void SetUserInfo(User user)
         {
             SetValue((int)ApplicationKey.User, user);
@@ -85,8 +146,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<User>((int)ApplicationKey.User);
         }
+        #endregion
 
-
+        #region user info from mian system
         public static void SetGoodsInfo(HashSet<CommodityEps> hs)
         {
             SetValue((int)ApplicationKey.Goods, hs);
@@ -97,18 +159,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
         }
+        #endregion
 
-        public static void SetInvPlan(InventoryPlan inventoryPlan)
-        {
-            SetValue((int)ApplicationKey.InvPlan, inventoryPlan);
-            return;
-        }
-
-        public static InventoryPlan GetInvPlan()
-        {
-            return GetValue<InventoryPlan>((int)ApplicationKey.InvPlan);
-        }
-
+        #region equipment
         public static void SetEquipId(string  equipId)
         {
             SetValue((int)ApplicationKey.EquipId, equipId);
@@ -130,7 +183,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.EquipName);
         }
+        #endregion
 
+        #region house
         public static void SetHouseId(string houseId)
         {
             SetValue((int)ApplicationKey.EquipId, houseId);
@@ -152,6 +207,31 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.HouseName);
         }
+        #endregion
+
+        #region house
+        public static void SetHouseId(string houseId)
+        {
+            SetValue((int)ApplicationKey.EquipId, houseId);
+            return;
+        }
+
+        public static string GetHouseId()
+        {
+            return GetValue<string>((int)ApplicationKey.HouseId);
+        }
+
+        public static void SetHouseName(string houseName)
+        {
+            SetValue((int)ApplicationKey.HouseName, houseName);
+            return;
+        }
+
+        public static string GetHouseName()
+        {
+            return GetValue<string>((int)ApplicationKey.HouseName);
+        }
+        #endregion
 
     }
 }

@@ -41,14 +41,18 @@ namespace CFLMedCab.View
             tbMCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.CodeMCab) ;
             tbSCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.CodeSCab);
 
-            MLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
-            SLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
+            //MLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
+            //SLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
+            MLockerCB.SelectedItem = ApplicationState.GetMLockerCOM();
+            SLockerCB.SelectedItem = ApplicationState.GetSLockerCOM();
 
-            MrfidCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid);
-            SrfidCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid);
+            //MrfidCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid);
+            //SrfidCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid);
+            MrfidCB.SelectedItem = ApplicationState.GetMRfidCOM();
+            SrfidCB.SelectedItem = ApplicationState.GetSRfidCOM();
 
-            MVeinCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MVein);
-
+            //MVeinCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MVein);
+            MVeinCB.SelectedItem = ApplicationState.GetMVeinCOM();
 #if DUALCAB
 #else
             lbSCabName.Visibility = Visibility.Hidden;
@@ -64,19 +68,24 @@ namespace CFLMedCab.View
 
         private void onSave(object sender, RoutedEventArgs e)
         {
-            ApplicationState.SetValue((int)ApplicationKey.EquipId, tbEquipName.Text);
-            ApplicationState.SetValue((int)ApplicationKey.HouseId, tbHouseName.Text);
+            ApplicationState.SetValue((int)ApplicationKey.EquipName, tbEquipName.Text);
+            ApplicationState.SetValue((int)ApplicationKey.HouseName, tbHouseName.Text);
 
             ApplicationState.SetValue((int)ApplicationKey.CodeMCab, tbMCabName.Text);
             ApplicationState.SetValue((int)ApplicationKey.CodeSCab, tbSCabName.Text);
 
-            ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, MLockerCB.SelectedItem);
-            ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, SLockerCB.SelectedItem);
+            //ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, MLockerCB.SelectedItem);
+            //ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, SLockerCB.SelectedItem);
+            ApplicationState.SetMLockerCOM(MLockerCB.SelectedItem.ToString());
+            ApplicationState.SetSLockerCOM(SLockerCB.SelectedItem.ToString());
 
-            ApplicationState.SetValue((int)ApplicationKey.COM_MRFid, MrfidCB.SelectedItem);
-            ApplicationState.SetValue((int)ApplicationKey.COM_SRFid, SrfidCB.SelectedItem);
+            //ApplicationState.SetValue((int)ApplicationKey.COM_MRFid, MrfidCB.SelectedItem);
+            //ApplicationState.SetValue((int)ApplicationKey.COM_SRFid, SrfidCB.SelectedItem);
+            ApplicationState.SetMRfidCOM(MrfidCB.SelectedItem.ToString());
+            ApplicationState.SetSRfidCOM(SrfidCB.SelectedItem.ToString());
 
-            ApplicationState.SetValue((int)ApplicationKey.COM_MVein, MVeinCB.SelectedItem);
+            //ApplicationState.SetValue((int)ApplicationKey.COM_MVein, MVeinCB.SelectedItem);
+            ApplicationState.SetMVeinCOM(MVeinCB.SelectedItem.ToString());
         }
 
         private void onItemChanged(object sender, RoutedEventArgs e)

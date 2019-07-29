@@ -253,12 +253,14 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			isGetSuccess = true;
 
-			string com1 = "COM1";
+			//string com1 = "COM1";
+            string com1 = ApplicationState.GetMRfidCOM();
 #if DUALCAB
-            string com4 = "COM4";
+            //string com4 = "COM4";
+            string com4 = ApplicationState.GetSRfidCOM();
 #endif
 
-			HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
+            HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
 
 			//TODO:需要补充id
 			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
@@ -334,12 +336,14 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		{
 			isGetSuccess = true;
 
-			string com1 = "COM1";
+            //string com1 = "COM1";
+            string com1 = ApplicationState.GetMRfidCOM();
 #if DUALCAB
-            string com4 = "COM4";
+            //string com4 = "COM4";
+            string com4 = ApplicationState.GetSRfidCOM();
 #endif
 
-			Hashtable currentEpcDataHt = new Hashtable();
+            Hashtable currentEpcDataHt = new Hashtable();
 
 			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
 			if (isCom1Connect)

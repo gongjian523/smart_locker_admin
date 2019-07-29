@@ -145,7 +145,9 @@ namespace CFLMedCab
 #if TESTENV
 #else
 #if VEINSERIAL
-            vein = new VeinHelper("COM9", 9600);
+            string veinCom = ApplicationState.GetMVeinCOM();
+            //vein = new VeinHelper("COM9", 9600);
+            vein = new VeinHelper(veinCom, 9600);
             vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
             Console.WriteLine("onStart");
             vein.ChekVein();
