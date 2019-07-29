@@ -21,7 +21,7 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 		{
 			Console.WriteLine("ExecuteInventoryPlanJoB进入");
 
-			var epcs = RfidHelper.GetEpcData(out bool isGetSucess);
+			var epcs = RfidHelper.GetEpcDataJson(out bool isGetSucess);
 
 			if (isGetSucess)
 			{
