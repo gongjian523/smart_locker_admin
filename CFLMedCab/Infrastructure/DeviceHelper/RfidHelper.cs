@@ -271,7 +271,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				foreach (string epsJson in com1HashSet)
 				{
 					CommodityEps commodityEps = JsonConvert.DeserializeObject<CommodityEps>(epsJson);
-					commodityEps.GoodsLocationName = ComName.GetCabNameByRFidCom(com1);
+					commodityEps.GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1);
 					//commodityEps.GoodsLocationId = 
 					commodityEps.EquipmentId = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
 					//commodityEps.EquipmentName 

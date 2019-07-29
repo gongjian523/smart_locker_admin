@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG;TESTENV</DefineConstants>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -260,7 +260,6 @@
     <Compile Include="Http\Model\TaskOrder.cs" />
     <Compile Include="Infrastructure\ApplicationState.cs" />
     <Compile Include="Infrastructure\BootUpHelper\BootUpHelper.cs" />
-    <Compile Include="Infrastructure\ComName.cs" />
     <Compile Include="Infrastructure\DbHelper\SqlSugarHelper.cs" />
     <Compile Include="DAL\FetchOrderDal.cs" />
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
