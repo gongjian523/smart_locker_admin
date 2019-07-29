@@ -61,9 +61,9 @@ namespace CFLMedCab.Infrastructure
         public static string GetCabNameByRFidCom(string com)
         {
             if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid))
-                return ApplicationState.GetValue<string>((int)ApplicationKey.CodeMCab);
+                return ApplicationState.GetValue<string>((int)ApplicationKey.MCabName);
             else if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid))
-                return ApplicationState.GetValue<string>((int)ApplicationKey.CodeSCab);
+                return ApplicationState.GetValue<string>((int)ApplicationKey.SCabName);
             else
                 return "";
         }
@@ -80,9 +80,9 @@ namespace CFLMedCab.Infrastructure
 
         public static string GetLockerComByCabName(string cabName)
         {
-            if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.CodeMCab))
+            if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.MCabName))
                 return ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
-            else if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.CodeSCab))
+            else if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.SCabName))
                 return ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
             else
                 return "";

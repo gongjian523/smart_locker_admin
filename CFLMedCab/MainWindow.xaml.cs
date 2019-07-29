@@ -480,8 +480,6 @@ namespace CFLMedCab
 
             cabClosedNum = 0;
 #endif
-
-
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
         }
 

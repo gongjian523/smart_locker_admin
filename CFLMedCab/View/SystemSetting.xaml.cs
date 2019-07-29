@@ -35,11 +35,15 @@ namespace CFLMedCab.View
             SerialComList.Add("COM8");
             SerialComList.Add("COM9");
 
-            tbHouseName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.HouseId);
-            tbEquipName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
+            //tbHouseName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.HouseId);
+            //tbEquipName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.EquipId);
+            tbHouseName.Text = ApplicationState.GetHouseName();
+            tbEquipName.Text = ApplicationState.GetEquipName();
 
-            tbMCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.CodeMCab) ;
-            tbSCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.CodeSCab);
+            //tbMCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.MCabName) ;
+            //tbSCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.SCabName);
+            tbMCabName.Text = ApplicationState.GetHouseName();
+            tbSCabName.Text = ApplicationState.GetEquipName();
 
             //MLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
             //SLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
@@ -68,11 +72,15 @@ namespace CFLMedCab.View
 
         private void onSave(object sender, RoutedEventArgs e)
         {
-            ApplicationState.SetValue((int)ApplicationKey.EquipName, tbEquipName.Text);
-            ApplicationState.SetValue((int)ApplicationKey.HouseName, tbHouseName.Text);
+            //ApplicationState.SetValue((int)ApplicationKey.EquipName, tbEquipName.Text);
+            //ApplicationState.SetValue((int)ApplicationKey.HouseName, tbHouseName.Text);
+            ApplicationState.SetEquipName(tbEquipName.Text.ToString());
+            ApplicationState.SetHouseName(tbHouseName.Text.ToString());
 
-            ApplicationState.SetValue((int)ApplicationKey.CodeMCab, tbMCabName.Text);
-            ApplicationState.SetValue((int)ApplicationKey.CodeSCab, tbSCabName.Text);
+            //ApplicationState.SetValue((int)ApplicationKey.MCabName, tbMCabName.Text);
+            //ApplicationState.SetValue((int)ApplicationKey.SCabName, tbSCabName.Text);
+            ApplicationState.SetMCabName(tbMCabName.Text.ToString());
+            ApplicationState.SetSCabName(tbMCabName.Text.ToString());
 
             //ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, MLockerCB.SelectedItem);
             //ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, SLockerCB.SelectedItem);

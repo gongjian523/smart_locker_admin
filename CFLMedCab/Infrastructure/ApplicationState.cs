@@ -16,10 +16,10 @@ namespace CFLMedCab.Infrastructure
         HouseName, //库房名字
         EquipId,   //设备id
         EquipName, //设备名字
-        CodeMCab,  //主柜编码(名字)
-        CodeSCab,  //副柜编码(名字)
-        IdMCab,    //主柜id
-        IdSCab,    //副柜id
+        MCabName,  //主柜编码(名字)
+        MCabId,    //主柜id
+        SCabName,  //副柜编码(名字)
+        SCabId,    //副柜id
         COM_MLocker,
         COM_SLocker,
         COM_MRFid,
@@ -27,7 +27,7 @@ namespace CFLMedCab.Infrastructure
         COM_MVein,
         AccessToken,
         RefreshToken,
-         };
+    };
 
     public static class ApplicationState
     {
@@ -209,27 +209,49 @@ namespace CFLMedCab.Infrastructure
         }
         #endregion
 
-        #region house
-        public static void SetHouseId(string houseId)
+        #region cab
+        public static void SetMCabId(string cabId)
         {
-            SetValue((int)ApplicationKey.EquipId, houseId);
+            SetValue((int)ApplicationKey.MCabId, cabId);
             return;
         }
 
-        public static string GetHouseId()
+        public static string GetMCabId()
         {
-            return GetValue<string>((int)ApplicationKey.HouseId);
+            return GetValue<string>((int)ApplicationKey.MCabId);
         }
 
-        public static void SetHouseName(string houseName)
+        public static void SetMCabName(string cabName)
         {
-            SetValue((int)ApplicationKey.HouseName, houseName);
+            SetValue((int)ApplicationKey.MCabName, cabName);
             return;
         }
 
-        public static string GetHouseName()
+        public static string GetMCabName()
         {
-            return GetValue<string>((int)ApplicationKey.HouseName);
+            return GetValue<string>((int)ApplicationKey.MCabName);
+        }
+
+        public static void SetSCabId(string cabId)
+        {
+            SetValue((int)ApplicationKey.SCabId, cabId);
+            return;
+        }
+
+        public static string GetSCabId()
+        {
+            return GetValue<string>((int)ApplicationKey.SCabId);
+        }
+
+        public static void SetSCabName(string cabName)
+        {
+            SetValue((int)ApplicationKey.SCabName, cabName);
+            return;
+        }
+
+        public static string GetSCabName()
+        {
+            return GetValue<string>((int)ApplicationKey.SCabName);
         }
         #endregion
 

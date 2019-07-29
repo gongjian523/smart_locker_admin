@@ -46,16 +46,21 @@ namespace CFLMedCab
             };
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
 
-            ApplicationState.SetValue((int)ApplicationKey.CodeMCab, "Cab1");
-            ApplicationState.SetValue((int)ApplicationKey.CodeSCab, "Cab2");
+            //ApplicationState.SetValue((int)ApplicationKey.MCabName, "Cab1");
+            //ApplicationState.SetValue((int)ApplicationKey.SCabName, "Cab2");
 
-            ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, "COM2");
-            ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, "COM5");
+            //ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, "COM2");
+            //ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, "COM5");
+            ApplicationState.SetMLockerCOM("COM2");
+            ApplicationState.SetSLockerCOM("COM5");
 
-            ApplicationState.SetValue((int)ApplicationKey.COM_MRFid, "COM1");
-            ApplicationState.SetValue((int)ApplicationKey.COM_SRFid, "COM4");
+            //ApplicationState.SetValue((int)ApplicationKey.COM_MRFid, "COM1");
+            //ApplicationState.SetValue((int)ApplicationKey.COM_SRFid, "COM4");
+            ApplicationState.SetMRfidCOM("COM1");
+            ApplicationState.SetSRfidCOM("COM4");
 
-            ApplicationState.SetValue((int)ApplicationKey.COM_MVein, "COM9");
+            //ApplicationState.SetValue((int)ApplicationKey.COM_MVein, "COM9");
+            ApplicationState.SetMVeinCOM("COM9");
 
             // 注册Application_Error
             DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
