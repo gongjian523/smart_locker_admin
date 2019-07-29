@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.Http.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,23 +51,40 @@ namespace CFLMedCab.Infrastructure
         }
 
         #region the serial name of the lockers
+
+        /// <summary>
+        /// 设置主柜门锁的串口
+        /// </summary>
+        /// <param name="com"></param>
         public static void SetMLockerCOM(string com)
         {
             SetValue((int)ApplicationKey.COM_MLocker, com);
             return;
         }
 
+        /// <summary>
+        /// 获取主柜门锁的串口
+        /// </summary>
+        /// <param name="com"></param>
         public static string GetMLockerCOM()
         {
             return GetValue<string>((int)ApplicationKey.COM_MLocker);
         }
 
+        /// <summary>
+        /// 设置副柜门锁的串口
+        /// </summary>
+        /// <param name="com"></param>
         public static void SetSLockerCOM(string com)
         {
             SetValue((int)ApplicationKey.COM_SLocker, com);
             return;
         }
 
+        /// <summary>
+        /// 获取副柜门锁的串口
+        /// </summary>
+        /// <param name="com"></param>
         public static string GetSLockerCOM()
         {
             return GetValue<string>((int)ApplicationKey.COM_SLocker);
@@ -74,17 +92,30 @@ namespace CFLMedCab.Infrastructure
         #endregion
 
         #region the serial name of the RFid
+
+        /// <summary>
+        /// 设置主柜RF扫描仪的串口
+        /// </summary>
+        /// <param name="com"></param>
         public static void SetMRfidCOM(string com)
         {
             SetValue((int)ApplicationKey.COM_MRFid, com);
             return;
         }
 
+        /// <summary>
+        /// 设置主柜RF扫描仪的串口
+        /// </summary>
+        /// <param name="com"></param>
         public static string GetMRfidCOM()
         {
             return GetValue<string>((int)ApplicationKey.COM_MRFid);
         }
 
+        /// <summary>
+        /// 设置副柜RF扫描仪的串口
+        /// </summary>
+        /// <param name="com"></param>
         public static void SetSRfidCOM(string com)
         {
             SetValue((int)ApplicationKey.COM_SRFid, com);
@@ -254,6 +285,64 @@ namespace CFLMedCab.Infrastructure
             return GetValue<string>((int)ApplicationKey.SCabName);
         }
         #endregion
+
+
+        public static string GetCabNameByRFidCom(string com)
+        {
+            if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.MCabName);
+            else if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.SCabName);
+            else
+                return "";
+        }
+
+        public static string GetLockerComByRfidCom(string com)
+        {
+            if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
+            else if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
+            else
+                return "";
+        }
+
+        public static string GetLockerComByCabName(string cabName)
+        {
+            if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.MCabName))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
+            else if (cabName == ApplicationState.GetValue<string>((int)ApplicationKey.SCabName))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
+            else
+                return "";
+        }
+
+        public static string GetCabNameByCode(string code, Hashtable ht)
+        {
+            foreach (string key in ht.Keys)
+            {
+                if (((HashSet<string>)ht[key]).Contains(code))
+                    return GetCabNameByRFidCom(key);
+            }
+
+            return "";
+        }
+
+        public static List<string> GetAllLockerCom()
+        {
+            //return(new List<string> {
+            //    "COM2",
+            //    "COM5"
+            //});
+
+            List<string> list = new List<string>();
+
+            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker));
+#if DUALCAB
+            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker));
+#endif
+            return list;
+        }
 
     }
 }

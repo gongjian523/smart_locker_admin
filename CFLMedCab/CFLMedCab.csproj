@@ -279,7 +279,6 @@
     <Compile Include="Http\Model\Base\BaseData.cs" />
     <Compile Include="Http\Model\Account.cs" />
     <Compile Include="Http\Model\User.cs" />
-    <Compile Include="Infrastructure\QuartzHelper\quartzEnum\TriggerState.cs" />
     <Compile Include="Infrastructure\QuartzHelper\quartzEnum\Week.cs" />
     <Compile Include="Infrastructure\QuartzHelper\QuartzUtils.cs" />
     <Compile Include="Infrastructure\QuartzHelper\quartzEnum\GroupName.cs" />

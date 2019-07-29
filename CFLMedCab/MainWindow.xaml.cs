@@ -469,7 +469,7 @@ namespace CFLMedCab
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
 
-            List<string> com = ComName.GetAllLockerCom();
+            List<string> com = ApplicationState.GetAllLockerCom();
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
@@ -541,7 +541,7 @@ namespace CFLMedCab
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
 
-            List<string> com = ComName.GetAllLockerCom();
+            List<string> com = ApplicationState.GetAllLockerCom();
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
@@ -791,7 +791,7 @@ namespace CFLMedCab
             GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
 
-            List<string> com = ComName.GetAllLockerCom();
+            List<string> com = ApplicationState.GetAllLockerCom();
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
