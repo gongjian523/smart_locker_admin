@@ -297,6 +297,16 @@ namespace CFLMedCab.Infrastructure
                 return "";
         }
 
+        public static string GetCabIdByRFidCom(string com)
+        {
+            if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.MCabId);
+            else if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid))
+                return ApplicationState.GetValue<string>((int)ApplicationKey.SCabId);
+            else
+                return "";
+        }
+
         public static string GetLockerComByRfidCom(string com)
         {
             if (com == ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid))
