@@ -27,7 +27,7 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 				var inventoryPlan = baseDataInventoryPlan.body.objects.First();
 				string cronStr = QuartzUtils.GetQuartzCron(inventoryPlan);
 				//cronStr = "0 43 11 * * ?";
-				CustomizeScheduler.GetInstance().CreateUpdateTriggerAsync(cronStr);
+				CustomizeScheduler.GetInstance().CreateUpdateTriggerAsync(cronStr).Wait();
 
 				//System.Threading.Thread.Sleep(10000);
 
