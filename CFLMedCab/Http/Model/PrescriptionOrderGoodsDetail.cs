@@ -76,5 +76,11 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string updated_by { get; set; }
-    }
+
+		/// <summary>
+		/// 在机柜的库存数量
+		/// </summary>
+		[JsonIgnore]
+		public int stockNum { get; set; }
+	}
 }
