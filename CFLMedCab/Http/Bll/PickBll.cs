@@ -95,25 +95,31 @@ namespace CFLMedCab.Http.Bll
 					}
 				}
 			});
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess0);
 
-			BaseData<PickCommodity> baseDataPickTaskCommodityDetail = GetPickTaskCommodityDetail(baseDataPickTask);
+            if (isSuccess0)
+            {
+                BaseData<PickCommodity> baseDataPickTaskCommodityDetail = GetPickTaskCommodityDetail(baseDataPickTask);
 
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(baseDataPickTaskCommodityDetail, out bool isSuccess);
+                //校验是否含有数据
+                HttpHelper.GetInstance().ResultCheck(baseDataPickTaskCommodityDetail, out bool isSuccess);
 
-			if (isSuccess)
-			{
-				var pickTasks = baseDataPickTask.body.objects;
-				var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects;
-				pickTasks.ForEach(it =>
-				{
-					it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => sit.Number)).Single();
-				});
+                if (isSuccess)
+                {
+                    var pickTasks = baseDataPickTask.body.objects;
+                    var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects;
+                    pickTasks.ForEach(it =>
+                    {
+                        it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => sit.Number)).FirstOrDefault();
+                    });
 
-				baseDataPickTask.body.objects = pickTasks.Where(it=>it.NeedPickTotalNumber != 0).ToList();
-			}
+                    baseDataPickTask.body.objects = pickTasks.Where(it => it.NeedPickTotalNumber != 0).ToList();
+                }
 
-			return baseDataPickTask;
+            }
+
+            return baseDataPickTask;
 		}
 		/// <summary>
 		/// 根据拣货单号获取商品详情
