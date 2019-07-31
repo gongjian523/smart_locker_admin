@@ -59,7 +59,7 @@ namespace CFLMedCab.View.Inventory
             BaseData<InventoryPlan> bdInventoryPlan = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId(ApplicationState.GetEquipName());
 #endif
 
-            if(bdInventoryPlan.code != 0)
+            if (bdInventoryPlan.code != 0)
             {
                 inventoryTime.Content = "无法获取盘点计划";
             }
@@ -108,9 +108,9 @@ namespace CFLMedCab.View.Inventory
                 taskName = inputStr;
             }
 
-            BaseData<InventoryTask> bdInventoryTask =  InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
+            BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
 
-            if(bdInventoryTask.code!=0)
+            if (bdInventoryTask.code != 0)
             {
                 MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
                 return;
@@ -164,7 +164,7 @@ namespace CFLMedCab.View.Inventory
             {
                 id = (int)btnItem.CommandParameter;
             }
-             
+
             EnterInventoryDetailLocalEvent(this, id);
         }
 

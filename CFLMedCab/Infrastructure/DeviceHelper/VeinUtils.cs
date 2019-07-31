@@ -269,7 +269,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
                     if (3 < wErrCount)
                     {
-                        System.Diagnostics.Debug.WriteLine("Wait for" + stateE + "finger error!");
+                        System.Diagnostics.Debug.WriteLine("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
                         FingerDetectedEvent(this, -1);
                         return ;
                     }
@@ -282,7 +282,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                         //手指还没有移开
                         if (0 == (wDetectCnt % nStartCnt))
                         {
-                            System.Diagnostics.Debug.WriteLine("Please " + stateE + " finger " + i);//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
+                            System.Diagnostics.Debug.WriteLine("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
                             i++;
                         }
                         Thread.Sleep(nInterval);
@@ -290,7 +290,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     else
                     {
                         //手指已经移开
-                        System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE);
+                        System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
                         FingerDetectedEvent(this, 0);
                         return ;
                     }

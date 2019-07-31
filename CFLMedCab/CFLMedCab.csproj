@@ -162,6 +162,7 @@
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="Controls\TouchScreenKeyboard.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
     <Compile Include="Http\Bll\CommodityCodeBll.cs" />
     <Compile Include="Http\Bll\CommodityInventoryChangeBll.cs" />
@@ -321,6 +322,9 @@
     <Compile Include="View\Inventory\InventoryDtlLocal.xaml.cs">
       <DependentUpon>InventoryDtlLocal.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\KeyboardView.xaml.cs">
+      <DependentUpon>KeyboardView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\LoadingData.xaml.cs">
       <DependentUpon>LoadingData.xaml</DependentUpon>
     </Compile>
@@ -444,6 +448,10 @@
     <Page Include="Controls\Styles\BtnStyles.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </Page>
+    <Page Include="Controls\Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -459,6 +467,10 @@
     <Page Include="View\Inventory\InventoryDtlLocal.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\KeyboardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\LoadingData.xaml">
       <SubType>Designer</SubType>

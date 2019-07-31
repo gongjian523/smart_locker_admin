@@ -82,6 +82,9 @@ namespace CFLMedCab
 
         private LoadingData loadingDataPage;
 
+        //TouchScreenKeyboard kbHandler;
+        KeyboardView kbHandler;
+
 #if TESTENV
         private System.Timers.Timer testTimer;
         private FetchParam testFetchPara = new FetchParam();
@@ -181,7 +184,7 @@ namespace CFLMedCab
 
         private void MainWindow_Deactivated(object sender, EventArgs e)
         {
-            this.Topmost = true;
+            //this.Topmost = true;
         }
 
         private void onInventoryTimer(object sender, EventArgs e)
@@ -624,7 +627,8 @@ namespace CFLMedCab
             surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
             surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);
 
-
+            surgeryQuery.ShowKeyboardEvent += new SurgeryQuery.ShowKeyboardHandler(onShowKeyboard);
+            surgeryQuery.HideKeyboardEvent += new SurgeryQuery.HideKeyboardHandler(onHideKeyboard);
 
             ContentFrame.Navigate(surgeryQuery);
         }
@@ -1530,6 +1534,18 @@ namespace CFLMedCab
             {
                 ClosePop();
             }));
+        }
+
+        private void onShowKeyboard(object sender, RoutedEventArgs e)
+        {
+            kbHandler = new KeyboardView();
+            kbHandler.Show();
+        }
+
+        private void onHideKeyboard(object sender, RoutedEventArgs e)
+        {
+            if(kbHandler!= null)
+                kbHandler.Hide();
         }
 
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)

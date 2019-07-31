@@ -1,79 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
 
-
-namespace CFLMedCab.Controls
+namespace CFLMedCab.View
 {
-    public class TouchScreenKeyboard : Window
+    /// <summary>
+    /// KeyboardView.xaml 的交互逻辑
+    /// </summary>
+    /// 
+    public partial class KeyboardView : Window
     {
-        #region Property & Variable & Constructor
-        private static double _WidthTouchKeyboard = 830;
-
-        public static double WidthTouchKeyboard
-        {
-            get { return _WidthTouchKeyboard; }
-            set { _WidthTouchKeyboard = value; }
-
-        }
-        private static bool _ShiftFlag;
-
-        protected static bool ShiftFlag
-        {
-            get { return _ShiftFlag; }
-            set { _ShiftFlag = value; }
-        }
-
-        private static bool _CapsLockFlag;
-
-        protected static bool CapsLockFlag
-        {
-            get { return TouchScreenKeyboard._CapsLockFlag; }
-            set { TouchScreenKeyboard._CapsLockFlag = value; }
-        }
-
-        private static Window _InstanceObject;
-
-        private static Brush _PreviousTextBoxBackgroundBrush = null;
-        private static Brush _PreviousTextBoxBorderBrush = null;
-        private static Thickness _PreviousTextBoxBorderThickness;
-
-        private static Control _CurrentControl;
-        public static string TouchScreenText
-        {
-            get
-            {
-                if (_CurrentControl is TextBox)
-                {
-                    return ((TextBox)_CurrentControl).Text;
-                }
-                else if (_CurrentControl is PasswordBox)
-                {
-                    return ((PasswordBox)_CurrentControl).Password;
-                }
-                else return "";
-
-
-            }
-            set
-            {
-                if (_CurrentControl is TextBox)
-                {
-                    ((TextBox)_CurrentControl).Text = value;
-                }
-                else if (_CurrentControl is PasswordBox)
-                {
-                    ((PasswordBox)_CurrentControl).Password = value;
-                }
-
-
-            }
-
-        }
-
         public static RoutedUICommand CmdTlide = new RoutedUICommand();
         public static RoutedUICommand Cmd1 = new RoutedUICommand();
         public static RoutedUICommand Cmd2 = new RoutedUICommand();
@@ -88,7 +34,6 @@ namespace CFLMedCab.Controls
         public static RoutedUICommand CmdMinus = new RoutedUICommand();
         public static RoutedUICommand CmdPlus = new RoutedUICommand();
         public static RoutedUICommand CmdBackspace = new RoutedUICommand();
-
 
         public static RoutedUICommand CmdTab = new RoutedUICommand();
         public static RoutedUICommand CmdQ = new RoutedUICommand();
@@ -131,28 +76,67 @@ namespace CFLMedCab.Controls
         public static RoutedUICommand CmdLessThan = new RoutedUICommand();
         public static RoutedUICommand CmdQuestion = new RoutedUICommand();
 
-
-
         public static RoutedUICommand CmdSpaceBar = new RoutedUICommand();
         public static RoutedUICommand CmdClear = new RoutedUICommand();
 
-
-
-        public TouchScreenKeyboard()
+        private bool _ShiftFlag;
+        protected bool ShiftFlag
         {
-            this.Width = WidthTouchKeyboard;
-
+            get { return _ShiftFlag; }
+            set { _ShiftFlag = value; }
         }
 
-        static TouchScreenKeyboard()
+        private bool _CapsLockFlag;
+        protected bool CapsLockFlag
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(TouchScreenKeyboard), new FrameworkPropertyMetadata(typeof(TouchScreenKeyboard)));
+            get { return _CapsLockFlag; }
+            set { _CapsLockFlag = value; }
+        }
+
+        private static Control _CurrentControl;
+        public static string TouchScreenText
+        {
+            get
+            {
+                if (_CurrentControl is TextBox)
+                {
+                    return ((TextBox)_CurrentControl).Text;
+                }
+                else if (_CurrentControl is PasswordBox)
+                {
+                    return ((PasswordBox)_CurrentControl).Password;
+                }
+                else return "";
+
+
+            }
+            set
+            {
+                if (_CurrentControl is TextBox)
+                {
+                    ((TextBox)_CurrentControl).Text = value;
+                }
+                else if (_CurrentControl is PasswordBox)
+                {
+                    ((PasswordBox)_CurrentControl).Password = value;
+                }
+            }
+        }
+
+        public KeyboardView()
+        {
+            InitializeComponent();
 
             SetCommandBinding();
         }
-        #endregion
-        #region CommandRelatedCode
-        private static void SetCommandBinding()
+
+        public void
+            SetCurrentControl(Control currentControl)
+        {
+            _CurrentControl = currentControl;
+        }
+
+        private void SetCommandBinding()
         {
             CommandBinding CbTlide = new CommandBinding(CmdTlide, RunCommand);
             CommandBinding Cb1 = new CommandBinding(Cmd1, RunCommand);
@@ -168,22 +152,6 @@ namespace CFLMedCab.Controls
             CommandBinding CbMinus = new CommandBinding(CmdMinus, RunCommand);
             CommandBinding CbPlus = new CommandBinding(CmdPlus, RunCommand);
             CommandBinding CbBackspace = new CommandBinding(CmdBackspace, RunCommand);
-
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbTlide);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb1);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb2);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb3);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb4);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb5);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb6);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb7);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb8);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb9);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cb0);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbMinus);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbPlus);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbBackspace);
-
 
             CommandBinding CbTab = new CommandBinding(CmdTab, RunCommand);
             CommandBinding CbQ = new CommandBinding(CmdQ, RunCommand);
@@ -226,72 +194,82 @@ namespace CFLMedCab.Controls
             CommandBinding CbLessThan = new CommandBinding(CmdLessThan, RunCommand);
             CommandBinding CbQuestion = new CommandBinding(CmdQuestion, RunCommand);
 
-
-
             CommandBinding CbSpaceBar = new CommandBinding(CmdSpaceBar, RunCommand);
             CommandBinding CbClear = new CommandBinding(CmdClear, RunCommand);
 
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbTab);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbQ);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cbw);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbE);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbR);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbT);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbY);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbU);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbI);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), Cbo);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbP);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbOpenCrulyBrace);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbEndCrultBrace);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbOR);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbTlide);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb1);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb2);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb3);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb4);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb5);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb6);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb7);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb8);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb9);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cb0);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbMinus);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbPlus);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbBackspace);
 
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbCapsLock);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbA);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbS);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbD);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbF);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbG);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbH);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbJ);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbK);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbL);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbColon);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbDoubleInvertedComma);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbEnter);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbTab);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbQ);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cbw);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbE);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbR);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbT);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbY);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbU);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbI);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), Cbo);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbP);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbOpenCrulyBrace);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbEndCrultBrace);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbOR);
 
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbShift);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbZ);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbX);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbC);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbV);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbB);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbN);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbM);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbGreaterThan);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbLessThan);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbQuestion);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbCapsLock);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbA);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbS);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbD);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbF);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbG);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbH);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbJ);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbK);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbL);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbColon);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbDoubleInvertedComma);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbEnter);
 
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbShift);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbZ);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbX);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbC);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbV);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbB);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbN);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbM);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbGreaterThan);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbLessThan);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbQuestion);
 
-
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbSpaceBar);
-            CommandManager.RegisterClassCommandBinding(typeof(TouchScreenKeyboard), CbClear);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbSpaceBar);
+            CommandManager.RegisterClassCommandBinding(typeof(KeyboardView), CbClear);
 
         }
-        static void RunCommand(object sender, ExecutedRoutedEventArgs e)
+
+        void RunCommand(object sender, ExecutedRoutedEventArgs e)
         {
 
             if (e.Command == CmdTlide)  //First Row
             {
-
-
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "`";
+                    TouchScreenText += "`";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "~";
+                    TouchScreenText += "~";
                     ShiftFlag = false;
                 }
             }
@@ -299,11 +277,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "1";
+                    TouchScreenText += "1";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "!";
+                    TouchScreenText += "!";
                     ShiftFlag = false;
                 }
 
@@ -312,11 +290,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "2";
+                    TouchScreenText += "2";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "@";
+                    TouchScreenText += "@";
                     ShiftFlag = false;
                 }
 
@@ -325,11 +303,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "3";
+                    TouchScreenText += "3";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "#";
+                    TouchScreenText += "#";
                     ShiftFlag = false;
                 }
 
@@ -338,11 +316,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "4";
+                    TouchScreenText += "4";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "$";
+                    TouchScreenText += "$";
                     ShiftFlag = false;
                 }
 
@@ -351,11 +329,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "5";
+                    TouchScreenText += "5";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "%";
+                    TouchScreenText += "%";
                     ShiftFlag = false;
                 }
 
@@ -364,11 +342,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "6";
+                    TouchScreenText += "6";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "^";
+                    TouchScreenText += "^";
                     ShiftFlag = false;
                 }
 
@@ -377,11 +355,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "7";
+                    TouchScreenText += "7";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "&";
+                    TouchScreenText += "&";
                     ShiftFlag = false;
                 }
 
@@ -390,11 +368,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "8";
+                    TouchScreenText += "8";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "*";
+                    TouchScreenText += "*";
                     ShiftFlag = false;
                 }
 
@@ -403,11 +381,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "9";
+                    TouchScreenText += "9";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "(";
+                    TouchScreenText += "(";
                     ShiftFlag = false;
                 }
 
@@ -416,11 +394,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "0";
+                    TouchScreenText += "0";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += ")";
+                    TouchScreenText += ")";
                     ShiftFlag = false;
                 }
 
@@ -429,11 +407,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "-";
+                    KeyboardView.TouchScreenText += "-";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "_";
+                    TouchScreenText += "_";
                     ShiftFlag = false;
                 }
 
@@ -442,26 +420,26 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "=";
+                    TouchScreenText += "=";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "+";
+                    TouchScreenText += "+";
                     ShiftFlag = false;
                 }
 
             }
             else if (e.Command == CmdBackspace)
             {
-                if (!string.IsNullOrEmpty(TouchScreenKeyboard.TouchScreenText))
+                if (!string.IsNullOrEmpty(TouchScreenText))
                 {
-                    TouchScreenKeyboard.TouchScreenText = TouchScreenKeyboard.TouchScreenText.Substring(0, TouchScreenKeyboard.TouchScreenText.Length - 1);
+                    TouchScreenText = TouchScreenText.Substring(0, TouchScreenText.Length - 1);
                 }
 
             }
             else if (e.Command == CmdTab)  //Second Row
             {
-                TouchScreenKeyboard.TouchScreenText += "     ";
+                TouchScreenText += "     ";
             }
             else if (e.Command == CmdQ)
             {
@@ -508,11 +486,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "[";
+                    TouchScreenText += "[";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "{";
+                    TouchScreenText += "{";
                     ShiftFlag = false;
                 }
             }
@@ -520,11 +498,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "]";
+                    TouchScreenText += "]";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "}";
+                    TouchScreenText += "}";
                     ShiftFlag = false;
                 }
             }
@@ -532,11 +510,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += @"\";
+                    TouchScreenText += @"\";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "|";
+                    TouchScreenText += "|";
                     ShiftFlag = false;
                 }
             }
@@ -594,39 +572,30 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += ";";
+                    KeyboardView.TouchScreenText += ";";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += ":";
+                    TouchScreenText += ":";
                     ShiftFlag = false;
                 }
-
             }
             else if (e.Command == CmdDoubleInvertedComma)
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "'";
+                    TouchScreenText += "'";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += Char.ConvertFromUtf32(34);
+                    TouchScreenText += Char.ConvertFromUtf32(34);
                     ShiftFlag = false;
                 }
-
-
             }
             else if (e.Command == CmdEnter)
             {
-                if (_InstanceObject != null)
-                {
-                    _InstanceObject.Close();
-                    _InstanceObject = null;
-                }
-                _CurrentControl.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-
-
+                Hide();            
+                //_CurrentControl.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
             }
             else if (e.Command == CmdShift) //Fourth Row
             {
@@ -674,11 +643,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += ",";
+                    TouchScreenText += ",";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "<";
+                    TouchScreenText += "<";
                     ShiftFlag = false;
                 }
 
@@ -687,11 +656,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += ".";
+                    TouchScreenText += ".";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += ">";
+                    TouchScreenText += ">";
                     ShiftFlag = false;
                 }
 
@@ -700,11 +669,11 @@ namespace CFLMedCab.Controls
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += "/";
+                    TouchScreenText += "/";
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += "?";
+                    TouchScreenText += "?";
                     ShiftFlag = false;
                 }
 
@@ -712,200 +681,44 @@ namespace CFLMedCab.Controls
             else if (e.Command == CmdSpaceBar)//Last row
             {
 
-                TouchScreenKeyboard.TouchScreenText += " ";
+                TouchScreenText += " ";
             }
             else if (e.Command == CmdClear)//Last row
             {
 
-                TouchScreenKeyboard.TouchScreenText = "";
+                TouchScreenText = "";
             }
         }
-        #endregion
-        #region Main Functionality
-        private static void AddKeyBoardINput(char input)
+
+
+        private void AddKeyBoardINput(char input)
         {
             if (CapsLockFlag)
             {
                 if (ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += char.ToLower(input).ToString();
+                    TouchScreenText += char.ToLower(input).ToString();
                     ShiftFlag = false;
 
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += char.ToUpper(input).ToString();
+                    TouchScreenText += char.ToUpper(input).ToString();
                 }
             }
             else
             {
                 if (!ShiftFlag)
                 {
-                    TouchScreenKeyboard.TouchScreenText += char.ToLower(input).ToString();
+                    TouchScreenText += char.ToLower(input).ToString();
                 }
                 else
                 {
-                    TouchScreenKeyboard.TouchScreenText += char.ToUpper(input).ToString();
+                    TouchScreenText += char.ToUpper(input).ToString();
                     ShiftFlag = false;
                 }
             }
         }
-
-
-        private static void syncchild()
-        {
-            
-            if (_CurrentControl != null && _InstanceObject != null)
-            {
-
-                Point virtualpoint = new Point(0, _CurrentControl.ActualHeight + 3);
-                Point Actualpoint = _CurrentControl.PointToScreen(virtualpoint);
-
-                if (WidthTouchKeyboard + Actualpoint.X > SystemParameters.VirtualScreenWidth)
-                {
-                    double difference = WidthTouchKeyboard + Actualpoint.X - SystemParameters.VirtualScreenWidth;
-                    _InstanceObject.Left = Actualpoint.X - difference;
-                }
-                else if (!(Actualpoint.X > 1))
-                {
-                    _InstanceObject.Left = 1;
-                }
-                else
-                    _InstanceObject.Left = Actualpoint.X;
-
-
-
-
-                _InstanceObject.Top = Actualpoint.Y;
-                _InstanceObject.Show();
-            }
-
-
-        }
-
-        public static bool GetTouchScreenKeyboard(DependencyObject obj)
-        {
-            return (bool)obj.GetValue(TouchScreenKeyboardProperty);
-        }
-
-        public static void SetTouchScreenKeyboard(DependencyObject obj, bool value)
-        {
-            obj.SetValue(TouchScreenKeyboardProperty, value);
-        }
-
-        public static readonly DependencyProperty TouchScreenKeyboardProperty =
-            DependencyProperty.RegisterAttached("TouchScreenKeyboard", typeof(bool), typeof(TouchScreenKeyboard), new UIPropertyMetadata(default(bool), TouchScreenKeyboardPropertyChanged));
-
-
-
-        static void TouchScreenKeyboardPropertyChanged(DependencyObject sender, DependencyPropertyChangedEventArgs e)
-        {
-            FrameworkElement host = sender as FrameworkElement;
-            if (host != null)
-            {
-                host.GotFocus += new RoutedEventHandler(OnGotFocus);
-                host.LostFocus += new RoutedEventHandler(OnLostFocus);
-            }
-        }
-
-
-
-        static void OnGotFocus(object sender, RoutedEventArgs e)
-        {
-            Control host = sender as Control;
-
-            _PreviousTextBoxBackgroundBrush = host.Background;
-            _PreviousTextBoxBorderBrush = host.BorderBrush;
-            _PreviousTextBoxBorderThickness = host.BorderThickness;
-
-            host.Background = Brushes.Yellow;
-            host.BorderBrush = Brushes.Red;
-            host.BorderThickness = new Thickness(4);
-
-
-            _CurrentControl = host;
-
-            if (_InstanceObject == null)
-            {
-                //FrameworkElement ct = host;
-                //while (true)
-                //{
-                //    if (ct is Window)
-                //    {
-                //        ((Window)ct).LocationChanged += new EventHandler(TouchScreenKeyboard_LocationChanged);
-                //        ((Window)ct).Activated += new EventHandler(TouchScreenKeyboard_Activated);
-                //        ((Window)ct).Deactivated += new EventHandler(TouchScreenKeyboard_Deactivated);
-                //        break;
-                //    }
-                //    ct = (FrameworkElement)ct.Parent;
-                //}
-
-                Window mainwin = Application.Current.MainWindow;
-
-                mainwin.LocationChanged += new EventHandler(TouchScreenKeyboard_LocationChanged);
-                mainwin.Activated += new EventHandler(TouchScreenKeyboard_Activated);
-                mainwin.Deactivated += new EventHandler(TouchScreenKeyboard_Deactivated);
-
-                _InstanceObject = new TouchScreenKeyboard();
-                _InstanceObject = new Window();
-                _InstanceObject.AllowsTransparency = true;
-                _InstanceObject.WindowStyle = WindowStyle.None;
-                _InstanceObject.ShowInTaskbar = false;
-                _InstanceObject.ShowInTaskbar = false;
-                _InstanceObject.Topmost = true;
-
-                host.LayoutUpdated += new EventHandler(tb_LayoutUpdated);
-            }
-
-
-
-        }
-
-        static void TouchScreenKeyboard_Deactivated(object sender, EventArgs e)
-        {
-            if (_InstanceObject != null)
-            {
-                _InstanceObject.Topmost = false;
-            }
-        }
-
-        static void TouchScreenKeyboard_Activated(object sender, EventArgs e)
-        {
-            if (_InstanceObject != null)
-            {
-                _InstanceObject.Topmost = true;
-            }
-        }
-
-
-
-        static void TouchScreenKeyboard_LocationChanged(object sender, EventArgs e)
-        {
-            syncchild();
-        }
-
-        static void tb_LayoutUpdated(object sender, EventArgs e)
-        {
-            //syncchild();
-        }
-
-
-
-        static void OnLostFocus(object sender, RoutedEventArgs e)
-        {
-
-            Control host = sender as Control;
-            host.Background = _PreviousTextBoxBackgroundBrush;
-            host.BorderBrush = _PreviousTextBoxBorderBrush;
-            host.BorderThickness = _PreviousTextBoxBorderThickness;
-
-            if (_InstanceObject != null)
-            {
-                _InstanceObject.Close();
-                _InstanceObject = null;
-            }
-        }
-
-        #endregion
     }
+    
 }

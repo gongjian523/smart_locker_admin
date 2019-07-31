@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.APO.Surgery;
 using CFLMedCab.BLL;
+using CFLMedCab.Controls;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Http.Bll;
@@ -41,7 +42,14 @@ namespace CFLMedCab.View.Fetch
         public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
         public event HideLoadDataHandler HideLoadDataEvent;
 
-        private FetchOrderBll fetchOrderBll = new FetchOrderBll();
+        public delegate void ShowKeyboardHandler(object sender, RoutedEventArgs e);
+        public event ShowKeyboardHandler ShowKeyboardEvent;
+
+        public delegate void HideKeyboardHandler(object sender, RoutedEventArgs e);
+        public event HideKeyboardHandler HideKeyboardEvent;
+
+        KeyboardView kbHandler = new KeyboardView();
+
         public SurgeryQuery(ConsumingOrderType type)
         {
             InitializeComponent();
@@ -155,6 +163,31 @@ namespace CFLMedCab.View.Fetch
         private void EnterNoNum_Click(object sender, RoutedEventArgs e)
         {
             EnterSurgeryNoNumOpenEvent(this,null);
+        }
+
+        /// <summary>
+        /// 获得焦点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onGotFocus(object sender, RoutedEventArgs e)
+        {
+            //ShowKeyboardEvent(this, null);
+            //kbHandler = new KeyboardView();
+            kbHandler.SetCurrentControl((Control)sender);
+            kbHandler.Topmost = true;
+            kbHandler.Show();
+        }
+
+        /// <summary>
+        /// 失去焦点
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onLostFocus(object sender, RoutedEventArgs e)
+        {
+            //HideKeyboardEvent(this, null);
+            kbHandler.Hide();
         }
     }
 }

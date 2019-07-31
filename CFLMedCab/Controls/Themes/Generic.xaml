@@ -18,17 +18,17 @@
 
 
     <Style x:Key="ShadowStyle">
-        <Setter Property="Control.Foreground" Value="LightGray" />
+        <Setter Property="Control.Foreground" Value="{StaticResource RadioTabBlueBrush}" />
     </Style>
 
     <Style x:Key="InformButton" TargetType="Button">
         <Setter Property="OverridesDefaultStyle" Value="True"/>
-        <Setter Property="Margin" Value="2"/>
+        <Setter Property="Margin" Value="3.2"/>
         <Setter Property="FontFamily" Value="Verdana"/>
         <Setter Property="FontSize" Value="15px"/>
         <Setter Property="FontWeight" Value="Bold"/>
         <Setter Property="FocusVisualStyle" Value="{StaticResource MyFocusVisual}" />
-        <Setter Property="Background" >
+        <!--<Setter Property="Background" >
             <Setter.Value>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" >
                     <GradientStop Color="#FFFFD190" Offset="0.2"/>
@@ -36,33 +36,34 @@
                     <GradientStop Color="#FFFFD190" Offset="1"/>
                 </LinearGradientBrush>
             </Setter.Value>
-        </Setter>
+        </Setter>-->
+        <Setter Property="Background" Value="White"/>
+        <Setter Property="Foreground" Value="{StaticResource RadioTabBlueBrush}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
                     <Border Name="border" 
-				BorderThickness="3"
-				Padding="4,2" 
-				BorderBrush="DarkGray" 
-				CornerRadius="8" 
-				Background="{TemplateBinding Background}">
+				        BorderThickness="3"
+				        Padding="4,2" 
+				        BorderBrush="{StaticResource RadioTabBlueBrush}" 
+				        CornerRadius="8" 
+				        Background="{TemplateBinding Background}">
                         <Grid >
-                            <ContentPresenter HorizontalAlignment="Left"  
-	                           VerticalAlignment="Center"  Name="contentShadow" 
-					Style="{StaticResource ShadowStyle}">
-
-                            </ContentPresenter>
-                            <ContentPresenter HorizontalAlignment="Left"  
-                            VerticalAlignment="Center" Name="content"/>
+                            <ContentPresenter HorizontalAlignment="Left"  VerticalAlignment="Center" Name="contentShadow"  TextBlock.Foreground="{StaticResource RadioTabBlueBrush}"/>
+                            <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center" Name="content"   TextBlock.Foreground="{StaticResource RadioTabBlueBrush}"/>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
+                        <!--<Trigger Property="IsMouseOver" Value="True">
                             <Setter TargetName="border" Property="BorderBrush" Value="#FF4788c8" />
                             <Setter Property="Foreground" Value="#FF4788c8" />
+                        </Trigger>-->
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush"  Value="{StaticResource RadioTabBlueBrush}" />
+                            <Setter Property="Foreground" Value="#FFFD854E" />
                         </Trigger>
                         <Trigger Property="IsPressed" Value="True">
-                            <Setter Property="Background" >
+                            <!--<Setter Property="Background" >
                                 <Setter.Value>
                                     <LinearGradientBrush StartPoint="0,0" EndPoint="0,1" >
                                         <GradientStop Color="#FFFFD190" Offset="0.35"/>
@@ -70,8 +71,8 @@
                                         <GradientStop Color="#FFFFD190" Offset="1"/>
                                     </LinearGradientBrush>
                                 </Setter.Value>
-                            </Setter>
-                            
+                            </Setter>-->
+                            <Setter Property="Background" Value="{StaticResource RadioTabBlueBrush}"/>
                             <Setter TargetName="content" Property="RenderTransform" >
                                 <Setter.Value>
                                     <TranslateTransform Y="1.0" />
@@ -80,10 +81,18 @@
                         </Trigger>
                         <Trigger Property="IsDefaulted" Value="True">
                             <Setter TargetName="border" Property="BorderBrush" Value="#FF282828" />
+                            <Setter Property="Foreground" Value="{StaticResource RadioTabBlueBrush}" />
                         </Trigger>
                         <Trigger Property="IsFocused" Value="True">
-                            <Setter TargetName="border" Property="BorderBrush" Value="#FF282828" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource RadioTabBlueBrush}" />
+                            <Setter Property="Foreground" Value="White" />
+                            <Setter Property="Background" Value="{StaticResource RadioTabBlueBrush}" />
                         </Trigger>
+                        <!--<Trigger Property="IsFocused" Value="False">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource RadioTabBlueBrush}" />
+                            <Setter Property="Foreground" Value="{StaticResource RadioTabBlueBrush}"  />
+                            <Setter Property="Background" Value="White"/>
+                        </Trigger>-->
                         <Trigger Property="IsEnabled" Value="False">
                             <Setter TargetName="border" Property="Opacity" Value="0.7" />
                             <Setter Property="Foreground" Value="Gray" />
@@ -117,7 +126,7 @@
 
                                     <StackPanel Orientation="Horizontal" >
 
-                                        <Button Style="{StaticResource InformButton}" Command="local:TouchScreenKeyboard.CmdTlide" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="50" Height="50">
+                                        <Button Style="{StaticResource InformButton}" Command="local:TouchScreenKeyboard.CmdTlide" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
                                             <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
                                                 <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top"   >~</TextBlock>
                                                 <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"   >`</TextBlock>

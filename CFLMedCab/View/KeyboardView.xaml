@@ -1,0 +1,373 @@
+﻿<Window x:Class="CFLMedCab.View.KeyboardView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CFLMedCab.View"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        BorderThickness="0"
+        Title="KeyboardView"
+        Height="456"
+        Width ="1312"
+        WindowStartupLocation="Manual"
+        Left="304"
+        Top="634">
+    <Border BorderBrush="{StaticResource RadioTabBlueBrush}" BorderThickness="5" CornerRadius="4" Background="Transparent">
+        <Border BorderBrush="White" BorderThickness="2" CornerRadius="4">
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" >
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdTlide" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top"  FontFamily="BOLD" FontSize="30">~</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">`</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button  Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd1"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">!</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">1</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd2"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">@</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">2</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd3" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">#</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">3</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd4" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">$</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">4</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd5"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">%</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">5</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd6"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">^</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">6</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd7"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">&amp;</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">7</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd8"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">*</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">8</TextBlock>
+                        </StackPanel>
+                    </Button>
+
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmd9"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">(</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">9</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}"  Command="local:KeyboardView.Cmd0" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">)</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">0</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdMinus" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">--</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">-</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdPlus"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">+</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30">=</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdBackspace"   VerticalContentAlignment="Center" HorizontalContentAlignment="Center"  Width="164" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30">Backspace</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"></TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" >
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdTab" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="124" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >Tab</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdQ" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >Q</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.Cmdw"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >W</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdE"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >E</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdR"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >R</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdT"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >T</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}"  Command="local:KeyboardView.CmdY"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >Y</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdU"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >U</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdI"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >I</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdO"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >O</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdP"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >P</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdOpenCrulyBrace"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >{</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  >[</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdEndCrultBrace"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >}</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  >]</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdOR"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="120" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >|</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  >\</TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" >
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top"  Command="local:KeyboardView.CmdCapsLock"  HorizontalContentAlignment="Left"  Width="164" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >Caps Lock</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdA"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >A</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdS"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >S</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdD"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >D</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdF"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >F</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdG"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >G</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdH"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >H</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdJ"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >J</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdK"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >K</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdL"  HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top"  FontFamily="BOLD" FontSize="30" >L</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontFamily="BOLD" FontSize="30" ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdColon"   HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top"  FontFamily="BOLD" FontSize="30" >:</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontFamily="BOLD" FontSize="30" >;</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdDoubleInvertedComma"   HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top"  FontFamily="BOLD" FontSize="30" >"</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontFamily="BOLD" FontSize="30" >'</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" VerticalContentAlignment="Top" Command="local:KeyboardView.CmdEnter"  HorizontalContentAlignment="Left"  Width="166" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top"  FontFamily="BOLD" FontSize="30" >Enter</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom"  FontFamily="BOLD" FontSize="30" ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" >
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdShift"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="210.4" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >Shift</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdZ"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >Z</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdX"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >X</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdC"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >C</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdV"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >V</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdB"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >B</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdN"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >N</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdM"   VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >M</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdLessThan"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >&lt;</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  >,</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdGreaterThan" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"  >&gt;</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"  >.</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdQuestion" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="80" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"   >?</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"   >/</TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdShift"  VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="206" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock    HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"   >Shift</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"   ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" >
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdClear" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="321.6" Height="80" FontFamily="BOLD" FontSize="30" >
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"   >Clear</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"    ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdSpaceBar" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="632" Height="80">
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"   ></TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"    ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource InformButton}" Command="local:KeyboardView.CmdClear" VerticalContentAlignment="Top" HorizontalContentAlignment="Left"  Width="317" Height="80" >
+                        <StackPanel Orientation="Vertical" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Top" FontFamily="BOLD" FontSize="30"   >Clear</TextBlock>
+                            <TextBlock HorizontalAlignment="Left" VerticalAlignment="Bottom" FontFamily="BOLD" FontSize="30"    ></TextBlock>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+    </Border>
+</Window>

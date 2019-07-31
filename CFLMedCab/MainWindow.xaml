@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CFLMedCab"
         xmlns:cvt="clr-namespace:CFLMedCab.Converter"
+        xmlns:k="clr-namespace:CFLMedCab.Controls"
         mc:Ignorable="d"
         Title="MainWindow"
         Height="1080"
@@ -16,6 +17,7 @@
         <cvt:NavBtnVisiblityConverter x:Key="NavBtnVisiblityConverter"/>
     </Control.Resources>
     <Grid>
+        <Frame x:Name="KeyboardFrame" Panel.ZIndex="5" NavigationUIVisibility="Hidden"/>
         <Frame x:Name="PopFrame" Panel.ZIndex="4" NavigationUIVisibility ="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
         <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Visible" >
@@ -46,7 +48,7 @@
                 </Image>
 
                 <Button Style="{StaticResource ReturnButton}" Content="退出"     Name="btnExit" Margin="-150,5,0,5" HorizontalAlignment="Center"   Click="onExit" />
-                <Button Style="{StaticResource ReturnButton}" Content="回到首页" Name="btnBackHP"  Margin="150,5,0,5" HorizontalAlignment="Center"  Click="onBackToHP" Visibility="Hidden"/>
+                <Button Style="{StaticResource ReturnButton}" Content="回到首页" Name="btnBackHP"  Margin="-600,5,0,5" HorizontalAlignment="Center"  Click="onBackToHP" Visibility="Hidden"/>
                 <Button Style="{StaticResource ReturnButton}" Content="退出程序" Name="btnExitApp"  Margin="220,5,0,5" HorizontalAlignment="Center"  Click="onExitApp" />
 
                 <TextBlock Height="Auto"

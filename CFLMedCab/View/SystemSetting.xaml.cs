@@ -46,17 +46,23 @@ namespace CFLMedCab.View
             //tbMCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.MCabName) ;
             //tbSCabName.Text = ApplicationState.GetValue<string>((int)ApplicationKey.SCabName);
             tbMCabName.Text = ApplicationState.GetMCabName();
+#if DUALCAB
             tbSCabName.Text = ApplicationState.GetSCabName();
+#endif
 
             //MLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker);
             //SLockerCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker);
             MLockerCB.SelectedItem = ApplicationState.GetMLockerCOM();
+#if DUALCAB
             SLockerCB.SelectedItem = ApplicationState.GetSLockerCOM();
+#endif
 
             //MrfidCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MRFid);
             //SrfidCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_SRFid);
             MrfidCB.SelectedItem = ApplicationState.GetMRfidCOM();
+#if DUALCAB
             SrfidCB.SelectedItem = ApplicationState.GetSRfidCOM();
+#endif
 
             //MVeinCB.SelectedItem = ApplicationState.GetValue<string>((int)ApplicationKey.COM_MVein);
             MVeinCB.SelectedItem = ApplicationState.GetMVeinCOM();

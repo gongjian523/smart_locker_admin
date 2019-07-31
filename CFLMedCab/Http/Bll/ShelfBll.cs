@@ -9,6 +9,7 @@ using System.Web;
 using System.ComponentModel;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model.Common;
+using CFLMedCab.Infrastructure;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -47,14 +48,13 @@ namespace CFLMedCab.Http.Bll
 								@operator = "==",
 								operands = {$"'{ HttpUtility.UrlEncode(ShelfTaskStatus.待上架.ToString()) }'" }
 							}
-							//new QueryParam.Expressions
-							//{
-							//	field = "Operator",
-							//	@operator = "==",
-							//	operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.CurUser)) }'" }
-							//}
-
-						}
+                            //new QueryParam.Expressions
+                            //{
+                            //    field = "Operator",
+                            //    @operator = "==",
+                            //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
+                            //}
+                        }
 					}
 				}
 			});
@@ -285,7 +285,7 @@ namespace CFLMedCab.Http.Bll
 
 					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
 					{
-						if (stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+						if ((int)stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
 						{
 							shelfTask.Status = DocumentStatus.异常.ToString();
 							isAllNormal = false;

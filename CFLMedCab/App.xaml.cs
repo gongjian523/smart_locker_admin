@@ -48,6 +48,18 @@ namespace CFLMedCab
 
             //ApplicationState.SetValue((int)ApplicationKey.MCabName, "Cab1");
             //ApplicationState.SetValue((int)ApplicationKey.SCabName, "Cab2");
+            ApplicationState.SetEquipName("E00000010");
+            ApplicationState.SetEquipId("AQACQqweDg8BAAAA1G-F5jgPsxWCFwQA");
+
+            ApplicationState.SetHouseName("SR00000008");
+            ApplicationState.SetHouseId("AQACQqweDg8BAAAAdoUd3g4PsxV3FwQA");
+
+            ApplicationState.SetMCabName("L00000012");
+            ApplicationState.SetMCabId("AQACQqweDg8BAAAA6XuBbV0PsxWJFwQA");
+#if DUALCAB
+            ApplicationState.SetSCabName("L00000012");
+            ApplicationState.SetSCabId("AQACQqweDg8BAAAA6XuBbV0PsxWJFwQA");
+#endif
 
             //ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, "COM2");
             //ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, "COM5");
@@ -70,7 +82,6 @@ namespace CFLMedCab
          void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
          {
             //处理完后，我们需要将Handler=true表示已此异常已处理过
-
             LogUtils.Error(e.ToString());
             e.Handled = true;
          }
