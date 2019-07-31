@@ -138,12 +138,15 @@ namespace CFLMedCab
             ShowTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
             ShowTimer.Start();
 
-            InventoryTimer = new DispatcherTimer();
-            InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer, 每分钟检查是否有扫描计划
-            InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
-            InventoryTimer.Start();
+            //InventoryTimer = new DispatcherTimer();
+            //InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer, 每分钟检查是否有扫描计划
+            //InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
+            //InventoryTimer.Start();
 
             loadingDataPage = new LoadingData();
+
+            Task.Factory.StartNew(initCurrentGoodsInfo);
+
 
 #if TESTENV
 #else
@@ -174,7 +177,10 @@ namespace CFLMedCab
 #endif
             ConsoleManager.Show();
 
-            //LoginBkView.Visibility = Visibility.Visible;
+#if TESTENV
+#else
+            LoginBkView.Visibility = Visibility.Visible;
+#endif
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
@@ -184,12 +190,11 @@ namespace CFLMedCab
 
         private void MainWindow_Deactivated(object sender, EventArgs e)
         {
-            //this.Topmost = true;
+            this.Topmost = true;
         }
 
         private void onInventoryTimer(object sender, EventArgs e)
         {
-            return;
             List <InventoryPlanLDB> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
 
             foreach(var item in listPan)
@@ -454,6 +459,16 @@ namespace CFLMedCab
             Taskbar.HideTask(false);
             System.Environment.Exit(0);
         }
+
+        private void initCurrentGoodsInfo()
+        {
+#if TESTENV
+            HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
+#else
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+#endif
+            ApplicationState.SetGoodsInfo(hs);
+        }
         
         
 #region 领用
@@ -601,9 +616,9 @@ namespace CFLMedCab
                 FullFrame.Navigate(surgeryNoNumClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region 有手术单领用和医嘱处方领用
+#region 有手术单领用和医嘱处方领用
         /// <summary>
         /// 手术领用医嘱处方领用
         /// </summary>
@@ -1015,9 +1030,9 @@ namespace CFLMedCab
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region  ReturnGoods
+#region  ReturnGoods
         /// <summary>
         /// 进入退货出库页面
         /// </summary>

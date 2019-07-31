@@ -256,9 +256,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			//string com1 = "COM1";
             string com1 = ApplicationState.GetMRfidCOM();
 
+#if DUALCAB
             //string com4 = "COM4";
             string com4 = ApplicationState.GetSRfidCOM();
-
+#endif
 
             HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
 
@@ -291,8 +292,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
-
-			GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
+#if DUALCAB
+            GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
 			if (isCom4Connect)
 			{
 			
@@ -318,10 +319,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				isGetSuccess = false;
 			}
+#endif
 
-
-
-			WaitHandle.WaitAll(manualEvents.ToArray());
+            WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
 
 			return currentEpcDataHs;
@@ -393,12 +393,14 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		{
 			isGetSuccess = true;
 
-			string com1 = "COM1";
+			//string com1 = "COM1";
+            string com1 = ApplicationState.GetMRfidCOM();
+#if DUALCAB
+            //string com4 = "COM4";
+            string com4 = ApplicationState.GetSRfidCOM();
+#endif
 
-            string com4 = "COM4";
-
-
-			Hashtable currentEpcDataHt = new Hashtable();
+            Hashtable currentEpcDataHt = new Hashtable();
 
 			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
 			if (isCom1Connect)
@@ -410,8 +412,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
-
-			GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
+#if DUALCAB
+            GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
 			if (isCom4Connect)
 			{
 				currentEpcDataHt.Add(com4, DealComData(com4ClientConn, com4, out isGetSuccess));
@@ -420,8 +422,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				isGetSuccess = false;
 			}
-
-			WaitHandle.WaitAll(manualEvents.ToArray());
+#endif
+            WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
 
 			return currentEpcDataHt;
