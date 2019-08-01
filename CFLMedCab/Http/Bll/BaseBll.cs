@@ -151,7 +151,7 @@ namespace CFLMedCab.Http.Bll
 				.Where((lcc) => lcc.operate_type == pageDataApo.operate_type)
 				.WhereIF(pageDataApo.startTime.HasValue, (lcc) => lcc.create_time >= pageDataApo.startTime)
 				.WhereIF(pageDataApo.endTime.HasValue, (lcc) => lcc.create_time <= pageDataApo.endTime)
-				.WhereIF((!string.IsNullOrEmpty(pageDataApo.name) && !string.IsNullOrWhiteSpace(pageDataApo.name)), (lcc) => lcc.name.Contains(pageDataApo.name))
+				.WhereIF((!string.IsNullOrEmpty(pageDataApo.name) && !string.IsNullOrWhiteSpace(pageDataApo.name)), (lcc) => lcc.CommodityName.Contains(pageDataApo.name))
 				.OrderBy((lcc) => lcc.create_time, OrderByType.Desc)
 				.Select<LocalCommodityCode>();
 
