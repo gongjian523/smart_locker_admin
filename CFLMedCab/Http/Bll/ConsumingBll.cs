@@ -244,16 +244,34 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="baseDataCommodityCode"></param>
 		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrderType type)
+		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrderType type, SourceBill  sourceBill = null)
 		{
-			//创建领用单
-			var order = CreateConsumingOrder(new ConsumingOrder()
-			{
-				FinishDate = GetDateTimeNow(),//完成时间
-				Status = ConsumingOrderStatus.已完成.ToString(),//领用状态
-				StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
-				Type = type.ToString()//领用类型
-			});
+
+            ConsumingOrder consumingOrder;
+            if(type == ConsumingOrderType.医嘱处方领用)
+            {
+                consumingOrder = new ConsumingOrder()
+                {
+                    FinishDate = GetDateTimeNow(),//完成时间
+                    Status = ConsumingOrderStatus.已完成.ToString(),//领用状态
+                    StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
+                    Type = type.ToString(),//领用类型
+                    SourceBill = sourceBill  // 需要填写医嘱处方SourceBill
+                };
+            }
+            else
+            {
+                consumingOrder = new ConsumingOrder()
+                {
+                    FinishDate = GetDateTimeNow(),//完成时间
+                    Status = ConsumingOrderStatus.已完成.ToString(),//领用状态
+                    StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
+                    Type = type.ToString()//领用类型
+                };
+            }
+
+            //创建领用单
+            var order = CreateConsumingOrder(consumingOrder);
 			//校验数据是否正常
 			HttpHelper.GetInstance().ResultCheck(order, out bool isSuccess);
 
@@ -266,7 +284,6 @@ namespace CFLMedCab.Http.Bll
 					message = ResultCode.Result_Exception.ToString()
 				};
 			}
-
 
 			var normalList = new List<CommodityCode>();//回退商品列表
 			var lossList = new List<CommodityCode>();//领用商品列表
@@ -346,7 +363,7 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="baseDataCommodityCode"></param>
 		/// <param name="order"></param>
 		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order)
+		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order)
 		{
 			//更新领用单状态信息
 			var orderResult = UpdateConsumingOrderStatus(order);

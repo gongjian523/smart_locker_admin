@@ -133,7 +133,7 @@ namespace CFLMedCab.View.Fetch
                 if(bdCommodityCode.body.objects.Count > 0)
                 {
                     BasePostData<CommodityInventoryChange> bdBasePostData =
-                        ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0]);
+                        ConsumingBll.GetInstance().SubmitConsumingChangeWithOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0]);
 
                     if (bdBasePostData.code != 0)
                     {

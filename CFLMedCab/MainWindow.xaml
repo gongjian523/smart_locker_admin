@@ -79,7 +79,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
-                            <RowDefinition />
+                            <!--<RowDefinition />-->
                         </Grid.RowDefinitions>
                         <Button  Style="{DynamicResource HPNavButton}"  Grid.Row="0" Grid.Column="0" Margin="10,10,10,10"   Background="#3D7CFF"  Content="一般领用"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-GerFetch.png" Click="onEnterGerFetch"  x:Name="NavBtnEnterGerFetch" />
@@ -98,7 +98,7 @@
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="3"  Margin="10,10,10,10"   Background="#3D7CFF"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterStock" x:Name="NavBtnEnterStock"/>
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="2" Grid.Column="0"  Margin="10,10,10,10"   Background="#FF8B50"  Content="系统设置"
-                                 Tag="/CFLMedCab;component/Resources/Images/btn-SysSetting.png" Click="onEnterSysSetting" x:Name="NavBtnEnterSysSetting"/>
+                                 Tag="/CFLMedCab;component/Resources/Images/btn-SysSetting.png" Click="onEnterSysSetting" x:Name="NavBtnEnterSysSetting" Visibility="Collapsed"/>
                     </Grid>
 
                 </Border>

@@ -33,7 +33,7 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterSurgeryDetailHandler(object sender, FetchParam fetchParam);
         public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
         
-        public delegate void EnterSurgeryNoNumOpenHandler(object sender, RoutedEventArgs e);
+        public delegate void EnterSurgeryNoNumOpenHandler(object sender, ConsumingOrder e);
         public event EnterSurgeryNoNumOpenHandler EnterSurgeryNoNumOpenEvent;
 
         public delegate void EnterPrescriptionOpenHandler(object sender, ConsumingOrder e);

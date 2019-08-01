@@ -553,7 +553,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterSurgeryNoNumOpen(object sender, RoutedEventArgs e)
+        private void onEnterSurgeryNoNumOpen(object sender, ConsumingOrder e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
@@ -564,10 +564,12 @@ namespace CFLMedCab
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+            delegateGetMsg.userData = e;
 
 #if DUALCAB
             LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+            delegateGetMsg.userData = e;
 
             cabClosedNum = 0;
 #endif
@@ -606,12 +608,24 @@ namespace CFLMedCab
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+            ConsumingOrder consumingOrder = (ConsumingOrder)delegateGetMsg.userData;
+
             //关闭盘点中弹窗
             ClosePop();
             
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose(hs, ConsumingOrderType.手术领用, new ConsumingOrder());
+                SurgeryNoNumClose surgeryNoNumClose;
+                if (consumingOrder == null)
+                {
+                    surgeryNoNumClose  = new SurgeryNoNumClose(hs, ConsumingOrderType.手术领用, new ConsumingOrder());
+                }
+                else
+                {
+                    surgeryNoNumClose = new SurgeryNoNumClose(hs, ConsumingOrderType.医嘱处方领用, consumingOrder);
+                }
+                
                 surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
                 FullFrame.Navigate(surgeryNoNumClose);
@@ -639,6 +653,7 @@ namespace CFLMedCab
             SurgeryQuery surgeryQuery = new SurgeryQuery(type);
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
+            surgeryQuery.EnterPrescriptionOpenEvent += new SurgeryQuery.EnterPrescriptionOpenHandler(onEnterSurgeryNoNumOpen);
 
             surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
             surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);

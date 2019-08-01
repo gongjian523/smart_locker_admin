@@ -5,6 +5,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Constant;
@@ -140,13 +141,20 @@ namespace CFLMedCab.View.Fetch
                             MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
                         }
                     }
-                    else 
+                    else
+                    {
+                        BasePostData<CommodityInventoryChange> bdBasePostData =
+                            ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.医嘱处方领用,new SourceBill {
+                                object_id = consumingOrder.id,
+                                object_name = "PrescriptionOrder"
+                            });
 
+                        if (bdBasePostData.code != 0)
+                        {
+                            MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+                        }
 
-
-
-
-
+                    }
                     ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
                 }
             }
