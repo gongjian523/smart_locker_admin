@@ -613,10 +613,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				if (null != msg && 0 == msg.Result)
 				{
 					Console.WriteLine(msg.ToString());
-					//按照规则处理
-					string rfid = $"RF{msg.Epc.Substring(msg.Epc.Length - 8)}";
-
-					msgHs.Add(rfid);
+					msgHs.Add(msg.Epc);
 
 				}
 			}
