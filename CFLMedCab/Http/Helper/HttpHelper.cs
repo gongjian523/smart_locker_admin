@@ -295,7 +295,7 @@ namespace CFLMedCab.Http.Helper
 					break;
 				case ResultHandleType.请求超时:
 
-					if (handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
+                    if (handleEventWait.WaitOne(HttpConstant.HttpTimeOut))
 					{
 						ret = new BaseData<T>
 						{
@@ -995,10 +995,20 @@ namespace CFLMedCab.Http.Helper
         /// <param name="isSuccess"></param>
         /// <returns></returns>
         public BaseData<T> ResultCheck<T>(BaseData<T> baseData, out bool isSuccess)
-		{
+		{ 
 			isSuccess = false;
 
-			if (baseData.code == (int)ResultCode.OK)
+            if (baseData == null)
+            {
+                baseData = new BaseData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return baseData;
+            }
+
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null && baseData.body.global_offset > 0)
 				{
@@ -1030,7 +1040,17 @@ namespace CFLMedCab.Http.Helper
 
 			BasePutData<T> basePutData = null;
 
-			if (baseData.code == (int)ResultCode.OK)
+            if (basePutData == null)
+            {
+                basePutData = new BasePutData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return basePutData;
+            }
+
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null && baseData.body.global_offset > 0)
 				{
@@ -1073,7 +1093,17 @@ namespace CFLMedCab.Http.Helper
 		{
 			isSuccess = false;
 
-			if (baseData.code == (int)ResultCode.OK)
+            if (baseData == null)
+            {
+                baseData = new BasePostData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return baseData;
+            }
+
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null && baseData.body.Count > 0)
 				{
@@ -1104,7 +1134,18 @@ namespace CFLMedCab.Http.Helper
 		{
 			isSuccess = false;
 
-			if (baseData.code == (int)ResultCode.OK)
+            if (baseData == null)
+            {
+                baseData = new BasePutData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return baseData;
+            }
+
+
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null)
 				{
@@ -1131,8 +1172,17 @@ namespace CFLMedCab.Http.Helper
 		/// <returns></returns>
 		public BaseData<T> ResultCheck<T>(BaseData<T> baseData)
 		{
+            if (baseData == null)
+            {
+                baseData = new BaseData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return baseData;
+            }
 
-			if (baseData.code == (int)ResultCode.OK)
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body == null || baseData.body.global_offset <= 0)
 				{
@@ -1157,8 +1207,18 @@ namespace CFLMedCab.Http.Helper
 
 			BaseData<T> ret;
 
-			//结果集正常
-			if (baseData.code == (int)ResultCode.OK)
+            if (baseData == null)
+            {
+                ret = new BaseData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return ret;
+            }
+
+            //结果集正常
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null && baseData.body.global_offset > 0)
 				{
@@ -1201,8 +1261,20 @@ namespace CFLMedCab.Http.Helper
 
 			BaseData<T> ret;
 
-			//结果集正常
-			if (baseData.code == (int)ResultCode.OK)
+
+            if (baseData == null)
+            {
+                ret = new BaseData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return ret;
+            }
+
+
+            //结果集正常
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null && baseData.body.global_offset > 0)
 				{
@@ -1246,8 +1318,18 @@ namespace CFLMedCab.Http.Helper
 
 			BaseSinglePostData<T> ret;
 
-			//结果集正常
-			if (baseData.code == (int)ResultCode.OK)
+            if (baseData == null)
+            {
+                ret = new BaseSinglePostData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return ret;
+            }
+
+            //结果集正常
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null)
 				{
@@ -1288,6 +1370,16 @@ namespace CFLMedCab.Http.Helper
         {
 
 			BasePostData<T> ret;
+
+            if (baseData == null)
+            {
+                ret = new BasePostData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return ret;
+            }
 
             //结果集正常
             if (baseData.code == (int)ResultCode.OK)
@@ -1332,8 +1424,20 @@ namespace CFLMedCab.Http.Helper
 
 			BasePostData<T> ret;
 
-			//结果集正常
-			if (baseData.code == (int)ResultCode.OK)
+
+            if (baseData == null)
+            {
+                ret = new BasePostData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return ret;
+            }
+
+
+            //结果集正常
+            if (baseData.code == (int)ResultCode.OK)
 			{
 				if (baseData.body != null)
 				{
@@ -1375,6 +1479,12 @@ namespace CFLMedCab.Http.Helper
 
             string ret;
 
+            if (data == null)
+            {
+                ret = ResultCode.Result_Exception.ToString();
+                return ret;
+            }
+
             //结果集正常
             if (data.code == (int)ResultCode.OK)
             {
@@ -1396,6 +1506,8 @@ namespace CFLMedCab.Http.Helper
 
             return ret;
         }
+
+
 
     }
 }
