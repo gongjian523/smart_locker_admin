@@ -365,7 +365,7 @@ namespace CFLMedCab.Http.Bll
 
 			var tempChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDataCommodityCode, sourceBill);
 			//校验数据是否正常
-			HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(tempChange, out bool isSuccess2);
 
 			return tempChange;
 		}
