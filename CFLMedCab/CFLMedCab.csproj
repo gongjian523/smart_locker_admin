@@ -155,6 +155,7 @@
     <Compile Include="APO\Inventory\GetGoodApo.cs" />
     <Compile Include="APO\GoodsChange\GoodsChangeApo.cs" />
     <Compile Include="APO\Inventory\GetGoodsApo.cs" />
+    <Compile Include="APO\InventoryChangesApo.cs" />
     <Compile Include="APO\Inventory\InventoryOrderApo.cs" />
     <Compile Include="APO\Picking\PickingSubOrderdtlApo.cs" />
     <Compile Include="APO\Replenish\ReplenishSubOrderdtlApo.cs" />
