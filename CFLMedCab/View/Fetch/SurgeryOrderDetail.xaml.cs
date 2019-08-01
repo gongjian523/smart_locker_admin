@@ -51,11 +51,6 @@ namespace CFLMedCab.View.Fetch
                 lbCodeTitle.Content = "手术单号";
                 listView.DataContext = fetchParam.bdOperationOrderGoodsDetail.body.objects;
             }
-            else
-            {
-                lbCodeTitle.Content = "医嘱处方单号";
-                listView.DataContext = fetchParam.bdPrescriptionOrderGoodsDetail.body.objects;
-            }
         }
 
         /// <summary>

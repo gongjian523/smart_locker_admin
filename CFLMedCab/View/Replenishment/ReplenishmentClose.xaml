@@ -127,7 +127,7 @@
                         <Grid x:Name="normalBtmView" >
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Label Style="{StaticResource lblTitle1}" Content="是否结束本次操作？" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Horizontal" Grid.Column="1">

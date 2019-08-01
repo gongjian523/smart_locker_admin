@@ -36,17 +36,14 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterSurgeryNoNumOpenHandler(object sender, RoutedEventArgs e);
         public event EnterSurgeryNoNumOpenHandler EnterSurgeryNoNumOpenEvent;
 
+        public delegate void EnterPrescriptionOpenHandler(object sender, ConsumingOrder e);
+        public event EnterPrescriptionOpenHandler EnterPrescriptionOpenEvent;
+
         public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
         public event ShowLoadDataHandler ShowLoadDataEvent;
 
         public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
         public event HideLoadDataHandler HideLoadDataEvent;
-
-        public delegate void ShowKeyboardHandler(object sender, RoutedEventArgs e);
-        public event ShowKeyboardHandler ShowKeyboardEvent;
-
-        public delegate void HideKeyboardHandler(object sender, RoutedEventArgs e);
-        public event HideKeyboardHandler HideKeyboardEvent;
 
         KeyboardView kbHandler = new KeyboardView();
 
@@ -107,11 +104,6 @@ namespace CFLMedCab.View.Fetch
                     fetchParam.bdOperationOrderGoodsDetail = 
                         ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
                 }
-                else
-                {
-                    fetchParam.bdPrescriptionOrderGoodsDetail = 
-                        ConsumingBll.GetInstance().GetPrescriptionOrderGoodsDetail(fetchParam.bdConsumingOrder);
-                }
             }
 
             HideLoadDataEvent(this, null);
@@ -126,20 +118,15 @@ namespace CFLMedCab.View.Fetch
             {
                 if (fetchParam.bdOperationOrderGoodsDetail.code != 0)
                 {
-                    MessageBox.Show("无法获取手术单详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("无法获取手术单物品详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
                     return;
                 }
+                EnterSurgeryDetailEvent(this, fetchParam);
             }
             else
             {
-                if (fetchParam.bdPrescriptionOrderGoodsDetail.code != 0)
-                {
-                    MessageBox.Show("无法获取医嘱处方单详情！" + fetchParam.bdPrescriptionOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
-                    return;
-                }
+                EnterPrescriptionOpenEvent(this, fetchParam.bdConsumingOrder.body.objects[0]);
             }
-
-            EnterSurgeryDetailEvent(this, fetchParam);
         }
         
         /// <summary>
@@ -172,7 +159,6 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onGotFocus(object sender, RoutedEventArgs e)
         {
-            //ShowKeyboardEvent(this, null);
             //kbHandler = new KeyboardView();
             kbHandler.SetCurrentControl((Control)sender);
             kbHandler.Topmost = true;
@@ -186,7 +172,6 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onLostFocus(object sender, RoutedEventArgs e)
         {
-            //HideKeyboardEvent(this, null);
             kbHandler.Hide();
         }
     }

@@ -26,6 +26,6 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 医嘱处方领单
         /// </summary>
-        public BaseData<PrescriptionOrderGoodsDetail> bdPrescriptionOrderGoodsDetail { get; set; }
+        //public BaseData<PrescriptionOrderGoodsDetail> bdPrescriptionOrderGoodsDetail { get; set; }
     }
 }

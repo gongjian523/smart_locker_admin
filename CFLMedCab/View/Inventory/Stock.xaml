@@ -22,7 +22,7 @@
             <Border  Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="库存查询"  Name="stockSnapshot" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  IsChecked="True" FontWeight="Bold" Click="onStockSnapshot"/>
-                    <RadioButton Content="有效期查询" Name="validity" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="EffectivePeriod"/>
+                    <RadioButton Content="有效期查询" Name="validity" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="EffectivePeriod" Visibility="Collapsed"/>
                     <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="StockQuery" />
                 </StackPanel>
             </Border>

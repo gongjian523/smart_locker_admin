@@ -10,9 +10,8 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
-    [JsonObject(MemberSerialization.OptOut)]
     public class CommodityInventoryChange: BaseModel
-	{
+    {
         public string CommodityCodeId { get; set; }
         /// <summary>
         /// 商品码

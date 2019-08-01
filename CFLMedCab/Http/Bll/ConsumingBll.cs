@@ -259,7 +259,7 @@ namespace CFLMedCab.Http.Bll
 
 			if (!isSuccess)
 			{
-                LogUtils.Warn("CreateConsumingOrder" + ResultCode.Result_Exception.ToString());
+                LogUtils.Warn("CreateConsumingOrder 1:" + ResultCode.Result_Exception.ToString());
                 return new BasePostData<CommodityInventoryChange>()
 				{
 					code = (int)ResultCode.Result_Exception,
@@ -334,9 +334,11 @@ namespace CFLMedCab.Http.Bll
 			var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeList);
 
 			//校验数据是否正常
-			HttpHelper.GetInstance().ResultCheck(order, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(changes, out bool isSuccess2);
+            if(!isSuccess2)
+                LogUtils.Warn("CreateConsumingOrder 2:" + ResultCode.Result_Exception.ToString());
 
-			return changes;
+            return changes;
 		}
 		/// <summary>
 		/// 有单领用数据提交

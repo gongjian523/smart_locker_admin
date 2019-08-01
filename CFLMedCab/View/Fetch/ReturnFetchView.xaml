@@ -59,23 +59,19 @@
                         </StackPanel>
                     </Border>
                     <Grid Grid.Row="1">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto" />
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
                             <Grid Grid.Column="2" x:Name="column3"/>
+                            <Grid Grid.Column="3" x:Name="column4"/>
                         </Grid>
-
-                        <Label Style="{StaticResource lblTitle5}" Content="本次操作明细" Grid.Row="0"/>
-                        <ListView Style="{StaticResource DefaultListView}"  Grid.Row="1"  ItemsSource="{Binding}" Name="listView">
+                        <ListView Style="{StaticResource DefaultListView}"  ItemsSource="{Binding}" Name="listView">
                             <ListView.View>
                                 <GridView>
                                     <GridViewColumn Header="商品名称" Width="{Binding ElementName=column1,Path=ActualWidth}">
@@ -96,6 +92,13 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=AbnormalDisplay}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

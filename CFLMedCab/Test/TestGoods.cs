@@ -1,9 +1,11 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Timers;
 using static CFLMedCab.Model.Enum.UserIdEnum;
 
 namespace CFLMedCab.Test
@@ -327,6 +329,26 @@ namespace CFLMedCab.Test
                 },
             };
             fetchOrderBll.InitSurgerOrder(surgeryOrdersG);
+        }
+
+        public void onInitGoods(object sender, EventArgs e)
+        {
+            bool isGetSuccess;
+            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
+        }
+
+        public void TestLocker(object sender, ElapsedEventArgs e)
+        {
+            Console.ReadKey();
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(TestLockerEvent);
+        }
+
+        public void TestLockerEvent(object sender, bool isClose)
+        {
+            Console.WriteLine("返回开锁状态{0}", isClose);
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
         }
     }
 }

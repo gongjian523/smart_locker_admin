@@ -3,6 +3,7 @@ using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -58,15 +59,26 @@ namespace CFLMedCab.View.Fetch
             after = hashtable;
 
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
+
             if (bdCommodityCode.code != 0)
             {
-                MessageBox.Show("没有检测到任何商品变化！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("获取商品信息错误！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            if (bdCommodityCode.body.objects.Count == 0)
+            {
+                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
             listView.DataContext = bdCommodityCode.body.objects;
-            returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type==1).Count();
+            returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
             fetchNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+
+            bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().ForEach(it => {
+                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+            });
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
@@ -112,11 +124,25 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            BasePostData<CommodityInventoryChange> bdCommodityInventoryChange 
-                = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, new SourceBill {
-                    object_name = "ConsumingReturnOrder",
-                    object_id = ""
-                });
+            if(bdCommodityCode.code == 0)
+            {
+                if(bdCommodityCode.body.objects.Count >0)
+                {
+                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange
+                        = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, new SourceBill
+                        {
+                            object_name = "ConsumingReturnOrder",
+                            object_id = ""
+                        });
+
+                    if (bdCommodityInventoryChange.code != 0)
+                    {
+                        MessageBox.Show("提交结果失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
+                    }
+
+                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
+                }
+            }
 
             ApplicationState.SetGoodsInfo(after);
 

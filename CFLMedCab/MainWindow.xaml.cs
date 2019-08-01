@@ -611,7 +611,7 @@ namespace CFLMedCab
             
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose(hs, ConsumingOrderType.手术领用);
+                SurgeryNoNumClose surgeryNoNumClose = new SurgeryNoNumClose(hs, ConsumingOrderType.手术领用, new ConsumingOrder());
                 surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
                 FullFrame.Navigate(surgeryNoNumClose);
@@ -642,9 +642,6 @@ namespace CFLMedCab
 
             surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
             surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);
-
-            surgeryQuery.ShowKeyboardEvent += new SurgeryQuery.ShowKeyboardHandler(onShowKeyboard);
-            surgeryQuery.HideKeyboardEvent += new SurgeryQuery.HideKeyboardHandler(onHideKeyboard);
 
             ContentFrame.Navigate(surgeryQuery);
         }
@@ -1633,27 +1630,6 @@ namespace CFLMedCab
             //iniGoodstimer.Elapsed += new ElapsedEventHandler(onInitGoods);
 #endif
 
-        }
-
-        [Obsolete]
-        private void onInitGoods(object sender, EventArgs e)
-        {
-            bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-        }
-
-        private void TestLocker(object sender, ElapsedEventArgs e)
-        {
-            Console.ReadKey();
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(TestLockerEvent);
-        }
-
-        private void TestLockerEvent(object sender, bool isClose)
-        {
-            Console.WriteLine("返回开锁状态{0}", isClose);
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
         }
 #endregion
 

@@ -65,6 +65,19 @@ namespace CFLMedCab.View.Fetch
             after = afterEps;
 
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
+
+            if (bdCommodityCode.code != 0)
+            {
+                MessageBox.Show("获取商品信息错误！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            if (bdCommodityCode.body.objects.Count == 0)
+            {
+                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
             listView1.DataContext = bdCommodityCode.body.objects;
 
             //inNum.Content = currentOperateNum;//领用数
@@ -115,18 +128,20 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            if(bdCommodityCode.code != 0)
+            if(bdCommodityCode.code == 0)
             {
-                ApplicationState.SetGoodsInfo(after);
-                EnterPopCloseEvent(this, bExit);
-            }
+                if(bdCommodityCode.body.objects.Count > 0)
+                {
+                    BasePostData<CommodityInventoryChange> bdBasePostData =
+                        ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0]);
 
-            BasePostData<CommodityInventoryChange> bdBasePostData =
-                ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0]);
+                    if (bdBasePostData.code != 0)
+                    {
+                        MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+                    }
 
-            if (bdBasePostData.code != 0)
-            {
-                MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
+                }
             }
 
             ApplicationState.SetGoodsInfo(after);

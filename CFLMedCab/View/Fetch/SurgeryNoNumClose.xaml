@@ -55,7 +55,7 @@
                     <Border Style="{StaticResource TipBorder}" Width="{Binding ElementName=myGrid,Path=ActualWidth}" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="当前领用了" Style="{StaticResource lblTitle1}"/>
-                            <Label Content=" " Name="inNum" Style="{StaticResource lblTitleRed}"/>
+                            <Label Content=" " Name="outNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品，退回了"  Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品" Style="{StaticResource lblTitle1}"/>
@@ -82,7 +82,7 @@
                         <ListView Style="{StaticResource DefaultListView}" Grid.Row="1"  ItemsSource="{Binding}" Name="listView">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="商品名称" DisplayMemberBinding="{Binding Path=name}" Width="{Binding ElementName=column1,Path=ActualWidth}">
+                                    <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column1,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=CommodityName}"/>
@@ -121,8 +121,8 @@
             <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
 
                     <Label Style="{StaticResource lblTitle5}" Content="是否结束本次操作？" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" />

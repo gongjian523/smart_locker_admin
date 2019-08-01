@@ -2,6 +2,7 @@
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
@@ -43,8 +44,10 @@ namespace CFLMedCab.View.Fetch
 
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
+        private ConsumingOrder consumingOrder;
+        private ConsumingOrderType consumingOrderType;
 
-        public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, ConsumingOrderType type)
+        public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, ConsumingOrderType type, ConsumingOrder order)
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
@@ -53,11 +56,31 @@ namespace CFLMedCab.View.Fetch
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = afterEps;
 
+            consumingOrder = order;
+            consumingOrderType = type;
+
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
+
+            if (bdCommodityCode.code != 0)
+            {
+                MessageBox.Show("获取商品信息错误！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            if (bdCommodityCode.body.objects.Count == 0)
+            {
+                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
             listView.DataContext = bdCommodityCode.body.objects;
             lbTypeContent.Content = type;
-            inNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
-            abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+            outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+            abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+
+            bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
+                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+            });
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
@@ -102,15 +125,34 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            BasePostData<CommodityInventoryChange> bdBasePostData =
-                ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.手术领用);
-
-            if (bdBasePostData.code != 0)
+            if (bdCommodityCode.code == 0)
             {
-                MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+                if(bdCommodityCode.body.objects.Count > 0)
+                {
+
+                    if(consumingOrderType == ConsumingOrderType.手术领用)
+                    {
+                        BasePostData<CommodityInventoryChange> bdBasePostData =
+                            ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.手术领用);
+
+                        if (bdBasePostData.code != 0)
+                        {
+                            MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+                        }
+                    }
+                    else 
+
+
+
+
+
+
+                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
+                }
             }
 
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, after);
+            ApplicationState.SetGoodsInfo(after);
+
             EnterPopCloseEvent(this, bExit);
         }
     }
