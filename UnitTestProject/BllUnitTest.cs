@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.QuartzHelper;
 using CFLMedCab.Infrastructure.QuartzHelper.job;
 using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
@@ -297,9 +299,22 @@ namespace UnitTestProject
 
             if(null != recovery && null != recovery.body && null != recovery.body.objects)
             {
-                var temp = CommodityRecoveryBll.GetInstance().SubmitCommodityRecoveryChange(
-    GetBaseData(), recovery.body.objects[0]);
+                var temp = CommodityRecoveryBll.GetInstance().SubmitCommodityRecoveryChange(GetBaseData(), recovery.body.objects[0]);
             }
+
+        }
+        [TestMethod]
+        public void TestGoodsInfo()
+        {
+            var codes = GetBaseData().body.objects.GroupBy(code => new { code.CommodityId, code.GoodsLocationId }).Select(g => (new Commodity()
+                {
+                    id = g.Key.CommodityId,//CommodityId
+                    GoodsLocationId = g.Key.GoodsLocationId,
+                    GoodsLocationName = g.ElementAt(0).GoodsLocationName,
+                    name = g.ElementAt(0).CommodityName,//name
+                    Count = g.Count(),//商品数量
+                    codes = GetBaseData().body.objects.Where(it => it.CommodityId == g.Key.CommodityId && it.GoodsLocationId == g.Key.GoodsLocationId).ToList()
+            })).ToList();
 
         }
 	}
