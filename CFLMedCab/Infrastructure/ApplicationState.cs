@@ -344,7 +344,7 @@ namespace CFLMedCab.Infrastructure
         /// <param name="houseId"></param>
         public static void SetHouseId(string houseId)
         {
-            SetValue((int)ApplicationKey.EquipId, houseId);
+            SetValue((int)ApplicationKey.HouseId, houseId);
             return;
         }
 

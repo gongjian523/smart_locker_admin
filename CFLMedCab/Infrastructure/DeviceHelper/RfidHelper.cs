@@ -255,37 +255,20 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			//string com1 = "COM1";
             string com1 = ApplicationState.GetMRfidCOM();
+            HashSet<string> com1HashSet = new HashSet<string>();
 
 #if DUALCAB
             //string com4 = "COM4";
             string com4 = ApplicationState.GetSRfidCOM();
+            HashSet<string> com4HashSet = new HashSet<string>();
 #endif
-
             HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
 
-			//TODO:需要补充id
-			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
+            //TODO:需要补充id
+            GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
 			if (isCom1Connect)
 			{
-				HashSet<string> com1HashSet = DealComData(com1ClientConn, com1, out isGetSuccess);
-
-				foreach (string rfid in com1HashSet)
-				{
-					CommodityEps commodityEps = new CommodityEps
-					{
-						CommodityCodeName = rfid,
-						EquipmentId = ApplicationState.GetEquipId(),
-						EquipmentName = ApplicationState.GetEquipName(),
-						StoreHouseId = ApplicationState.GetHouseId(),
-						StoreHouseName = ApplicationState.GetHouseName(),
-						GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
-						GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
-					};
-				
-					currentEpcDataHs.Add(commodityEps);
-
-				}
-				
+				com1HashSet = DealComData(com1ClientConn, com1, out isGetSuccess);
 			}
 			else
 			{
@@ -296,24 +279,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
 			if (isCom4Connect)
 			{
-			
-				HashSet<string> com4HashSet = DealComData(com4ClientConn, com4, out isGetSuccess);
-
-				foreach (string rfid in com4HashSet)
-				{
-					CommodityEps commodityEps = new CommodityEps
-					{
-						CommodityCodeName = rfid,
-						EquipmentId = ApplicationState.GetEquipId(),
-						EquipmentName = ApplicationState.GetEquipName(),
-						StoreHouseId = ApplicationState.GetHouseId(),
-						StoreHouseName = ApplicationState.GetHouseName(),
-						GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com4),
-						GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com4)
-					};
-
-					currentEpcDataHs.Add(commodityEps);
-				}
+				com4HashSet = DealComData(com4ClientConn, com4, out isGetSuccess);
 			}
 			else
 			{
@@ -324,8 +290,46 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
 
-			return currentEpcDataHs;
+            //提取com1的标签epc，并组装
+            foreach (string rfid in com1HashSet)
+            {
+                CommodityEps commodityEps = new CommodityEps
+                {
+                    CommodityCodeName = $"RF{rfid.Substring(rfid.Length - 8)}",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                };
 
+                currentEpcDataHs.Add(commodityEps);
+                Console.WriteLine(commodityEps.CommodityCodeName + commodityEps.CommodityName);
+            }
+
+#if DUALCAB
+            //提取com4的标签epc，并组装
+            foreach (string rfid in com4HashSet)
+            {
+                CommodityEps commodityEps = new CommodityEps
+                {
+                    CommodityCodeName = $"RF{rfid.Substring(rfid.Length - 8)}",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                };
+
+                currentEpcDataHs.Add(commodityEps);
+                Console.WriteLine(commodityEps.CommodityCodeName + commodityEps.CommodityName);
+
+            }
+#endif
+            Console.WriteLine("RFID NUM:" + currentEpcDataHs.Count());
+            return currentEpcDataHs;
 		}
 
 
@@ -341,6 +345,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return testGoods.GetCurrentRFid(); 
         }
 #else
+        [Obsolete]
         public static Hashtable GetEpcData(out bool isGetSuccess)
 		{
 			isGetSuccess = true;

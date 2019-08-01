@@ -103,7 +103,7 @@ namespace CFLMedCab.View.Fetch
         private void EndOperation(bool bExit)
         {
             BasePostData<CommodityInventoryChange> bdBasePostData =
-                ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode);
+                ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.手术领用);
 
             if (bdBasePostData.code != 0)
             {

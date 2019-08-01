@@ -5,6 +5,7 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.ToolHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace CFLMedCab.Http.Bll
         {
             if(null == changes || changes.Count <= 0)
             {
+                LogUtils.Warn("CreateCommodityInventoryChange" + ResultCode.Result_Exception.ToString());
                 return new BasePostData<CommodityInventoryChange>()
                 {
                     code = (int)ResultCode.Parameter_Exception,

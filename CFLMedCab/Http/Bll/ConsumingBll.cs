@@ -6,6 +6,7 @@ using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.Enum;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.ToolHelper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -243,7 +244,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="baseDataCommodityCode"></param>
 		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode)
+		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrderType type)
 		{
 			//创建领用单
 			var order = CreateConsumingOrder(new ConsumingOrder()
@@ -251,14 +252,15 @@ namespace CFLMedCab.Http.Bll
 				FinishDate = GetDateTimeNow(),//完成时间
 				Status = ConsumingOrderStatus.已完成.ToString(),//领用状态
 				StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
-				Type = ConsumingOrderType.一般领用.ToString()//领用类型
+				Type = type.ToString()//领用类型
 			});
 			//校验数据是否正常
 			HttpHelper.GetInstance().ResultCheck(order, out bool isSuccess);
 
 			if (!isSuccess)
 			{
-				return new BasePostData<CommodityInventoryChange>()
+                LogUtils.Warn("CreateConsumingOrder" + ResultCode.Result_Exception.ToString());
+                return new BasePostData<CommodityInventoryChange>()
 				{
 					code = (int)ResultCode.Result_Exception,
 					message = ResultCode.Result_Exception.ToString()

@@ -128,6 +128,11 @@ namespace CFLMedCab.Http.Bll
 
 			}
 
+            if(!result)
+            {
+                LogUtils.Warn("InsertLocalCommodityCodeInfo" + sourceBill);
+            }
+
 			return result;
 		}
 

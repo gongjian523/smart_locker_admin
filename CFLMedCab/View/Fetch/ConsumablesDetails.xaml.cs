@@ -57,7 +57,6 @@ namespace CFLMedCab.View.Fetch
         private void Return(object sender, RoutedEventArgs e)
         {
             EnterSurgeryDetailEvent(this, consumingOrder);
-
         }
     }
 }

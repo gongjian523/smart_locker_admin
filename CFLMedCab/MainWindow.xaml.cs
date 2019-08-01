@@ -101,7 +101,9 @@ namespace CFLMedCab
             BootUpHelper.GetInstance().SetMeAutoStart();
 
 			InitializeComponent();
-       
+
+            ConsoleManager.Show();
+
             foreach (Screen scr in Screen.AllScreens)
             {
                 if (scr.Primary)
@@ -147,7 +149,6 @@ namespace CFLMedCab
 
             Task.Factory.StartNew(initCurrentGoodsInfo);
 
-
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -175,7 +176,7 @@ namespace CFLMedCab
             }
 #endif
 #endif
-            ConsoleManager.Show();
+
 
 #if TESTENV
 #else
@@ -465,6 +466,7 @@ namespace CFLMedCab
 #if TESTENV
             HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
 #else
+            //Console.ReadKey();
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 #endif
             ApplicationState.SetGoodsInfo(hs);
@@ -525,18 +527,17 @@ namespace CFLMedCab
                 return;
             }
 #endif
-
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
             //关闭盘点中弹窗
             ClosePop();
             
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                GerFetchView gerFetchView = new GerFetchView(ht);
+                GerFetchView gerFetchView = new GerFetchView(hs);
                 gerFetchView.EnterPopCloseEvent += new GerFetchView.EnterPopCloseHandler(onEnterPopClose);
                 gerFetchView.EnterGerFetch += new GerFetchView.EnterFetchOpenHandler(onEnterGerFetch);
                 FullFrame.Navigate(gerFetchView);
@@ -1611,8 +1612,11 @@ namespace CFLMedCab
 
         private void MockData()
         {
-            test.InitGoodsInfo();
-            test.InitUsersInfo();
+            //test.InitGoodsInfo();
+            //test.InitUsersInfo();
+            //test.InitReplenishOrder();
+            //test.InitPickingOrder();
+            //test.InitSurgerOrder();
 
 #if TESTENV
             LoginBkView.Visibility = Visibility.Hidden;
@@ -1623,17 +1627,15 @@ namespace CFLMedCab
             TestGoods testGoods = new TestGoods();
             testGoods.GetCurrentRFid();
 #else
-            System.Timers.Timer iniGoodstimer = new System.Timers.Timer(1000);
-            iniGoodstimer.AutoReset = false;
-            iniGoodstimer.Enabled = true;
-            iniGoodstimer.Elapsed += new ElapsedEventHandler(onInitGoods);
+            //System.Timers.Timer iniGoodstimer = new System.Timers.Timer(1000);
+            //iniGoodstimer.AutoReset = false;
+            //iniGoodstimer.Enabled = true;
+            //iniGoodstimer.Elapsed += new ElapsedEventHandler(onInitGoods);
 #endif
-            test.InitReplenishOrder();
-            test.InitPickingOrder();
-            test.InitSurgerOrder();
+
         }
 
-
+        [Obsolete]
         private void onInitGoods(object sender, EventArgs e)
         {
             bool isGetSuccess;
