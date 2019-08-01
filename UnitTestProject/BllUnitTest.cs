@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.QuartzHelper;
 using CFLMedCab.Infrastructure.QuartzHelper.job;
 using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
@@ -40,39 +42,43 @@ namespace UnitTestProject
    //         });
 		}
 
+        public BaseData<CommodityCode> GetBaseData()
+        {
+            return CommodityCodeBll.GetInstance().GetCompareCommodity(
+                new HashSet<CommodityEps>()
+                {
+                    new CommodityEps
+                    {
+                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+                        CommodityCodeName = "QR00000038",
+                        CommodityName = "止血包",
+                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                        EquipmentName = "E00000008",
+                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                        GoodsLocationName = "L00000013"
+                    }
+                },
+
+                new HashSet<CommodityEps>()
+                {
+                    new CommodityEps
+                    {
+                        CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
+                        CommodityCodeName = "QR00000035",
+                        CommodityName = "止血包",
+                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
+                        EquipmentName = "E00000008",
+                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
+                        GoodsLocationName = "L00000013"
+                    }
+                }
+            );
+        }
 		[TestMethod]
 		public void ShelfBllTestMethod()
 		{
 
-			BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
-				new HashSet<CommodityEps>()
-				{
-					new CommodityEps
-					{
-						CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
-						CommodityCodeName = "QR00000038",
-						CommodityName = "止血包",
-						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-						EquipmentName = "E00000008",
-						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-						GoodsLocationName = "L00000013"
-					}
-				},
-
-				new HashSet<CommodityEps>()
-				{
-					new CommodityEps
-					{
-						CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-						CommodityCodeName = "QR00000035",
-						CommodityName = "止血包",
-						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-						EquipmentName = "E00000008",
-						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-						GoodsLocationName = "L00000013"
-					}
-				}
-			);
+            BaseData<CommodityCode> baseDataCommodityCode = GetBaseData();
 
 
 			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
@@ -104,37 +110,7 @@ namespace UnitTestProject
 		public void PickBllTestMethod()
 		{
 
-			BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
-				new HashSet<CommodityEps>()
-				{
-					new CommodityEps
-					{
-						CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
-						CommodityCodeName = "QR00000038",
-						CommodityName = "止血包",
-						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-						EquipmentName = "E00000008",
-						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-						GoodsLocationName = "L00000013"
-
-					}
-				},
-
-				new HashSet<CommodityEps>()
-				{
-					new CommodityEps
-					{
-						CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-						CommodityCodeName = "QR00000035",
-						CommodityName = "止血包",
-						EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-						EquipmentName = "E00000008",
-						GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-						GoodsLocationName = "L00000013"
-
-					}
-				}
-			);
+            BaseData<CommodityCode> baseDataCommodityCode = GetBaseData();
 
 
 			BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask("ST20190721000031");
@@ -198,55 +174,25 @@ namespace UnitTestProject
         [TestMethod]
         public void CommodityInventoryChangeTestMethod()
         {
-/*            //创建商品库存变更记录
-            var temp = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(new List<CommodityInventoryChange>()
-            {
-                new CommodityInventoryChange()
-                {
-                    CommodityCodeId = "AQACQqweDg8BAAAAq09Zts9esxXkLwQA",//商品码【扫描】
-                    SourceBill = new SourceBill()//来源单据
-                    {
-                        object_name = "ConsumingOrder",
-                        object_id = "AQACQqweDg8BAAAAv0_s8_fnsxXXagQA"
-                    },
-                    ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
-                }
-            });
+            /*            //创建商品库存变更记录
+                        var temp = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(new List<CommodityInventoryChange>()
+                        {
+                            new CommodityInventoryChange()
+                            {
+                                CommodityCodeId = "AQACQqweDg8BAAAAq09Zts9esxXkLwQA",//商品码【扫描】
+                                SourceBill = new SourceBill()//来源单据
+                                {
+                                    object_name = "ConsumingOrder",
+                                    object_id = "AQACQqweDg8BAAAAv0_s8_fnsxXXagQA"
+                                },
+                                ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
+                            }
+                        });
 
-            Console.WriteLine(temp);
-*/
+                        Console.WriteLine(temp);
+            */
             //根据商品码变更列表和来源单据创建库存变更记录资料
-            BaseData<CommodityCode> baseDataCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(
-                new HashSet<CommodityEps>()
-                {
-                    new CommodityEps
-                    {
-                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
-                        CommodityCodeName = "QR00000038",
-                        CommodityName = "止血包",
-                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-                        EquipmentName = "E00000008",
-                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-                        GoodsLocationName = "L00000013"
-            
-                    }
-                },
-            
-                new HashSet<CommodityEps>()
-                {
-                    new CommodityEps
-                    {
-                        CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-                        CommodityCodeName = "QR00000035",
-                        CommodityName = "止血包",
-                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-                        EquipmentName = "E00000008",
-                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-                        GoodsLocationName = "L00000013"
-            
-                    }
-                }
-            );
+            BaseData<CommodityCode> baseDataCommodityCode = GetBaseData();
             //货物领用
             SourceBill sourceBill = new SourceBill()
             {
@@ -345,5 +291,31 @@ namespace UnitTestProject
 			System.Threading.Thread.Sleep(2000000);
 
 		}
+
+        [TestMethod]
+        public void TestCommodityRecovery()
+        {
+            var recovery = CommodityRecoveryBll.GetInstance().GetCommodityRecovery("RT20190731000029");
+
+            if(null != recovery && null != recovery.body && null != recovery.body.objects)
+            {
+                var temp = CommodityRecoveryBll.GetInstance().SubmitCommodityRecoveryChange(GetBaseData(), recovery.body.objects[0]);
+            }
+
+        }
+        [TestMethod]
+        public void TestGoodsInfo()
+        {
+            var codes = GetBaseData().body.objects.GroupBy(code => new { code.CommodityId, code.GoodsLocationId }).Select(g => (new Commodity()
+                {
+                    id = g.Key.CommodityId,//CommodityId
+                    GoodsLocationId = g.Key.GoodsLocationId,
+                    GoodsLocationName = g.ElementAt(0).GoodsLocationName,
+                    name = g.ElementAt(0).CommodityName,//name
+                    Count = g.Count(),//商品数量
+                    codes = GetBaseData().body.objects.Where(it => it.CommodityId == g.Key.CommodityId && it.GoodsLocationId == g.Key.GoodsLocationId).ToList()
+            })).ToList();
+
+        }
 	}
 }

@@ -1,9 +1,11 @@
-﻿using CFLMedCab.Http.Helper;
+﻿using CFLMedCab.APO.Inventory;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -113,9 +115,13 @@ namespace CFLMedCab.Http.Bll
 			{
 				List<LocalCommodityCode> localCommodityCodes = baseDataCommodityCode.body.objects.MapToListIgnoreId<CommodityCode, LocalCommodityCode>();
 
+
+				var createTime = DateTime.Now;
+
 				localCommodityCodes.ForEach(it =>
 				{
 					it.sourceBill = sourceBill;
+					it.create_time = createTime;
 				});
 
 				//事务防止多插入产生脏数据
@@ -136,7 +142,57 @@ namespace CFLMedCab.Http.Bll
 			return result;
 		}
 
-        public string GetDateTimeNow()
+		/// <summary>
+		/// 获取变化后的商品信息
+		/// </summary>
+		/// <returns></returns>
+		public List<LocalCommodityCode> GetLocalCommodityCodeChange(InventoryChangesApo pageDataApo, out int totalCount)
+		{
+			totalCount = 0;
+			List<LocalCommodityCode> data;
+
+			//查询语句
+			var queryable = SqlSugarHelper.GetInstance().Db.Queryable<LocalCommodityCode>()
+				.Where((lcc) => lcc.operate_type == pageDataApo.operate_type)
+				.WhereIF(pageDataApo.startTime.HasValue, (lcc) => lcc.create_time >= pageDataApo.startTime)
+				.WhereIF(pageDataApo.endTime.HasValue, (lcc) => lcc.create_time <= pageDataApo.endTime)
+				.WhereIF((!string.IsNullOrEmpty(pageDataApo.name) && !string.IsNullOrWhiteSpace(pageDataApo.name)), (lcc) => lcc.CommodityName.Contains(pageDataApo.name))
+				.OrderBy((lcc) => lcc.create_time, OrderByType.Desc)
+				.Select<LocalCommodityCode>();
+
+
+			//如果小于0，默认查全部
+			if (pageDataApo.PageSize > 0)
+			{
+				data = queryable.ToPageList(pageDataApo.PageIndex, pageDataApo.PageSize, ref totalCount);
+			}
+			else
+			{
+				data = queryable.ToList();
+				totalCount = data.Count();
+			}
+			return data;
+		}
+
+		/// <summary>
+		/// 获取变化后的商品信息的名称集合
+		/// </summary>
+		/// <returns></returns>
+		public List<string> GetLocalCommodityName()
+		{
+		
+			//查询语句
+			var queryable = SqlSugarHelper.GetInstance().Db.Queryable<LocalCommodityCode>()
+				.Distinct()
+				.Select(it=>it.CommodityName).ToList();
+
+
+			return queryable;
+		}
+
+
+
+		public string GetDateTimeNow()
         {
             return DateTime.Now.ToString("s") + "Z";
         }

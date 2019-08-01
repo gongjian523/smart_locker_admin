@@ -1,12 +1,16 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+
 namespace CFLMedCab.Http.Model
 {
-	/// <summary>
-	/// 商品管理
-	/// </summary>
-	public class Commodity: BaseModel
+    /// <summary>
+    /// 商品管理
+    /// </summary>
+    [JsonObject(MemberSerialization.OptOut)]
+    public class Commodity: BaseModel
 	{
 		/// <summary>
 		/// 商品码
@@ -85,9 +89,28 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string updated_by { get; set; }
 
-		
+        /// <summary>
+        /// 数量
+        /// </summary>
+        [JsonIgnore]
+		public int Count { get; set; }
 
-	}
+        /// <summary>
+        /// 货位ID
+        /// </summary>
+        [JsonIgnore]
+        public string GoodsLocationId { get; set; }
+        /// <summary>
+        /// 货位名称
+        /// </summary>
+        [JsonIgnore]
+        public string GoodsLocationName { get; set; }
+        /// <summary>
+        /// 商品码详情列表
+        /// </summary>
+        [JsonIgnore]
+        public List<CommodityCode> codes { get; set; }
+    }
 
 	/// <summary>
 	/// 价钱

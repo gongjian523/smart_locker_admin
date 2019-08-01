@@ -81,5 +81,13 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string sourceBill { get; set; }
 
+		/// <summary>
+		/// 操作时间
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public DateTime create_time { get; set; }
+
+
+
 	}
 }
