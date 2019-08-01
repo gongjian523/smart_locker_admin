@@ -166,6 +166,7 @@
     <Compile Include="Http\Bll\BaseBll.cs" />
     <Compile Include="Http\Bll\CommodityCodeBll.cs" />
     <Compile Include="Http\Bll\CommodityInventoryChangeBll.cs" />
+    <Compile Include="Http\Bll\CommodityRecoveryBll.cs" />
     <Compile Include="Http\Bll\ConsumingBll.cs" />
     <Compile Include="Http\Bll\InventoryTaskBll.cs" />
     <Compile Include="Http\Bll\RollbackBll.cs" />
@@ -223,6 +224,7 @@
     <Compile Include="Http\Model\Base\BaseSinglePostData.cs" />
     <Compile Include="Http\Model\Base\BasePutData.cs" />
     <Compile Include="Http\Model\CommodityInventoryDetail.cs" />
+    <Compile Include="Http\Model\CommodityRecovery.cs" />
     <Compile Include="Http\Model\Common\SourceBill.cs" />
     <Compile Include="Http\Model\Commodity.cs" />
     <Compile Include="Http\Model\CommodityCode.cs" />
