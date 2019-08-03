@@ -47,8 +47,7 @@ namespace CFLMedCab.View.Return
             pickTask = task;
 
             //操作人
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetUserInfo().name;
             //工单号
             orderNum.Content = task.name;
 

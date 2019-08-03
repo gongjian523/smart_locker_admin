@@ -37,10 +37,16 @@
 
                         <Label x:Name="WarnInfo" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,15,0,0"  Style="{StaticResource lblTitle1_2}" />
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.ColumnSpan="2">
-                        <Button Style="{StaticResource CommonNoButtonT2}" Content="绑定指静脉" Width="300" Height="80"    Margin="55,0,0,0" Click="onBindingVein"/>
-                        <Button Style="{StaticResource CommonNoButtonT2}" Content="退出" Width="300" Height="80" Margin="110,0,0,0" Click="onExitApp"/>
-                    </StackPanel>
+                    <Grid Grid.Row="5" Grid.ColumnSpan="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button x:Name="btnBinding" Style="{StaticResource CommonNoButtonT2}" Content="绑定指静脉"   Width="245" Height="80"    Click="onBindingVein"/>
+                        <Button x:Name="btnLogin" Style="{StaticResource CommonNoButtonT2}" Content="登录"   Grid.Column="1" Width="245" Height="80"  Click="onBindingVein"/>
+                        <Button Style="{StaticResource CommonNoButtonT2}" Content="退出"   Grid.Column="2" Width="245" Height="80"  Click="onExitApp"/>
+                    </Grid>
                 </Grid>
                 <Grid x:Name="BindingView" Visibility="Collapsed" >
                     <Grid.RowDefinitions>

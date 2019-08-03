@@ -60,11 +60,11 @@
                         <Grid Grid.Column="2" x:Name="column3"/>
                         <!--<Grid Grid.Column="3" x:Name="column4"/>-->
                     </Grid>
-                    <Border Grid.Row="0" Grid.Column="1" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Style="{StaticResource TipBorder}" Visibility="Hidden">
+                    <Border Grid.Row="0" Grid.Column="1" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Style="{StaticResource TipBorder}" >
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="该手术领用单待领用耗材如下，其中" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="inStock" Style="{StaticResource lblTitleRed}"/>
-                            <Label Content="种商品有库存"  Style="{StaticResource lblTitle1}"/>
+                            <Label Content="种商品有库存,"  Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="noStock" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="种本柜无库存" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
@@ -97,7 +97,7 @@
                                 <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stock_num}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stocknum}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

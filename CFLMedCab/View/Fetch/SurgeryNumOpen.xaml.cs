@@ -4,11 +4,13 @@ using CFLMedCab.DTO.Fetch;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 
 
@@ -23,14 +25,18 @@ namespace CFLMedCab.View.Fetch
         {
             InitializeComponent();
 
-            lbCodeContent.Content = fetchParam.bdConsumingOrder.body.objects[0].name;
-            lbStatusContent.Content = fetchParam.bdConsumingOrder.body.objects[0].Status;
+            lbCodeTitle.Content = "手术单号";
 
-            if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
-            {
-                lbCodeTitle.Content = "手术单号";
-                listView.DataContext = fetchParam.bdOperationOrderGoodsDetail.body.objects;
-            }
+            ConsumingOrder consumingOrder = fetchParam.bdConsumingOrder.body.objects[0];
+            List<OperationOrderGoodsDetail> list = fetchParam.bdOperationOrderGoodsDetail.body.objects;
+
+            lbCodeContent.Content = consumingOrder.name;
+            lbStatusContent.Content = consumingOrder.Status;
+
+            inStock.Content = list.Where(item => item.stockNum > 0).Count();
+            noStock.Content = list.Where(item => item.stockNum == 0).Count();
+
+            listView.DataContext = list;
         }
         
     }

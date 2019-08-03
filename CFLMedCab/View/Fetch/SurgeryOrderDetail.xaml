@@ -99,7 +99,7 @@
                                 <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stock_num}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stockNum}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

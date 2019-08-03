@@ -6,6 +6,7 @@ using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using Newtonsoft.Json;
 using System;
@@ -90,8 +91,6 @@ namespace CFLMedCab.View.Fetch
                 name = inputStr;
             }
 
-            name = "U20190723000051";
-
             ShowLoadDataEvent(this, null);
 
             FetchParam fetchParam = new FetchParam();
@@ -121,6 +120,12 @@ namespace CFLMedCab.View.Fetch
                     MessageBox.Show("无法获取手术单物品详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
                     return;
                 }
+
+                HashSet<CommodityEps> hs = ApplicationState.GetGoodsInfo();
+                BaseData<CommodityCode> bdCommodityCode =  CommodityCodeBll.GetInstance().GetCommodityCode(ApplicationState.GetGoodsInfo());
+
+                ConsumingBll.GetInstance().CombinationStockNum(fetchParam.bdOperationOrderGoodsDetail, bdCommodityCode);
+
                 EnterSurgeryDetailEvent(this, fetchParam);
             }
             else

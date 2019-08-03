@@ -129,11 +129,7 @@ namespace CFLMedCab.View.Fetch
                 if(bdCommodityCode.body.objects.Count >0)
                 {
                     BasePostData<CommodityInventoryChange> bdCommodityInventoryChange
-                        = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, new SourceBill
-                        {
-                            object_name = "ConsumingReturnOrder",
-                            object_id = ""
-                        });
+                        = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode);
 
                     if (bdCommodityInventoryChange.code != 0)
                     {

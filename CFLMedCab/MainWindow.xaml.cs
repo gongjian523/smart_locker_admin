@@ -37,6 +37,7 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.login;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Http.Helper;
+using CFLMedCab.Infrastructure.ToolHelper;
 
 namespace CFLMedCab
 {
@@ -177,8 +178,8 @@ namespace CFLMedCab
 #endif
 #endif
 
-
 #if TESTENV
+            LoginBkView.Visibility = Visibility.Visible;
 #else
             LoginBkView.Visibility = Visibility.Visible;
 #endif
@@ -363,8 +364,9 @@ namespace CFLMedCab
                     }
                     else
                     {
-                        info = "没有找到和当前指静脉匹配的用户";
+                        info = "没有找到和当前指静脉匹配的用户" + data.message;
                         info2 = "请先绑定指静脉";
+                        LogUtils.Error(data.message);
                     }
 #endif
                 }
@@ -424,16 +426,22 @@ namespace CFLMedCab
 #else
         private void SetNavBtnVisiblity(string  role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
 #endif
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterPrescription.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+
             NavBtnEnterReplenishment.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterReturnAll.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterStockSwitch.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStock.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterSysSetting.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+
             btnExitApp.Visibility = Visibility.Visible;
 #if TESTENV
 #else
@@ -1056,7 +1064,7 @@ namespace CFLMedCab
             HomePageView.Visibility = Visibility.Hidden;
             btnBackHP.Visibility = Visibility.Visible;
 
-            ReturnGoods returnGoods = new ReturnGoods();
+            ReturnGoods returnGoods = new ReturnGoods(false);
             returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
             returnGoods.EnterReturnGoodsDetailOpenEvent += new ReturnGoods.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
 
@@ -1189,9 +1197,28 @@ namespace CFLMedCab
             }));
         }
 #endif
-#endregion
 
-#region Inventory
+        /// <summary>
+        /// 进入退货出库页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnAll(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
+
+            ReturnGoods returnGoods = new ReturnGoods(true);
+            returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
+            returnGoods.EnterReturnGoodsDetailOpenEvent += new ReturnGoods.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
+
+            ContentFrame.Navigate(returnGoods);
+        }
+
+
+        #endregion
+
+        #region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -1384,12 +1411,14 @@ namespace CFLMedCab
 
             Stock stock = new Stock();
             stock.EnterStockDetailedEvent += new Stock.EnterStockDetailedHandler(onEnterStockDetailedEvent);
+            stock.EnterPopInventoryEvent += new Stock.EnterPopInventoryHandler(onEnterPopInventory);
+            stock.HidePopInventoryEvent += new Stock.HidePopInventoryHandler(onHidePopInventory);
             ContentFrame.Navigate(stock);
         }
 
-        private void onEnterStockDetailedEvent(object sender, GoodDto goodDto)
+        private void onEnterStockDetailedEvent(object sender, Commodity commodity)
         {
-            StockDetailed stockDetailed = new StockDetailed(goodDto);
+            StockDetailed stockDetailed = new StockDetailed(commodity);
             stockDetailed.EnterStockEvent += new StockDetailed.EnterStockHandler(colseStockDetailedEvent);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -1413,6 +1442,7 @@ namespace CFLMedCab
 
             BindingVein bindingVein = new BindingVein();
             bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
+            bindingVein.UserPwDLoginEvent += new BindingVein.UserPwDLoginHandler(onUserPwDLogin);
             PopFrame.Navigate(bindingVein);
 #if TESTENV
 #else
@@ -1422,6 +1452,18 @@ namespace CFLMedCab
             vein.SetDetectFingerState(true);
 #endif
 #endif
+        }
+
+        private void onUserPwDLogin(object sender, User e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                LoginBkView.Visibility = Visibility.Hidden;
+
+                ApplicationState.SetUserInfo(e);
+                SetNavBtnVisiblity(e.Role);
+                tbNameText.Text = e.name;
+            }));
         }
 
 

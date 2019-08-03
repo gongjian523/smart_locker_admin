@@ -38,15 +38,17 @@ namespace CFLMedCab.Http.Constant
 		/// </summary>
 		public static readonly string TokenUrl = "http://implement.int.chengfayun.net/tenant-gateway/internal/api/v1.0/tenant-gateway/signin";
 
-		/// <summary>
-		/// 指静脉绑定的url(特殊)
-		/// </summary>
-		public static readonly string VeinmatchBindingUrlSuffix = "api/v1.0/plugin/veinmatch/binding";
+        /// <summary>
+        /// 指静脉绑定的url(特殊)
+        /// </summary>
+        //public static readonly string VeinmatchBindingUrlSuffix = "api/v1.0/plugin/veinmatch/binding";
+        public static readonly string VeinmatchBindingUrlSuffix = "api/v1.0/veinmatch/binding";
 
-		/// <summary>
-		/// 指静脉识别的url(特殊)
-		/// </summary>
-		public static readonly string VeinmatchLoginUrlSuffix = "api/v1.0/plugin/veinmatch/login";
+        /// <summary>
+        /// 指静脉识别的url(特殊)
+        /// </summary>
+        //public static readonly string VeinmatchLoginUrlSuffix = "api/v1.0/plugin/veinmatch/login";
+        public static readonly string VeinmatchLoginUrlSuffix = "api/v1.0/veinmatch/login";
 
         /// <summary>
         /// 获取图形验证码token的url(特殊)

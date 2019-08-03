@@ -36,7 +36,7 @@ namespace CFLMedCab.View.Return
         public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickTask e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
-        public ReturnGoods()
+        public ReturnGoods(bool bReturnDown)
         {
             InitializeComponent();
             DataContext = this;
@@ -134,10 +134,6 @@ namespace CFLMedCab.View.Return
             {
                 name = inputStr;
             }
-
-//#if TESTENV
-            name = "ST20190721000031";
-//#endif
 
             //ShowLoadDataEvent(this, true);
             BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask(name);

@@ -349,7 +349,7 @@ namespace CFLMedCab.Http.Bll
 			var equipment = GetEquipmentByEquipmentNameOrId(equipmentNameOrId);
 			//校验是否含有数据，如果含有数据，进行后续操作
 			HttpHelper.GetInstance().ResultCheck(equipment, out bool isSuccess);
-			var plans = new BaseData<InventoryPlan>();
+            BaseData<InventoryPlan> plans = null;
 			if (isSuccess)
 			{
 				//根据自动盘点计划Id查询盘点计划相关信息
@@ -363,10 +363,10 @@ namespace CFLMedCab.Http.Bll
 							in_list =  BllHelper.ParamUrlEncode(equipment.body.objects[0].InventoryPlanId)
 						}
 					});
-					//校验是否含有数据，如果含有数据，拼接具体字段
-					HttpHelper.GetInstance().ResultCheck(plans, out bool isSuccess2);
 				}
-			}
+                //校验是否含有数据，如果含有数据，拼接具体字段
+                plans = HttpHelper.GetInstance().ResultCheck(plans, out bool isSuccess2);
+            }
 			else
 			{
 				plans.code = equipment.code;

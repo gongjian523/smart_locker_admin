@@ -19,4 +19,23 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string name { get; set; }
     }
+
+
+    public class CommodityOrder
+    {
+        /// <summary>
+        /// 标签id
+        /// </summary>
+        public string CommodityCodeId { get; set; }
+
+        /// <summary>
+        /// 标签码
+        /// </summary>
+        public string CommodityCodeName { get; set; }
+
+        /// <summary>
+        /// 商品名
+        /// </summary>
+        public string CommodityName { get; set; }
+    }
 }

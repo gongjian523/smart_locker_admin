@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CFLMedCab.Infrastructure.ToolHelper;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -16,7 +17,7 @@ namespace CFLMedCab.Http.Bll
         /// 获取本地商品快照列表（包含详情）
         /// </summary>
         /// <returns></returns>
-        public List<Commodity> GetCommodity()
+        public static List<Commodity> GetCommodity()
         {
             var commodityEps = ApplicationState.GetGoodsInfo();
             var baseCommodityCodes = CommodityCodeBll.GetInstance().GetCommodityCode(commodityEps);
@@ -38,6 +39,10 @@ namespace CFLMedCab.Http.Bll
                         Count = g.Count(),//商品数量
                         codes = tempList.Where(it=>it.CommodityId == g.Key.CommodityId && it.GoodsLocationId == g.Key.GoodsLocationId).ToList()
                     })).ToList();
+            }
+            else
+            {
+                LogUtils.Error($"LocalGoodsChangeBll:GetCommodity {baseCommodityCodes.message}");
             }
             return commodityLists;
         }

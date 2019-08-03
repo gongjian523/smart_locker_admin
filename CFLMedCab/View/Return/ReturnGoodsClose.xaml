@@ -34,7 +34,7 @@
                             <RowDefinition Height="auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle1}" />
-                        <Label Content="退货出库" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle2}"/>
+                        <Label Content="拣货" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle2}"/>
 
                         <Label Grid.Row="0" Grid.Column="1" Content="操作人" Style="{StaticResource lblTitle3}"/>
                         <Label Grid.Row="1" Grid.Column="1" Content="Label" Name="operatorName" Style="{StaticResource lblTitle4_0}"/>
@@ -127,15 +127,15 @@
                     <Grid>
                         <Grid x:Name="normalBtmView" >
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="2*"/>
                             </Grid.ColumnDefinitions>
 
                             <Label Style="{StaticResource lblTitle1}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Horizontal" Grid.Column="1">
                                 <Button Style="{StaticResource CommonYesButton}" x:Name="YesBtn" Content="是,并回到首页"  Width="220" Click="onEndOperation" />
-                                <Button Style="{StaticResource CommonYesButton}" x:Name="YesAndExitBtn" Content="是,并退出" Margin="60,0,0,0" Width="220"  Click="onEndOperation"/>
-                                <Button Style="{StaticResource CommonNoButton}" x:Name="NoBtn" Content="否" Margin="60,0,0,0"  Width="220"  Click="onNoEndOperation"/>
+                                <Button Style="{StaticResource CommonYesButton}" x:Name="YesAndExitBtn" Content="是,并退出登录" Margin="60,0,0,0" Width="220"  Click="onEndOperation"/>
+                                <Button Style="{StaticResource CommonNoButton}" x:Name="NoBtn" Content="否,并开门" Margin="60,0,0,0"  Width="220"  Click="onNoEndOperation"/>
                             </StackPanel>
                         </Grid>
                         <Grid x:Name="abnormalBtmView" Visibility="Collapsed">

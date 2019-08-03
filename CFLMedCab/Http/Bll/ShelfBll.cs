@@ -10,6 +10,7 @@ using System.ComponentModel;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.ToolHelper;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -316,26 +317,37 @@ namespace CFLMedCab.Http.Bll
 		}
 
 
-		/// <summary>
-		/// 更新上架任务单
-		/// </summary>
-		/// <param name="baseDataShelfTask">最后结果集</param>
-		/// <returns></returns>
-		public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask, AbnormalCauses abnormalCauses)
-		{
-			if (shelfTask.Status == DocumentStatus.异常.ToString())
-			{
-				shelfTask.AbnormalCauses = abnormalCauses.ToString();
-			}
+        /// <summary>
+        /// 更新上架任务单
+        /// </summary>
+        /// <param name="baseDataShelfTask">最后结果集</param>
+        /// <returns></returns>
+        public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask, List<AbnormalCauses> abnormalCauses)
+        {
+            if (shelfTask.Status == DocumentStatus.异常.ToString())
+            {
+                abnormalCauses.ForEach(item =>
+                {
+                    shelfTask.AbnormalCauses += abnormalCauses.ToString();
+                    shelfTask.AbnormalCauses += ",";
+                });
+                shelfTask.AbnormalCauses.TrimEnd(',');
+            }
 
-			return HttpHelper.GetInstance().Put(new ShelfTask
-			{
-				id = shelfTask.id,
-				Status = shelfTask.Status,
-				AbnormalCauses = shelfTask.AbnormalCauses,
-				version = shelfTask.version
-			});
-		}
+            BasePutData<ShelfTask> basePutData = HttpHelper.GetInstance().Put(new ShelfTask
+            {
+                id = shelfTask.id,
+                Status = shelfTask.Status,
+                AbnormalCauses = shelfTask.AbnormalCauses,
+                version = shelfTask.version
+            });
+
+            if (basePutData.code != 0)
+            {
+                LogUtils.Error("PutShelfTask 失败！ " + basePutData.message);
+            }
+            return basePutData;
+        }
 
 		/// <summary>
 		/// 上架的库存变化
@@ -393,6 +405,8 @@ namespace CFLMedCab.Http.Bll
 					code = baseDataCommodityCode.code,
 					message = baseDataCommodityCode.message
 				};
+
+                LogUtils.Error("CreateShelfTaskCommodityInventoryChange 失败！ " + baseDataCommodityCode.message);
 			}
 			return retBaseSinglePostDataCommodityInventoryChange;
 		}

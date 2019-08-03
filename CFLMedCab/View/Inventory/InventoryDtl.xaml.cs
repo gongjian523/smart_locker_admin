@@ -144,25 +144,27 @@ namespace CFLMedCab.View.Inventory
 
             adds = CommodityCodeBll.GetInstance().GetCommodityCode(addHs).body.objects.ToList();
 #else
+
+            CommodityOrder commodityOrder;
+            string name;
             try
             {
-                CommodityEps commodityEps = JsonConvert.DeserializeObject<CommodityEps>(inputStr);
-
-                HashSet<CommodityEps> addHs = new HashSet<CommodityEps>();
-                addHs.Add(commodityEps);
-
-                adds = CommodityCodeBll.GetInstance().GetCommodityCode(addHs).body.objects.ToList();
+                commodityOrder = JsonConvert.DeserializeObject<CommodityOrder>(inputStr);
+                name = commodityOrder.CommodityCodeName;
             }
             catch
             {
-                BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(inputStr);
-                if (bdCommodityCode.code != 0)
-                {
-                    MessageBox.Show("获取商品信息失败" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                    return;
-                }
-                adds.Add(bdCommodityCode.body.objects[0]);
+                name = inputStr;
             }
+
+
+            BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(inputStr);
+            if (bdCommodityCode.code != 0 || (bdCommodityCode.code == 0 && bdCommodityCode.body.objects == null))
+            {
+                MessageBox.Show("获取商品信息失败" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+            adds.Add(bdCommodityCode.body.objects[0]);
 #endif
 
             if (list.Where(item => item.name == adds[0].name).Count() > 0)

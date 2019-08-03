@@ -304,14 +304,17 @@ namespace CFLMedCab.Http.Bll
 
 					normalList.ForEach(normal =>
 					{
-						changeList.Add(new CommodityInventoryChange()
-						{
-							CommodityCodeId = normal.id,
-							SourceBill = new SourceBill()
-							{
-								object_name = "ConsumingReturnOrder",
-							},
-							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString()
+                        changeList.Add(new CommodityInventoryChange()
+                        {
+                            CommodityCodeId = normal.id,
+                            SourceBill = new SourceBill()
+                            {
+                                object_name = "ConsumingReturnOrder",
+                            },
+                            ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                            EquipmentId = normal.EquipmentId,
+                            StoreHouseId = normal.StoreHouseId,
+                            GoodsLocationId = normal.GoodsLocationId
 						});
 					});
 				}
@@ -342,8 +345,11 @@ namespace CFLMedCab.Http.Bll
 							{
 								object_name = "ConsumingReturnOrder",
 							},
-							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString()
-						});
+							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                            EquipmentId = normal.EquipmentId,
+                            StoreHouseId = normal.StoreHouseId,
+                            GoodsLocationId = normal.GoodsLocationId
+                        });
 					});
 				}
 			}

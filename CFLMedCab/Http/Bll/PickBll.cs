@@ -9,6 +9,7 @@ using System.Web;
 using System.ComponentModel;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model.Common;
+using CFLMedCab.Infrastructure.ToolHelper;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -332,15 +333,22 @@ namespace CFLMedCab.Http.Bll
 		public BasePutData<PickTask> PutPickTask(PickTask pickTask, AbnormalCauses abnormalCauses)
 		{
 
-			//put修改拣货工单
-			return HttpHelper.GetInstance().Put(new PickTask
+            //put修改拣货工单
+            BasePutData<PickTask> basePutData =  HttpHelper.GetInstance().Put(new PickTask
 			{
 				id = pickTask.id,
 				BillStatus = pickTask.BillStatus,
 				//AbnormalCauses = pickTask.AbnormalCauses,
 				version = pickTask.version
 			});
-		}
+
+            if(basePutData.code != 0)
+            {
+                LogUtils.Error("PutPickTask " + basePutData.message);
+            }
+
+            return basePutData;
+        }
 
 
 		/// <summary>

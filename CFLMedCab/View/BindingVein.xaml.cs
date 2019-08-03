@@ -33,6 +33,9 @@ namespace CFLMedCab.View
         public delegate void HidePopCloseHandler(object sender, RoutedEventArgs e);
         public event HidePopCloseHandler HidePopCloseEvent;
 
+        public delegate void UserPwDLoginHandler(object sender, User e);
+        public event UserPwDLoginHandler UserPwDLoginEvent;
+
         private string CaptchaToken { get; set; }
 
 #if LOCALSDK
@@ -76,6 +79,8 @@ namespace CFLMedCab.View
 
         public void onBindingVein(object sender, EventArgs e)
         {
+            bool bBinding  = ((Button)sender).Name == "btnBinding" ? true : false;
+
             Dispatcher.BeginInvoke(new Action(() => {
                 WarnInfo.Content = "";
             }));
@@ -121,7 +126,7 @@ namespace CFLMedCab.View
                 if(data.code != 0)
                 {
                     Dispatcher.BeginInvoke(new Action(() => {
-                        WarnInfo.Content = "获取账号失败，请再次输入用户信息、密码以及验证，并重新绑定";
+                        WarnInfo.Content = "获取账号失败，请再次输入用户信息、密码以及验证，并重新" + (bBinding?"绑定" :"登录") + "!";
                     }));
                     return;
                 }
@@ -141,22 +146,43 @@ namespace CFLMedCab.View
                     imageAuth.Visibility = Visibility.Visible;
 
                     imageAuth.Source = bitmapImage;
-                    WarnInfo.Content = "获取账号失败，请再次输入用户信息、密码以及验证，并重新绑定！";
+                    WarnInfo.Content = "获取账号失败，请再次输入用户信息、密码以及验证，并重新" + (bBinding ? "绑定" : "登录") + "!";
                 }));
             }
             else
             {
-                loginView.Visibility = Visibility.Collapsed;
-                BindingView.Visibility = Visibility.Visible;
 
-                rebindingBtn.Visibility = Visibility.Hidden;
+                if(bBinding)
+                {
+                    loginView.Visibility = Visibility.Collapsed;
+                    BindingView.Visibility = Visibility.Visible;
 
-                HttpHelper.GetInstance().SetHeaders(data1.body.access_token);
+                    rebindingBtn.Visibility = Visibility.Hidden;
 
-                ApplicationState.SetAccessToken(data1.body.access_token);
-                ApplicationState.SetRefreshToken(data1.body.refresh_token);
+                    HttpHelper.GetInstance().SetHeaders(data1.body.access_token);
 
-                Task.Factory.StartNew(Binding);
+                    ApplicationState.SetAccessToken(data1.body.access_token);
+                    ApplicationState.SetRefreshToken(data1.body.refresh_token);
+
+                    Task.Factory.StartNew(Binding);
+                }
+                else
+                {
+                    HttpHelper.GetInstance().SetHeaders(data1.body.access_token);
+
+                    ApplicationState.SetAccessToken(data1.body.access_token);
+                    ApplicationState.SetRefreshToken(data1.body.refresh_token);
+
+                    BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text), tbInputPsw.Password);
+                    if (bdData.code != 0 || (bdData.code == 0 && bdData.body.objects == null))
+                    {
+                        WarnInfo2.Content = "获取用户信息失败！" + bdData.message;
+                    }
+                    else
+                    {
+                        UserPwDLoginEvent(this, bdData.body.objects[0]);
+                    }
+                }
             }
 #endif
         }
@@ -253,6 +279,23 @@ namespace CFLMedCab.View
                 this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = data.message));
 #endif
 
+        }
+
+
+        private void Login()
+        {
+            this.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text), tbInputPsw.Password);
+                if (bdData.code != 0 || (bdData.code == 0 && bdData.body.objects == null) )
+                {
+                    WarnInfo2.Content = "获取用户信息失败！" + bdData.message;
+                }
+                else
+                {
+                    UserPwDLoginEvent(this, bdData.body.objects[0]);
+                }
+            }));
         }
 
     }

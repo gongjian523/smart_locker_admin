@@ -58,7 +58,7 @@ namespace CFLMedCab.View.Return
             InitializeComponent();
             pickTask = task;
             //操作人
-            //operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetUserInfo().name;
             ////工单号
             orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
@@ -76,9 +76,9 @@ namespace CFLMedCab.View.Return
 
             PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
 
-            int outCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
-            int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1 && item.AbnormalDisplay == "异常").ToList().Count;
-            int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
+            int outCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
+            int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.AbnormalDisplay == "异常").ToList().Count;
+            int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
 
             outNum.Content = outCnt;
             abnormalInNum.Content = abnormalInCnt;
@@ -153,7 +153,20 @@ namespace CFLMedCab.View.Return
         private void EndOperation(bool bEixt)
         {
             BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask, AbnormalCauses.商品损坏);
-            BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
+
+            if(putData.code != 0)
+            {
+                MessageBox.Show("更新取货任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+            }
+            else
+            {
+                BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
+
+                if(basePostData.code != 0)
+                {
+                    MessageBox.Show("创建取货任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                }
+            }
 
             ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bEixt);

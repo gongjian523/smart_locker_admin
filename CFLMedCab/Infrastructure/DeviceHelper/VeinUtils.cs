@@ -118,7 +118,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         StringBuilder[] devIdList = new StringBuilder[10];	//设备列表
         StringBuilder devName = new StringBuilder("CabS");          //选择被操作设备
-        StringBuilder serialName = new StringBuilder("COM8:");
+        StringBuilder serialName = new StringBuilder("COM7:");
         //StringBuilder devName = new StringBuilder(ApplicationState.GetMCabName());
         //StringBuilder serialName = new StringBuilder(ApplicationState.GetMVeinCOM() + ":");
 

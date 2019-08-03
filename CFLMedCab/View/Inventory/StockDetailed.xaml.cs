@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
+using CFLMedCab.Http.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,11 +27,10 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterStockHandler(object sender, RoutedEventArgs e);
         public event EnterStockHandler EnterStockEvent;
 
-        GoodsBll goodsBll = new GoodsBll();
-        public StockDetailed(GoodDto goodDto)
+        public StockDetailed(Commodity commodity)
         {
             InitializeComponent();
-            listView.DataContext= goodsBll.GetGoodsDto(goodDto.goods_code);
+            listView.DataContext= commodity.codes;
         }
 
         /// <summary>

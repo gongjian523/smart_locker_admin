@@ -24,10 +24,9 @@
                              VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
                              Width="{Binding Path=ActualWidth,ElementName=GridView}" PreviewKeyDown="SearchBox_OnKeyDown" GotFocus="onGotFocus" LostFocus="onLostFocus" />
                     <StackPanel  Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
-                        <Button x:Name="btnNoCode" Style="{StaticResource CommonNoButton}" Content="暂无手术单号"   Click="EnterNoNum_Click"/>
+                        <Button x:Name="btnNoCode" Style="{StaticResource CommonNoButton}" Content="暂无手术单号" Width="200"  Click="EnterNoNum_Click"/>
                         <Label Width="30"/>
-                        <!--<Button Style="{StaticResource CommonYesButton}" Content="查询"  Click="EnterDetail_Click"/>-->
-                        <Button Style="{StaticResource CommonYesButton}" Content="查询"  />
+                        <Button Style="{StaticResource CommonYesButton}" Content="查询"  Width="200" Click="EnterDetail_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>

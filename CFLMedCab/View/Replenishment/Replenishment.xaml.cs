@@ -144,7 +144,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 name = inputStr;
             }
 
-            name = "OS20190721000052";
+            //name = "OS20190721000052";
 
             ShowLoadDataEvent(this, null);
             BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);

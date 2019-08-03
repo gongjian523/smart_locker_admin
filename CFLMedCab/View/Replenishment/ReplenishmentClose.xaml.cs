@@ -8,6 +8,7 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Constant;
 using System;
@@ -153,8 +154,32 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         private void EndOperation(bool bEixt)
         {
-            BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, AbnormalCauses.商品损坏);
-            BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+            List<AbnormalCauses> list = new List<AbnormalCauses>();
+
+            if (bthShortHide.Visibility == Visibility.Visible)
+                list.Add(AbnormalCauses.商品缺失);
+
+            if (bthLossHide.Visibility == Visibility.Visible)
+                list.Add(AbnormalCauses.商品损坏);
+
+            if (bthOtherHide.Visibility == Visibility.Visible)
+                list.Add(AbnormalCauses.商品遗失);
+
+            BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, list);
+
+            if(putData.code != 0)
+            {
+                MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+            }
+            else
+            {
+                BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+                
+                if(basePostData.code != 0)
+                {
+                    MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                }
+            }
 
             ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bEixt);

@@ -102,10 +102,12 @@ namespace CFLMedCab.Infrastructure
         {
             if (com == GetValue<string>((int)ApplicationKey.COM_MRFid))
                 return GetValue<string>((int)ApplicationKey.COM_MLocker);
+#if DUALCAB
             else if (com == GetValue<string>((int)ApplicationKey.COM_SRFid))
                 return GetValue<string>((int)ApplicationKey.COM_SLocker);
+#endif
             else
-                return "";
+                return GetValue<string>((int)ApplicationKey.COM_MLocker);
         }
 
         /// <summary>
@@ -117,10 +119,12 @@ namespace CFLMedCab.Infrastructure
         {
             if (cabName == GetValue<string>((int)ApplicationKey.MCabName))
                 return GetValue<string>((int)ApplicationKey.COM_MLocker);
+#if DUALCAB
             else if (cabName == GetValue<string>((int)ApplicationKey.SCabName))
                 return GetValue<string>((int)ApplicationKey.COM_SLocker);
+#endif
             else
-                return "";
+                return GetValue<string>((int)ApplicationKey.COM_MLocker);
         }
 
         /// <summary>
@@ -142,9 +146,9 @@ namespace CFLMedCab.Infrastructure
 #endif
             return list;
         }
-        #endregion
+#endregion
 
-        #region the serial name of the RFid
+#region the serial name of the RFid
         //默认配置
         //COM1  主柜rfid串口
         //COM4  副柜rfid串口 
@@ -186,9 +190,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.COM_SRFid);
         }
-        #endregion
+#endregion
 
-        #region the serial name of the Vein
+#region the serial name of the Vein
         //默认配置
         //主柜指静脉串口"COM9"
         //副柜指静脉串口"COM8"
@@ -211,9 +215,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.COM_MVein);
         }
-        #endregion
+#endregion
 
-        #region Token
+#region Token
 
         /// <summary>
         ///设置发送请求的Token
@@ -253,9 +257,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.RefreshToken);
         }
-        #endregion
+#endregion
 
-        #region user info from mian system
+#region user info from mian system
         /// <summary>
         /// 保存主系统传来的用户信息
         /// </summary>
@@ -274,9 +278,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<User>((int)ApplicationKey.User);
         }
-        #endregion
+#endregion
 
-        #region user info from mian system
+#region user info from mian system
         /// <summary>
         /// 保存当前货柜的商品信息
         /// </summary>
@@ -295,9 +299,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
         }
-        #endregion
+#endregion
 
-        #region equipment
+#region equipment
         /// <summary>
         /// 保存设备ID
         /// </summary>
@@ -335,9 +339,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.EquipName);
         }
-        #endregion
+#endregion
 
-        #region house
+#region house
         /// <summary>
         /// 保存库房ID
         /// </summary>
@@ -375,9 +379,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.HouseName);
         }
-        #endregion
+#endregion
 
-        #region cab
+#region cab
         /// <summary>
         /// 获取主货柜ID
         /// </summary>
@@ -463,10 +467,12 @@ namespace CFLMedCab.Infrastructure
         {
             if (com == GetValue<string>((int)ApplicationKey.COM_MRFid))
                 return GetValue<string>((int)ApplicationKey.MCabName);
+#if DUALCAB
             else if (com == GetValue<string>((int)ApplicationKey.COM_SRFid))
                 return GetValue<string>((int)ApplicationKey.SCabName);
+#endif
             else
-                return "";
+                return GetValue<string>((int)ApplicationKey.MCabName);
         }
 
         /// <summary>
@@ -478,12 +484,14 @@ namespace CFLMedCab.Infrastructure
         {
             if (com == GetValue<string>((int)ApplicationKey.COM_MRFid))
                 return GetValue<string>((int)ApplicationKey.MCabId);
+#if DUALCAB
             else if (com == GetValue<string>((int)ApplicationKey.COM_SRFid))
                 return GetValue<string>((int)ApplicationKey.SCabId);
+#endif
             else
-                return "";
+                return GetValue<string>((int)ApplicationKey.MCabId);
         }
-        #endregion
+#endregion
 
 
 
