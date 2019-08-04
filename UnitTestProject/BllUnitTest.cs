@@ -131,7 +131,7 @@ namespace UnitTestProject
         public void ConsumingQueryOrderTestMethod()
         {
             //根据通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的id，以及markId（作废标识）。（如果领⽤用单作废标识为【是】则弹窗提醒⼿手术单作废，跳转回前⻚页）
-            var temp = ConsumingBll.GetInstance().GetConsumingOrder("U20190723000051");
+            var temp = ConsumingBll.GetInstance().GetConsumingOrder("456465412321",ConsumingOrderType.医嘱处方领用);
             Console.WriteLine(temp.body.objects[0].id);
             /*            var id = "AQACQqweDg8BAAAAlQ6o8NWbsxUtQwQA";*//*
             //通过【关联领⽤用单】(ConsumingOrder.id= ConsumingGoodsDetail.ConsumingOrderId）从表格 【领⽤用商品明细】中查询获取领⽤用商品的列列表信息。

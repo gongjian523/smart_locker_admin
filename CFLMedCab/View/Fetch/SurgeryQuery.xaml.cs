@@ -48,11 +48,15 @@ namespace CFLMedCab.View.Fetch
 
         KeyboardView kbHandler = new KeyboardView();
 
+        ConsumingOrderType consumingOrderType;
+
         public SurgeryQuery(ConsumingOrderType type)
         {
             InitializeComponent();
 
-            if(type == ConsumingOrderType.医嘱处方领用)
+            consumingOrderType = type;
+
+            if (type == ConsumingOrderType.医嘱处方领用)
             {
                 lbInputCode.Content = "请输入医嘱处方领号或扫描医嘱处方领单二维码";
                 btnNoCode.Visibility = Visibility.Hidden;
@@ -94,7 +98,7 @@ namespace CFLMedCab.View.Fetch
             ShowLoadDataEvent(this, null);
 
             FetchParam fetchParam = new FetchParam();
-            fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
+            fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name, consumingOrderType);
 
             if (fetchParam.bdConsumingOrder.code == 0)
             {

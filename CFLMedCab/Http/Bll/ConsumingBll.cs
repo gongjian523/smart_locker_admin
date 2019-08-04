@@ -24,7 +24,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="consumingOrderName"></param>
 		/// <returns></returns>
-		public BaseData<ConsumingOrder> GetConsumingOrder(string consumingOrderName)
+		public BaseData<ConsumingOrder> GetConsumingOrder(string consumingOrderName, ConsumingOrderType type)
 		{
 			if (null == consumingOrderName)
 			{
@@ -34,38 +34,66 @@ namespace CFLMedCab.Http.Bll
 					message = ResultCode.Parameter_Exception.ToString()
 				};
 			}
-			//获取待完成上架工单
-			var detail = HttpHelper.GetInstance().Get<ConsumingOrder>(new QueryParam
-			{
-				view_filter =
-				{
-					filter =
-					{
-						logical_relation = "1 AND 2",
-						expressions =
-						{
-							new QueryParam.Expressions
-							{
-								field = "name",
-								@operator = "==",
-								operands =  {$"'{ HttpUtility.UrlEncode(consumingOrderName) }'"}
-							},
-							new QueryParam.Expressions
-							{
-								field = "Status",
-								@operator = "==",
-								operands = {$"'{ HttpUtility.UrlEncode(ConsumingOrderStatus.未领用.ToString()) }'" }
-							}
-						}
-					}
-				}
-			});
-			//校验是否含有数据，如果含有数据，拼接具体字段
-			HttpHelper.GetInstance().ResultCheck(detail, out bool isSuccess);
+            //获取待完成上架工单
+            BaseData<ConsumingOrder> bdConsumingOrder;
+
+            if(type != ConsumingOrderType.医嘱处方领用)
+            {
+                bdConsumingOrder = HttpHelper.GetInstance().Get<ConsumingOrder>(new QueryParam
+                {
+                    view_filter =
+                    {
+                        filter =
+                        {
+                            logical_relation = "1 AND 2",
+                            expressions =
+                            {
+                                new QueryParam.Expressions
+                                {
+                                    field = "name",
+                                    @operator = "==",
+                                    operands =  {$"'{ HttpUtility.UrlEncode(consumingOrderName) }'"}
+                                },
+                                new QueryParam.Expressions
+                                {
+                                    field = "Status",
+                                    @operator = "==",
+                                    operands = {$"'{ HttpUtility.UrlEncode(ConsumingOrderStatus.未领用.ToString()) }'" }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            else
+            {
+                bdConsumingOrder = HttpHelper.GetInstance().Get<ConsumingOrder>(new QueryParam
+                {
+                    view_filter =
+                    {
+                        filter =
+                        {
+                            logical_relation = "1",
+                            expressions =
+                            {
+                                new QueryParam.Expressions
+                                {
+                                    field = "name",
+                                    @operator = "==",
+                                    operands =  {$"'{ HttpUtility.UrlEncode(consumingOrderName) }'"}
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            //校验是否含有数据，如果含有数据，拼接具体字段
+            bdConsumingOrder = HttpHelper.GetInstance().ResultCheck(bdConsumingOrder, out bool isSuccess);
 
 			if (isSuccess)
 			{
-				detail.body.objects.ForEach(it =>
+                bdConsumingOrder.body.objects.ForEach(it =>
 				{
 					//拼接库房名称
 					if (!string.IsNullOrEmpty(it.StoreHouseId))
@@ -74,13 +102,20 @@ namespace CFLMedCab.Http.Bll
 					}
 				});
 			}
+
+            if(bdConsumingOrder.body.objects == null)
+            {
+                bdConsumingOrder.code = (int)ResultCode.Result_Exception;
+                bdConsumingOrder.message = ResultCode.Result_Exception.ToString();
+            }
+
 			//如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
-			if ("是".Equals(detail.body.objects[0].markId))
+			if ("是".Equals(bdConsumingOrder.body.objects[0].markId))
 			{
-				detail.code = (int)ResultCode.Result_Exception;
-				detail.message = ResultCode.Result_Exception.ToString();
+                bdConsumingOrder.code = (int)ResultCode.Result_Exception;
+                bdConsumingOrder.message = ResultCode.Result_Exception.ToString();
 			}
-			return detail;
+			return bdConsumingOrder;
 		}
 		/// <summary>
 		/// 来源单据解析为【⼿手术单管理理】(ConsumingOrder.SourceBill.object_name=‘OperationOrder’ )：

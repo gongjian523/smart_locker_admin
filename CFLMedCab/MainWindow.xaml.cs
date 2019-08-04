@@ -160,6 +160,7 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 #else
+            //Console.ReadKey();
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
             int vienSt = vein.LoadingDevice();
@@ -426,7 +427,7 @@ namespace CFLMedCab
 #else
         private void SetNavBtnVisiblity(string  role)
         {
-            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
 #endif
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
