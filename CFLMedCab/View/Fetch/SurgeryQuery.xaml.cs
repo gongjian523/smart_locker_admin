@@ -6,6 +6,7 @@ using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using Newtonsoft.Json;
@@ -97,28 +98,28 @@ namespace CFLMedCab.View.Fetch
 
             ShowLoadDataEvent(this, null);
 
-            FetchParam fetchParam = new FetchParam();
-            fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
-
-            if (fetchParam.bdConsumingOrder.code == 0)
+            if(consumingOrderType != ConsumingOrderType.医嘱处方领用)
             {
-                if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
+                FetchParam fetchParam = new FetchParam();
+                fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
+
+                if (fetchParam.bdConsumingOrder.code == 0)
                 {
-                    fetchParam.bdOperationOrderGoodsDetail = 
-                        ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
+                    if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
+                    {
+                        fetchParam.bdOperationOrderGoodsDetail =
+                            ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
+                    }
                 }
-            }
 
-            HideLoadDataEvent(this, null);
+                HideLoadDataEvent(this, null);
 
-            if (fetchParam.bdConsumingOrder.code != 0)
-            {
-                MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                if (fetchParam.bdConsumingOrder.code != 0)
+                {
+                    MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
 
-            if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
-            {
                 if (fetchParam.bdOperationOrderGoodsDetail.code != 0)
                 {
                     MessageBox.Show("无法获取手术单物品详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
@@ -126,7 +127,7 @@ namespace CFLMedCab.View.Fetch
                 }
 
                 HashSet<CommodityEps> hs = ApplicationState.GetGoodsInfo();
-                BaseData<CommodityCode> bdCommodityCode =  CommodityCodeBll.GetInstance().GetCommodityCode(ApplicationState.GetGoodsInfo());
+                BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(ApplicationState.GetGoodsInfo());
 
                 ConsumingBll.GetInstance().CombinationStockNum(fetchParam.bdOperationOrderGoodsDetail, bdCommodityCode);
 
@@ -134,7 +135,21 @@ namespace CFLMedCab.View.Fetch
             }
             else
             {
-                EnterPrescriptionOpenEvent(this, fetchParam.bdConsumingOrder.body.objects[0]);
+                BaseData<PrescriptionBill> baseData = ConsumingBll.GetInstance().GetPrescriptionBill(name);
+
+                if (baseData.code != 0)
+                {
+                    MessageBox.Show("无法获取处方单！" + baseData.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+
+                EnterPrescriptionOpenEvent(this,new ConsumingOrder {
+                    SourceBill = new SourceBill
+                    {
+                        object_name = "PrescriptionBill",
+                        object_id = baseData.body.objects[0].id
+                    }
+                });
             }
         }
         

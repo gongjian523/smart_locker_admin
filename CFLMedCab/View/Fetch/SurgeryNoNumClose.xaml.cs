@@ -51,45 +51,35 @@ namespace CFLMedCab.View.Fetch
         public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, ConsumingOrderType type, ConsumingOrder order)
         {
             InitializeComponent();
-            time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            operatorName.Content = ApplicationState.GetUserInfo().name;
-
-            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
-            after = afterEps;
 
             consumingOrder = order;
             consumingOrderType = type;
-
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
-
-            if (bdCommodityCode.code != 0)
-            {
-                MessageBox.Show("获取商品信息错误！", "温馨提示", MessageBoxButton.OK);
-            }
-            else
-            {
-                if (bdCommodityCode.body.objects.Count == 0)
-                {
-                    MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                }
-                else
-                {
-                    listView.DataContext = bdCommodityCode.body.objects;
-                    lbTypeContent.Content = type;
-                    outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-                    abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
-
-
-                    bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
-                        it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                    });
-                }
-            }
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
             endTimer.Enabled = true;
             endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+
+            time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
+            operatorName.Content = ApplicationState.GetUserInfo().name;
+
+            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+            after = afterEps;
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
+            if (bdCommodityCode.code != 0)
+            {
+                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
+            listView.DataContext = bdCommodityCode.body.objects;
+            lbTypeContent.Content = type;
+            outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+            abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+
+            bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
+                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+            });
         }
 
         /// <summary>
@@ -147,10 +137,7 @@ namespace CFLMedCab.View.Fetch
                     else
                     {
                         BasePostData<CommodityInventoryChange> bdBasePostData =
-                            ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.医嘱处方领用,new SourceBill {
-                                object_id = consumingOrder.id,
-                                object_name = "PrescriptionOrder"
-                            });
+                            ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.医嘱处方领用, consumingOrder.SourceBill);
 
                         if (bdBasePostData.code != 0)
                         {

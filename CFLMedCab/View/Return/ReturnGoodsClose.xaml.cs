@@ -56,6 +56,12 @@ namespace CFLMedCab.View.Return
         public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs)
         {
             InitializeComponent();
+
+            endTimer = new Timer(Contant.ClosePageEndTimer);
+            endTimer.AutoReset = false;
+            endTimer.Enabled = true;
+            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+
             pickTask = task;
             //操作人
             operatorName.Content = ApplicationState.GetUserInfo().name;
@@ -69,10 +75,16 @@ namespace CFLMedCab.View.Return
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
             if (bdCommodityCode.code != 0)
             {
+                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
             bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
+            if (bdCommodityDetail.code != 0)
+            {
+                MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
             PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
 
@@ -95,11 +107,6 @@ namespace CFLMedCab.View.Return
                 normalBtmView.Visibility = Visibility.Collapsed;
                 abnormalBtmView.Visibility = Visibility.Visible;
             }
-
-            endTimer = new Timer(Contant.ClosePageEndTimer);
-            endTimer.AutoReset = false;
-            endTimer.Enabled = true;
-            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
         }
 
         /// <summary>

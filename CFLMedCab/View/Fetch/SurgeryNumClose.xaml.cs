@@ -57,6 +57,11 @@ namespace CFLMedCab.View.Fetch
 
             fetchParam = param;
 
+            endTimer = new Timer(Contant.ClosePageEndTimer);
+            endTimer.AutoReset = false;
+            endTimer.Enabled = true;
+            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+
             operatorName.Content = ApplicationState.GetUserInfo().name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             type.Content = param.bdConsumingOrder.body.objects[0].Type;
@@ -66,19 +71,11 @@ namespace CFLMedCab.View.Fetch
             after = afterEps;
 
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
-
             if (bdCommodityCode.code != 0)
             {
-                MessageBox.Show("获取商品信息错误！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
                 return;
             }
-
-            if (bdCommodityCode.body.objects.Count == 0)
-            {
-                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
-
             ConsumingBll.GetInstance().GetOperationOrderChangeWithOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0], fetchParam.bdOperationOrderGoodsDetail);
 
             listView1.DataContext = bdCommodityCode.body.objects;
@@ -87,11 +84,6 @@ namespace CFLMedCab.View.Fetch
             //abnormalInNum.Content = storageOperateExNum;//异常入库
             //abnormalOutNum.Content = notStorageOperateExNum;//异常出库
             //waitNum.Content = notFetchGoodsNum;//待领用数
-
-            endTimer = new Timer(Contant.ClosePageEndTimer);
-            endTimer.AutoReset = false;
-            endTimer.Enabled = true;
-            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
         }
 
         /// <summary>

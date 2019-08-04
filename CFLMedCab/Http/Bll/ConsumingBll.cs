@@ -42,7 +42,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2",
+                        logical_relation = "1",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -50,12 +50,6 @@ namespace CFLMedCab.Http.Bll
                                 field = "name",
                                 @operator = "==",
                                 operands =  {$"'{ HttpUtility.UrlEncode(consumingOrderName) }'"}
-                            },
-                            new QueryParam.Expressions
-                            {
-                                field = "Status",
-                                @operator = "==",
-                                operands = {$"'{ HttpUtility.UrlEncode(ConsumingOrderStatus.未领用.ToString()) }'" }
                             }
                         }
                     }
@@ -82,13 +76,17 @@ namespace CFLMedCab.Http.Bll
                 bdConsumingOrder.code = (int)ResultCode.Result_Exception;
                 bdConsumingOrder.message = ResultCode.Result_Exception.ToString();
             }
+            else
+            {
+                //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
+                if ("是".Equals(bdConsumingOrder.body.objects[0].markId) || "已完成".Equals(bdConsumingOrder.body.objects[0].Status) 
+                    || "已撤销".Equals(bdConsumingOrder.body.objects[0].Status))
+                {
+                    bdConsumingOrder.code = (int)ResultCode.Result_Exception;
+                    bdConsumingOrder.message = ResultCode.Result_Exception.ToString();
+                }
+            }
 
-			//如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
-			if ("是".Equals(bdConsumingOrder.body.objects[0].markId))
-			{
-                bdConsumingOrder.code = (int)ResultCode.Result_Exception;
-                bdConsumingOrder.message = ResultCode.Result_Exception.ToString();
-			}
 			return bdConsumingOrder;
 		}
         /// <summary>

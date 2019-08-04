@@ -63,7 +63,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             //操作人
-            //operatorName.Content = ApplicationState.GetUserInfo().name;
+            operatorName.Content = ApplicationState.GetUserInfo().name;
             //工单号
             orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
@@ -75,10 +75,17 @@ namespace CFLMedCab.View.ReplenishmentOrder
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
             if(bdCommodityCode.code != 0)
             {
-                return;
+                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                return; 
             }
 
             bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
+            if (bdCommodityDetail.code != 0)
+            {
+                MessageBox.Show("获取上架任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+
             ShelfBll.GetInstance().GetShelfTaskChange(bdCommodityCode, shelfTask, bdCommodityDetail);
 
             int inCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;

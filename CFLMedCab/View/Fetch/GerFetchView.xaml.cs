@@ -54,35 +54,28 @@ namespace CFLMedCab.View.Fetch
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
             operatorName.Content = ApplicationState.GetUserInfo().name;
 
-            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
-            after = afterEps;
-
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
-
-            if (bdCommodityCode.code != 0)
-            {
-                MessageBox.Show("获取商品信息错误！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
-
-            if (bdCommodityCode.body.objects.Count == 0)
-            {
-                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
-
-            listView.DataContext = bdCommodityCode.body.objects;
-            normalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count(); 
-            abnormalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
-
-            bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
-                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-            });
-
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
             endTimer.Enabled = true;
             endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+
+            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+            after = afterEps;
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
+
+            if (bdCommodityCode.code != 0)
+            {
+                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
+            
+            listView.DataContext = bdCommodityCode.body.objects;
+            normalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+            abnormalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+
+            bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
+                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+            });
         }
 
         /// <summary>

@@ -945,7 +945,10 @@ namespace CFLMedCab.Http.Helper
             //去掉put参数中的id值
             putParam.id = null;
 
-            JumpKick.HttpLib.Http.Put(GetUpdateUrl(typeof(T).Name, id)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(putParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+            string url = GetUpdateUrl(typeof(T).Name, id);
+            string urlbody = JsonConvert.SerializeObject(putParam, Formatting.Indented, jsetting);
+
+            JumpKick.HttpLib.Http.Put(url).Headers(GetHeaders()).Body(urlbody).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
