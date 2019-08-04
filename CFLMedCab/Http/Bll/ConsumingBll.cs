@@ -415,14 +415,17 @@ namespace CFLMedCab.Http.Bll
 				var operationDetails = operationDetail.body.objects;
 				//获取待领用商品CommodityId列表（去重后）
 				var detailCommodityIds = operationDetails.Select(it => it.CommodityId).Distinct().ToList();
-
+                //变更后的Id列表
 				var commodityCodes = baseDataCommodityCode.body.objects;
+                //是否主单异常
+                var IsException = false;
 
 				commodityCodes.ForEach(it =>
 				{
-					if (it.operate_type == (int)OperateType.出库)
+					if (it.operate_type == (int)OperateType.入库)
 					{
 						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                        IsException = true;
 					}
 					else
 					{
@@ -433,44 +436,53 @@ namespace CFLMedCab.Http.Bll
 						else
 						{
 							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                            IsException = true;
 						}
 					}
 				});
 
-				//变动商品明细CommodityId列表（去重后）
-				var baseDataCommodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+                if (IsException)
+                {
+                    order.Status = ConsumingOrderStatus.异常.ToString();
+                }
+                else
+                {
+                    //变动商品明细CommodityId列表（去重后）
+                    var baseDataCommodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
 
-				//是否名称全部一致
-				bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count >= detailCommodityIds.Count;
+                    //是否名称全部一致
+                    bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count >= detailCommodityIds.Count;
 
-				if (isAllContains)
-				{
+                    if (isAllContains)
+                    {
 
-					bool isAllNormal = true;
+                        bool isAllNormal = true;
 
-					foreach (OperationOrderGoodsDetail oogd in operationDetails)
-					{
-						var tempCount = commodityCodes.Where(cit => cit.CommodityId == oogd.CommodityId).Count();
-						//当领用数量小于需要领用单上的数量时，状态变更为领用中
-						if (oogd.Number > tempCount)
-						{
-							order.Status = ConsumingOrderStatus.领用中.ToString();
-							isAllNormal = false;
-							break;
+                        foreach (OperationOrderGoodsDetail oogd in operationDetails)
+                        {
+                            //详情对应的Commodity领用数量
+                            var tempCount = commodityCodes.Where(cit => cit.CommodityId == oogd.CommodityId).Count();
+                            //当领用数量小于需要领用单上的数量时，状态变更为领用中
+                            if (oogd.Number > tempCount)
+                            {
+                                order.Status = ConsumingOrderStatus.领用中.ToString();
+                                isAllNormal = false;
+                                break;
 
-						}
-					}
+                            }
+                        }
 
-					if (isAllNormal)
-					{
-						order.Status = ConsumingOrderStatus.已完成.ToString();
-					}
-				}
-				if (detailCommodityIds.Count > baseDataCommodityIds.Count)
-				{
-					order.Status = ConsumingOrderStatus.领用中.ToString();
+                        if (isAllNormal)
+                        {
+                            order.Status = ConsumingOrderStatus.已完成.ToString();
+                        }
+                    }
+                    if (detailCommodityIds.Count > baseDataCommodityIds.Count)
+                    {
+                        order.Status = ConsumingOrderStatus.领用中.ToString();
 
-				}
+                    }
+                }
 			}
 		}
 		/// <summary>
@@ -494,12 +506,15 @@ namespace CFLMedCab.Http.Bll
 				var detailCommodityIds = operationDetails.Select(it => it.CommodityId).Distinct().ToList();
 
 				var commodityCodes = baseDataCommodityCode.body.objects;
+                //记录订单异常状态
+                var IsException = false;
 
 				commodityCodes.ForEach(it =>
 				{
-					if (it.operate_type == (int)OperateType.出库)
+					if (it.operate_type == (int)OperateType.入库)
 					{
 						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                        IsException = true;
 					}
 					else
 					{
@@ -510,45 +525,53 @@ namespace CFLMedCab.Http.Bll
 						else
 						{
 							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                            IsException = true;
 						}
 					}
 				});
+                //当商品出现入库即判定主单状态为异常
+                if (IsException)
+                {
+                    order.Status = ConsumingOrderStatus.异常.ToString();
+                }
+                else
+                {
+                    //变动商品明细CommodityId列表（去重后）
+                    var baseDataCommodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
 
-				//变动商品明细CommodityId列表（去重后）
-				var baseDataCommodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+                    //是否名称全部一致
+                    bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count >= detailCommodityIds.Count;
 
-				//是否名称全部一致
-				bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count >= detailCommodityIds.Count;
+                    if (isAllContains)
+                    {
 
-				if (isAllContains)
-				{
+                        bool isAllNormal = true;
 
-					bool isAllNormal = true;
+                        foreach (PrescriptionOrderGoodsDetail oogd in operationDetails)
+                        {
+                            var tempCount = commodityCodes.Where(cit => cit.CommodityId == oogd.CommodityId).Count();
+                            int.TryParse(oogd.Number, out int number);
+                            //当领用数量小于需要领用单上的数量时，状态变更为领用中
+                            if (number > tempCount)
+                            {
+                                order.Status = ConsumingOrderStatus.领用中.ToString();
+                                isAllNormal = false;
+                                break;
 
-					foreach (PrescriptionOrderGoodsDetail oogd in operationDetails)
-					{
-						var tempCount = commodityCodes.Where(cit => cit.CommodityId == oogd.CommodityId).Count();
-						int.TryParse(oogd.Number, out int number);
-						//当领用数量小于需要领用单上的数量时，状态变更为领用中
-						if (number > tempCount)
-						{
-							order.Status = ConsumingOrderStatus.领用中.ToString();
-							isAllNormal = false;
-							break;
+                            }
+                        }
 
-						}
-					}
+                        if (isAllNormal)
+                        {
+                            order.Status = ConsumingOrderStatus.已完成.ToString();
+                        }
+                    }
+                    if (detailCommodityIds.Count > baseDataCommodityIds.Count)
+                    {
+                        order.Status = ConsumingOrderStatus.领用中.ToString();
 
-					if (isAllNormal)
-					{
-						order.Status = ConsumingOrderStatus.已完成.ToString();
-					}
-				}
-				if (detailCommodityIds.Count > baseDataCommodityIds.Count)
-				{
-					order.Status = ConsumingOrderStatus.领用中.ToString();
-
-				}
+                    }
+                }
 			}
 		}
 

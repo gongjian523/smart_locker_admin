@@ -114,7 +114,13 @@ namespace CFLMedCab.Http.Model
         /// 已完成
         /// </summary>
         [Description("已完成")]
-        已完成 = 2
+        已完成 = 2,
+        /// <summary>
+        /// 异常
+        /// </summary>
+        [Description("异常")]
+        异常 = 3
+
     }
 
     public enum ConsumingOrderType
