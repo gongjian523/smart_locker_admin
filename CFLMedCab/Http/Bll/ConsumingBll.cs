@@ -295,6 +295,11 @@ namespace CFLMedCab.Http.Bll
 				if (commodityCode.operate_type == 0) { lossList.Add(commodityCode); } else { normalList.Add(commodityCode); };
 
 			});
+            //当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
+            if (normalList.Count > 0)
+            {
+                consumingOrder.Status = ConsumingOrderStatus.异常.ToString();
+            }
 			//当正常数量等于0说明未从智能柜领用商品
 			if (lossList.Count <= 0)
 			{
@@ -307,10 +312,7 @@ namespace CFLMedCab.Http.Bll
                         changeList.Add(new CommodityInventoryChange()
                         {
                             CommodityCodeId = normal.id,
-                            SourceBill = new SourceBill()
-                            {
-                                object_name = "ConsumingReturnOrder",
-                            },
+                            SourceBill = null,//回退的时候SourceBill传值为null
                             ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                             EquipmentId = normal.EquipmentId,
                             StoreHouseId = normal.StoreHouseId,
@@ -341,10 +343,7 @@ namespace CFLMedCab.Http.Bll
 						changeList.Add(new CommodityInventoryChange()
 						{
 							CommodityCodeId = normal.id,
-							SourceBill = new SourceBill()
-							{
-								object_name = "ConsumingReturnOrder",
-							},
+							SourceBill = null,
 							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                             EquipmentId = normal.EquipmentId,
                             StoreHouseId = normal.StoreHouseId,
@@ -397,7 +396,7 @@ namespace CFLMedCab.Http.Bll
 			return tempChange;
 		}
 		/// <summary>
-		/// 提交并获取手术类领用领用状态，和商品变动状态明细
+		/// 检测并变更手术类【有单领用】领用状态，和商品变动状态明细
 		/// </summary>
 		/// <param name="baseDataCommodityCode"></param>
 		/// <param name="order"></param>
@@ -485,8 +484,41 @@ namespace CFLMedCab.Http.Bll
                 }
 			}
 		}
+        /// <summary>
+        /// 检测并变更手术类【无单领用】领用状态，和商品变动状态明细
+        /// </summary>
+        /// <param name="baseDataCommodityCode"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public void GetOperationOrderChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order)
+		{
+			HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
+
+			if (isSuccess)
+			{
+				var commodityCodes = baseDataCommodityCode.body.objects;
+                //记录订单异常状态
+                var IsException = false;
+
+				commodityCodes.ForEach(it =>
+				{
+					if (it.operate_type == (int)OperateType.入库)
+					{
+						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                        IsException = true;
+					}
+				});
+                //当商品出现入库即判定主单状态为异常
+                if (IsException)
+                {
+                    order.Status = ConsumingOrderStatus.异常.ToString();
+                }
+                //凡是不存在入库情况就视为已完成
+                order.Status = ConsumingOrderStatus.已完成.ToString();
+			}
+		}
 		/// <summary>
-		/// 提交并获取医嘱处方单领用状态，和商品变动状态明细
+		/// 检测并变更医嘱处方单领用状态，和商品变动状态明细
 		/// </summary>
 		/// <param name="baseDataCommodityCode"></param>
 		/// <param name="order"></param>
