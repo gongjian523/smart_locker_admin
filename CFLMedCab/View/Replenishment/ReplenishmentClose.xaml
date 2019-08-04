@@ -226,15 +226,17 @@
                         <Border Grid.Row="1" Background="{StaticResource ContentBkBrush}" Padding="5,10,5,10" CornerRadius="5,5,5,5" MinHeight="60">
                             <StackPanel Orientation="Horizontal">
                                 <Button Content="商品缺失" x:Name="bthShortHide" Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnShort"/>
-                                <Button Content="商品损坏" x:Name="bthLossHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnLoss"/>
-                                <Button Content="商品遗失" x:Name="bthOtherHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnOther"/>
+                                <Button Content="商品遗失" x:Name="bthLossHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnLoss"/>
+                                <Button Content="商品损坏" x:Name="bthBadHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnOther"/>
+                                <Button Content="其他原因" x:Name="bthOtherHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnOther"/>
                             </StackPanel>
                         </Border>
                         <Label Grid.Row="2" Content="常见原因" Style="{StaticResource lblTitle1}"/>
                         <StackPanel Grid.Row="3"  Orientation="Horizontal">
                             <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthShortShow" Content="商品缺失" Click="onShowBtnShort"/>
-                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthLossShow" Margin="20,0,0,0" Content="商品损坏" Click="onShowBtnLoss"/>
-                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthOtherShow" Margin="20,0,0,0" Content="商品遗失" Click="onShowBtnOther"/>
+                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthLossShow" Margin="20,0,0,0" Content="商品遗失" Click="onShowBtnLoss"/>
+                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthBadShow" Margin="20,0,0,0" Content="商品损坏" Click="onShowBtnBad"/>
+                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthOtherShow" Margin="20,0,0,0" Content="其他原因" Click="onShowBtnOther"/>
                         </StackPanel>
                     </Grid>
                 </Border>

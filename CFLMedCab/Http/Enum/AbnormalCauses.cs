@@ -28,6 +28,13 @@ namespace CFLMedCab.Http.Enum
 		/// 异常
 		/// </summary>
 		[Description("商品遗失")]
-		商品遗失 = 3
+		商品遗失 = 3,
+
+        /// <summary>
+        /// 其他
+        /// </summary>
+        [Description("其他")]
+        其他原因 = 4
+
 	}
 }

@@ -116,8 +116,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-
-            if (bdCommodityDetail.body.objects.Where(item => item.PlanShelfNumber > item.CurShelfNumber).Count() > 0)
+            if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() > 0)
             {
                 endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
@@ -166,11 +165,14 @@ namespace CFLMedCab.View.ReplenishmentOrder
             if (bthShortHide.Visibility == Visibility.Visible)
                 list.Add(AbnormalCauses.商品缺失);
 
-            if (bthLossHide.Visibility == Visibility.Visible)
+            if (bthLossShow.Visibility == Visibility.Visible)
+                list.Add(AbnormalCauses.商品遗失);
+
+            if (bthBadShow.Visibility == Visibility.Visible)
                 list.Add(AbnormalCauses.商品损坏);
 
             if (bthOtherHide.Visibility == Visibility.Visible)
-                list.Add(AbnormalCauses.商品遗失);
+                list.Add(AbnormalCauses.其他原因);
 
             BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, list);
 
@@ -223,6 +225,17 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             Button btn = (Button)sender;
             bthOtherHide.Visibility = (btn.Name == "bthOtherShow" ? Visibility.Visible : Visibility.Collapsed);
+        }
+
+        /// <summary>
+        /// 操作损耗按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onShowBtnBad(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            bthBadHide.Visibility = (btn.Name == "bthBadShow" ? Visibility.Visible : Visibility.Collapsed);
         }
 
         /// <summary>

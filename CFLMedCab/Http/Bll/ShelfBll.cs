@@ -313,7 +313,6 @@ namespace CFLMedCab.Http.Bll
                 foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
                 {
                     stcd.CurShelfNumber = commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
-                    stcd.PlanShelfNumber = stcd.NeedShelfNumber - stcd.AlreadyShelfNumber;
                 }
             }
 

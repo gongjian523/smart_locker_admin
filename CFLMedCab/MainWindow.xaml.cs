@@ -398,8 +398,6 @@ namespace CFLMedCab
             }
             else
             {
-                
-
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     LoginBkView.Visibility = Visibility.Hidden;
@@ -427,7 +425,7 @@ namespace CFLMedCab
 #else
         private void SetNavBtnVisiblity(string  role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
 #endif
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
