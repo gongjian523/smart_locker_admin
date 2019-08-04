@@ -1458,6 +1458,7 @@ namespace CFLMedCab
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 LoginBkView.Visibility = Visibility.Hidden;
+                PopFrame.Visibility = Visibility.Hidden;
 
                 ApplicationState.SetUserInfo(e);
                 SetNavBtnVisiblity(e.Role);

@@ -294,9 +294,8 @@ namespace CFLMedCab.Http.Bll
 
 					foreach (PickCommodity stcd in pickTaskCommodityDetails)
 					{
-						if (stcd.Number != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+						if ((stcd.Number - stcd.PickNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
 						{
-							pickTask.BillStatus = DocumentStatus.异常.ToString();
 							isAllNormal = false;
 							break;
 						}
@@ -308,11 +307,11 @@ namespace CFLMedCab.Http.Bll
 					}
 
 				}
-				else
-				{
-					pickTask.BillStatus = DocumentStatus.异常.ToString();
+				//else
+				//{
+				//	pickTask.BillStatus = DocumentStatus.异常.ToString();
 					
-				}
+				//}
 
                 foreach (PickCommodity stcd in pickTaskCommodityDetails)
                 {
@@ -330,7 +329,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="baseDataPickTask">最后结果集</param>
 		/// <returns></returns>
-		public BasePutData<PickTask> PutPickTask(PickTask pickTask, AbnormalCauses abnormalCauses)
+		public BasePutData<PickTask> PutPickTask(PickTask pickTask)
 		{
 
             //put修改拣货工单
@@ -338,7 +337,6 @@ namespace CFLMedCab.Http.Bll
 			{
 				id = pickTask.id,
 				BillStatus = pickTask.BillStatus,
-				//AbnormalCauses = pickTask.AbnormalCauses,
 				version = pickTask.version
 			});
 

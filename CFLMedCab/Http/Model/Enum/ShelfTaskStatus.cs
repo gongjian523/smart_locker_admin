@@ -28,7 +28,14 @@ namespace CFLMedCab.Http.Model.Enum
 		/// 异常
 		/// </summary>
 		[Description("异常")]
-		异常 = 2
+		异常 = 2,
 
-	}
+        /// <summary>
+        /// 已撤销
+        /// </summary>
+        [Description("已撤销")]
+        已撤销 = 3
+
+
+    }
 }

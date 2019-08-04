@@ -49,9 +49,8 @@ namespace CFLMedCab.BLL
 
             if (type == InventoryType.Manual)
             {
-                //获取当前用户
-                inventoryOrder.operator_id = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id;
-                inventoryOrder.operator_name = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+                inventoryOrder.operator_id = 1;
+                inventoryOrder.operator_name = ApplicationState.GetUserInfo().name;
                 inventoryOrder.type = (int)InventoryType.Manual;
             }
             else

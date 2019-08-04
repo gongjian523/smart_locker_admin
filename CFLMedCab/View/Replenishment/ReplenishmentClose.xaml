@@ -13,7 +13,7 @@
         <cvt:ExceptionFlagStrConverter x:Key="ExceptionFlagStrConverter"/>
     </UserControl.Resources>
     <Grid>
-        <Border Style="{StaticResource CommonBlueBorder}" x:Name="normalView" >
+        <Border Style="{StaticResource CommonBlueBorder}" x:Name="normalView">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
@@ -150,7 +150,7 @@
                 </Border>
             </Grid>
         </Border>
-        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView" Visibility="Hidden">
+        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView"  Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
@@ -172,12 +172,10 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column11"/>
                             <Grid Grid.Column="1" x:Name="column12"/>
                             <Grid Grid.Column="2" x:Name="column13"/>
-                            <Grid Grid.Column="3" x:Name="column14"/>
                         </Grid>
                         <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" >
                             <Label Content="本次上架商品" Style="{StaticResource lblTitle5}"/>
@@ -195,17 +193,17 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="应上架数量"  Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                    <GridViewColumn Header="应上架数量"  Width="{Binding ElementName=column12,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding NeedShelfNumber-AlreadyShelfNumber}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding PlanShelfNumber}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="本次上架数量" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn Header="本次上架数量" Width="{Binding ElementName=column13,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding AlreadyShelfNumber}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CurShelfNumber}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
@@ -225,23 +223,23 @@
                         <Label  Grid.Row="0" Content="原因" Style="{StaticResource lblTitle1}"/>
                         <Border Grid.Row="1" Background="{StaticResource ContentBkBrush}" Padding="5,10,5,10" CornerRadius="5,5,5,5" MinHeight="60">
                             <StackPanel Orientation="Horizontal">
-                                <Button Content="商品缺失" x:Name="bthShortHide" Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnShort"/>
-                                <Button Content="商品遗失" x:Name="bthLossHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnLoss"/>
-                                <Button Content="商品损坏" x:Name="bthBadHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnOther"/>
-                                <Button Content="其他原因" x:Name="bthOtherHide"  Style="{StaticResource CommonNoButtonPic}" Margin="10,0,0,0" Visibility="Collapsed" Click="onShowBtnOther"/>
+                                <RadioButton Content="商品缺失"  Name="bthShortHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  IsChecked="True" FontWeight="Bold" />
+                                <RadioButton Content="商品遗失" Name="bthLossHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold"/>
+                                <RadioButton Content="商品损坏" Name="bthBadHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold" />
+                                <RadioButton Content="其他" Name="bthOtherHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold" />
                             </StackPanel>
                         </Border>
-                        <Label Grid.Row="2" Content="常见原因" Style="{StaticResource lblTitle1}"/>
-                        <StackPanel Grid.Row="3"  Orientation="Horizontal">
-                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthShortShow" Content="商品缺失" Click="onShowBtnShort"/>
-                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthLossShow" Margin="20,0,0,0" Content="商品遗失" Click="onShowBtnLoss"/>
-                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthBadShow" Margin="20,0,0,0" Content="商品损坏" Click="onShowBtnBad"/>
-                            <Button Style="{StaticResource CommonYesButtonT}" x:Name="bthOtherShow" Margin="20,0,0,0" Content="其他原因" Click="onShowBtnOther"/>
-                        </StackPanel>
                     </Grid>
                 </Border>
                 <Border  Style="{StaticResource BottomRadiusBorder}" Grid.Row="4">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
                         <Button Style="{StaticResource CommonYesButton}" x:Name="SubmitBtn" Content="提交"  Width="220" Click="onSubmit"/>
+                        <Button Style="{StaticResource CommonNoButton}" x:Name="BackwordsBtn"  Grid.Column="1" Content="返回"  Width="220" Click="onBackwords"/>
+                    </Grid>
                 </Border>
             </Grid>
         </Border>

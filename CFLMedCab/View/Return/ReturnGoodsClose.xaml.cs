@@ -97,7 +97,9 @@ namespace CFLMedCab.View.Return
             abnormalOutNum.Content = abnormalOutCnt;
             listView.DataContext = bdCommodityCode.body.objects;
 
-            if (abnormalInCnt == 0 && abnormalOutCnt == 0)
+            int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurShelfNumber > (item.Number - item.PickNumber)).Count();
+
+            if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
             {
                 normalBtmView.Visibility = Visibility.Visible;
                 abnormalBtmView.Visibility = Visibility.Collapsed;
@@ -116,20 +118,10 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if (bdCommodityDetail.body.objects.Where(item => item.PlanShelfNumber > item.CurShelfNumber).Count() > 0)
-            {
-                endTimer.Close();
-                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-                EndOperation(bExit);  
-            }
-            else
-            {
-                endTimer.Close();
-                endTimer.Start();
-                normalView.Visibility = Visibility.Collapsed;
-                abnormalView.Visibility = Visibility.Visible;
+            endTimer.Close();
+            bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+            EndOperation(bExit);  
 
-            }
         }
 
         /// <summary>
@@ -159,7 +151,7 @@ namespace CFLMedCab.View.Return
 
         private void EndOperation(bool bEixt)
         {
-            BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask, AbnormalCauses.商品损坏);
+            BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
 
             if(putData.code != 0)
             {

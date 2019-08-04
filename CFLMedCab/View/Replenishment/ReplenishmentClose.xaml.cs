@@ -95,9 +95,11 @@ namespace CFLMedCab.View.ReplenishmentOrder
             inNum.Content = inCnt;
             abnormalInNum.Content = abnormalInCnt;
             abnormalOutNum.Content = abnormalOutCnt;
+            int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurShelfNumber > (item.NeedShelfNumber - item.AlreadyShelfNumber)).Count();
+
             listView.DataContext = bdCommodityCode.body.objects;
 
-            if(abnormalInCnt == 0 && abnormalOutCnt == 0)
+            if(abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
             {
                 normalBtmView.Visibility = Visibility.Visible;
                 abnormalBtmView.Visibility = Visibility.Collapsed;
@@ -116,7 +118,21 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() > 0)
+            bool bGotoAbnormal = true;
+
+            if (bdCommodityCode.code != 0 || bdCommodityDetail.code != 0)
+            {
+                bGotoAbnormal = false;
+            }
+            else
+            {
+                if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() == 0)
+                {
+                    bGotoAbnormal = false;
+                }
+            }
+
+            if (!bGotoAbnormal)
             {
                 endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
@@ -124,8 +140,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
             }
             else
             {
-                endTimer.Close();
-                endTimer.Start();
                 normalView.Visibility = Visibility.Collapsed;
                 abnormalView.Visibility = Visibility.Visible;
 
@@ -160,33 +174,33 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         private void EndOperation(bool bEixt)
         {
-            List<AbnormalCauses> list = new List<AbnormalCauses>();
-
-            if (bthShortHide.Visibility == Visibility.Visible)
-                list.Add(AbnormalCauses.商品缺失);
-
-            if (bthLossShow.Visibility == Visibility.Visible)
-                list.Add(AbnormalCauses.商品遗失);
-
-            if (bthBadShow.Visibility == Visibility.Visible)
-                list.Add(AbnormalCauses.商品损坏);
-
-            if (bthOtherHide.Visibility == Visibility.Visible)
-                list.Add(AbnormalCauses.其他原因);
-
-            BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, list);
-
-            if(putData.code != 0)
+            if(bdCommodityCode.code == 0 && bdCommodityDetail.code == 0)
             {
-                MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-            }
-            else
-            {
-                BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
-                
-                if(basePostData.code != 0)
+                AbnormalCauses abnormalCauses;
+
+                if ((bool)bthShortHide.IsChecked)
+                    abnormalCauses=AbnormalCauses.商品缺失;
+                else if ((bool)bthLossHide.IsChecked)
+                    abnormalCauses = AbnormalCauses.商品遗失;
+                else if ((bool)bthBadHide.IsChecked)
+                    abnormalCauses = AbnormalCauses.商品遗失;
+                else
+                    abnormalCauses = AbnormalCauses.其他;
+
+                BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, abnormalCauses);
+
+                if (putData.code != 0)
                 {
-                    MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                }
+                else
+                {
+                    BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+
+                    if (basePostData.code != 0)
+                    {
+                        MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    }
                 }
             }
 
@@ -247,6 +261,18 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             endTimer.Close();
             EndOperation(bExit);
+        }
+
+
+        /// <summary>
+        /// 返回按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onBackwords(object sender, RoutedEventArgs e)
+        {
+            normalView.Visibility = Visibility.Visible;
+            abnormalView.Visibility = Visibility.Collapsed;
         }
     }
 }

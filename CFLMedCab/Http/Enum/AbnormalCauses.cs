@@ -34,7 +34,7 @@ namespace CFLMedCab.Http.Enum
         /// 其他
         /// </summary>
         [Description("其他")]
-        其他原因 = 4
+        其他 = 4
 
 	}
 }

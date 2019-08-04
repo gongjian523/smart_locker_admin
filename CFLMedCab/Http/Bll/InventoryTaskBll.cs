@@ -281,8 +281,9 @@ namespace CFLMedCab.Http.Bll
 				{
 					CommodityInventoryId = it.CommodityInventoryId,
 					InventoryOrderId = inventoryOrderId,
-					CommodityCodeId = it.id
-				});
+					CommodityCodeId = it.id,
+                    Status = it.QStatus
+                });
 			});
 
 			return HttpHelper.GetInstance().Post(new PostParam<InventoryDetail>()

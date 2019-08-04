@@ -27,14 +27,14 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BaseData<ShelfTask> GetShelfTask(string shelfTaskName)
 		{
-			//获取待完成上架工单
-			return HttpHelper.GetInstance().Get<ShelfTask>(new QueryParam
+            //获取待完成上架工单
+            BaseData<ShelfTask> bdShelfTask = HttpHelper.GetInstance().Get<ShelfTask>(new QueryParam
 			{
 				view_filter =
 				{
 					filter =
 					{
-						logical_relation = "1 AND 2",
+						logical_relation = "1",
 						expressions =
 						{
 							new QueryParam.Expressions
@@ -42,12 +42,6 @@ namespace CFLMedCab.Http.Bll
 								field = "name",
 								@operator = "==",
 								operands =  {$"'{ HttpUtility.UrlEncode(shelfTaskName) }'"}
-							},
-							new QueryParam.Expressions
-							{
-								field = "Status",
-								@operator = "==",
-								operands = {$"'{ HttpUtility.UrlEncode(ShelfTaskStatus.待上架.ToString()) }'" }
 							}
                             //new QueryParam.Expressions
                             //{
@@ -59,7 +53,27 @@ namespace CFLMedCab.Http.Bll
 					}
 				}
 			});
-		}
+
+            bdShelfTask = HttpHelper.GetInstance().ResultCheck(bdShelfTask, out bool isSuccess);
+
+            if (!isSuccess)
+            {
+                bdShelfTask.code = (int)ResultCode.Result_Exception;
+                bdShelfTask.message = ResultCode.Result_Exception.ToString();
+            }
+            else
+            {
+                //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
+                if ("已完成".Equals(bdShelfTask.body.objects[0].Status) || "已撤销".Equals(bdShelfTask.body.objects[0].Status))
+                {
+                    bdShelfTask.code = (int)ResultCode.Result_Exception;
+                    bdShelfTask.message = ResultCode.Result_Exception.ToString();
+                }
+            }
+
+            return bdShelfTask;
+
+        }
 
 		/// <summary>
 		/// 根据上架单号获取任务单详情
@@ -289,7 +303,7 @@ namespace CFLMedCab.Http.Bll
 					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
 					{
                         //种类不相等
-						if ((int)stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+						if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
 						{
 							shelfTask.Status = DocumentStatus.异常.ToString();
 							isAllNormal = false;
@@ -313,6 +327,7 @@ namespace CFLMedCab.Http.Bll
                 foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
                 {
                     stcd.CurShelfNumber = commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
+                    stcd.PlanShelfNumber = stcd.NeedShelfNumber - stcd.AlreadyShelfNumber;
                 }
             }
 
@@ -324,25 +339,22 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="baseDataShelfTask">最后结果集</param>
         /// <returns></returns>
-        public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask, List<AbnormalCauses> abnormalCauses)
+        public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask, AbnormalCauses abnormalCauses)
         {
-            if (shelfTask.Status == DocumentStatus.异常.ToString())
-            {
-                abnormalCauses.ForEach(item =>
-                {
-                    shelfTask.AbnormalCauses += abnormalCauses.ToString();
-                    shelfTask.AbnormalCauses += ",";
-                });
-                shelfTask.AbnormalCauses.TrimEnd(',');
-            }
 
-            BasePutData<ShelfTask> basePutData = HttpHelper.GetInstance().Put(new ShelfTask
+            ShelfTask task = new ShelfTask
             {
                 id = shelfTask.id,
                 Status = shelfTask.Status,
-                AbnormalCauses = shelfTask.AbnormalCauses,
                 version = shelfTask.version
-            });
+            };
+
+            if (shelfTask.Status == DocumentStatus.异常.ToString())
+            {
+                task.AbnormalCauses = abnormalCauses.ToString();
+            }
+
+            BasePutData<ShelfTask> basePutData = HttpHelper.GetInstance().Put(task);
 
             if (basePutData.code != 0)
             {
@@ -386,15 +398,18 @@ namespace CFLMedCab.Http.Bll
 					}
 
 
-					CommodityInventoryChanges.Add(new CommodityInventoryChange()
-					{
-						CommodityCodeId = it.id,//商品码【扫描】
-						SourceBill = new SourceBill()//来源单据
-						{
-							object_name = typeof(ShelfTask).Name,
-							object_id = shelfTask.id
-						},
-						ChangeStatus = changeStatus
+                    CommodityInventoryChanges.Add(new CommodityInventoryChange()
+                    {
+                        CommodityCodeId = it.id,//商品码【扫描】
+                        SourceBill = new SourceBill()//来源单据
+                        {
+                            object_name = typeof(ShelfTask).Name,
+                            object_id = shelfTask.id
+                        },
+                        ChangeStatus = changeStatus,
+                        EquipmentId = ApplicationState.GetEquipId(),
+                        StoreHouseId = ApplicationState.GetHouseId(),
+                        GoodsLocationId = it.GoodsLocationId
 					});
 				});
 

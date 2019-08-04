@@ -31,7 +31,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public ReplenishmentDetailOpen(ShelfTask model)
         {
             InitializeComponent();
-            operatorName.Content = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            operatorName.Content = ApplicationState.GetUserInfo().name;
             orderNum.Content = model.name;
 
             BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(model);
