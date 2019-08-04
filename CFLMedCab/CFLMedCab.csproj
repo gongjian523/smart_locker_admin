@@ -171,6 +171,7 @@
     <Compile Include="Http\Bll\ConsumingBll.cs" />
     <Compile Include="Http\Bll\InventoryTaskBll.cs" />
     <Compile Include="Http\Bll\LocalGoodsChangeBll.cs" />
+    <Compile Include="Http\Bll\PositionAdjustmentBll.cs" />
     <Compile Include="Http\Bll\RollbackBll.cs" />
     <Compile Include="Http\Bll\PickBll.cs" />
     <Compile Include="Http\Bll\ShelfBll.cs" />

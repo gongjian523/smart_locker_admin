@@ -698,9 +698,9 @@ namespace CFLMedCab.Http.Helper
 				NullValueHandling = NullValueHandling.Ignore
 			};
 
-            var temp = JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting);
+            var JsonBody = JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting);
 
-            JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+            JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonBody).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 
