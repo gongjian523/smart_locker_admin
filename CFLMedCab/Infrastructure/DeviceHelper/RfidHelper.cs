@@ -328,7 +328,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
             }
 #endif
-            Console.ReadKey();
+
             Console.WriteLine("RFID NUM:" + currentEpcDataHs.Count());
             return currentEpcDataHs;
 		}

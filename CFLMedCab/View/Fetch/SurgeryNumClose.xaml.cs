@@ -79,6 +79,8 @@ namespace CFLMedCab.View.Fetch
                 return;
             }
 
+            ConsumingBll.GetInstance().GetOperationOrderChangeWithOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0], fetchParam.bdOperationOrderGoodsDetail);
+
             listView1.DataContext = bdCommodityCode.body.objects;
 
             //inNum.Content = currentOperateNum;//领用数
@@ -146,6 +148,7 @@ namespace CFLMedCab.View.Fetch
             {
                 if(bdCommodityCode.body.objects.Count > 0)
                 {
+
                     BasePostData<CommodityInventoryChange> bdBasePostData =
                         ConsumingBll.GetInstance().SubmitConsumingChangeWithOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0]);
 
