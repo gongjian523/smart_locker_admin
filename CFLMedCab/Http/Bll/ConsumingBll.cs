@@ -91,7 +91,7 @@ namespace CFLMedCab.Http.Bll
 			}
 			return bdConsumingOrder;
 		}
-		/// <summary>
+        /// <summary>
 		/// 来源单据解析为【⼿手术单管理理】(ConsumingOrder.SourceBill.object_name=‘OperationOrder’ )：
 		/// • 通过【手术单】(ConsumingOrder.SourceBill.object_id=OperationOrderGoodsDetail.OperationOrderId）从表格 【手术单商品明细】中查询获取领⽤用商品的列列表信息。
 		/// </summary>
@@ -152,57 +152,31 @@ namespace CFLMedCab.Http.Bll
 			return baseOperationOrderGoodsDetail;
 
 		}
-		/// <summary>
-		/// 来源单据解析为【医嘱处⽅方单管理理】(ConsumingOrder.SourceBill.object_name=‘PrescriptionBill’ )：
-		/// • 通过【医嘱/处⽅方单】(ConsumingOrder.SourceBill.object_id=PrescriptionOrderGoodsDetail.PrescriptionBillId）从表格 【医嘱/处⽅单商品明细】中查询获取医嘱/处⽅方商品的列列表信息。
-		/// </summary>
-		/// <param name="commodityCode"></param>
-		/// <returns></returns>
-		public BaseData<PrescriptionOrderGoodsDetail> GetPrescriptionOrderGoodsDetail(BaseData<ConsumingOrder> baseDataConsumingOrder)
+        /// <summary>
+        /// 根据医嘱领用单名称，获取PrescriptionBill信息
+        /// </summary>
+        /// <param name="prescriptionBillName"></param>
+        /// <returns></returns>
+        public BaseData<PrescriptionBill> GetPrescriptionBill(string prescriptionBillName)
 		{
-			//校验是否含有数据，如果含有数据，拼接具体字段
-			HttpHelper.GetInstance().ResultCheck(baseDataConsumingOrder, out bool isSuccess);
-			if (!isSuccess)
+			if (null == prescriptionBillName)
 			{
-				return new BaseData<PrescriptionOrderGoodsDetail>()
+				return new BaseData<PrescriptionBill>()
 				{
 					code = (int)ResultCode.Parameter_Exception,
 					message = ResultCode.Parameter_Exception.ToString()
 				};
 			}
-			if (!"PrescriptionBill".Equals(baseDataConsumingOrder.body.objects[0].SourceBill.object_name))
-			{
-				return new BaseData<PrescriptionOrderGoodsDetail>()
-				{
-					code = (Int32)ResultCode.Business_Exception,
-					message = ResultCode.Business_Exception.ToString()
-				};
-			}
-			BaseData<PrescriptionOrderGoodsDetail> baseCommodityInventoryDetail = HttpHelper.GetInstance().Get<PrescriptionOrderGoodsDetail>(new QueryParam
-			{
-				@in =
-					{
-						field = "PrescriptionBillId",
-						in_list =  { HttpUtility.UrlEncode(baseDataConsumingOrder.body.objects[0].SourceBill.object_id) }
-					}
-			});
-
-			//校验是否含有数据，如果含有数据，拼接具体字段
-			HttpHelper.GetInstance().ResultCheck(baseCommodityInventoryDetail, out bool isSuccess2);
-
-			if (isSuccess2)
-			{
-				baseCommodityInventoryDetail.body.objects.ForEach(it =>
-				{
-					//拼接商品编码名称
-					if (!string.IsNullOrEmpty(it.CommodityId))
-					{
-						it.CommodityName = GetNameById<Commodity>(it.CommodityId);
-					}
-
-				});
-			}
-			return baseCommodityInventoryDetail;
+            BaseData<PrescriptionBill> prescriptionBill = HttpHelper.GetInstance().Get<PrescriptionBill>(new QueryParam
+            {
+                @in =
+                {
+                    field = "name",
+                    in_list = { HttpUtility.UrlEncode(prescriptionBillName) }
+                }
+            });
+            prescriptionBill = HttpHelper.GetInstance().ResultCheck(prescriptionBill, out bool isSuccess);
+            return prescriptionBill;
 
 		}
 		/// <summary>
