@@ -307,7 +307,10 @@ namespace CFLMedCab.Http.Bll
                         changeList.Add(new CommodityInventoryChange()
                         {
                             CommodityCodeId = normal.id,
-                            SourceBill = null,//回退的时候SourceBill传值为null
+                            SourceBill = new SourceBill()
+                            {
+                                object_name = "ConsumingReturnOrder"
+                            },
                             ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                             EquipmentId = normal.EquipmentId,
                             StoreHouseId = normal.StoreHouseId,
@@ -338,8 +341,11 @@ namespace CFLMedCab.Http.Bll
 						changeList.Add(new CommodityInventoryChange()
 						{
 							CommodityCodeId = normal.id,
-							SourceBill = null,
-							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                            SourceBill = new SourceBill()
+                            {
+                                object_name = "ConsumingReturnOrder"
+                            },
+                            ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                             EquipmentId = normal.EquipmentId,
                             StoreHouseId = normal.StoreHouseId,
                             GoodsLocationId = normal.GoodsLocationId

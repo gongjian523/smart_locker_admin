@@ -139,7 +139,10 @@ namespace CFLMedCab.Http.Bll
                 var temp = new CommodityInventoryChange()
                 {
                     CommodityCodeId = commodityCode.id,
-                    SourceBill = null,
+                    SourceBill = new SourceBill()
+                    {
+                        object_name = "ConsumingReturnOrder",
+                    },
                     ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                     EquipmentId = commodityCode.EquipmentId,
                     GoodsLocationId = commodityCode.GoodsLocationId,
