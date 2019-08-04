@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model;
@@ -323,6 +324,31 @@ namespace UnitTestProject
                     codes = GetBaseData().body.objects.Where(it => it.CommodityId == g.Key.CommodityId && it.GoodsLocationId == g.Key.GoodsLocationId).ToList()
             })).ToList();
 
+        }
+
+        [TestMethod]
+        public void TestUserLogin()
+        {
+            var token = UserLoginBll.GetInstance().GetUserToken(new SignInParam()
+            {
+                phone = "+86 18408252063",
+                password = ""
+            });
+            Console.WriteLine(token);
+            var userInfo = UserLoginBll.GetInstance().GetUserInfo("+86 18408252063");
+            Console.WriteLine(userInfo);
+
+            //var temp = UserLoginBll.GetInstance().GetCaptchaImageToken();
+            //Console.WriteLine(temp);
+
+        }
+
+        [TestMethod]
+        public void TestBase64()
+        {
+            var password = "";
+            var pas64 = Convert.ToBase64String(Encoding.Default.GetBytes(password));
+            Console.WriteLine(pas64);
         }
 	}
 }
