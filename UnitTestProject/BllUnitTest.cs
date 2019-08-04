@@ -210,14 +210,18 @@ namespace UnitTestProject
         [TestMethod]
         public void RollbackTestMethod()
         {
-            var name = "L00000010";
-            var temp = RollbackBll.GetInstance().GetGoodsLocation(name);
-            Console.WriteLine(temp);
+            //var name = "L00000010";
+            //var temp = RollbackBll.GetInstance().GetGoodsLocation(name);
+            //Console.WriteLine(temp);
 
-            var commodityCode = "C00000053";
-            var temp2 = RollbackBll.GetInstance().GetCommodity(commodityCode);
+            //var commodityCode = "C00000053";
+            //var temp2 = RollbackBll.GetInstance().GetCommodity(commodityCode);
 
-            Console.WriteLine(temp2);
+            //Console.WriteLine(temp2);
+
+            var baseDetail = GetBaseData();
+            var change = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDetail);
+            Console.WriteLine(change);
 
         }
         [TestMethod]

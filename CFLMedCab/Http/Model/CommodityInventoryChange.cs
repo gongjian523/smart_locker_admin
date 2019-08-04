@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
+    /// <summary>
+    /// 商品库存变更更记录资料
+    /// </summary>
     public class CommodityInventoryChange: BaseModel
     {
         public string CommodityCodeId { get; set; }
@@ -41,9 +44,28 @@ namespace CFLMedCab.Http.Model
         /// 变更后状态
         /// </summary>
         public string ChangeStatus { get; set; }
+        /// <summary>
+        /// 调整状态
+        /// </summary>
+        public string AdjustStatus { get; set; }
 
     }
-
+    /// <summary>
+    /// 调整状态:[是，否]
+    /// </summary>
+    public enum CommodityInventoryChangeAdjustStatus
+    {
+        /// <summary>
+        /// 是
+        /// </summary>
+        [Description("是")]
+        是 = 0,
+        /// <summary>
+        /// 否【默认值】
+        /// </summary>
+        [Description("否")]
+        否 = 0
+    }
     /// <summary>
     /// 变更后状态[正常 未上架 待回收 配送在途 拣货作业 已消耗 已回收 损耗]
     /// </summary>

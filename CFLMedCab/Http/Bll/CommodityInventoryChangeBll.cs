@@ -115,6 +115,7 @@ namespace CFLMedCab.Http.Bll
                 HttpHelper.GetInstance().ResultCheck(consumingOrder, out bool isSuccess);
                 if (isSuccess)
                 {
+                    //创建商品库存变更记录资料【出库::领用】
                     baseDataCommodityCode.body.objects.Where(it=>it.operate_type == 0).ToList().ForEach(commodityCode =>
                     {
                         var temp = new CommodityInventoryChange()
@@ -132,15 +133,13 @@ namespace CFLMedCab.Http.Bll
                     });
                 }
             }
+            ////创建商品库存变更记录资料【入库::回退】
             baseDataCommodityCode.body.objects.Where(it => it.operate_type == 1).ToList().ForEach(commodityCode =>
             {
                 var temp = new CommodityInventoryChange()
                 {
                     CommodityCodeId = commodityCode.id,
-                    SourceBill = new SourceBill()
-                    {
-                        object_name = "ConsumingReturnOrder",
-                    },
+                    SourceBill = null,
                     ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                     EquipmentId = commodityCode.EquipmentId,
                     GoodsLocationId = commodityCode.GoodsLocationId,
