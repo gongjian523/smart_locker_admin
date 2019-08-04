@@ -98,7 +98,7 @@ namespace CFLMedCab.View.Fetch
             ShowLoadDataEvent(this, null);
 
             FetchParam fetchParam = new FetchParam();
-            fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name, consumingOrderType);
+            fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
 
             if (fetchParam.bdConsumingOrder.code == 0)
             {

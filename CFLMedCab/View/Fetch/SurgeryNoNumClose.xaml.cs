@@ -65,23 +65,26 @@ namespace CFLMedCab.View.Fetch
             if (bdCommodityCode.code != 0)
             {
                 MessageBox.Show("获取商品信息错误！", "温馨提示", MessageBoxButton.OK);
-                return;
             }
-
-            if (bdCommodityCode.body.objects.Count == 0)
+            else
             {
-                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                return;
+                if (bdCommodityCode.body.objects.Count == 0)
+                {
+                    MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                }
+                else
+                {
+                    listView.DataContext = bdCommodityCode.body.objects;
+                    lbTypeContent.Content = type;
+                    outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+                    abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+
+
+                    bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
+                        it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                    });
+                }
             }
-
-            listView.DataContext = bdCommodityCode.body.objects;
-            lbTypeContent.Content = type;
-            outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-            abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
-
-            bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
-                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-            });
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
