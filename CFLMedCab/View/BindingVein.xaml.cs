@@ -117,6 +117,7 @@ namespace CFLMedCab.View
             siParam.phone = "+86 " + tbInputName.Text;
             siParam.source = "app";
 
+            //获取用户Token
             var data1 = UserLoginBll.GetInstance().GetUserToken(siParam);
 
             if(data1.code != 0)
@@ -173,7 +174,7 @@ namespace CFLMedCab.View
                     ApplicationState.SetAccessToken(data1.body.access_token);
                     ApplicationState.SetRefreshToken(data1.body.refresh_token);
 
-                    BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text), tbInputPsw.Password);
+                    BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
                     if (bdData.code != 0 || (bdData.code == 0 && bdData.body.objects == null))
                     {
                         WarnInfo2.Content = "获取用户信息失败！" + bdData.message;
@@ -286,7 +287,7 @@ namespace CFLMedCab.View
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
-                BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text), tbInputPsw.Password);
+                BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
                 if (bdData.code != 0 || (bdData.code == 0 && bdData.body.objects == null) )
                 {
                     WarnInfo2.Content = "获取用户信息失败！" + bdData.message;

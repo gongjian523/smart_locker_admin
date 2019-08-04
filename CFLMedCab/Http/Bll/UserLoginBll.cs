@@ -138,7 +138,6 @@ namespace CFLMedCab.Http.Bll
 
             return dataUserToken;
         }
-
         /// <summary>
         /// 获取图形验证码
         /// </summary>
@@ -150,65 +149,22 @@ namespace CFLMedCab.Http.Bll
 
 
         /// <summary>
-        /// 获取图形验证码
+        /// 获取用户信息
         /// </summary>
         /// <returns></returns>
-        public BaseData<User> GetUserInfo(string mobilePhone, string password)
+        public BaseData<User> GetUserInfo(string mobilePhone)
         {
-            //获取账户数据
-            BaseData<Account> baseDataAccount = HttpHelper.GetInstance().Get<Account>(new QueryParam
-            {
-                view_filter =
-                {
-                    filter =
-                    {
-                        logical_relation = "1 AND 2",
-                        expressions =
-                        {
-                            new QueryParam.Expressions
-                            {
-                                field = "Phone",
-                                @operator = "CONTAINS",
-                                operands =  {$"'{ HttpUtility.UrlEncode(mobilePhone) }'"}
-                            },
-                            new QueryParam.Expressions
-                            {
-                                field = "Password",
-                                @operator = "==",
-                                operands = {$"'{ BllHelper.EncodeBase64Str(password) }'" }
-                            }
-                        }
-                    }
-                }
-            });
 
             //根据账户获取用户数据
-            BaseData<User> baseDataUser = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
-
-                return hh.Get<User>(new QueryParam
-                {
-                    @in =
+            BaseData<User> baseDataUser = HttpHelper.GetInstance().Get<User>(new QueryParam
+            {
+                @in =
                     {
                         field = "MobilePhone",
-                        in_list =  { HttpUtility.UrlEncode(baseDataAccount.body.objects[0].Phone) }
+                        in_list =  { HttpUtility.UrlEncode(mobilePhone) }
                     }
-                });
-
-            }, baseDataAccount);
-
-            //BaseData<User> baseDataUser = HttpHelper.GetInstance().Get<User>(new QueryParam
-            //{
-            //    @in =
-            //    {
-            //        field = "MobilePhone",
-            //        in_list =  { HttpUtility.UrlEncode(mobilePhone) }
-            //    }
-            //});
-
-            //if(baseDataUser.code !=0)
-            //{
-            //    LogUtils.Error("GetUserInfo:" + mobilePhone + " " + baseDataUser.message);
-            //}
+            });
+            baseDataUser = HttpHelper.GetInstance().ResultCheck(baseDataUser, out bool isSuccess);
 
             return baseDataUser;
         }
