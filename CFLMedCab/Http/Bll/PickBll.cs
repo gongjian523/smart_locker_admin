@@ -243,7 +243,7 @@ namespace CFLMedCab.Http.Bll
 		/// 获取变化后的拣货单
 		/// </summary>
 		/// <param name="baseDatacommodityCode"></param>
-		/// <param name="baseDataPickTask"></param>
+		/// <param name="pickTask"></param>
 		/// <param name="baseDataPickTaskCommodityDetail"></param>
 		/// <returns></returns>
 		public void GetPickTaskChange(BaseData<CommodityCode> baseDatacommodityCode, PickTask pickTask, BaseData<PickCommodity> baseDataPickTaskCommodityDetail)

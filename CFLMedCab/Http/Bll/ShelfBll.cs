@@ -250,29 +250,31 @@ namespace CFLMedCab.Http.Bll
 
             if (isSuccess && isSuccess1)
 			{
+                //上架任务单商品详情列表
 				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
-
+                //上架任务单商品码
 				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
 
 				var commodityCodes = baseDatacommodityCode.body.objects;
 
-					commodityCodes.ForEach(it=> {
-						if (it.operate_type == (int)OperateType.出库)
+                //商品异常状态回显
+                commodityCodes.ForEach(it=> {
+					if (it.operate_type == (int)OperateType.出库)
+					{
+						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+					}
+					else
+					{
+						if (sfdCommodityIds.Contains(it.CommodityId))
 						{
-							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+							it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
 						}
 						else
 						{
-							if (sfdCommodityIds.Contains(it.CommodityId))
-							{
-								it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
-							}
-							else
-							{
-								it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-							}
+							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
 						}
-					});
+					}
+				});
 
 				var cccIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
 
@@ -286,6 +288,7 @@ namespace CFLMedCab.Http.Bll
 
 					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
 					{
+                        //种类不相等
 						if ((int)stcd.NeedShelfNumber != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
 						{
 							shelfTask.Status = DocumentStatus.异常.ToString();

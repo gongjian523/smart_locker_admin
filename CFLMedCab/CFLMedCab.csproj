@@ -259,6 +259,7 @@
     <Compile Include="Http\Model\param\VeinmatchPostParam.cs" />
     <Compile Include="Http\Model\PickCommodity.cs" />
     <Compile Include="Http\Model\PickTask.cs" />
+    <Compile Include="Http\Model\PrescriptionBill.cs" />
     <Compile Include="Http\Model\PrescriptionOrderGoodsDetail.cs" />
     <Compile Include="Http\Model\ShelfTask.cs" />
     <Compile Include="Http\Model\ShelfTaskCommodityDetail.cs" />
