@@ -3,6 +3,7 @@ using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Inventory;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
@@ -103,14 +104,19 @@ namespace CFLMedCab.View.Inventory
                 taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
                 taskName = taskOrder.name;
             }
-            catch(Exception ex)
-            {
-                taskName = inputStr;
-            }
+			catch (Exception ex)
+			{
+				LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
+				taskName = inputStr;
+			}
 
-            BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
+			BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
 
-            if (bdInventoryTask.code != 0)
+
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdInventoryTask, out bool isSuccess);
+
+			if (!isSuccess)
             {
                 MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
                 return;

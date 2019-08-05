@@ -4,6 +4,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Picking;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
@@ -73,18 +74,14 @@ namespace CFLMedCab.View.Return
             after = hs;
 
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
-            if (bdCommodityCode.code != 0)
-            {
-                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
 
-            bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
-            if (bdCommodityDetail.code != 0)
-            {
-                MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+
+			if (!isSuccess)
+			{
+				MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+				return;
+			}
 
             PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
 
