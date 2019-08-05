@@ -265,68 +265,44 @@ namespace CFLMedCab.Http.Bll
 				};
 			}
 
-
-	
-			//当正常数量等于0说明未从智能柜领用商品
-			if (lossList.Count <= 0)
-			{
-				//当正常数量大于0说明向智能柜中存放商品，需要创建商品变更记录
-				if (normalList.Count > 0)
-				{
-
-					normalList.ForEach(normal =>
-					{
-                        changeList.Add(new CommodityInventoryChange()
+            //当正常数量大于0说明向智能柜中存放商品，需要创建商品变更记录
+            if (normalList.Count > 0)
+            {
+                normalList.ForEach(normal =>
+                {
+                    changeList.Add(new CommodityInventoryChange()
+                    {
+                        CommodityCodeId = normal.id,
+                        SourceBill = new SourceBill()
                         {
-                            CommodityCodeId = normal.id,
-                            SourceBill = new SourceBill()
-                            {
-                                object_name = "ConsumingReturnOrder"
-                            },
-                            ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
-                            EquipmentId = normal.EquipmentId,
-                            StoreHouseId = normal.StoreHouseId,
-                            GoodsLocationId = normal.GoodsLocationId
-						});
-					});
-				}
-			}
-			else
-			{
-				lossList.ForEach(loss =>
-				{
-					changeList.Add(new CommodityInventoryChange()
-					{
-						CommodityCodeId = loss.id,
-						SourceBill = new SourceBill()
-						{
-							object_name = "ConsumingOrder",
-							object_id = order.body[0].id
-						},
-						ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
-					});
-				});
-				if (normalList.Count > 0)
-				{
-					normalList.ForEach(normal =>
-					{
-						changeList.Add(new CommodityInventoryChange()
-						{
-							CommodityCodeId = normal.id,
-                            SourceBill = new SourceBill()
-                            {
-                                object_name = "ConsumingReturnOrder"
-                            },
-                            ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
-                            EquipmentId = normal.EquipmentId,
-                            StoreHouseId = normal.StoreHouseId,
-                            GoodsLocationId = normal.GoodsLocationId
-                        });
-					});
-				}
-			}
+                            object_name = "ConsumingReturnOrder"
+                        },
+                        ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                        EquipmentId = normal.EquipmentId,
+                        StoreHouseId = normal.StoreHouseId,
+                        GoodsLocationId = normal.GoodsLocationId
+                    });
+                });
+            }
 
-			var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeList);
+            //当消耗数量大于0说明向智能柜中取出商品，需要创建商品变更记录
+            if (lossList.Count > 0)
+            {
+                lossList.ForEach(loss =>
+                {
+                    changeList.Add(new CommodityInventoryChange()
+                    {
+                        CommodityCodeId = loss.id,
+                        SourceBill = new SourceBill()
+                        {
+                            object_name = "ConsumingOrder",
+                            object_id = order.body[0].id
+                        },
+                        ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
+                    });
+                });
+            }
+            var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeList);
 
 			//校验数据是否正常
 			HttpHelper.GetInstance().ResultCheck(changes, out bool isSuccess2);

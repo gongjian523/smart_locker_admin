@@ -46,7 +46,7 @@
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
                 <Label Content="请输入盘点任务单号或扫描二维码" Grid.Row="0"  Style="{StaticResource lblTitle1}"  Foreground="#FFFFFF" />
-                <TextBox x:Name="tbInputNumbers" Grid.Row="1"  Height="48" Margin="0 15"  TextWrapping="Wrap" Text="IT20190724000016" 
+                <TextBox x:Name="tbInputNumbers" Grid.Row="1"  Height="48" Margin="0 15"  TextWrapping="Wrap"  
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" FontSize="22" 
                             Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
 

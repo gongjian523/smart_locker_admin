@@ -97,8 +97,6 @@ namespace CFLMedCab.View.Fetch
                 name = inputStr;
             }
 
-            ShowLoadDataEvent(this, null);
-
             if(consumingOrderType != ConsumingOrderType.医嘱处方领用)
             {
                 FetchParam fetchParam = new FetchParam();
@@ -112,8 +110,6 @@ namespace CFLMedCab.View.Fetch
                             ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
                     }
                 }
-
-                HideLoadDataEvent(this, null);
 
                 if (fetchParam.bdConsumingOrder.code != 0)
                 {
