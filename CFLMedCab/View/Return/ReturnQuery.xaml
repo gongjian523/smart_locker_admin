@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="CFLMedCab.View.Return.ReturnQuery"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CFLMedCab.View.Fetch"
+             xmlns:k="clr-namespace:CFLMedCab.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Border Style="{StaticResource CommonBlueBorder}" >
+        <Grid>
+            <Border Background="White" Padding="30 40"  Grid.Row="0" CornerRadius="{DynamicResource GRadius}">
+                <Grid x:Name="GridView">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+                    <Label  x:Name="lbInputCode" Grid.Row="0" Content="请输入商品回收任务单号或扫描任务单二维码"   Style="{StaticResource lblTitle1}"/>
+                    <!--<TextBox k:TouchScreenKeyboard.TouchScreenKeyboard="True"  x:Name="tbInputCode" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" Text="" 
+                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                             Width="{Binding Path=ActualWidth,ElementName=GridView}" PreviewKeyDown="SearchBox_OnKeyDown"/>-->
+                    <TextBox x:Name="tbInputCode" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" Text="" 
+                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                             Width="{Binding Path=ActualWidth,ElementName=GridView}" PreviewKeyDown="SearchBox_OnKeyDown" GotFocus="onGotFocus" LostFocus="onLostFocus" />
+                    <StackPanel  Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
+                        <Button Style="{StaticResource CommonYesButton}" Content="查询"  Width="200" Click="EnterDetail_Click"/>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

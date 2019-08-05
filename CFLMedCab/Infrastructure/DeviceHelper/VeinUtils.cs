@@ -237,7 +237,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             bExitDetect = state;
         }
 
-        // 等待手指某状态（ 0移开；3放置 ） 
+        // 手指某状态（ 0移开；3放置 ） 
         public void  DetectFinger()
         {
             int wDetectCnt = 0;                         //循环检测次数

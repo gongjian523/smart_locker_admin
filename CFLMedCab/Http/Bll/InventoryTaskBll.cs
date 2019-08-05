@@ -350,7 +350,7 @@ namespace CFLMedCab.Http.Bll
 			var equipment = GetEquipmentByEquipmentNameOrId(equipmentNameOrId);
 			//校验是否含有数据，如果含有数据，进行后续操作
 			HttpHelper.GetInstance().ResultCheck(equipment, out bool isSuccess);
-            BaseData<InventoryPlan> plans = null;
+            BaseData<InventoryPlan> plans = new BaseData<InventoryPlan>();
 			if (isSuccess)
 			{
 				//根据自动盘点计划Id查询盘点计划相关信息

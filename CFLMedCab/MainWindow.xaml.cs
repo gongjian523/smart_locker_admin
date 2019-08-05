@@ -419,7 +419,7 @@ namespace CFLMedCab
 #else
         private void SetNavBtnVisiblity(string  role)
         {
-            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
 #endif
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -474,8 +474,8 @@ namespace CFLMedCab
         }
         
         
-#region 领用
-#region 一般领用
+        #region 领用
+        #region 一般领用
         /// <summary>
         /// 一般领用
         /// </summary>
@@ -544,13 +544,13 @@ namespace CFLMedCab
                 FullFrame.Navigate(gerFetchView);
             }));
         }
-#endregion
+        #endregion
 
-#region 手术领用
+        #region 手术领用
 
-#region 无手术单领用
+        #region 无手术单领用和医嘱处方领用
         /// <summary>
-        /// 进入手术无单领用-开门状态
+        /// 进入手术无单领用和医嘱处方领用-开门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -579,7 +579,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 手术无单领用关门状态
+        /// 手术无单领用和和医嘱处方领用-关门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -634,7 +634,7 @@ namespace CFLMedCab
         }
 #endregion
 
-#region 有手术单领用和医嘱处方领用
+#region 有手术单领用
         /// <summary>
         /// 手术领用医嘱处方领用
         /// </summary>
@@ -654,7 +654,7 @@ namespace CFLMedCab
             SurgeryQuery surgeryQuery = new SurgeryQuery(type);
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
-            surgeryQuery.EnterPrescriptionOpenEvent += new SurgeryQuery.EnterPrescriptionOpenHandler(onEnterSurgeryNoNumOpen);
+            surgeryQuery.EnterPrescriptionOpenEvent += new SurgeryQuery.EnterPrescriptionOpenHandler(onEnterSurgeryNoNumOpen);//医嘱处方领用直接开柜领用
 
             surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
             surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);
@@ -1192,20 +1192,154 @@ namespace CFLMedCab
 #endif
 
         /// <summary>
-        /// 进入退货出库页面
+        /// 进入回收取货页面
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnAll(object sender, RoutedEventArgs e)
-        {
+        private void onEnterReturnPick(object sender, RoutedEventArgs e)
+        {          
             HomePageView.Visibility = Visibility.Hidden;
             btnBackHP.Visibility = Visibility.Visible;
 
-            ReturnGoods returnGoods = new ReturnGoods(true);
-            returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
-            returnGoods.EnterReturnGoodsDetailOpenEvent += new ReturnGoods.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
+            ReturnQuery returnQuery = new ReturnQuery();
+            returnQuery.EnterReturnOpenEvent += new ReturnQuery.EnterReturnOpenHandler(onEnterReturnOpen);
+            returnQuery.ShowLoadDataEvent += new ReturnQuery.ShowLoadDataHandler(onShowLoadingData);
+            returnQuery.HideLoadDataEvent += new ReturnQuery.HideLoadDataHandler(onHideLoadingData);
 
-            ContentFrame.Navigate(returnGoods);
+            ContentFrame.Navigate(returnQuery);
+        }
+
+        /// <summary>
+        /// 进入回收取货页面-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnOpen(object sender, CommodityRecovery e)
+        {
+            NaviView.Visibility = Visibility.Hidden;
+
+            GerFetchState gerFetchState = new GerFetchState(1);
+            FullFrame.Navigate(gerFetchState);
+
+            List<string> com = ApplicationState.GetAllLockerCom();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnClose);
+            delegateGetMsg.userData = e;
+
+#if DUALCAB
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnClose);
+            delegateGetMsg.userData = e;
+
+            cabClosedNum = 0;
+#endif
+
+            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+        }
+
+        /// <summary>
+        /// 进入进入库存调整-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterReturnClose(object sender, bool isClose)
+        {
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
+#if DUALCAB
+            cabClosedNum--;
+            if (cabClosedNum == 1)
+                return;
+#endif
+
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+
+            //关闭盘点中弹窗
+            ClosePop();
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReturnClose returnClose = new ReturnClose(hs,(CommodityRecovery)delegateGetMsg.userData);
+                returnClose.EnterReturnOpenEvent += new ReturnClose.EnterReturnOpenHandler(onEnterReturnOpen);
+                returnClose.EnterStockSwitchOpenEvent += new ReturnClose.EnterStockSwitchOpenHandler(onEnterStockSwitch);
+                returnClose.EnterPopCloseEvent += new ReturnClose.EnterPopCloseHandler(onEnterPopClose);
+
+                FullFrame.Navigate(returnClose);
+            }));
+        }
+
+        /// <summary>
+        /// 进入库存调整
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterStockSwitch(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
+            NaviView.Visibility = Visibility.Hidden;
+
+            GerFetchState gerFetchState = new GerFetchState(4);
+            FullFrame.Navigate(gerFetchState);
+
+            List<string> com = ApplicationState.GetAllLockerCom();
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnClose);
+
+#if DUALCAB
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnClose);
+
+            cabClosedNum = 0;
+#endif
+            SpeakerHelper.Sperker("柜门已开，请您根据需要调整耗材，操作完毕请关闭柜门");
+        }
+
+        /// <summary>
+        /// 进入进入库存调整-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterStockSwitchClose(object sender, bool isClose)
+        {
+            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+
+            if (!isClose)
+                return;
+
+#if DUALCAB
+            cabClosedNum--;
+            if (cabClosedNum == 1)
+                return;
+#endif
+
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+
+            //关闭盘点中弹窗
+            ClosePop();
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReturnClose returnClose = new ReturnClose(hs,null);
+                returnClose.EnterReturnOpenEvent += new ReturnClose.EnterReturnOpenHandler(onEnterReturnOpen);
+                returnClose.EnterStockSwitchOpenEvent += new ReturnClose.EnterStockSwitchOpenHandler(onEnterStockSwitch);
+                returnClose.EnterPopCloseEvent += new ReturnClose.EnterPopCloseHandler(onEnterPopClose);
+
+                FullFrame.Navigate(returnClose);
+            }));
         }
 
 

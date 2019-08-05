@@ -40,7 +40,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TESTENV</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -171,7 +171,6 @@
     <Compile Include="Http\Bll\ConsumingBll.cs" />
     <Compile Include="Http\Bll\InventoryTaskBll.cs" />
     <Compile Include="Http\Bll\LocalGoodsChangeBll.cs" />
-    <Compile Include="Http\Bll\PositionAdjustmentBll.cs" />
     <Compile Include="Http\Bll\RollbackBll.cs" />
     <Compile Include="Http\Bll\PickBll.cs" />
     <Compile Include="Http\Bll\ShelfBll.cs" />
@@ -335,6 +334,12 @@
     <Compile Include="View\LoadingData.xaml.cs">
       <DependentUpon>LoadingData.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Return\ReturnQuery.xaml.cs">
+      <DependentUpon>ReturnQuery.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Return\ReturnClose.xaml.cs">
+      <DependentUpon>ReturnClose.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\SystemSetting.xaml.cs">
       <DependentUpon>SystemSetting.xaml</DependentUpon>
     </Compile>
@@ -482,6 +487,14 @@
     <Page Include="View\LoadingData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\Return\ReturnQuery.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Return\ReturnClose.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\SystemSetting.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -680,6 +693,8 @@
     </Content>
     <Content Include="Lib\IWshRuntimeLibrary.dll" />
     <Content Include="Lib\VeinMatch.Win32.dll" />
+    <Resource Include="Resources\Images\btn-ReturnAll.png" />
+    <Resource Include="Resources\Images\btn-StockAdjust.png" />
     <Resource Include="Resources\Images\btn-SysSetting.png" />
     <Resource Include="Resources\Images\btn-PreFetch.png" />
     <Resource Include="Resources\Images\btn-Exit.png" />

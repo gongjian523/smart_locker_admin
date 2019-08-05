@@ -27,8 +27,11 @@ namespace CFLMedCab.View.Fetch
                 attention.Content = "请拿取您需要的耗材，拿取完毕请关闭柜门";
             else if (e == 2)
                 attention.Content = "请放入您需要回退的的耗材，放回完毕请关闭柜门";
-            else
+            else if (e == 3)
                 attention.Content = "还有柜门未关，操作完毕请关门";
+            else
+                attention.Content = "请您根据需要调整耗材，操作完毕请关闭柜门";
+            
         }
     }
 }

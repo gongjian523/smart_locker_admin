@@ -15,7 +15,7 @@ using System.Web;
 namespace CFLMedCab.Http.Bll
 {
     /// <summary>
-    /// 回收下架-智能柜端
+    /// 回收取货-智能柜端
     /// </summary>
     public class CommodityRecoveryBll : BaseBll<CommodityRecoveryBll>
     {
