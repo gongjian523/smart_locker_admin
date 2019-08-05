@@ -4,6 +4,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
@@ -63,12 +64,15 @@ namespace CFLMedCab.View.Fetch
             after = afterEps;
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
 
-            if (bdCommodityCode.code != 0)
-            {
-                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
-            
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+
+			if (!isSuccess)
+			{
+				MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+				return;
+			}
+
             listView.DataContext = bdCommodityCode.body.objects;
             normalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
             abnormalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
@@ -122,10 +126,14 @@ namespace CFLMedCab.View.Fetch
                     BasePostData<CommodityInventoryChange> bdBasePostData =
                         ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.一般领用);
 
-                    if (bdBasePostData.code != 0)
-                    {
-                        MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
-                    }
+					//校验是否含有数据
+					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
+
+					if (!isSuccess)
+					{
+						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+
+					}
 
                     ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingReturnOrder");
                 }

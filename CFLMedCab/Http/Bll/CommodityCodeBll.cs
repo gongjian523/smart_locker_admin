@@ -121,7 +121,7 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="preCommodityEpsCollect">之前商品集合</param>
 		/// <param name="afterCommodityEpsCollect">之后商品集合</param>
 		/// <returns></returns>
-		private List<CommodityCode> GetCompareSimpleCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
+		public List<CommodityCode> GetCompareSimpleCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
 		{
 			var commodityCodes = new List<CommodityCode>();
 
@@ -171,7 +171,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="CommodityEpss">hashset的eps集合</param>
 		/// <returns></returns>
-		private List<CommodityCode> GetSimpleCommodity(HashSet<CommodityEps> CommodityEpss)
+		public List<CommodityCode> GetSimpleCommodity(HashSet<CommodityEps> CommodityEpss)
 		{
 			var commodityCodes = new List<CommodityCode>(CommodityEpss.Count);
 

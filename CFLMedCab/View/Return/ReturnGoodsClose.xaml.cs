@@ -73,8 +73,17 @@ namespace CFLMedCab.View.Return
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = hs;
 
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
+			List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
 
+			if (commodityCodeList == null || commodityCodeList.Count <= 0)
+			{
+				MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+				return;
+			}
+
+			bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+
+			//校验是否含有数据
 			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
 
 			if (!isSuccess)
@@ -83,7 +92,7 @@ namespace CFLMedCab.View.Return
 				return;
 			}
 
-            PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
+			PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
 
             int outCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
             int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.AbnormalDisplay == "异常").ToList().Count;
