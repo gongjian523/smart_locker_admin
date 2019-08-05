@@ -38,6 +38,7 @@ using CFLMedCab.Http.Model.login;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Infrastructure.ToolHelper;
+using System.Runtime.InteropServices;
 
 namespace CFLMedCab
 {
@@ -46,8 +47,17 @@ namespace CFLMedCab
     /// </summary>
     public partial class MainWindow : MetroWindow
     {
-        private DispatcherTimer ShowTimer;
+
+		#region 空闲时间处理相关定义
+		[DllImport("user32.dll")]
+		private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
+		private DispatcherTimer mIdleTimer;
+		private LASTINPUTINFO mLastInputInfo;
+		#endregion
+
+		private DispatcherTimer ShowTimer;
         private DispatcherTimer InventoryTimer;
+
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -95,6 +105,20 @@ namespace CFLMedCab
 
         public MainWindow()
         {
+
+			#region 空闲时间处理相关定义
+			mLastInputInfo = new LASTINPUTINFO();
+			mLastInputInfo.cbSize = Marshal.SizeOf(mLastInputInfo);
+
+			mIdleTimer = new DispatcherTimer();
+			mIdleTimer.Tick += new EventHandler(IdleTime);//起个Timer一直获取当前时间 
+			mIdleTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
+			mIdleTimer.Start();
+			#endregion
+
+			//线程池设置
+			ThreadPool.SetMaxThreads(1, 1);
+			ThreadPool.SetMinThreads(1, 1);
 
 			Taskbar.HideTask(true);
 
@@ -171,14 +195,24 @@ namespace CFLMedCab
             }
             else
             {
-                if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
-                    vein.OpenDevice();
+				if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
+				{
+					vienSt = vein.OpenDevice();
 
-                Task.Factory.StartNew(vein.DetectFinger);
+					if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+					{
+						onFingerDetected(this, -1);
+					}
+					else
+					{
+						ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+					}
+				}
             }
 #endif
 #endif
         }
+
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
         {
@@ -225,10 +259,11 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-                Task.Factory.StartNew(vein.DetectFinger);
+				//Task.Factory.StartNew(vein.DetectFinger);
+				ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
 #endif
 #endif
-            }
+			}
         }
 
 #if TESTENV
@@ -1657,10 +1692,11 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-                Task.Factory.StartNew(vein.DetectFinger);
+				//Task.Factory.StartNew(vein.DetectFinger);
+				ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
 #endif
 #endif
-            }));
+			}));
         }
 
         /// <summary>
@@ -1768,7 +1804,8 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.ChekVein();
 #else
-            Task.Factory.StartNew(vein.DetectFinger);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+			//Task.Factory.StartNew(vein.DetectFinger);
 #endif
 #endif
             inventoryDetailHandler = null;
@@ -1832,5 +1869,39 @@ namespace CFLMedCab
         {
             e.Cancel = true;
         }
-    }
+
+		/// <summary>
+		/// 空闲监听定时
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void IdleTime(object sender, EventArgs e)
+		{
+
+			if (!GetLastInputInfo(ref mLastInputInfo))
+				System.Windows.MessageBox.Show("GetLastInputInfo Failed!");
+			else
+			{
+				if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 > 10)
+				{
+					//System.Windows.MessageBox.Show("no operation for 5 minutes.");
+				}
+			}
+
+		}
+	}
+
+	/// <summary>
+	/// 空闲监听定时结构体
+	/// </summary>
+	[StructLayout(LayoutKind.Sequential)]
+	struct LASTINPUTINFO
+	{
+		// 设置结构体块容量
+		[MarshalAs(UnmanagedType.U4)]
+		public int cbSize;
+		// 捕获的时间
+		[MarshalAs(UnmanagedType.U4)]
+		public uint dwTime;
+	}
 }

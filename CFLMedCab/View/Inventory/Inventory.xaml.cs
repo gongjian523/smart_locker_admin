@@ -103,7 +103,7 @@ namespace CFLMedCab.View.Inventory
                 taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
                 taskName = taskOrder.name;
             }
-            catch
+            catch(Exception ex)
             {
                 taskName = inputStr;
             }

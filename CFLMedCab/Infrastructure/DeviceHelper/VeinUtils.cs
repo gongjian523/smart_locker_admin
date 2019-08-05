@@ -66,7 +66,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         public const int FV_IMAGE_BMP_SIZE_352240 = 85558;	//352*240分辨率8位BMP文件大小(字节)
         public const int FV_IMAGE_BMP_SIZE_320240 = 77878;  //320*240分辨率8位BMP文件大小(字节)
 
-        public const int D_FINGER_DETECT_INTERVAL = 30;     //检测手指放置状态的间隔，单位ms
+        public const int D_FINGER_DETECT_INTERVAL = 100;     //检测手指放置状态的间隔，单位ms
         public const int D_FINGER_DETECT_PERIOD = 30000;  //手指检测的总时间，单位ms
 
         public const int FEATURE_COLLECT_CNT = 3;	//单指特征采集次数
@@ -237,8 +237,69 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             bExitDetect = state;
         }
 
-        // 手指某状态（ 0移开；3放置 ） 
-        public void  DetectFinger()
+		// 等待手指某状态（ 0移开；3放置 ） 
+		public void DetectFinger(object obj)
+		{
+			int wDetectCnt = 0;                         //循环检测次数
+			int wErrCount = 0;                          //检测产生错误的次数
+			byte u1FingerStatus = 0;           //手指状态
+
+			int nRetVal;
+			int nDetectTimes = D_FINGER_DETECT_PERIOD / D_FINGER_DETECT_INTERVAL;
+			int nInterval = D_FINGER_DETECT_INTERVAL;
+			int nStartCnt = nDetectTimes / 30;
+
+			int flg = 3;
+			bExitDetect = false;
+
+			string stateE = flg != 0 ? "Place" : "Remove";  //0移开；3放置
+			string state = flg != 0 ? "放置" : "移开";  //0移开；3放置
+
+			//等待移开手指、
+			int i = 0;
+			while (!bExitDetect)
+			{ //循环检测手指
+
+				nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
+				if (FV_ERRCODE_SUCCESS != nRetVal)
+				{//检测时产生错误。
+					wErrCount++;
+
+					Thread.Sleep(nInterval);
+
+					if (3 < wErrCount)
+					{
+						System.Diagnostics.Debug.WriteLine("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
+						FingerDetectedEvent(this, -1);
+						return;
+					}
+				}
+				else
+				{
+					wErrCount = 0;
+					if ((flg & 0xFF) != u1FingerStatus)
+					{
+						//手指还没有移开
+						if (0 == (wDetectCnt % nStartCnt))
+						{
+							System.Diagnostics.Debug.WriteLine("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
+							i++;
+						}
+						Thread.Sleep(nInterval);
+					}
+					else
+					{
+						//手指已经移开
+						System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
+						FingerDetectedEvent(this, 0);
+						return;
+					}
+				}
+			}
+		}
+
+		// 等待手指某状态（ 0移开；3放置 ） 
+		public void  DetectFinger()
         {
             int wDetectCnt = 0;                         //循环检测次数
             int wErrCount = 0;                          //检测产生错误的次数
@@ -292,7 +353,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                         //手指已经移开
                         System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
                         FingerDetectedEvent(this, 0);
-                        return ;
+                        return;
                     }
                 }
             }

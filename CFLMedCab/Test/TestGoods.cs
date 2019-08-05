@@ -340,7 +340,7 @@ namespace CFLMedCab.Test
 
         public void TestLocker(object sender, ElapsedEventArgs e)
         {
-            Console.ReadKey();
+            //Console.ReadKey();
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData("COM2", out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(TestLockerEvent);
         }
