@@ -4,6 +4,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -63,28 +64,34 @@ namespace CFLMedCab.View.Fetch
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = hashtable;
 
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
-            if (bdCommodityCode.code != 0)
-            {
-                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+			List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
 
-            if (bdCommodityCode.body.objects.Count == 0)
-            {
-                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-            }
-            else
-            {
-                listView.DataContext = bdCommodityCode.body.objects;
-                returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
-                fetchNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+			if (commodityCodeList == null || commodityCodeList.Count <= 0)
+			{
+				MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+				return;
+			}
 
-                bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().ForEach(it =>
-                {
-                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                });
-            }
+			bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+
+			if (!isSuccess)
+			{
+				MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+				return;
+			}
+
+            listView.DataContext = bdCommodityCode.body.objects;
+            returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+            fetchNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+
+            bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().ForEach(it =>
+            {
+                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+            });
+            
         }
 
 

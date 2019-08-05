@@ -6,6 +6,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
@@ -70,13 +71,25 @@ namespace CFLMedCab.View.Fetch
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = afterEps;
 
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
-            if (bdCommodityCode.code != 0)
-            {
-                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
-            ConsumingBll.GetInstance().GetOperationOrderChangeWithOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0], fetchParam.bdOperationOrderGoodsDetail);
+			List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+
+			if (commodityCodeList == null || commodityCodeList.Count <= 0)
+			{
+				MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+				return;
+			}
+
+			bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+
+			if (!isSuccess)
+			{
+				MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+				return;
+			}
+			ConsumingBll.GetInstance().GetOperationOrderChangeWithOrder(bdCommodityCode, fetchParam.bdConsumingOrder.body.objects[0], fetchParam.bdOperationOrderGoodsDetail);
 
             listView1.DataContext = bdCommodityCode.body.objects;
 

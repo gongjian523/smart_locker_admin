@@ -4,6 +4,7 @@ using CFLMedCab.Controls;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -137,13 +138,16 @@ namespace CFLMedCab.View.Fetch
             {
                 BaseData<PrescriptionBill> baseData = ConsumingBll.GetInstance().GetPrescriptionBill(name);
 
-                if (baseData.code != 0)
+				//校验是否含有数据
+				HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+
+				if (!isSuccess)
                 {
                     MessageBox.Show("无法获取处方单！" + baseData.message, "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 
-                EnterPrescriptionOpenEvent(this,new ConsumingOrder {
+				EnterPrescriptionOpenEvent(this,new ConsumingOrder {
                     SourceBill = new SourceBill
                     {
                         object_name = "PrescriptionBill",
