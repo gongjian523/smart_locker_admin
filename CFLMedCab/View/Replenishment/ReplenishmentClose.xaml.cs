@@ -73,16 +73,28 @@ namespace CFLMedCab.View.ReplenishmentOrder
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = hs;
 
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, after);
+            List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+            if (commodityCodeList == null || commodityCodeList.Count <= 0)
+            {
+                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+            if (!isSuccess)
+            {
+                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
-			if (!isSuccess)
-			{
-				MessageBox.Show("获取上架任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
-				return;
-			}
+            bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
+            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess1);
+            if (!isSuccess1)
+            {
+                MessageBox.Show("获取上架任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
             ShelfBll.GetInstance().GetShelfTaskChange(bdCommodityCode, shelfTask, bdCommodityDetail);
 
