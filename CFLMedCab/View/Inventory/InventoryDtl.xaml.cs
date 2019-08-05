@@ -2,6 +2,7 @@
 using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure.DeviceHelper;
@@ -160,12 +161,17 @@ namespace CFLMedCab.View.Inventory
             }
 
 
-            BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(inputStr);
-            if (bdCommodityCode.code != 0 || (bdCommodityCode.code == 0 && bdCommodityCode.body.objects == null))
-            {
-                MessageBox.Show("获取商品信息失败" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+            BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(name);
+
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+
+			if (!isSuccess)
+			{
+				MessageBox.Show("获取商品信息失败" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+				return;
+			}
+
             adds.Add(bdCommodityCode.body.objects[0]);
 #endif
 
@@ -193,21 +199,29 @@ namespace CFLMedCab.View.Inventory
         private void onSubmit(object sender, RoutedEventArgs e)
         {
             BasePutData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().UpdateInventoryOrderStatus(inventoryOrder);
-            if (bdInventoryOrder.code != 0)
-            {
-                MessageBox.Show("更新盘点任务单失败!" + bdInventoryOrder.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccess);
+
+			if (!isSuccess)
+			{
+				MessageBox.Show("更新盘点任务单失败!" + bdInventoryOrder.message, "温馨提示", MessageBoxButton.OK);
+				return;
+			}
 
             BasePostData<InventoryDetail> bdInventoryDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrder.id);
 
-            if (bdInventoryDetail.code == 0)
-            {
-                MessageBox.Show("提交盘点任务单成功!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
-                BackInventoryEvent(this, null);
-            }
-            else
-                MessageBox.Show("创建盘点商品明细失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
+
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdInventoryDetail, out bool isSuccess1);
+
+			if (isSuccess1)
+			{
+				MessageBox.Show("提交盘点任务单成功!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
+				BackInventoryEvent(this, null);
+			}
+			else
+				MessageBox.Show("创建盘点商品明细失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
 
             return;
         }

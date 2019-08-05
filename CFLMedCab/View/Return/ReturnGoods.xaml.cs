@@ -5,6 +5,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using Newtonsoft.Json;
 using System;
@@ -130,9 +131,10 @@ namespace CFLMedCab.View.Return
                 taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
                 name = taskOrder.name;
             }
-            catch
+            catch(Exception ex)
             {
-                name = inputStr;
+				LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
+				name = inputStr;
             }
 
             //ShowLoadDataEvent(this, true);
