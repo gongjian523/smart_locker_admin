@@ -1750,7 +1750,7 @@ namespace CFLMedCab
 			{
 				if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 > 10)
 				{
-					System.Windows.MessageBox.Show("no operation for 5 minutes.");
+					//System.Windows.MessageBox.Show("no operation for 5 minutes.");
 				}
 			}
 
