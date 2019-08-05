@@ -178,12 +178,6 @@ namespace CFLMedCab
             }
 #endif
 #endif
-
-#if TESTENV
-            LoginBkView.Visibility = Visibility.Visible;
-#else
-            LoginBkView.Visibility = Visibility.Visible;
-#endif
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
