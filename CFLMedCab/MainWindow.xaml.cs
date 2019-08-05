@@ -48,6 +48,7 @@ namespace CFLMedCab
     {
         private DispatcherTimer ShowTimer;
         private DispatcherTimer InventoryTimer;
+
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -95,6 +96,10 @@ namespace CFLMedCab
 
         public MainWindow()
         {
+
+			//线程池设置
+			ThreadPool.SetMaxThreads(1, 1);
+			ThreadPool.SetMinThreads(1, 1);
 
 			Taskbar.HideTask(true);
 
@@ -160,7 +165,7 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 #else
-            //Console.ReadKey();
+            Console.ReadKey();
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
             int vienSt = vein.LoadingDevice();
@@ -171,14 +176,27 @@ namespace CFLMedCab
             }
             else
             {
-                if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
-                    vein.OpenDevice();
+				if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
+				{
+					vienSt = vein.OpenDevice();
 
-                Task.Factory.StartNew(vein.DetectFinger);
+					if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+					{
+						onFingerDetected(this, -1);
+					}
+					else
+					{
+						ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+					}
+				}
             }
 #endif
 #endif
         }
+
+
+
+
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
         {
@@ -225,10 +243,11 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-                Task.Factory.StartNew(vein.DetectFinger);
+				//Task.Factory.StartNew(vein.DetectFinger);
+				ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
 #endif
 #endif
-            }
+			}
         }
 
 #if TESTENV
@@ -1523,10 +1542,11 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-                Task.Factory.StartNew(vein.DetectFinger);
+				//Task.Factory.StartNew(vein.DetectFinger);
+				ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
 #endif
 #endif
-            }));
+			}));
         }
 
         /// <summary>
@@ -1634,7 +1654,8 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.ChekVein();
 #else
-            Task.Factory.StartNew(vein.DetectFinger);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+			//Task.Factory.StartNew(vein.DetectFinger);
 #endif
 #endif
             inventoryDetailHandler = null;
