@@ -5,6 +5,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Infrastructure.ToolHelper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -152,9 +153,10 @@ namespace CFLMedCab.View.Inventory
                 commodityOrder = JsonConvert.DeserializeObject<CommodityOrder>(inputStr);
                 name = commodityOrder.CommodityCodeName;
             }
-            catch
+            catch(Exception ex)
             {
-                name = inputStr;
+				LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
+				name = inputStr;
             }
 
 

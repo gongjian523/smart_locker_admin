@@ -110,7 +110,7 @@ namespace CFLMedCab
 			mLastInputInfo = new LASTINPUTINFO();
 			mLastInputInfo.cbSize = Marshal.SizeOf(mLastInputInfo);
 
-			mIdleTimer = new System.Windows.Threading.DispatcherTimer();
+			mIdleTimer = new DispatcherTimer();
 			mIdleTimer.Tick += new EventHandler(IdleTime);//起个Timer一直获取当前时间 
 			mIdleTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
 			mIdleTimer.Start();
