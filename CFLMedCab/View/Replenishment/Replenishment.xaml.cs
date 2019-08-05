@@ -146,9 +146,9 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
             //name = "OS20190721000052";
 
-            ShowLoadDataEvent(this, null);
+            //ShowLoadDataEvent(this, null);
             BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);
-            HideLoadDataEvent(this, null);
+            //HideLoadDataEvent(this, null);
 
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
             if(!isSuccess)

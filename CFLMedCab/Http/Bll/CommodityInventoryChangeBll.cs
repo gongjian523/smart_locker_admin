@@ -181,6 +181,7 @@ namespace CFLMedCab.Http.Bll
                     {
                         CommodityCodeId = commodityCode.id,
                         //出库变更更后库房、变更更后设备、变更更后货位 value 值都为null。
+                        StoreHouseId = commodityCode.StoreHouseId,
                         ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString(),
                         AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString()
                     };

@@ -76,7 +76,7 @@ namespace CFLMedCab.View.Return
                 name = inputStr;
             }
 
-            ShowLoadDataEvent(this, null);
+            //ShowLoadDataEvent(this, null);
 
             BaseData<CommodityRecovery> bdCommodityRecovery = CommodityRecoveryBll.GetInstance().GetCommodityRecovery(name);
 
@@ -86,7 +86,7 @@ namespace CFLMedCab.View.Return
                 return;
             }
 
-            HideLoadDataEvent(this, null);
+            //HideLoadDataEvent(this, null);
 
             EnterReturnOpenEvent(this, bdCommodityRecovery.body.objects[0]);
         }
