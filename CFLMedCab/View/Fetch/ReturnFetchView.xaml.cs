@@ -50,7 +50,9 @@ namespace CFLMedCab.View.Fetch
 
         private Timer endTimer;
 
-        public ReturnFetchView(HashSet<CommodityEps> hashtable)
+		private bool isSuccess;
+
+		public ReturnFetchView(HashSet<CommodityEps> hashtable)
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
@@ -75,7 +77,7 @@ namespace CFLMedCab.View.Fetch
 			bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
 
 			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
 
 			if (!isSuccess)
 			{
@@ -132,21 +134,23 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            if(bdCommodityCode.code == 0)
-            {
-                if(bdCommodityCode.body.objects.Count >0)
-                {
-                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange
-                        = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode);
 
-                    if (bdCommodityInventoryChange.code != 0)
-                    {
-                        MessageBox.Show("提交结果失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
-                    }
+			if (isSuccess)
+			{
+				BasePostData<CommodityInventoryChange> bdCommodityInventoryChange
+					   = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode);
 
-                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
-                }
-            }
+
+				//校验是否含有数据
+				HttpHelper.GetInstance().ResultCheck(bdCommodityInventoryChange, out bool isSuccess);
+
+				if (!isSuccess)
+				{
+					MessageBox.Show("提交结果失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
+				}
+
+				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
+			}
 
             ApplicationState.SetGoodsInfo(after);
 

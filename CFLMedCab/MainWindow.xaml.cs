@@ -56,7 +56,7 @@ namespace CFLMedCab
 		#endregion
 
 		private DispatcherTimer ShowTimer;
-        private DispatcherTimer InventoryTimer;
+        //private DispatcherTimer InventoryTimer;
 
 #if TESTENV
 #else
@@ -224,6 +224,7 @@ namespace CFLMedCab
             this.Topmost = true;
         }
 
+		[Obsolete]
         private void onInventoryTimer(object sender, EventArgs e)
         {
             List <InventoryPlanLDB> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
@@ -238,7 +239,7 @@ namespace CFLMedCab
                 if (timeSpan.TotalMinutes < 1 && timeSpan.TotalMinutes > -1 )
                 {
                     bool isGetSuccess;
-                    Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
+                    RfidHelper.GetEpcDataJson(out isGetSuccess);
 
                     return;
                 }
@@ -933,8 +934,8 @@ namespace CFLMedCab
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
             replenishment.EnterReplenishmentDetailOpenEvent += new Replenishment.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
 
-            replenishment.ShowLoadDataEvent += new Replenishment.ShowLoadDataHandler(onShowLoadingData);
-            replenishment.HideLoadDataEvent += new Replenishment.HideLoadDataHandler(onHideLoadingData);
+            //replenishment.ShowLoadDataEvent += new Replenishment.ShowLoadDataHandler(onShowLoadingData);
+            //replenishment.HideLoadDataEvent += new Replenishment.HideLoadDataHandler(onHideLoadingData);
 
             ContentFrame.Navigate(replenishment);
         }
@@ -1238,8 +1239,8 @@ namespace CFLMedCab
 
             ReturnQuery returnQuery = new ReturnQuery();
             returnQuery.EnterReturnOpenEvent += new ReturnQuery.EnterReturnOpenHandler(onEnterReturnOpen);
-            returnQuery.ShowLoadDataEvent += new ReturnQuery.ShowLoadDataHandler(onShowLoadingData);
-            returnQuery.HideLoadDataEvent += new ReturnQuery.HideLoadDataHandler(onHideLoadingData);
+            //returnQuery.ShowLoadDataEvent += new ReturnQuery.ShowLoadDataHandler(onShowLoadingData);
+            //returnQuery.HideLoadDataEvent += new ReturnQuery.HideLoadDataHandler(onHideLoadingData);
 
             ContentFrame.Navigate(returnQuery);
         }

@@ -436,7 +436,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 		}
 
-
+		[Obsolete]
 		public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
 		{
 			Console.ReadKey();

@@ -86,12 +86,15 @@ namespace CFLMedCab.View.Inventory
 
             BaseData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(inventoryTask.name);
 
-            if(bdInventoryOrder.code != 0)
-            {
-                HidePopInventoryEvent(this, null);
-                MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+			//校验是否含有数据
+			HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccess1);
+
+			if (!isSuccess1)
+			{
+				HidePopInventoryEvent(this, null);
+				MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
+				return;
+			}
 
             inventoryOrder = bdInventoryOrder.body.objects[0];
 #if TESTENV

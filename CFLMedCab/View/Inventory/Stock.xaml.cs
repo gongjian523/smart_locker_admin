@@ -54,6 +54,7 @@ namespace CFLMedCab.View
 
         }
 
+		[Obsolete]
         private void onEndInventory(object sender, ElapsedEventArgs e)
         {
             GetGoodApo getGoodApo = new GetGoodApo();
@@ -122,7 +123,7 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void queryData(object sender, RoutedEventArgs e)
         {
-            int totalCount = 0;
+            //int totalCount = 0;
             if (this.stockSnapshot.IsChecked == true)//库存快照
             {
                 EnterPopInventoryEvent(this, null);

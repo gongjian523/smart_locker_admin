@@ -111,17 +111,24 @@ namespace CFLMedCab.View.Fetch
                     }
                 }
 
-                if (fetchParam.bdConsumingOrder.code != 0)
-                {
-                    MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
-                    return;
-                }
+				//校验是否含有数据
+				HttpHelper.GetInstance().ResultCheck(fetchParam.bdConsumingOrder, out bool isSuccess);
 
-                if (fetchParam.bdOperationOrderGoodsDetail.code != 0)
-                {
-                    MessageBox.Show("无法获取手术单物品详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
-                    return;
-                }
+				if (!isSuccess)
+				{
+					MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
+					return;
+				}
+
+				//校验是否含有数据
+				HttpHelper.GetInstance().ResultCheck(fetchParam.bdOperationOrderGoodsDetail, out bool isSuccess1);
+
+				if (!isSuccess1)
+				{
+					MessageBox.Show("无法获取手术单物品详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
+					return;
+				}
+
 
                 HashSet<CommodityEps> hs = ApplicationState.GetGoodsInfo();
                 BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(ApplicationState.GetGoodsInfo());
