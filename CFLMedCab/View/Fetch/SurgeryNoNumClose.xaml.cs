@@ -65,6 +65,7 @@ namespace CFLMedCab.View.Fetch
 
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetUserInfo().name;
+            lbTypeContent.Content = type;
 
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = afterEps;
@@ -73,6 +74,7 @@ namespace CFLMedCab.View.Fetch
 			if (commodityCodeList == null || commodityCodeList.Count <= 0)
 			{
 				MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                isSuccess = false;
 				return;
 			}
 
@@ -88,7 +90,6 @@ namespace CFLMedCab.View.Fetch
 			}
 
 			listView.DataContext = bdCommodityCode.body.objects;
-            lbTypeContent.Content = type;
             outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
             abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
 
@@ -142,9 +143,9 @@ namespace CFLMedCab.View.Fetch
 						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.手术领用);
 
 					//校验是否含有数据
-					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
+					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
 
-					if (!isSuccess)
+					if (!isSuccess1)
 					{
 						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 					}
@@ -156,9 +157,9 @@ namespace CFLMedCab.View.Fetch
 						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.医嘱处方领用, consumingOrder.SourceBill);
 
 					//校验是否含有数据
-					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
+					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
 
-					if (!isSuccess)
+					if (!isSuccess1)
 					{
 						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 					}

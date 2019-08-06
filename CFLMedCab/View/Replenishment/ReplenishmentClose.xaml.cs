@@ -54,6 +54,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         bool bExit;
 
+        private bool isSuccess;
+
         public ReplenishmentClose(ShelfTask task, HashSet<CommodityEps> hs)
         {
             InitializeComponent();
@@ -77,11 +79,12 @@ namespace CFLMedCab.View.ReplenishmentOrder
             if (commodityCodeList == null || commodityCodeList.Count <= 0)
             {
                 MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                isSuccess = false;
                 return;
             }
 
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
             if (!isSuccess)
             {
                 MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
@@ -89,8 +92,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
             }
 
             bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess1);
-            if (!isSuccess1)
+            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
+            if (!isSuccess)
             {
                 MessageBox.Show("获取上架任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
                 return;
@@ -105,7 +108,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             inNum.Content = inCnt;
             abnormalInNum.Content = abnormalInCnt;
             abnormalOutNum.Content = abnormalOutCnt;
-            int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurShelfNumber > (item.NeedShelfNumber - item.AlreadyShelfNumber)).Count();
+            int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => (item.CurShelfNumber > (item.NeedShelfNumber - item.AlreadyShelfNumber))).Count();
 
             listView.DataContext = bdCommodityCode.body.objects;
 
@@ -184,7 +187,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
         private void EndOperation(bool bEixt)
         {
-            if(bdCommodityCode.code == 0 && bdCommodityDetail.code == 0)
+            if(isSuccess)
             {
                 AbnormalCauses abnormalCauses;
 
@@ -199,8 +202,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
                 BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, abnormalCauses);
 
-				HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess);
-				if (!isSuccess)
+				HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
+				if (!isSuccess1)
 				{
 					MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
 				}
@@ -208,14 +211,13 @@ namespace CFLMedCab.View.ReplenishmentOrder
 				{
 					BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
 
-					HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
+					HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
 
-					if (!isSuccess1)
+					if (!isSuccess2)
 					{
 						MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
 					}
 				}
-
             }
 
             ApplicationState.SetGoodsInfo(after);

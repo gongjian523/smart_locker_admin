@@ -34,7 +34,7 @@
                             <RowDefinition Height="auto"></RowDefinition>
                         </Grid.RowDefinitions>
                         <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle1}" />
-                        <Label Content="补货入库" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle2}" />
+                        <Label Content="上架" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Style="{StaticResource lblTitle2}" />
 
                         <Label Grid.Row="0" Grid.Column="1" Content="操作人"  Style="{StaticResource lblTitle3}" />
                         <Label Grid.Row="1" Grid.Column="1" Content="Label" Name="operatorName" Style="{StaticResource lblTitle4_0}" />
@@ -54,7 +54,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Border Style="{StaticResource TipBorder}" Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
+                        <Border Style="{StaticResource TipBorder}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Label Content="当前领入库了" Style="{StaticResource lblTitle1}"/>
                                 <Label Content=" " Name="inNum" Style="{StaticResource lblTitleRed}"/>
@@ -65,7 +65,7 @@
                                 <Label Content="个商品出库" Style="{StaticResource lblTitle1}"/>
                             </StackPanel>
                         </Border>
-                        <Grid Grid.Row="2">
+                        <Grid Grid.Row="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*"/>

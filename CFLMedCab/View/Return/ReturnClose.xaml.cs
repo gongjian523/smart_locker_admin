@@ -3,6 +3,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -48,6 +49,8 @@ namespace CFLMedCab.View.Return
 
         private Timer endTimer;
 
+        private bool isSuccess;
+
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
         CommodityRecovery commodityRecovery;
@@ -63,20 +66,30 @@ namespace CFLMedCab.View.Return
 
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetUserInfo().name;
+            lbTypeContent.Content = order == null ? "库存调整" : "回收下架";
 
             commodityRecovery = order;
 
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = afterEps;
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
-            if (bdCommodityCode.code != 0)
+
+            List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+            if (commodityCodeList == null || commodityCodeList.Count <= 0)
             {
-                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                isSuccess = false;
+                return;
+            }
+
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+            if (!isSuccess)
+            {
+                MessageBox.Show("获取商品信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
             listView.DataContext = bdCommodityCode.body.objects;
-            lbTypeContent.Content = order == null ? "库存调整" : "回收下架";
             outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
             abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
 
@@ -151,33 +164,29 @@ namespace CFLMedCab.View.Return
 
         private void EndOperation(bool bExit)
         {
-            if (bdCommodityCode.code == 0)
+            if(isSuccess)
             {
-                if(bdCommodityCode.body.objects.Count > 0)
+                if (commodityRecovery == null)
                 {
-                    if(commodityRecovery == null)
+                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeInStockChange(bdCommodityCode);
+
+                    if (bdCommodityInventoryChange.code != 0)
                     {
-                        BasePostData<CommodityInventoryChange> bdCommodityInventoryChange =  CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeInStockChange(bdCommodityCode);
-                        
-                        if(bdCommodityInventoryChange.code != 0)
-                        {
-                            MessageBox.Show("创建库存调整商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
-                        }
-
-                        ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "IntentoryAdjust");
-                    }
-                    else
-                    {
-                        BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, commodityRecovery);
-
-                        if (bdCommodityInventoryChange.code != 0)
-                        {
-                            MessageBox.Show("创建库存调整商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
-                        }
-
-                        ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "CommodityRecovery");
+                        MessageBox.Show("创建库存调整商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
                     }
 
+                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "IntentoryAdjust");
+                }
+                else
+                {
+                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, commodityRecovery);
+
+                    if (bdCommodityInventoryChange.code != 0)
+                    {
+                        MessageBox.Show("创建库存调整商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
+                    }
+
+                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "CommodityRecovery");
                 }
             }
 

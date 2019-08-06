@@ -28,7 +28,7 @@
                     </Grid.RowDefinitions>
 
                     <Label Content="业务类型" Grid.Column="0" Grid.Row="0" Style="{StaticResource lblTitle1}"/>
-                    <Label Content="补货入库" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
+                    <Label Content="上架" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
 
                     <Label  Grid.Column="1" Grid.Row="0" Content="操作人" Style="{StaticResource lblTitle3}"/>
                     <Label  Grid.Column="1" Grid.Row="1" Content="操作人" Name="operatorName" Style="{StaticResource lblTitle4_0}"/>
@@ -49,12 +49,12 @@
                     </Grid.RowDefinitions>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>

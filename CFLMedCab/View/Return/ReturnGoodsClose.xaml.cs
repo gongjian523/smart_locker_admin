@@ -51,7 +51,9 @@ namespace CFLMedCab.View.Return
         BaseData<CommodityCode> bdCommodityCode;
         BaseData<PickCommodity> bdCommodityDetail;
 
-        bool bExit;
+        private bool bExit;
+
+        bool isSuccess;
 
         public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs)
         {
@@ -76,11 +78,12 @@ namespace CFLMedCab.View.Return
 			if (commodityCodeList == null || commodityCodeList.Count <= 0)
 			{
 				MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-				return;
+                isSuccess = false;
+                return;
 			}
 
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
             if (!isSuccess)
             {
                 MessageBox.Show("获取商品信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
@@ -88,8 +91,8 @@ namespace CFLMedCab.View.Return
             }
 
             bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess1);
-            if (!isSuccess1)
+            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
+            if (!isSuccess)
             {
                 MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
                 return;
@@ -160,24 +163,27 @@ namespace CFLMedCab.View.Return
 
         private void EndOperation(bool bEixt)
         {
-            BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
+            if(isSuccess)
+            {
+                BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
 
-			HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess);
-			if (!isSuccess)
-			{
-				MessageBox.Show("更新取货任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-			}
-			else
-			{
-				BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
+                HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
+                if (!isSuccess1)
+                {
+                    MessageBox.Show("更新取货任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                }
+                else
+                {
+                    BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
 
-				HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
+                    HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
 
-				if (!isSuccess1)
-				{
-					MessageBox.Show("创建取货任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-				}
-			}
+                    if (!isSuccess2)
+                    {
+                        MessageBox.Show("创建取货任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    }
+                }
+            }
 
             ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bEixt);

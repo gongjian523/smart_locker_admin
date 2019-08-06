@@ -28,7 +28,7 @@ namespace CFLMedCab.View.Fetch
             lbCodeTitle.Content = "手术单号";
 
             ConsumingOrder consumingOrder = fetchParam.bdConsumingOrder.body.objects[0];
-            List<OperationOrderGoodsDetail> list = fetchParam.bdOperationOrderGoodsDetail.body.objects;
+            List<ConsumingGoodsDetail> list = fetchParam.bdOperationOrderGoodsDetail.body.objects;
 
             lbCodeContent.Content = consumingOrder.name;
             lbStatusContent.Content = consumingOrder.Status;

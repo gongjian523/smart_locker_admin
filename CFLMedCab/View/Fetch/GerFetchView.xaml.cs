@@ -65,11 +65,18 @@ namespace CFLMedCab.View.Fetch
 
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = afterEps;
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
 
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+            List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+            if (commodityCodeList == null || commodityCodeList.Count <= 0)
+            {
+                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                isSuccess = false;
+                return;
+            }
 
+            bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
 			if (!isSuccess)
 			{
 				MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
@@ -128,9 +135,8 @@ namespace CFLMedCab.View.Fetch
 						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.一般领用);
 
 				//校验是否含有数据
-				HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
-
-				if (!isSuccess)
+				HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
+				if (!isSuccess1)
 				{
 					MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 

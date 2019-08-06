@@ -29,7 +29,7 @@
                         <RowDefinition  Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <Label Name="lbCodeTitle" Grid.Column="0" Grid.Row="0"  Style="{StaticResource lblTitle1}"/>
+                    <Label Name="lbCodeTitle"  Grid.Column="0"  Content="手术单号" Grid.Row="0"  Style="{StaticResource lblTitle1}"/>
                     <Label Name="lbCodeContent" Grid.Column="0" Grid.Row="1"   Style="{StaticResource lblTitle2}"/>
 
                     <Label Grid.Column="1" Grid.Row="0"  Content="使用状态"  Style="{StaticResource lblTitle3}"/>
@@ -92,7 +92,7 @@
                                 <GridViewColumn Header="待领用数量" Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Number}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding unusedAmount}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

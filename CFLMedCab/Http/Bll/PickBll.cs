@@ -256,7 +256,7 @@ namespace CFLMedCab.Http.Bll
 
             if (isSuccess && isSuccess1)
 			{
-				var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects;
+				var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects.Where(item => item.Number != item.PickNumber);
 
 				var sfdCommodityIds = pickTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
 		
@@ -318,10 +318,7 @@ namespace CFLMedCab.Http.Bll
                     stcd.CurShelfNumber = commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
                     stcd.PlanShelfNumber = stcd.Number - stcd.PickNumber;
                 }
-
-
             }
-
 		}
 
 		/// <summary>

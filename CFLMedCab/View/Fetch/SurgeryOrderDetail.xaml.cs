@@ -45,12 +45,7 @@ namespace CFLMedCab.View.Fetch
 
             lbCodeContent.Content = fetchParam.bdConsumingOrder.body.objects[0].name;
             lbStatusContent.Content = fetchParam.bdConsumingOrder.body.objects[0].Status;
-
-            if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
-            {
-                lbCodeTitle.Content = "手术单号";
-                listView.DataContext = fetchParam.bdOperationOrderGoodsDetail.body.objects;
-            }
+            listView.DataContext = fetchParam.bdOperationOrderGoodsDetail.body.objects;
         }
 
         /// <summary>

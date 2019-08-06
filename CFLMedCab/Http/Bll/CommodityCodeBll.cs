@@ -166,12 +166,12 @@ namespace CFLMedCab.Http.Bll
 			return commodityCodes;
 		}
 
-		/// <summary>
-		/// 获取当前eps集合对应的CommodityCode集合
-		/// </summary>
-		/// <param name="CommodityEpss">hashset的eps集合</param>
-		/// <returns></returns>
-		public List<CommodityCode> GetSimpleCommodity(HashSet<CommodityEps> CommodityEpss)
+        /// <summary>
+        /// 获取当前eps集合对应的CommodityCode集合
+        /// </summary>
+        /// <param name="CommodityEpss">hashset的eps集合</param>
+        /// <returns></returns>
+        public List<CommodityCode> GetSimpleCommodity(HashSet<CommodityEps> CommodityEpss)
 		{
 			var commodityCodes = new List<CommodityCode>(CommodityEpss.Count);
 

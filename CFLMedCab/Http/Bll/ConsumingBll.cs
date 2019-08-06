@@ -88,20 +88,20 @@ namespace CFLMedCab.Http.Bll
             }
 
 			return bdConsumingOrder;
-		}
+        }
         /// <summary>
 		/// 来源单据解析为【⼿手术单管理理】(ConsumingOrder.SourceBill.object_name=‘OperationOrder’ )：
-		/// • 通过【手术单】(ConsumingOrder.SourceBill.object_id=OperationOrderGoodsDetail.OperationOrderId）从表格 【手术单商品明细】中查询获取领⽤用商品的列列表信息。
-		/// </summary>
-		/// <param name="baseDataConsumingOrder"></param>
-		/// <returns></returns>
-		public BaseData<OperationOrderGoodsDetail> GetOperationOrderGoodsDetail(BaseData<ConsumingOrder> baseDataConsumingOrder)
+		/// 通过【领⽤单id】(ConsumingGoodsDetail.ConsumingOrderId =ConsumingOrder.Id）从表格 【领⽤单商品明细】中查询获取领⽤商品的列表信息
+        /// </summary>
+        /// <param name="baseDataConsumingOrder"></param>
+        /// <returns></returns>
+        public BaseData<ConsumingGoodsDetail> GetOperationOrderGoodsDetail(BaseData<ConsumingOrder> baseDataConsumingOrder)
 		{
 			//校验是否含有数据，如果含有数据，拼接具体字段
 			HttpHelper.GetInstance().ResultCheck(baseDataConsumingOrder, out bool isSuccess);
 			if (!isSuccess)
 			{
-				return new BaseData<OperationOrderGoodsDetail>()
+				return new BaseData<ConsumingGoodsDetail>()
 				{
 					code = (int)ResultCode.Parameter_Exception,
 					message = ResultCode.Parameter_Exception.ToString()
@@ -109,7 +109,7 @@ namespace CFLMedCab.Http.Bll
 			}
 			if (!"OperationOrder".Equals(baseDataConsumingOrder.body.objects[0].SourceBill.object_name))
 			{
-				return new BaseData<OperationOrderGoodsDetail>()
+				return new BaseData<ConsumingGoodsDetail>()
 				{
 					code = (Int32)ResultCode.Business_Exception,
 					message = ResultCode.Business_Exception.ToString()
@@ -117,15 +117,15 @@ namespace CFLMedCab.Http.Bll
 			}
 
 			//根据领用单ID获取领用上列表信息
-			BaseData<OperationOrderGoodsDetail> baseOperationOrderGoodsDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
+			BaseData<ConsumingGoodsDetail> baseOperationOrderGoodsDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
 			{
 
-				return hh.Get<OperationOrderGoodsDetail>(new QueryParam
+				return hh.Get<ConsumingGoodsDetail>(new QueryParam
 				{
 					@in =
 					{
-						field = "OperationOrderId",
-						in_list =  { HttpUtility.UrlEncode(baseDataConsumingOrder.body.objects[0].SourceBill.object_id) }
+						field = "ConsumingOrderId",
+						in_list =  { HttpUtility.UrlEncode(baseDataConsumingOrder.body.objects[0].id) }
 					}
 				});
 
@@ -351,16 +351,16 @@ namespace CFLMedCab.Http.Bll
 		/// <param name="order"></param>
 		/// <param name="operationDetail"></param>
 		/// <returns></returns>
-		public void GetOperationOrderChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order, BaseData<OperationOrderGoodsDetail> operationDetail)
+		public void GetOperationOrderChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order, BaseData<ConsumingGoodsDetail> consumingGoodsDetail)
 		{
-			HttpHelper.GetInstance().ResultCheck(operationDetail, out bool isSuccess);
+			HttpHelper.GetInstance().ResultCheck(consumingGoodsDetail, out bool isSuccess);
 
 			HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess1);
 
 			if (isSuccess && isSuccess1)
 			{
 				//手术待领用商品明细
-				var operationDetails = operationDetail.body.objects;
+				var operationDetails = consumingGoodsDetail.body.objects.Where(item=> Convert.ToInt32(item.unusedAmount) != 0);
 				//获取待领用商品CommodityId列表（去重后）
 				var detailCommodityIds = operationDetails.Select(it => it.CommodityId).Distinct().ToList();
                 //变更后的Id列表
@@ -399,36 +399,33 @@ namespace CFLMedCab.Http.Bll
                     var baseDataCommodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
 
                     //是否名称全部一致
-                    bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count >= detailCommodityIds.Count;
+                    bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count == detailCommodityIds.Count;
 
-                    if (isAllContains)
+                    bool isAllNormal = true;
+                    foreach (ConsumingGoodsDetail ccd in operationDetails)
                     {
-
-                        bool isAllNormal = true;
-
-                        foreach (OperationOrderGoodsDetail oogd in operationDetails)
+                        //详情对应的Commodity领用数量
+                        var tempCount = commodityCodes.Where(cit => cit.CommodityId == ccd.CommodityId).Count();
+         
+                        //任何一种商品的数量不一致
+                        if(ccd.unusedAmount != null)
                         {
-                            //详情对应的Commodity领用数量
-                            var tempCount = commodityCodes.Where(cit => cit.CommodityId == oogd.CommodityId).Count();
-                            //当领用数量小于需要领用单上的数量时，状态变更为领用中
-                            if (oogd.Number > tempCount)
+                            if(Convert.ToInt32(ccd.unusedAmount) != tempCount)
                             {
-                                order.Status = ConsumingOrderStatus.领用中.ToString();
                                 isAllNormal = false;
                                 break;
-
                             }
                         }
-
-                        if (isAllNormal)
-                        {
-                            order.Status = ConsumingOrderStatus.已完成.ToString();
-                        }
                     }
-                    if (detailCommodityIds.Count > baseDataCommodityIds.Count)
-                    {
-                        order.Status = ConsumingOrderStatus.领用中.ToString();
 
+                    //只有种类和数量完全一致的情况下，才会修改领用单状态
+                    if (isAllContains && isAllNormal)
+                    {
+                         order.Status = ConsumingOrderStatus.已完成.ToString();
+                    }
+                    else
+                    {
+                        order.Status = ConsumingOrderStatus.异常.ToString();
                     }
                 }
 			}
@@ -561,7 +558,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="baseDataOogd"></param>
 		/// <param name="baseDataCommodityCode"></param>
-		public void CombinationStockNum(BaseData<OperationOrderGoodsDetail> baseDataOogd, BaseData<CommodityCode> baseDataCommodityCode)
+		public void CombinationStockNum(BaseData<ConsumingGoodsDetail> baseDataOogd, BaseData<CommodityCode> baseDataCommodityCode)
 		{
 			HttpHelper.GetInstance().ResultCheck(baseDataOogd, out bool isSuccess);
 
@@ -569,19 +566,15 @@ namespace CFLMedCab.Http.Bll
 
 			if (isSuccess && isSuccess1)
 			{
-
-
 				var OogdList = baseDataOogd.body.objects;
 
 				var CommodityCodeList = baseDataCommodityCode.body.objects;
 
-
 				OogdList.ForEach(it => 
 				{
 					it.stockNum = CommodityCodeList.Where(cit => cit.CommodityId == it.CommodityId).Count();
-				});
+                });
 			}
-
 		}
 
 		/// <summary>

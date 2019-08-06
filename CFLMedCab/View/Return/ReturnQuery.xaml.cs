@@ -36,19 +36,19 @@ namespace CFLMedCab.View.Return
         public delegate void EnterReturnOpenHandler(object sender, CommodityRecovery e);
         public event EnterReturnOpenHandler EnterReturnOpenEvent;
 
-        public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
+        //public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
         //public event ShowLoadDataHandler ShowLoadDataEvent;
 
-        public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
+        //public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
         //public event HideLoadDataHandler HideLoadDataEvent;
 
-        KeyboardView kbHandler = new KeyboardView();
+        //KeyboardView kbHandler = new KeyboardView();
 
         public ReturnQuery()
         {
             InitializeComponent();
 
-            lbInputCode.Focus();
+            tbInputCode.Focus();
         }
     
         /// <summary>
@@ -113,22 +113,22 @@ namespace CFLMedCab.View.Return
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onGotFocus(object sender, RoutedEventArgs e)
-        {
-            //kbHandler = new KeyboardView();
-            kbHandler.SetCurrentControl((Control)sender);
-            kbHandler.Topmost = true;
-            kbHandler.Show();
-        }
+        //private void onGotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    //kbHandler = new KeyboardView();
+        //    kbHandler.SetCurrentControl((Control)sender);
+        //    kbHandler.Topmost = true;
+        //    kbHandler.Show();
+        //}
 
         /// <summary>
         /// 失去焦点
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onLostFocus(object sender, RoutedEventArgs e)
-        {
-            kbHandler.Hide();
-        }
+        //private void onLostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    kbHandler.Hide();
+        //}
     }
 }

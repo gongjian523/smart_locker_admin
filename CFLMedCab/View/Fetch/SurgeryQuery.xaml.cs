@@ -48,7 +48,7 @@ namespace CFLMedCab.View.Fetch
         //public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
         //public event HideLoadDataHandler HideLoadDataEvent;
 
-        KeyboardView kbHandler = new KeyboardView();
+        //KeyboardView kbHandler = new KeyboardView();
 
         ConsumingOrderType consumingOrderType;
 
@@ -68,7 +68,8 @@ namespace CFLMedCab.View.Fetch
                 lbInputCode.Content = "请输入手术单号或扫描手术单二维码";
                 btnNoCode.Visibility = Visibility.Visible;
             }
-            lbInputCode.Focus();
+
+            tbInputCode.Focus();
         }
     
         /// <summary>
@@ -102,33 +103,22 @@ namespace CFLMedCab.View.Fetch
                 FetchParam fetchParam = new FetchParam();
                 fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
 
-                if (fetchParam.bdConsumingOrder.code == 0)
+                //校验是否含有数据
+                HttpHelper.GetInstance().ResultCheck(fetchParam.bdConsumingOrder, out bool isSuccess);
+                if (!isSuccess)
                 {
-                    if (fetchParam.bdConsumingOrder.body.objects[0].SourceBill.object_name == "OperationOrder")
-                    {
-                        fetchParam.bdOperationOrderGoodsDetail =
-                            ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
-                    }
+                    MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
+                    return;
                 }
 
-				//校验是否含有数据
-				HttpHelper.GetInstance().ResultCheck(fetchParam.bdConsumingOrder, out bool isSuccess);
-
-				if (!isSuccess)
-				{
-					MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
-					return;
-				}
-
+                fetchParam.bdOperationOrderGoodsDetail = ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
 				//校验是否含有数据
 				HttpHelper.GetInstance().ResultCheck(fetchParam.bdOperationOrderGoodsDetail, out bool isSuccess1);
-
 				if (!isSuccess1)
 				{
 					MessageBox.Show("无法获取手术单物品详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
 					return;
 				}
-
 
                 HashSet<CommodityEps> hs = ApplicationState.GetGoodsInfo();
                 BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(ApplicationState.GetGoodsInfo());
@@ -188,22 +178,22 @@ namespace CFLMedCab.View.Fetch
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onGotFocus(object sender, RoutedEventArgs e)
-        {
-            //kbHandler = new KeyboardView();
-            kbHandler.SetCurrentControl((Control)sender);
-            kbHandler.Topmost = true;
-            kbHandler.Show();
-        }
+        //private void onGotFocus(object sender, RoutedEventArgs e)
+        //{
+        //    //kbHandler = new KeyboardView();
+        //    kbHandler.SetCurrentControl((Control)sender);
+        //    kbHandler.Topmost = true;
+        //    kbHandler.Show();
+        //}
 
         /// <summary>
         /// 失去焦点
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onLostFocus(object sender, RoutedEventArgs e)
-        {
-            kbHandler.Hide();
-        }
+        //private void onLostFocus(object sender, RoutedEventArgs e)
+        //{
+        //    kbHandler.Hide();
+        //}
     }
 }

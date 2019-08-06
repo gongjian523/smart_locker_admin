@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace CFLMedCab.Http.Model
     /// <summary>
     /// 领用商品明细表
     /// </summary>
+    [JsonObject(MemberSerialization.OptOut)]
     public class ConsumingGoodsDetail : BaseModel
     {
         /// <summary>
@@ -117,5 +119,17 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public object usedAmount { get; set; }
+
+        /// <summary>
+        /// 在机柜的库存数量
+        /// </summary>
+        [JsonIgnore]
+        public int stockNum { get; set; }
+
+        /// <summary>
+        /// 还需要领用的数量（unusedAmount - usedAmount）
+        /// </summary>
+        //[JsonIgnore]
+        //public int needNum { get; set; }
     }
 }

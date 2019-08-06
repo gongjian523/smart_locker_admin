@@ -80,6 +80,8 @@ namespace CFLMedCab.View.Inventory
             DataContext = this;
 
             GetInventoryList();
+
+            tbInputNumbers.Focus();
         }
 
 

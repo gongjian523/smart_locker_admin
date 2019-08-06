@@ -90,14 +90,14 @@
                                 <GridViewColumn Header="待领用数量" Width="{Binding ElementName=column2,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Number}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding unusedAmount}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="本柜库存数量"  Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stocknum}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding stockNum}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

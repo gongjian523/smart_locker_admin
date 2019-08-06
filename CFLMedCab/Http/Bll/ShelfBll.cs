@@ -265,7 +265,7 @@ namespace CFLMedCab.Http.Bll
             if (isSuccess && isSuccess1)
 			{
                 //上架任务单商品详情列表
-				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
+				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects.Where(item => item.NeedShelfNumber != item.AlreadyShelfNumber);
                 //上架任务单商品码
 				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
 
@@ -297,7 +297,6 @@ namespace CFLMedCab.Http.Bll
 
                 if (isAllContains)
 				{
-
 					bool isAllNormal = true;
 
 					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
@@ -308,7 +307,6 @@ namespace CFLMedCab.Http.Bll
 							shelfTask.Status = DocumentStatus.异常.ToString();
 							isAllNormal = false;
 							break;
-
 						}
 					}
 

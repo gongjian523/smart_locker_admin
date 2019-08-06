@@ -71,7 +71,8 @@ namespace CFLMedCab.View.Fetch
 			if (commodityCodeList == null || commodityCodeList.Count <= 0)
 			{
 				MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-				return;
+                isSuccess = false;
+                return;
 			}
 
 			bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
@@ -142,9 +143,9 @@ namespace CFLMedCab.View.Fetch
 
 
 				//校验是否含有数据
-				HttpHelper.GetInstance().ResultCheck(bdCommodityInventoryChange, out bool isSuccess);
+				HttpHelper.GetInstance().ResultCheck(bdCommodityInventoryChange, out bool isSuccess1);
 
-				if (!isSuccess)
+				if (!isSuccess1)
 				{
 					MessageBox.Show("提交结果失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
 				}
