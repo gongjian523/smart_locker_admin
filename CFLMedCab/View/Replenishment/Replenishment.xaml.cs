@@ -42,10 +42,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
         public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
-        public event ShowLoadDataHandler ShowLoadDataEvent;
+        //public event ShowLoadDataHandler ShowLoadDataEvent;
 
         public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
-        public event HideLoadDataHandler HideLoadDataEvent;
+        //public event HideLoadDataHandler HideLoadDataEvent;
 
         public Replenishment()
         {

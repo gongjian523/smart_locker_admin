@@ -49,7 +49,10 @@ namespace CFLMedCab.View.Fetch
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
 
-        public GerFetchView(HashSet<CommodityEps> afterEps)
+		private bool isSuccess;
+
+
+		public GerFetchView(HashSet<CommodityEps> afterEps)
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
@@ -65,7 +68,7 @@ namespace CFLMedCab.View.Fetch
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCompareCommodity(before, afterEps);
 
 			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
 
 			if (!isSuccess)
 			{
@@ -119,25 +122,23 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            if(bdCommodityCode.code == 0)
-            {
-                if (bdCommodityCode.body.objects.Count > 0)
-                {
-                    BasePostData<CommodityInventoryChange> bdBasePostData =
-                        ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.一般领用);
+			if (isSuccess)
+			{
+				BasePostData<CommodityInventoryChange> bdBasePostData =
+						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.一般领用);
 
-					//校验是否含有数据
-					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
+				//校验是否含有数据
+				HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
 
-					if (!isSuccess)
-					{
-						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+				if (!isSuccess)
+				{
+					MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 
-					}
+				}
 
-                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingReturnOrder");
-                }
-            }
+				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingReturnOrder");
+			}
+
             ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bExit);
         }

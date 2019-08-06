@@ -331,6 +331,7 @@ namespace CFLMedCab.Test
             fetchOrderBll.InitSurgerOrder(surgeryOrdersG);
         }
 
+		[Obsolete]
         public void onInitGoods(object sender, EventArgs e)
         {
             bool isGetSuccess;

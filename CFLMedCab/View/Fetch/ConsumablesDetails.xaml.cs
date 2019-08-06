@@ -33,9 +33,9 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterSurgeryDetailHandler(object sender, ConsumingOrder e);
         public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
 
-        private ConsumingOrder consumingOrder;
+        //private ConsumingOrder consumingOrder;
 
-        private SurgeryOrderDto surgeryOrderDto;
+        //private SurgeryOrderDto surgeryOrderDto;
         private GoodsBll goodsBll = new GoodsBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
         public ConsumablesDetails(ConsumingOrder model)
@@ -56,7 +56,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void Return(object sender, RoutedEventArgs e)
         {
-            EnterSurgeryDetailEvent(this, consumingOrder);
+            //EnterSurgeryDetailEvent(this, consumingOrder);
         }
     }
 }

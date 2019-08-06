@@ -199,19 +199,23 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
                 BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, abnormalCauses);
 
-                if (putData.code != 0)
-                {
-                    MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-                }
-                else
-                {
-                    BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+				HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess);
+				if (!isSuccess)
+				{
+					MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+				}
+				else
+				{
+					BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
 
-                    if (basePostData.code != 0)
-                    {
-                        MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-                    }
-                }
+					HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
+
+					if (!isSuccess1)
+					{
+						MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+					}
+				}
+
             }
 
             ApplicationState.SetGoodsInfo(after);

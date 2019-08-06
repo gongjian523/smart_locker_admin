@@ -49,7 +49,9 @@ namespace CFLMedCab.View.Fetch
         private ConsumingOrder consumingOrder;
         private ConsumingOrderType consumingOrderType;
 
-        public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, ConsumingOrderType type, ConsumingOrder order)
+		private bool isSuccess;
+
+		public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, ConsumingOrderType type, ConsumingOrder order)
         {
             InitializeComponent();
 
@@ -77,7 +79,7 @@ namespace CFLMedCab.View.Fetch
 			bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
 
 			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
 
 			if (!isSuccess)
 			{
@@ -132,35 +134,38 @@ namespace CFLMedCab.View.Fetch
 
         private void EndOperation(bool bExit)
         {
-            if (bdCommodityCode.code == 0)
+            if (isSuccess)
             {
-                if(bdCommodityCode.body.objects.Count > 0)
-                {
+				if (consumingOrderType == ConsumingOrderType.手术领用)
+				{
+					BasePostData<CommodityInventoryChange> bdBasePostData =
+						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.手术领用);
 
-                    if(consumingOrderType == ConsumingOrderType.手术领用)
-                    {
-                        BasePostData<CommodityInventoryChange> bdBasePostData =
-                            ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.手术领用);
+					//校验是否含有数据
+					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
 
-                        if (bdBasePostData.code != 0)
-                        {
-                            MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
-                        }
-                    }
-                    else
-                    {
-                        BasePostData<CommodityInventoryChange> bdBasePostData =
-                            ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.医嘱处方领用, consumingOrder.SourceBill);
+					if (!isSuccess)
+					{
+						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+					}
 
-                        if (bdBasePostData.code != 0)
-                        {
-                            MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
-                        }
+				}
+				else
+				{
+					BasePostData<CommodityInventoryChange> bdBasePostData =
+						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.医嘱处方领用, consumingOrder.SourceBill);
 
-                    }
-                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
-                }
-            }
+					//校验是否含有数据
+					HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess);
+
+					if (!isSuccess)
+					{
+						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+					}
+
+				}
+				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
+			}
 
             ApplicationState.SetGoodsInfo(after);
 

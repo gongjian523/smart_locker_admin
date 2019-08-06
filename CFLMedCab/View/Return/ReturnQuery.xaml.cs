@@ -4,6 +4,7 @@ using CFLMedCab.Controls;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Http.Bll;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -36,10 +37,10 @@ namespace CFLMedCab.View.Return
         public event EnterReturnOpenHandler EnterReturnOpenEvent;
 
         public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
-        public event ShowLoadDataHandler ShowLoadDataEvent;
+        //public event ShowLoadDataHandler ShowLoadDataEvent;
 
         public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
-        public event HideLoadDataHandler HideLoadDataEvent;
+        //public event HideLoadDataHandler HideLoadDataEvent;
 
         KeyboardView kbHandler = new KeyboardView();
 
@@ -80,11 +81,14 @@ namespace CFLMedCab.View.Return
 
             BaseData<CommodityRecovery> bdCommodityRecovery = CommodityRecoveryBll.GetInstance().GetCommodityRecovery(name);
 
-            if (bdCommodityRecovery.code != 0)
-            {
-                MessageBox.Show("无法获取回收下架单详情！" + bdCommodityRecovery.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+
+			HttpHelper.GetInstance().ResultCheck(bdCommodityRecovery, out bool isSuccess);
+
+			if (!isSuccess)
+			{
+				MessageBox.Show("无法获取回收下架单详情！" + bdCommodityRecovery.message, "温馨提示", MessageBoxButton.OK);
+				return;
+			}
 
             //HideLoadDataEvent(this, null);
 

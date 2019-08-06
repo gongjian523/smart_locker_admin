@@ -51,7 +51,6 @@ namespace CFLMedCab.View.Return
         BaseData<CommodityCode> bdCommodityCode;
         BaseData<PickCommodity> bdCommodityDetail;
 
-        bool bAbnormal = false;
         bool bExit;
 
         public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs)
@@ -163,19 +162,22 @@ namespace CFLMedCab.View.Return
         {
             BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
 
-            if(putData.code != 0)
-            {
-                MessageBox.Show("更新取货任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-            }
-            else
-            {
-                BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
+			HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess);
+			if (!isSuccess)
+			{
+				MessageBox.Show("更新取货任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+			}
+			else
+			{
+				BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
 
-                if(basePostData.code != 0)
-                {
-                    MessageBox.Show("创建取货任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-                }
-            }
+				HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
+
+				if (!isSuccess1)
+				{
+					MessageBox.Show("创建取货任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+				}
+			}
 
             ApplicationState.SetGoodsInfo(after);
             EnterPopCloseEvent(this, bEixt);
