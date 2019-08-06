@@ -223,6 +223,16 @@ namespace CFLMedCab.Http.Helper
 			return HttpConstant.Domain + HttpConstant.VeinmatchBindingUrlSuffix;
 		}
 
+
+        /// <summary>
+        /// 获取指静脉授权请求的url
+        /// </summary>
+        /// <returns></returns>
+        public static string GetVeinmatchRegisterUrl()
+        {
+            return HttpConstant.Domain + HttpConstant.VeinmatchRegisterUrlSuffix;
+        }
+
         /// <summary>
         /// 获取图形验证码token的url
         /// </summary>
@@ -1173,7 +1183,7 @@ namespace CFLMedCab.Http.Helper
 		/// <typeparam name="K"></typeparam>
 		/// <param name="baseData"></param>
 		/// <returns></returns>
-		public BaseData<T> ResultCheck<T>(BaseData<T> baseData)
+		public BaseData<T> ResultCheck<T>(BaseData<T> baseData )
 		{
             if (baseData == null)
             {
@@ -1198,14 +1208,53 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
-		/// <summary>
-		/// 检查结果是否正确,用于多次表关联的校验
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <typeparam name="K"></typeparam>
-		/// <param name="baseData"></param>
-		/// <returns></returns>
-		public BaseData<T> ResultCheck<T,K>(Func<HttpHelper, BaseData<T>> func, BaseData<K> baseData)
+
+        /// <summary>
+        /// 检查结果是否正确,用于多次表关联的校验
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="K"></typeparam>
+        /// <param name="baseData"></param>
+        /// <returns></returns>
+        public BaseSinglePostData<T> ResultCheck<T>(BaseSinglePostData<T> baseData, out bool isSuccess)
+        {
+            isSuccess = false;
+
+            if (baseData == null)
+            {
+                baseData = new BaseSinglePostData<T>
+                {
+                    code = (int)ResultCode.Result_Exception,
+                    message = ResultCode.Result_Exception.ToString()
+                };
+                return baseData;
+            }
+
+            if (baseData.code == (int)ResultCode.OK)
+            {
+                if (baseData.body != null)
+                {
+                    isSuccess = true;
+                }
+                else
+                {
+                    baseData.code = (int)ResultCode.Result_Exception;
+                    baseData.message = ResultCode.Result_Exception.ToString();
+                }
+            }
+
+            return baseData;
+        }
+
+
+        /// <summary>
+        /// 检查结果是否正确,用于多次表关联的校验
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <typeparam name="K"></typeparam>
+        /// <param name="baseData"></param>
+        /// <returns></returns>
+        public BaseData<T> ResultCheck<T,K>(Func<HttpHelper, BaseData<T>> func, BaseData<K> baseData)
 		{
 
 			BaseData<T> ret;

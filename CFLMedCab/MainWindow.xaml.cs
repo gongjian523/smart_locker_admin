@@ -84,9 +84,6 @@ namespace CFLMedCab
 
         private LoadingData loadingDataPage;
 
-        //TouchScreenKeyboard kbHandler;
-        KeyboardView kbHandler;
-
 #if TESTENV
         private System.Timers.Timer testTimer;
         private FetchParam testFetchPara = new FetchParam();
@@ -173,7 +170,7 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 #else
-            //Console.ReadKey();
+            Console.ReadKey();
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
             int vienSt = vein.LoadingDevice();
@@ -188,14 +185,21 @@ namespace CFLMedCab
 				{
 					vienSt = vein.OpenDevice();
 
-					if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
-					{
+                    if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+					{                          
 						onFingerDetected(this, -1);
 					}
 					else
 					{
-						ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-					}
+                        //if(RegisterVein())
+                        //{
+                        //    onFingerDetected(this, -2);
+                        //}
+                        //else
+                        {
+                            ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+                        }
+                    }
 				}
             }
 #endif
@@ -321,6 +325,11 @@ namespace CFLMedCab
 
             string info = "等待检测指静脉的时候发生错误";
             string info2 = "请再次进行验证";
+            if(e == -2)
+            {
+                info = "设置指静脉设备本地签名时发生错误";
+                info2 = "请重启设备，如果仍然失败，请联系管理员！";
+            }
 
             if (e == 0)
             {
@@ -365,9 +374,6 @@ namespace CFLMedCab
                     info2 = "请先绑定指静脉";
 
 #else
-
-                    //BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchLogin(Convert.ToBase64String(macthfeature));
-
                     BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
                     {
                         regfeature = Convert.ToBase64String(macthfeature)
@@ -393,9 +399,9 @@ namespace CFLMedCab
             }
 
 #if LOCALSDK 
-            if (e == -1 || user.id == 0)
+            if (e < 0 || user.id == 0)
 #else
-            if (e == -1 || user ==null)
+            if (e < 0 || user ==null)
 #endif
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
@@ -834,7 +840,7 @@ namespace CFLMedCab
 #endregion
 #endregion
 
-#region 领用退回
+        #region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -906,9 +912,9 @@ namespace CFLMedCab
             }));
         }
 #endregion
-#endregion
+        #endregion
 
-#region Replenishment
+        #region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -1069,9 +1075,9 @@ namespace CFLMedCab
         }
 #endif
 
-#endregion
+        #endregion
 
-#region  ReturnGoods
+        #region  ReturnGoods
         /// <summary>
         /// 进入退货出库页面
         /// </summary>
@@ -1178,7 +1184,7 @@ namespace CFLMedCab
             }));
         }
 #else
-                /// <summary>
+        /// <summary>
         /// 进入拣货单详情页-关门状态
         /// </summary>
         /// <param name="sender"></param>
@@ -1619,7 +1625,6 @@ namespace CFLMedCab
             }));
         }
 
-
         private void onEnterSysSetting(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
@@ -1760,18 +1765,6 @@ namespace CFLMedCab
             }));
         }
 
-        private void onShowKeyboard(object sender, RoutedEventArgs e)
-        {
-            kbHandler = new KeyboardView();
-            kbHandler.Show();
-        }
-
-        private void onHideKeyboard(object sender, RoutedEventArgs e)
-        {
-            if(kbHandler!= null)
-                kbHandler.Hide();
-        }
-
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Taskbar.HideTask(true);
@@ -1817,7 +1810,57 @@ namespace CFLMedCab
             inventoryDetailHandler = null;
         }
 
-#region test
+
+        private bool RegisterVein()
+        {
+
+            byte[] devSign = new byte[36];
+            ushort devSignLen = 0;
+
+            int veinSt = vein.GetDevSign(devSign,  ref devSignLen);
+            if(veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
+            {
+                LogUtils.Error("获取本地指静脉设备签名失败！" + veinSt);
+                return false;
+            }
+
+            string devStr = "";
+            if (devSign != null)
+            {
+                for (int i = 0; i < devSignLen; i++)
+                {
+                    devStr += devSign[i].ToString("X2");
+                }
+            }
+
+            BaseSinglePostData<VeinRegister> bdVeinRegister = UserLoginBll.GetInstance().VeinmatchRegister(new VeinregisterPostParam {
+                devsign = devStr
+            });
+            HttpHelper.GetInstance().ResultCheck(bdVeinRegister, out bool isSuccess);
+            if(!isSuccess)
+            {
+                LogUtils.Error("获取服务器指静脉设备签名失败！");
+                return false;
+            }
+
+            string hexString = bdVeinRegister.body.sersign.Replace(" ", "");
+            if ((hexString.Length % 2) != 0)
+                hexString += " ";
+            byte[] serSign = new byte[hexString.Length / 2];
+            for (int i = 0; i < serSign.Length; i++)
+                serSign[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+
+            veinSt = vein.SetDevSign(devSign, (ushort)serSign.Length);
+            if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
+            {
+                LogUtils.Error("设置本地指静脉设备签名失败！" + veinSt);
+                return false;
+            }
+
+            return true;
+        }
+
+        #region test
 
         private void MockData()
         {
@@ -1836,9 +1879,8 @@ namespace CFLMedCab
             //iniGoodstimer.Enabled = true;
             //iniGoodstimer.Elapsed += new ElapsedEventHandler(onInitGoods);
 #endif
-
         }
-#endregion
+        #endregion
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {

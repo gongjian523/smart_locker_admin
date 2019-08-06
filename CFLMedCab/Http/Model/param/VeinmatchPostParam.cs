@@ -6,10 +6,23 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model.param
 {
-	/// <summary>
-	/// 指静脉绑定,参数
-	/// </summary>
-	public class VeinbindingPostParam
+
+    /// <summary>
+    /// 指静脉注册,参数
+    /// </summary>
+    public class VeinregisterPostParam
+    {
+        /// <summary>
+        /// 本地设备的签名 
+        /// </summary>
+        public string devsign { get; set; }
+
+    }
+
+    /// <summary>
+    /// 指静脉绑定,参数
+    /// </summary>
+    public class VeinbindingPostParam
 	{
 		/// <summary>
 		///  3 个指静脉特征 

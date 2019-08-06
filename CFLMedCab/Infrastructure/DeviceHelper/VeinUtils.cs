@@ -529,13 +529,13 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         }
 
         //读取设备的签名信息
-        public int GetDevSign(byte[] devsign, ref UInt16 devsignLen)
+        public int GetDevSign(byte[] devsign, ref ushort devsignLen)
         {
             return FV_GetDevSign(devName, devsign, ref devsignLen);
         }
 
         //设置设备的签名信息
-        public int SetDevSign(byte[] srvsign, UInt16 devsignLen)
+        public int SetDevSign(byte[] srvsign, ushort devsignLen)
         {
             return FV_SetDevSign(devName, srvsign, devsignLen);
         }

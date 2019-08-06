@@ -51,6 +51,11 @@ namespace CFLMedCab.Http.Constant
         public static readonly string VeinmatchLoginUrlSuffix = "api/v1.0/veinmatch/login";
 
         /// <summary>
+        /// 指静脉授权的url(特殊)
+        /// </summary>
+        public static readonly string VeinmatchRegisterUrlSuffix = "api/v1.0/veinmatch/register";
+
+        /// <summary>
         /// 获取图形验证码token的url(特殊)
         /// </summary>
         public static readonly string CaptchaTokenUrlSuffix = "api/v1.0/account/get_captcha_token";

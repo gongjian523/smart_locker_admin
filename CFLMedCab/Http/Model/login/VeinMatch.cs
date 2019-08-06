@@ -26,4 +26,17 @@ namespace CFLMedCab.Http.Model.login
         /// </summary>
         public User user { get; set; }
     }
+
+
+    /// <summary>
+    /// 服务端的授权
+    /// </summary>
+    public class VeinRegister
+    {
+        /// <summary>
+        /// 服务端返回的前面
+        /// </summary>
+        public string sersign { get; set; }
+
+    }
 }
