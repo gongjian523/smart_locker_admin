@@ -42,11 +42,11 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterPrescriptionOpenHandler(object sender, ConsumingOrder e);
         public event EnterPrescriptionOpenHandler EnterPrescriptionOpenEvent;
 
-        public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
-        public event ShowLoadDataHandler ShowLoadDataEvent;
+        //public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
+        //public event ShowLoadDataHandler ShowLoadDataEvent;
 
-        public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
-        public event HideLoadDataHandler HideLoadDataEvent;
+        //public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
+        //public event HideLoadDataHandler HideLoadDataEvent;
 
         KeyboardView kbHandler = new KeyboardView();
 

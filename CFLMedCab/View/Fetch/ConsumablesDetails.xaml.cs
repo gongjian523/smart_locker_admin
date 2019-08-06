@@ -30,8 +30,8 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class ConsumablesDetails : UserControl
     {
-        public delegate void EnterSurgeryDetailHandler(object sender, ConsumingOrder e);
-        public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
+        //public delegate void EnterSurgeryDetailHandler(object sender, ConsumingOrder e);
+        //public event EnterSurgeryDetailHandler EnterSurgeryDetailEvent;
 
         //private ConsumingOrder consumingOrder;
 

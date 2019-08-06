@@ -99,7 +99,7 @@ namespace CFLMedCab.View
             validityQuery.Visibility = Visibility.Hidden;
             stockQuery.Visibility = Visibility.Hidden;
 
-            Content.Visibility = Visibility.Visible;
+            Content0.Visibility = Visibility.Visible;
             Content1.Visibility = Visibility.Hidden;
             Content2.Visibility = Visibility.Hidden;
             queryData(this, null);
@@ -235,7 +235,7 @@ namespace CFLMedCab.View
             validityQuery.Visibility = Visibility.Visible;
             stockQuery.Visibility = Visibility.Hidden;
 
-            Content.Visibility = Visibility.Hidden;
+            Content0.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Visible;
             Content2.Visibility = Visibility.Hidden;
             //queryCriteria();
@@ -262,7 +262,7 @@ namespace CFLMedCab.View
             validityQuery.Visibility = Visibility.Hidden;
             stockQuery.Visibility = Visibility.Visible;
 
-            Content.Visibility = Visibility.Hidden;
+            Content0.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Hidden;
             Content2.Visibility = Visibility.Visible;
 

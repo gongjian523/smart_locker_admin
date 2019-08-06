@@ -692,8 +692,8 @@ namespace CFLMedCab
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
             surgeryQuery.EnterPrescriptionOpenEvent += new SurgeryQuery.EnterPrescriptionOpenHandler(onEnterSurgeryNoNumOpen);//医嘱处方领用直接开柜领用
 
-            surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
-            surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);
+            //surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
+            //surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);
 
             ContentFrame.Navigate(surgeryQuery);
         }

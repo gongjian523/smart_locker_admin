@@ -87,7 +87,7 @@
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource BottomRadiusBorder}"  Grid.Row="2"  Name="Content">
+            <Border Style="{StaticResource BottomRadiusBorder}"  Grid.Row="2"  Name="Content0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
