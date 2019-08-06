@@ -3,6 +3,10 @@ using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
+using Quartz;
+using Quartz.Impl.Matchers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -427,7 +431,9 @@ namespace CFLMedCab.Http.Bll
 					ConfirmDate = now,
 					Status = DocumentStatus.已完成.ToString(),
 					//TODO: 需要当前设备id，货位id和库房id
-					GoodsLocationId = goodsLocationId
+					GoodsLocationId = goodsLocationId,
+					EquipmentId = ApplicationState.GetEquipId(),
+					StoreHouseId = ApplicationState.GetHouseId()
 				});
 
 			});

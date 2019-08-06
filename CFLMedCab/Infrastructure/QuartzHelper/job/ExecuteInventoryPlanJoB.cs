@@ -1,5 +1,6 @@
 ﻿using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
+using CFLMedCab.Http.Model;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using Newtonsoft.Json;
@@ -17,6 +18,8 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 	/// </summary>
 	public class ExecuteInventoryPlanJoB : IJob
 	{
+
+
 		public Task Execute(IJobExecutionContext context)
 		{
 			Console.WriteLine("ExecuteInventoryPlanJoB进入");

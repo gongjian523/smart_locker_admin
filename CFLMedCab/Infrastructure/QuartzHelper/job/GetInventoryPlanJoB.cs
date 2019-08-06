@@ -1,6 +1,8 @@
 ﻿using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
+using CFLMedCab.Http.Model;
 using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
+using CFLMedCab.Infrastructure.ToolHelper;
 using Quartz;
 using System;
 using System.Linq;
@@ -24,20 +26,37 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 
 			if (isSuccess)
 			{
-				var inventoryPlan = baseDataInventoryPlan.body.objects.First();
-				string cronStr = QuartzUtils.GetQuartzCron(inventoryPlan);
-				//cronStr = "0 43 11 * * ?";
-				CustomizeScheduler.GetInstance().CreateUpdateTriggerAsync(cronStr).Wait();
+				var inventoryPlans = baseDataInventoryPlan.body.objects;
+				inventoryPlans.ForEach(item =>
+				{
+					item.InventoryTime = "17:57:00";
+				});
 
-				//System.Threading.Thread.Sleep(10000);
+				//cronStr = "0 43 11 * * ?";
+				CustomizeScheduler.GetInstance().SchedulerStartOrUpdateOrDeleteByPlans(inventoryPlans).Wait();
+
+
+				inventoryPlans.ForEach(item =>
+				{
+					item.InventoryTime = "17:59:00";
+				});
+
+
+				InventoryPlan inventoryPlan = inventoryPlans[0].MapTo<InventoryPlan>();
+
+				inventoryPlan.id = inventoryPlan.id + "134";
+				inventoryPlan.InventoryTime = "18:01:00";
+
+				inventoryPlans.Add(inventoryPlan);
+
+				//模拟重复任务
+				CustomizeScheduler.GetInstance().SchedulerStartOrUpdateOrDeleteByPlans(inventoryPlans).Wait();
 
 				//cronStr = "0 44 11 * * ?";
-				//CustomizeScheduler.GetInstance().CreateUpdateTriggerAsync(cronStr);
-
-
 			}
 
 			return null;
+
 		}
 
 	}

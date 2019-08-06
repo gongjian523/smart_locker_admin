@@ -35,5 +35,18 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.trigger
 								.Build();
 		}
 
+
+		/// <summary>
+		/// 获取盘点计划的触发器
+		/// </summary>
+		/// <returns></returns>
+		public static ITrigger GetExecuteInventoryPlanTrigger(string id, string cron)
+		{
+			return TriggerBuilder.Create()
+								.WithIdentity(id, GroupName.ExecuteInventoryPlan.ToString())
+								.WithCronSchedule(cron)
+								.Build();
+		}
+
 	}
 }

@@ -13,7 +13,6 @@ namespace CFLMedCab.Http.Model
     /// 盘点计划管理
     /// @λ智能柜/货架 盘点任务单：IT20190723000015，ID：AQACQqweJ4wBAAAAXRA4vCD_sxWaDwQA
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
     public class InventoryPlan : BaseModel
     {
         /// <summary>
@@ -23,7 +22,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public string Enabled { get; set; }
+        public bool Enabled { get; set; }
         /// <summary>
         /// 第一天
         /// </summary>
@@ -76,5 +75,6 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string updated_by { get; set; }
-    }
+
+	}
 }
