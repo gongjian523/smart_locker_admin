@@ -1797,10 +1797,10 @@ namespace CFLMedCab
             NaviView.Visibility = Visibility.Visible;
             HomePageView.Visibility = Visibility.Visible;
             btnBackHP.Visibility = Visibility.Hidden;
+            LoginBkView.Visibility = Visibility.Visible;
 #if TESTENV
 
 #else
-            LoginBkView.Visibility = Visibility.Visible;
 #if VEINSERIAL
             vein.ChekVein();
 #else
@@ -1837,9 +1837,7 @@ namespace CFLMedCab
             //test.InitPickingOrder();
             //test.InitSurgerOrder();
 
-#if TESTENV
-            LoginBkView.Visibility = Visibility.Hidden;
-        
+#if TESTENV        
             CurrentUser user = userBll.GetTestUser();        
             ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
 

@@ -90,7 +90,6 @@
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="3"  Margin="10,10,10,10"   Background="#4999FF"  Content="回退"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Return.png" Click="onEnterReturnFetch" x:Name="NavBtnEnterReturnFetch"/>
 
-
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="0"  Margin="10,10,10,10"   Background="#3D7CFF"  Content="上架"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Replenish.png" Click="onEnterReplenishment" x:Name="NavBtnEnterReplenishment"/>
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="1"  Margin="10,10,10,10"   Background="#6D8EFF"  Content="拣货"
