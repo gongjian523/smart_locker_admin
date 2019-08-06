@@ -11,6 +11,7 @@ using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -97,7 +98,8 @@ namespace CFLMedCab.View
 
             if (tbInputName.Text == "" || tbInputPsw.Password.ToString() == "")
             {
-                Dispatcher.BeginInvoke(new Action(() => {
+
+				Dispatcher.BeginInvoke(new Action(() => {
                     if(tbInputName.Text == "")
                         WarnInfo.Content = "请输入用户名！";
                     else
@@ -299,5 +301,14 @@ namespace CFLMedCab.View
             }));
         }
 
-    }
+		/// <summary>
+		/// 聚焦事件
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void TbInputPsw_GotFocus(object sender, RoutedEventArgs e)
+		{
+			Process.Start(@"C:\Program Files\Common Files\Microsoft Shared\Ink\TabTip.exe");
+		}
+	}
 }
