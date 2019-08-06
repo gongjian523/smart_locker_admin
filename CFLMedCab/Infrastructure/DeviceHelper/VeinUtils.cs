@@ -240,7 +240,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return ret;
         }
 
-        // 等待手指某状态（ 0移开；3放置 ） 
+        // 设置是否退出监测的状态变量（true 退出）
         public void SetDetectFingerState(bool state)
         {
             bExitDetect = state;
@@ -307,7 +307,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 		}
 
-		// 等待手指某状态（ 0移开；3放置 ） 
+		//检测手指是否放置到指静脉设备上  
 		public void  DetectFinger()
         {
             int wDetectCnt = 0;                         //循环检测次数
@@ -367,7 +367,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 }
             }
         }
-
 
         // 等待手指某状态（ 0移开；3放置 ） 
         public int WaitState(int flg, out string info)
@@ -430,7 +429,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return -1;
         }
 
-
         //用户注册，例每个用户只注册一个根手指
         public int RegisterProcess(int feature_getCnt, byte[] sampfeature, out byte[] regfeature, out string info)
         {
@@ -476,7 +474,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             }
             return ret;
         }
-
 
         //调用比对接口注意事项
         public int Match(byte[] macthfeature, byte[] regfeature, int regfcnt, byte[] aifeature,
@@ -531,10 +528,16 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return ret;
         }
 
-        //
+        //读取设备的签名信息
         public int GetDevSign(byte[] devsign, ref UInt16 devsignLen)
         {
-            return 0;
+            return FV_GetDevSign(devName, devsign, ref devsignLen);
+        }
+
+        //设置设备的签名信息
+        public int SetDevSign(byte[] srvsign, UInt16 devsignLen)
+        {
+            return FV_SetDevSign(devName, srvsign, devsignLen);
         }
 
     }

@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 namespace CFLMedCab.Infrastructure
 {
     enum ApplicationKey{
-        CurUser,   //本地数据库中的查询到用户信息
         User,      //从主系统查询到的用户信息
         CurGoods,  //本地数据库中的查询到商品信息
         Goods,     //从主系统中的查询到商品信息

@@ -82,15 +82,6 @@ namespace CFLMedCab
 
         private TestGoods test = new TestGoods();
 
-        private CurrentUser _curUser;
-        public CurrentUser CurUser { get {
-                return _curUser;
-            }
-            set {
-                _curUser = value;
-            }
-        }
-
         private LoadingData loadingDataPage;
 
         //TouchScreenKeyboard kbHandler;
@@ -156,8 +147,6 @@ namespace CFLMedCab
             MockData();
 
             DataContext = this;
-
-            this.tbNameText.Text = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
 
             ShowTime();
             ShowTimer = new DispatcherTimer();
@@ -1839,9 +1828,6 @@ namespace CFLMedCab
             //test.InitSurgerOrder();
 
 #if TESTENV        
-            CurrentUser user = userBll.GetTestUser();        
-            ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
-
             TestGoods testGoods = new TestGoods();
             testGoods.GetCurrentRFid();
 #else

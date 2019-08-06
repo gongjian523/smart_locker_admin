@@ -79,8 +79,8 @@ namespace CFLMedCab.BLL
             //设置当前时间
             inventoryOrder.confirm_time = DateTime.Now;
             //设置当前盘点确认人姓名和id
-            inventoryOrder.inspector_id = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).id;
-            inventoryOrder.inspector_name = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
+            inventoryOrder.inspector_id = 1;
+            inventoryOrder.inspector_name = ApplicationState.GetUserInfo().name;
 
             inventoryDal.ConfirmInventory(inventoryOrder);
         }

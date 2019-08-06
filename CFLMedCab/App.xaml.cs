@@ -39,17 +39,12 @@ namespace CFLMedCab
 			}
 
 			base.OnStartup(e);
-            CurrentUser user = new CurrentUser
-            {
-                id = 1111,
-                name = "Nathan",
-                vein_id = 12323,
-            };
-            ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
+
+            ApplicationState.SetUserInfo(new User());
+            ApplicationState.SetGoodsInfo(new HashSet<CommodityEps>());
 
             ApplicationState.SetEquipName("E00000010");
             ApplicationState.SetEquipId("AQACQqweDg8BAAAA1G-F5jgPsxWCFwQA");
-            Console.WriteLine("SetEquipId");
 
             ApplicationState.SetHouseName("SR00000008");
             ApplicationState.SetHouseId("AQACQqweDg8BAAAAdoUd3g4PsxV3FwQA");
@@ -67,8 +62,6 @@ namespace CFLMedCab
             ApplicationState.SetSRfidCOM("COM4"); //"COM4"
 
             ApplicationState.SetMVeinCOM("COM9"); //"COM9"
-
-            ApplicationState.SetGoodsInfo(new HashSet<CommodityEps>());
 
             // 注册Application_Error
             DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
