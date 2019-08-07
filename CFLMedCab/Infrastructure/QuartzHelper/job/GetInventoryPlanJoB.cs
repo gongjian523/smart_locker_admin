@@ -17,7 +17,7 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 	{
 		public Task Execute(IJobExecutionContext context)
 		{
-			Console.WriteLine("GetInventoryPlanJoB进入");
+			LogUtils.Debug("GetInventoryPlanJoB进入");
 
 			var baseDataInventoryPlan = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId(ApplicationState.GetEquipId());
 
@@ -27,7 +27,6 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 			if (isSuccess)
 			{
 				var inventoryPlans = baseDataInventoryPlan.body.objects;
-				//cronStr = "0 43 11 * * ?";
 				CustomizeScheduler.GetInstance().SchedulerStartOrUpdateOrDeleteByPlans(inventoryPlans).Wait();
 				//cronStr = "0 44 11 * * ?";
 			}
