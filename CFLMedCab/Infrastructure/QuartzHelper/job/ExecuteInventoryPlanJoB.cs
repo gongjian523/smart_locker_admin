@@ -22,7 +22,7 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 
 		public Task Execute(IJobExecutionContext context)
 		{
-			Console.WriteLine("ExecuteInventoryPlanJoB进入");
+			LogUtils.Debug("ExecuteInventoryPlanJoB进入");
 
 			var epcs = RfidHelper.GetEpcDataJson(out bool isGetSucess);
 
@@ -37,6 +37,10 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 					var basePostInventoryDetail = InventoryTaskBll.GetInstance().CreateInventoryOrderAndDetail(baseDataCommodityCodes.body.objects);
 					LogUtils.Debug($"已执行自动盘点任务：{JsonConvert.SerializeObject(basePostInventoryDetail)}");
 				}
+			}
+			else
+			{
+				LogUtils.Debug("盘点计划未扫描出有效商品");
 			}
 
 			return null;

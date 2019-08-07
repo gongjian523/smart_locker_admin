@@ -244,14 +244,14 @@ namespace CFLMedCab.Http.Bll
 
 			if (commodityCodes.Count > 0)
 			{
-				var commodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+				var commodityCodeIds = commodityCodes.Select(it => it.id).Distinct().ToList();
 
 				CommodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventoryDetail>(new QueryParam
 				{
 					@in =
 						{
-							field = "CommodityId",
-							in_list = commodityIds
+							field = "CommodityCodeId",
+							in_list = BllHelper.ParamUrlEncode(commodityCodeIds)
 						}
 				});
 			}
@@ -272,7 +272,7 @@ namespace CFLMedCab.Http.Bll
 				{
 					commodityCodes.ForEach(it =>
 					{
-						it.CommodityInventoryId = CommodityInventoryDetails.body.objects.Where(cit => cit.CommodityId == it.CommodityId).First().id;
+						it.CommodityInventoryId = CommodityInventoryDetails.body.objects.Where(cit => cit.CommodityCodeId == it.id).First().id;
 					});
 				}
 			}
@@ -433,7 +433,8 @@ namespace CFLMedCab.Http.Bll
 					//TODO: 需要当前设备id，货位id和库房id
 					GoodsLocationId = goodsLocationId,
 					EquipmentId = ApplicationState.GetEquipId(),
-					StoreHouseId = ApplicationState.GetHouseId()
+					StoreHouseId = ApplicationState.GetHouseId(),
+					Type = "自动创建"
 				});
 
 			});
@@ -450,14 +451,14 @@ namespace CFLMedCab.Http.Bll
 
 				if (commodityCodes.Count > 0)
 				{
-					var commodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+					var commodityCodeIds = commodityCodes.Select(it => it.id).Distinct().ToList();
 
 					CommodityInventoryDetails = hh.Get<CommodityInventoryDetail>(new QueryParam
 					{
 						@in =
 						{
-							field = "CommodityId",
-							in_list = commodityIds
+							field = "CommodityCodeId",
+							in_list =  BllHelper.ParamUrlEncode(commodityCodeIds)
 						}
 					});
 				}
@@ -470,7 +471,7 @@ namespace CFLMedCab.Http.Bll
 					{
 						commodityCodes.ForEach(it =>
 						{
-							it.CommodityInventoryId = CommodityInventoryDetails.body.objects.Where(cit => cit.CommodityId == it.CommodityId).First().id;
+							it.CommodityInventoryId = CommodityInventoryDetails.body.objects.Where(cit => cit.CommodityCodeId == it.id).First().id;
 						});
 
 					}
