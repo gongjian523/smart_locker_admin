@@ -105,7 +105,7 @@ namespace CFLMedCab
 			#endregion
 
 			//线程池设置
-			ThreadPool.SetMaxThreads(1, 1);
+			ThreadPool.SetMaxThreads(15, 20);
 			ThreadPool.SetMinThreads(1, 1);
 
 			Taskbar.HideTask(true);
