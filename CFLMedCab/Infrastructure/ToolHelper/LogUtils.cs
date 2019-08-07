@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace CFLMedCab.Infrastructure.ToolHelper
@@ -13,12 +14,12 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         //可以声明多个日志对象
         public static ILog log = LogManager.GetLogger(typeof(LogUtils));
 
-        #region 01-初始化Log4net的配置
-        /// <summary>
-        /// 初始化Log4net的配置
-        /// xml文件一定要改为嵌入的资源
-        /// </summary>
-        public static void InitLog4Net()
+		#region 01-初始化Log4net的配置
+		/// <summary>
+		/// 初始化Log4net的配置
+		/// xml文件一定要改为嵌入的资源
+		/// </summary>
+		public static void InitLog4Net()
         {
             //Assembly assembly = Assembly.GetExecutingAssembly();
             //var xml = assembly.GetManifestResourceStream("Ypf.Utils.log4net.xml");
@@ -38,8 +39,9 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         public static void Debug(string msg)
         {
 			Console.WriteLine($"Debug@{msg}");
-
-			log.Debug(msg);
+			//log.Debug(msg);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Debug), msg);
+		
         }
         /// <summary>
         /// Debug
@@ -63,7 +65,8 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         public static void Info(string msg)
         {
 			Console.WriteLine($"Info@{msg}");
-			log.Info(msg);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Info), msg);
+			
         }
         /// <summary>
         /// Info
@@ -86,7 +89,7 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         public static void Warn(string msg)
         {
 			Console.WriteLine($"Warn@{msg}");
-			log.Warn(msg);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Warn), msg);
         }
         /// <summary>
         /// Warn
@@ -109,7 +112,7 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         public static void Error(string msg)
         {
 			Console.WriteLine($"Error@{msg}");
-			log.Error(msg);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Error), msg);
         }
         /// <summary>
         /// Error
@@ -132,7 +135,7 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         public static void Fatal(string msg)
         {
 			Console.WriteLine($"Fatal@{msg}");
-			log.Fatal(msg);
+			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Fatal), msg);
         }
         /// <summary>
         /// Fatal
@@ -143,7 +146,10 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         {
 			Console.WriteLine($"Fatal@{msg}");
 			Console.WriteLine($"Exception@{exception.Message}");
-			log.Fatal(msg, exception);
+            //log.Fatal(msg, exception);
+            ThreadPool.QueueUserWorkItem( p => {
+                log.Fatal(msg, exception);
+            });
         }
         #endregion
     }

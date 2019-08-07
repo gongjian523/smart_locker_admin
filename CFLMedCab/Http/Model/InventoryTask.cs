@@ -82,7 +82,14 @@ namespace CFLMedCab.Http.Model
         /// 已完成
         /// </summary>
         [Description("已完成")]
-        已完成 = 1
+        已完成 = 1,
 
-    }
+		/// <summary>
+		/// 待确认
+		/// </summary>
+		[Description("待确认")]
+
+		待确认 = 3
+
+	}
 }

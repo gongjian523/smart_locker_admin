@@ -60,6 +60,7 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
             operatorName.Content = ApplicationState.GetUserInfo().name;
+            after = afterEps;
 
             endTimer = new Timer(Contant.ClosePageEndTimer);
             endTimer.AutoReset = false;
@@ -70,13 +71,17 @@ namespace CFLMedCab.View.Fetch
             iniTimer.AutoReset = false;
             iniTimer.Enabled = true;
             iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+        }
+
+
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
 
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
-            after = afterEps;
 
-            //LoadingDataEvent(this, true);
+            LoadingDataEvent(this, true);
             List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
-            //LoadingDataEvent(this, false);
+            LoadingDataEvent(this, false);
             if (commodityCodeList == null || commodityCodeList.Count <= 0)
             {
                 MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
@@ -84,16 +89,16 @@ namespace CFLMedCab.View.Fetch
                 return;
             }
 
-            //LoadingDataEvent(this, true);
+            LoadingDataEvent(this, true);
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-            //LoadingDataEvent(this, false);
+            LoadingDataEvent(this, false);
             //校验是否含有数据
             HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
-			if (!isSuccess)
-			{
-				MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-				return;
-			}
+            if (!isSuccess)
+            {
+                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
             listView.DataContext = bdCommodityCode.body.objects;
             normalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
@@ -102,12 +107,6 @@ namespace CFLMedCab.View.Fetch
             bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
                 it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
             });
-        }
-
-
-        private void onInitData(object sender, ElapsedEventArgs e)
-        {
-            
         }
 
         /// <summary>
