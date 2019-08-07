@@ -39,6 +39,10 @@ using CFLMedCab.Http.Model.param;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using System.Runtime.InteropServices;
+using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
+using CFLMedCab.Infrastructure.QuartzHelper.job;
+using CFLMedCab.Infrastructure.QuartzHelper.trigger;
+using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
 
 namespace CFLMedCab
 {
@@ -154,6 +158,8 @@ namespace CFLMedCab
             loadingDataPage = new LoadingData();
 
             Task.Factory.StartNew(initCurrentGoodsInfo);
+            Task.Factory.StartNew(startAutoInventory);
+            
 
 #if TESTENV
 #else
@@ -445,7 +451,7 @@ namespace CFLMedCab
 #else
         private void SetNavBtnVisiblity(string  role)
         {
-            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
 #endif
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -498,8 +504,13 @@ namespace CFLMedCab
 #endif
             ApplicationState.SetGoodsInfo(hs);
         }
-        
-        
+
+
+        private void startAutoInventory()
+        {
+            CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
+        }
+
         #region 领用
         #region 一般领用
         /// <summary>
@@ -1003,8 +1014,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
         {
-            bool isGetSuccess;
-
             ApplicationState.SetGoodsInfo(new HashSet<CommodityEps>()
                 {
                     new CommodityEps
@@ -1019,7 +1028,7 @@ namespace CFLMedCab
                     }
                 });
 
-            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out isGetSuccess);
+            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out bool isGetSuccess);
             HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
             ShelfTask shelfTask = testROPara;
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -1808,7 +1817,8 @@ namespace CFLMedCab
 
         private bool RegisterVein()
         {
-
+#if TESTENV
+#else
             byte[] devSign = new byte[36];
             ushort devSignLen = 0;
 
@@ -1851,7 +1861,7 @@ namespace CFLMedCab
                 LogUtils.Error("设置本地指静脉设备签名失败！" + veinSt);
                 return false;
             }
-
+#endif
             return true;
         }
 

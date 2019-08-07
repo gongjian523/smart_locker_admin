@@ -18,7 +18,7 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.trigger
 		{
 			return	TriggerBuilder.Create()
 								.WithIdentity($"{GroupName.GetInventoryPlan.ToString()}Trigger", GroupName.GetInventoryPlan.ToString())
-								.EndAt(DateBuilder.DateOf(24, 0, 0))
+								//.EndAt(DateBuilder.DateOf(24, 0, 0))
 								.StartNow()
 								.Build();
 		}
