@@ -146,7 +146,10 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         {
 			Console.WriteLine($"Fatal@{msg}");
 			Console.WriteLine($"Exception@{exception.Message}");
-			log.Fatal(msg, exception);
+            //log.Fatal(msg, exception);
+            ThreadPool.QueueUserWorkItem( p => {
+                log.Fatal(msg, exception);
+            });
         }
         #endregion
     }
