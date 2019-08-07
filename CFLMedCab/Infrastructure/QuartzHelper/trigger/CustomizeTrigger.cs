@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace CFLMedCab.Infrastructure.QuartzHelper.trigger
 {
@@ -16,10 +17,14 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.trigger
 		/// <returns></returns>
 		public static ITrigger GetInventoryPlanTrigger()
 		{
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load($"{ApplicationState.GetProjectRootPath()}/MyProject.xml");
+			XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
+			XmlNode quartz = root.SelectSingleNode("quartz");//指向quartz节点
+			
 			return	TriggerBuilder.Create()
 								.WithIdentity($"{GroupName.GetInventoryPlan.ToString()}Trigger", GroupName.GetInventoryPlan.ToString())
-								//.EndAt(DateBuilder.DateOf(24, 0, 0))
-								.StartNow()
+								.WithCronSchedule(quartz.SelectSingleNode("inventory_task_cron").InnerText)
 								.Build();
 		}
 

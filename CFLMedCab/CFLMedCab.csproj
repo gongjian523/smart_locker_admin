@@ -47,6 +47,8 @@
     <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
     <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -694,6 +696,7 @@
     </Content>
     <Content Include="Lib\IWshRuntimeLibrary.dll" />
     <Content Include="Lib\VeinMatch.Win32.dll" />
+    <Resource Include="MyProject.xml" />
     <Resource Include="Resources\Images\btn-ReturnAll.png" />
     <Resource Include="Resources\Images\btn-StockAdjust.png" />
     <Resource Include="Resources\Images\btn-SysSetting.png" />

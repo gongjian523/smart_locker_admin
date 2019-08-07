@@ -10,6 +10,9 @@ using CFLMedCab.Http.Model.param;
 using System.Text;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model.login;
+using System.Xml;
+using Formatting = Newtonsoft.Json.Formatting;
+using CFLMedCab.Infrastructure;
 
 namespace CFLMedCab.Http.Helper
 {
@@ -53,12 +56,17 @@ namespace CFLMedCab.Http.Helper
         /// </summary>
         private IDictionary<string, string> Headers = new Dictionary<string, string>();
 
-        /// <summary>
-        /// 根据表名获取查询数据url
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        public static string GetQueryUrl(string tableName, QueryParam queryParam)
+		/// <summary>
+		/// admintoken请求头
+		/// </summary>
+		private IDictionary<string, string> AdminTokenHeaders = new Dictionary<string, string>();
+
+		/// <summary>
+		/// 根据表名获取查询数据url
+		/// </summary>
+		/// <param name="tableName"></param>
+		/// <returns></returns>
+		public static string GetQueryUrl(string tableName, QueryParam queryParam)
 		{
 
 			StringBuilder queryParamUrlStr = new StringBuilder();
@@ -1022,9 +1030,12 @@ namespace CFLMedCab.Http.Helper
 		{
             if (Headers.Count <= 0)
             {
-                SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
+				XmlDocument xmlDoc = new XmlDocument();
+				xmlDoc.Load($"{ApplicationState.GetProjectRootPath()}/MyProject.xml");
+				XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
+				XmlNode adminToken = root.SelectSingleNode("admin_token");//指向设备节点
+				SetHeaders(adminToken.InnerText);
             }
-
             return Headers;
 		}
 
@@ -1034,12 +1045,25 @@ namespace CFLMedCab.Http.Helper
 		/// <returns></returns>
 		public IDictionary<string, string> GetAdminTokenHeaders()
 		{
-			IDictionary<string, string> adminTokenHeaders = new Dictionary<string, string>
+			if (AdminTokenHeaders.Count <= 0)
 			{
-				{ "x-token", "Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t" }
-			};
+				XmlDocument xmlDoc = new XmlDocument();
+				xmlDoc.Load($"{ApplicationState.GetProjectRootPath()}/MyProject.xml");
+				XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
+				XmlNode adminToken = root.SelectSingleNode("admin_token");//指向设备节点
+				SetAdminTokenHeaders(adminToken.InnerText);
+			}
+			return AdminTokenHeaders;
+		}
 
-			return adminTokenHeaders;
+		/// <summary>
+		/// 设置token值
+		/// </summary>
+		/// <returns></returns>
+		public void SetAdminTokenHeaders(string token)
+		{
+			AdminTokenHeaders.Clear();
+			AdminTokenHeaders.Add("x-token", token);
 		}
 
 		/// <summary>
