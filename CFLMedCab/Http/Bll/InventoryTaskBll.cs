@@ -37,8 +37,7 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-						logical_relation = "1 AND 2",
-                        //logical_relation = "1 AND 2 AND 3",
+                        logical_relation = "1 AND 2 AND 3",
                         expressions =
 						{
 							new QueryParam.Expressions
@@ -52,14 +51,13 @@ namespace CFLMedCab.Http.Bll
 								field = "Status",
 								@operator = "==",
 								operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
-							}
-                            //,
-                            //new QueryParam.Expressions
-                            //{
-                            //    field = "Operator",
-                            //    @operator = "==",
-                            //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
-                            //}
+							},
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
+                            }
                         }
 					}
 				}
@@ -94,16 +92,11 @@ namespace CFLMedCab.Http.Bll
 				{
 					orders = HttpHelper.GetInstance().Get<InventoryOrder>(new QueryParam
 					{
-						@in =
-						{
-							field = "InventoryTaskId",
-							in_list =  { HttpUtility.UrlEncode(task.body.objects[0].id) }
-						},
 						view_filter =
 						{
 							filter =
 							{
-								logical_relation = "1 AND 2",
+								logical_relation = "1 AND 2 AND 3 AND 4",
 								expressions =
 								{
 									new QueryParam.Expressions
@@ -118,13 +111,19 @@ namespace CFLMedCab.Http.Bll
 										@operator = "==",
 										operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
 									},
-									new QueryParam.Expressions
-									{
-										field = "EquipmentId",
-										@operator = "==",
-										operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
-									}
-							}
+                                    new QueryParam.Expressions
+                                    {
+                                        field = "StoreHouseId",
+                                        @operator = "==",
+                                        operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId()) }'" }
+                                    },
+                                    new QueryParam.Expressions
+                                    {
+                                        field = "EquipmentId",
+                                        @operator = "==",
+                                        operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
+                                    }
+                            }
 						}
 					}
 					});

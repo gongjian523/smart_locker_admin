@@ -41,8 +41,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        //logical_relation = "1 AND 2",
-                        logical_relation = "1",
+                        logical_relation = "1 AND 2",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -50,14 +49,13 @@ namespace CFLMedCab.Http.Bll
                                 field = "name",
                                 @operator = "==",
                                 operands =  {$"'{ HttpUtility.UrlEncode(commodityRecoveryName) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
                             }
-                            //,
-                            //new QueryParam.Expressions
-                            //{
-                            //    field = "Operator",
-                            //    @operator = "==",
-                            //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
-                            //}
                         }
                     }
                 }

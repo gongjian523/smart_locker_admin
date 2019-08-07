@@ -10,6 +10,7 @@ using System.ComponentModel;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure.ToolHelper;
+using CFLMedCab.Infrastructure;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -30,33 +31,33 @@ namespace CFLMedCab.Http.Bll
 			{
 				view_filter =
 				{
-					filter =
-					{
-						logical_relation = "1 AND 2",
-						expressions =
-						{
-							new QueryParam.Expressions
-							{
-								field = "name",
-								@operator = "==",
-								operands =  {$"'{ HttpUtility.UrlEncode(pickTaskName) }'"}
-							},
-							new QueryParam.Expressions
-							{
-								field = "BillStatus",
-								@operator = "==",
-								operands = {$"'{ HttpUtility.UrlEncode(PickTaskStatus.待拣货.ToString()) }'" }
-							}
-							//new QueryParam.Expressions
-							//{
-							//	field = "Operator",
-							//	@operator = "==",
-							//	operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.CurUser)) }'" }
-							//}
+                    filter =
+                    {
+                        logical_relation = "1 AND 2 AND 3",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "name",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(pickTaskName) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "BillStatus",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(PickTaskStatus.待拣货.ToString()) }'" }
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
+                            }
 
-						}
-					}
-				}
+                        }
+                    }
+                }
 			});
 		}
 
@@ -76,7 +77,7 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-						logical_relation = "1",
+						logical_relation = "1 AND 2",
 						expressions =
 						{
 							new QueryParam.Expressions
@@ -84,13 +85,13 @@ namespace CFLMedCab.Http.Bll
 								field = "BillStatus",
 								@operator = "==",
 								operands = {$"'{ HttpUtility.UrlEncode(PickTaskStatus.待拣货.ToString()) }'" }
+							},
+							new QueryParam.Expressions
+							{
+								field = "Operator",
+								@operator = "==",
+								operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
 							}
-							//new QueryParam.Expressions
-							//{
-							//	field = "Operator",
-							//	@operator = "==",
-							//	operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.CurUser)) }'" }
-							//}
 
 						}
 					}
@@ -149,12 +150,40 @@ namespace CFLMedCab.Http.Bll
 
 				return hh.Get<PickCommodity>(new QueryParam
 				{
-					@in =
-					{
-						field = "PickTaskId",
-						in_list = BllHelper.ParamUrlEncode(pickTaskIds)
-					}
-				});
+					//@in =
+					//{
+					//	field = "PickTaskId",
+					//	in_list = BllHelper.ParamUrlEncode(pickTaskIds)
+					//}
+                    view_filter =
+                    {
+                        filter =
+                        {
+                            logical_relation = "1 AND 2 AND 3",
+                            expressions =
+                            {
+                                new QueryParam.Expressions
+                                {
+                                    field = "PickTaskId",
+                                    @operator = "INRANGE",
+                                    operands =  BllHelper.OperandsProcess(pickTaskIds)
+                                },
+                                new QueryParam.Expressions
+                                {
+                                    field = "StoreHouseId",
+                                    @operator = "==",
+                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId()) }'" }
+                                },
+                                new QueryParam.Expressions
+                                {
+                                    field = "EquipmentId",
+                                    @operator = "==",
+                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
+                                }
+                            }
+                        }
+                    }
+                });
 
 			}, baseDataPickTask);
 
@@ -188,12 +217,12 @@ namespace CFLMedCab.Http.Bll
 								@operator = "==",
 								operands =  {$"'{ HttpUtility.UrlEncode(pickTask.id) }'"}
 							},
-							//new QueryParam.Expressions
-							//{
-							//	field = "EquipmentId",
-							//	@operator = "==",
-							//	operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)) }'" }
-							//}
+							new QueryParam.Expressions
+							{
+								field = "EquipmentId",
+								@operator = "==",
+								operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)) }'" }
+							}
 
 						}
 					}

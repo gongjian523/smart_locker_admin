@@ -19,12 +19,12 @@ namespace CFLMedCab.Http.Bll
 	/// </summary>
 	public class ConsumingBll : BaseBll<ConsumingBll>
 	{
-		/// <summary>
-		/// 根据领用单码查询领用单信息
-		/// </summary>
-		/// <param name="consumingOrderName"></param>
-		/// <returns></returns>
-		public BaseData<ConsumingOrder> GetConsumingOrder(string consumingOrderName)
+        /// <summary>
+        /// 根据领用单码查询领用单信息(领用回退不需要操作人,需要根据库房去筛选)
+        /// </summary>
+        /// <param name="consumingOrderName"></param>
+        /// <returns></returns>
+        public BaseData<ConsumingOrder> GetConsumingOrder(string consumingOrderName)
 		{
 			if (null == consumingOrderName)
 			{
@@ -42,7 +42,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1",
+                        logical_relation = "1 AND 2",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -50,6 +50,12 @@ namespace CFLMedCab.Http.Bll
                                 field = "name",
                                 @operator = "==",
                                 operands =  {$"'{ HttpUtility.UrlEncode(consumingOrderName) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "StoreHouseId",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.HouseId)) }'" }
                             }
                         }
                     }
@@ -122,12 +128,23 @@ namespace CFLMedCab.Http.Bll
 
 				return hh.Get<ConsumingGoodsDetail>(new QueryParam
 				{
-					@in =
-					{
-						field = "ConsumingOrderId",
-						in_list =  { HttpUtility.UrlEncode(baseDataConsumingOrder.body.objects[0].id) }
-					}
-				});
+                    view_filter =
+                    {
+                        filter =
+                        {
+                            logical_relation = "1",
+                            expressions =
+                            {
+                                new QueryParam.Expressions
+                                {
+                                    field = "ConsumingOrderId",
+                                    @operator = "==",
+                                    operands =  {$"'{ HttpUtility.UrlEncode(baseDataConsumingOrder.body.objects[0].id) }'"}
+                                }
+                            }
+                        }
+                    }
+                });
 
 			}, baseDataConsumingOrder);
 
