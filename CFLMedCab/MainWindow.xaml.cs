@@ -115,7 +115,7 @@ namespace CFLMedCab
 
 			InitializeComponent();
 
-            ConsoleManager.Show();
+            
 
             foreach (Screen scr in Screen.AllScreens)
             {
@@ -501,7 +501,7 @@ namespace CFLMedCab
 #if TESTENV
             HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
 #else
-            //Console.ReadKey();
+           
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 #endif
             ApplicationState.SetGoodsInfo(hs);

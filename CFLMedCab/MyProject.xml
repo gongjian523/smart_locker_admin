@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<config>
+  <!-- 设备综合信息 -->
+  <device>
+    <!-- 具体设备信息 -->
+    <equip_name>E00000010</equip_name>
+    <equip_id>AQACQqweDg8BAAAA1G-F5jgPsxWCFwQA</equip_id>
+
+    <!-- 设备的库房信息 -->
+    <house_name>SR00000008</house_name>
+    <house_id>AQACQqweDg8BAAAAdoUd3g4PsxV3FwQA</house_id>
+
+    <!-- 主柜货位信息 -->
+    <mcab_name>L00000012</mcab_name>
+    <mcab_id>AQACQqweDg8BAAAA6XuBbV0PsxWJFwQA</mcab_id>
+
+    <!-- 副柜货位信息 -->
+    <scab_name>L00000012</scab_name>
+    <scab_id>AQACQqweDg8BAAAA6XuBbV0PsxWJFwQA</scab_id>
+
+    <!-- 主柜柜门串口信息 -->
+    <mlocker_com>COM2</mlocker_com>
+
+    <!-- 副柜柜门串口信息 -->
+    <slocker_com>COM5</slocker_com>
+
+    <!-- 主柜rfid串口信息 -->
+    <mrfid_com>COM1</mrfid_com>
+
+    <!-- 副柜rfid串口信息 -->
+    <srfid_com>COM4</srfid_com>
+
+    <!-- 主柜指静脉串口信息 -->
+    <mvein_com>COM9</mvein_com>
+    
+  </device>
+  <!-- quartz信息 -->
+  <quartz>
+    <inventory_task_cron>0 15 21 * * ? </inventory_task_cron>
+  </quartz>
+  <!-- admin_token信息 -->
+  <admin_token>
+    Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t
+  </admin_token>
+</config>

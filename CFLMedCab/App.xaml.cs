@@ -14,6 +14,7 @@ using CFLMedCab.Infrastructure.ToolHelper;
 using log4net;
 using System.Windows.Threading;
 using CFLMedCab.Http.Model;
+using System.Xml;
 
 namespace CFLMedCab
 {
@@ -26,6 +27,7 @@ namespace CFLMedCab
 
 		protected override void OnStartup(StartupEventArgs e)
         {
+			ConsoleManager.Show();
 			bool createNew;
 			ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "乘法云", out createNew);
 
@@ -39,29 +41,35 @@ namespace CFLMedCab
 			}
 
 			base.OnStartup(e);
+			
+			//Console.ReadKey();
+			XmlDocument xmlDoc = new XmlDocument();
+			xmlDoc.Load($"{ApplicationState.GetProjectRootPath()}/MyProject.xml");
+			XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
+			XmlNode device = root.SelectSingleNode("device");//指向设备节点
 
-            ApplicationState.SetUserInfo(new User());
+			ApplicationState.SetUserInfo(new User());
             ApplicationState.SetGoodsInfo(new HashSet<CommodityEps>());
 
-            ApplicationState.SetEquipName("E00000010");
-            ApplicationState.SetEquipId("AQACQqweDg8BAAAA1G-F5jgPsxWCFwQA");
+            ApplicationState.SetEquipName(device.SelectSingleNode("equip_name").InnerText);
+            ApplicationState.SetEquipId(device.SelectSingleNode("equip_id").InnerText);
 
-            ApplicationState.SetHouseName("SR00000008");
-            ApplicationState.SetHouseId("AQACQqweDg8BAAAAdoUd3g4PsxV3FwQA");
+            ApplicationState.SetHouseName(device.SelectSingleNode("house_name").InnerText);
+            ApplicationState.SetHouseId(device.SelectSingleNode("house_id").InnerText);
 
-            ApplicationState.SetMCabName("L00000012");
-            ApplicationState.SetMCabId("AQACQqweDg8BAAAA6XuBbV0PsxWJFwQA");
+            ApplicationState.SetMCabName(device.SelectSingleNode("mcab_name").InnerText);
+            ApplicationState.SetMCabId(device.SelectSingleNode("mcab_id").InnerText);
 #if DUALCAB
-            ApplicationState.SetSCabName("L00000012");
-            ApplicationState.SetSCabId("AQACQqweDg8BAAAA6XuBbV0PsxWJFwQA");
+            ApplicationState.SetSCabName(device.SelectSingleNode("scab_name").InnerText);
+            ApplicationState.SetSCabId(device.SelectSingleNode("scab_id").InnerText);
 #endif
-            ApplicationState.SetMLockerCOM("COM2"); //"COM2"
-            ApplicationState.SetSLockerCOM("COM5"); //"COM5"
+			ApplicationState.SetMLockerCOM(device.SelectSingleNode("mlocker_com").InnerText); //"COM2"
+            ApplicationState.SetSLockerCOM(device.SelectSingleNode("slocker_com").InnerText); //"COM5"
 
-            ApplicationState.SetMRfidCOM("COM1"); //"COM1"
-            ApplicationState.SetSRfidCOM("COM4"); //"COM4"
+            ApplicationState.SetMRfidCOM(device.SelectSingleNode("mrfid_com").InnerText); //"COM1"
+            ApplicationState.SetSRfidCOM(device.SelectSingleNode("srfid_com").InnerText); //"COM4"
 
-            ApplicationState.SetMVeinCOM("COM9"); //"COM9"
+            ApplicationState.SetMVeinCOM(device.SelectSingleNode("mvein_com").InnerText); //"COM9"
 
             // 注册Application_Error
             DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);

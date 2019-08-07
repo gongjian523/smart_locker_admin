@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -504,5 +505,15 @@ namespace CFLMedCab.Infrastructure
 
             return "";
         }
-    }
+
+		/// <summary>
+		/// 获得项目的根路径
+		/// </summary>
+		/// <returns></returns>
+		public static string GetProjectRootPath()
+		{
+			string BaseDirectoryPath = Directory.GetCurrentDirectory(); 
+			return BaseDirectoryPath;
+		}
+	}
 }
