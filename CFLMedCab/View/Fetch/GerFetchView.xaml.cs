@@ -73,40 +73,42 @@ namespace CFLMedCab.View.Fetch
             iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
         }
 
-
         private void onInitData(object sender, ElapsedEventArgs e)
         {
-
-            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
-
-            LoadingDataEvent(this, true);
-            List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
-            LoadingDataEvent(this, false);
-            if (commodityCodeList == null || commodityCodeList.Count <= 0)
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                isSuccess = false;
-                return;
-            }
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
 
-            LoadingDataEvent(this, true);
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-            LoadingDataEvent(this, false);
-            //校验是否含有数据
-            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
-            if (!isSuccess)
-            {
-                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                LoadingDataEvent(this, true);
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                LoadingDataEvent(this, false);
+                if (commodityCodeList == null || commodityCodeList.Count <= 0)
+                {
+                    MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                    isSuccess = false;
+                    return;
+                }
 
-            listView.DataContext = bdCommodityCode.body.objects;
-            normalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-            abnormalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+                LoadingDataEvent(this, true);
+                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                LoadingDataEvent(this, false);
+                //校验是否含有数据
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
 
-            bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
-                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-            });
+                listView.DataContext = bdCommodityCode.body.objects;
+                normalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+                abnormalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+
+                bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it =>
+                {
+                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                });
+            }));
         }
 
         /// <summary>

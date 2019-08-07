@@ -42,11 +42,9 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterPrescriptionOpenHandler(object sender, ConsumingOrder e);
         public event EnterPrescriptionOpenHandler EnterPrescriptionOpenEvent;
 
-        //public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
-        //public event ShowLoadDataHandler ShowLoadDataEvent;
-
-        //public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
-        //public event HideLoadDataHandler HideLoadDataEvent;
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
 
         //KeyboardView kbHandler = new KeyboardView();
 
@@ -115,6 +113,7 @@ namespace CFLMedCab.View.Fetch
             if(consumingOrderType != ConsumingOrderType.医嘱处方领用)
             {
                 FetchParam fetchParam = new FetchParam();
+                LoadingDataEvent(this, true);
                 fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
 
                 //校验是否含有数据
@@ -125,7 +124,9 @@ namespace CFLMedCab.View.Fetch
                     return false;
                 }
 
+                LoadingDataEvent(this, true);
                 fetchParam.bdOperationOrderGoodsDetail = ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
+
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(fetchParam.bdOperationOrderGoodsDetail, out bool isSuccess1);
 				if (!isSuccess1)
@@ -143,7 +144,9 @@ namespace CFLMedCab.View.Fetch
             }
             else
             {
+                LoadingDataEvent(this, true);
                 BaseData<PrescriptionBill> baseData = ConsumingBll.GetInstance().GetPrescriptionBill(name);
+                LoadingDataEvent(this, false);
 
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);

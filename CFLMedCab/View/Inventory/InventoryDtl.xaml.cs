@@ -46,6 +46,10 @@ namespace CFLMedCab.View.Inventory
         public delegate void OpenDoorHandler(object sender, string e);
         public event OpenDoorHandler OpenDoorEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         public string Code { get; set; }
         public DateTime CreateTime { get; set; }
         public int Type { get; set; }
@@ -105,7 +109,6 @@ namespace CFLMedCab.View.Inventory
 #endif
             list = CommodityCodeBll.GetInstance().GetCommodityCode(hs).body.objects.ToList();
 
-
             HidePopInventoryEvent(this, null);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -164,10 +167,12 @@ namespace CFLMedCab.View.Inventory
 				name = inputStr;
             }
 
+            LoadingDataEvent(this, true);
             BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(name);
+            LoadingDataEvent(this, false);
 
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
 
 			if (!isSuccess)
 			{
@@ -207,10 +212,12 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onSubmit(object sender, RoutedEventArgs e)
         {
+            LoadingDataEvent(this, true);
             BasePutData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().UpdateInventoryOrderStatus(inventoryOrder);
+            LoadingDataEvent(this, false);
 
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccess);
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccess);
 
 			if (!isSuccess)
 			{
@@ -218,11 +225,13 @@ namespace CFLMedCab.View.Inventory
 				return;
 			}
 
+            LoadingDataEvent(this, true);
             BasePostData<InventoryDetail> bdInventoryDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrder.id);
+            LoadingDataEvent(this, false);
 
 
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdInventoryDetail, out bool isSuccess1);
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(bdInventoryDetail, out bool isSuccess1);
 
 			if (isSuccess1)
 			{

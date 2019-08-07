@@ -671,6 +671,7 @@ namespace CFLMedCab
                 
                 surgeryNoNumClose.EnterPopCloseEvent += new SurgeryNoNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
+                surgeryNoNumClose.LoadingDataEvent += new SurgeryNoNumClose.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(surgeryNoNumClose);
             }));
         }
@@ -697,9 +698,7 @@ namespace CFLMedCab
             surgeryQuery.EnterSurgeryDetailEvent += new SurgeryQuery.EnterSurgeryDetailHandler(onEnterSurgeryDetail);//有手术单号进入手术领用单详情
             surgeryQuery.EnterSurgeryNoNumOpenEvent += new SurgeryQuery.EnterSurgeryNoNumOpenHandler(onEnterSurgeryNoNumOpen);//无手术单号直接开柜领用
             surgeryQuery.EnterPrescriptionOpenEvent += new SurgeryQuery.EnterPrescriptionOpenHandler(onEnterSurgeryNoNumOpen);//医嘱处方领用直接开柜领用
-
-            //surgeryQuery.ShowLoadDataEvent += new SurgeryQuery.ShowLoadDataHandler(onShowLoadingData);
-            //surgeryQuery.HideLoadDataEvent += new SurgeryQuery.HideLoadDataHandler(onHideLoadingData);
+            surgeryQuery.LoadingDataEvent += new SurgeryQuery.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(surgeryQuery);
         }
@@ -797,7 +796,7 @@ namespace CFLMedCab
                 SurgeryNumClose surgeryNumClose = new SurgeryNumClose(testFetchPara, hs);
                 surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
-
+                surgeryNumClose.LoadingDataEvent += new SurgeryNumClose.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(surgeryNumClose);
             }));
         }
@@ -844,6 +843,7 @@ namespace CFLMedCab
                 SurgeryNumClose surgeryNumClose = new SurgeryNumClose(fetchParam, ht);
                 surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
+                surgeryNumClose.LoadingDataEvent += new SurgeryNumClose.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(surgeryNumClose);
             }));
         }
@@ -919,6 +919,7 @@ namespace CFLMedCab
                 ReturnFetchView returnFetchView = new ReturnFetchView(hs);
                 returnFetchView.EnterPopCloseEvent += new ReturnFetchView.EnterPopCloseHandler(onEnterPopClose);
                 returnFetchView.EnterReturnFetchEvent += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
+                returnFetchView.LoadingDataEvent += new ReturnFetchView.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(returnFetchView);
             }));
         }
@@ -1401,6 +1402,7 @@ namespace CFLMedCab
             inventory.EnterInventoryDetailLocalEvent += new Inventory.EnterInventoryDetailLcoalHandler(onEnterInventoryDetailLocal);
             inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
             inventory.HidePopInventoryEvent += new Inventory.HidePopInventoryHandler(onHidePopInventory);
+            inventory.LoadingDataEvent += new Inventory.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(inventory);
         }
@@ -1438,6 +1440,7 @@ namespace CFLMedCab
             inventoryDetail.HidePopInventoryEvent += new InventoryDtl.HidePopInventoryHandler(onHidePopInventory);
             inventoryDetail.BackInventoryEvent += new InventoryDtl.BackInventoryHandler(onBackInventory);
             inventoryDetail.OpenDoorEvent += new InventoryDtl.OpenDoorHandler(onInventoryDoorOpen);
+            inventoryDetail.LoadingDataEvent += new InventoryDtl.LoadingDataHandler(onLoadingData);
 
             inventoryDetailHandler = inventoryDetail;
 

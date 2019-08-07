@@ -48,40 +48,59 @@ namespace CFLMedCab.View.Inventory
         public delegate void HidePopInventoryHandler(object sender, System.EventArgs e);
         public event HidePopInventoryHandler HidePopInventoryEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         InventoryBll inventoryBll = new InventoryBll();
         List<InventoryOrderDto> inventoryOrderDtos = new List<InventoryOrderDto>();
 
         public Inventory()
         {
             InitializeComponent();
-#if TESTENV
-            BaseData<InventoryPlan> bdInventoryPlan = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId("E00000008");
-#else
-            BaseData<InventoryPlan> bdInventoryPlan = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId(ApplicationState.GetEquipName());
-#endif
 
-            if (bdInventoryPlan.code != 0)
-            {
-                inventoryTime.Content = "无法获取盘点计划";
-            }
-            else
-            {
-                InventoryPlan plan = bdInventoryPlan.body.objects[0];
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+        }
 
-                if (plan.CheckPeriod == "每日")
-                    inventoryTime.Content = plan.CheckPeriod + " " + plan.InventoryTime;
-                else if (plan.CheckPeriod == "每周")
-                    inventoryTime.Content = plan.CheckPeriod + plan.InventoryWeekday + " " + plan.InventoryTime;
-                else if (plan.CheckPeriod == "每月")
-                    inventoryTime.Content = plan.CheckPeriod + plan.InventoryDay + " " + plan.InventoryTime;
+        /// <summary>
+        /// 加载数据
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                LoadingDataEvent(this, true);
+                BaseData<InventoryPlan> bdInventoryPlan = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId(ApplicationState.GetEquipName());
+                LoadingDataEvent(this, false);
+
+                if (bdInventoryPlan.code != 0)
+                {
+                    inventoryTime.Content = "无法获取盘点计划";
+                }
                 else
-                    inventoryTime.Content = "";
-            }
-            DataContext = this;
+                {
+                    InventoryPlan plan = bdInventoryPlan.body.objects[0];
 
-            GetInventoryList();
+                    if (plan.CheckPeriod == "每日")
+                        inventoryTime.Content = plan.CheckPeriod + " " + plan.InventoryTime;
+                    else if (plan.CheckPeriod == "每周")
+                        inventoryTime.Content = plan.CheckPeriod + plan.InventoryWeekday + " " + plan.InventoryTime;
+                    else if (plan.CheckPeriod == "每月")
+                        inventoryTime.Content = plan.CheckPeriod + plan.InventoryDay + " " + plan.InventoryTime;
+                    else
+                        inventoryTime.Content = "";
+                }
+                DataContext = this;
 
-            tbInputNumbers.Focus();
+                GetInventoryList();
+
+                tbInputNumbers.Focus();
+            }));
         }
 
 
@@ -126,8 +145,9 @@ namespace CFLMedCab.View.Inventory
                 taskName = inputStr;
             }
 
+            LoadingDataEvent(this, true);
             BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
-
+            LoadingDataEvent(this, false);
 
             //校验是否含有数据
             HttpHelper.GetInstance().ResultCheck(bdInventoryTask, out bool isSuccess);

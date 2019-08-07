@@ -216,7 +216,7 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-						logical_relation = "1 AND 2",
+						logical_relation = "1 AND 2 AND 3",
 						expressions =
 						{
 							new QueryParam.Expressions

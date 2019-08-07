@@ -89,17 +89,22 @@ namespace CFLMedCab.View
             //ApplicationState.SetValue((int)ApplicationKey.MCabName, tbMCabName.Text);
             //ApplicationState.SetValue((int)ApplicationKey.SCabName, tbSCabName.Text);
             ApplicationState.SetMCabName(tbMCabName.Text.ToString());
+#if DUALCAB
             ApplicationState.SetSCabName(tbSCabName.Text.ToString());
+#endif
 
             //ApplicationState.SetValue((int)ApplicationKey.COM_MLocker, MLockerCB.SelectedItem);
             //ApplicationState.SetValue((int)ApplicationKey.COM_SLocker, SLockerCB.SelectedItem);
             ApplicationState.SetMLockerCOM(MLockerCB.SelectedItem.ToString());
+#if DUALCAB
             ApplicationState.SetSLockerCOM(SLockerCB.SelectedItem.ToString());
-
+#endif
             //ApplicationState.SetValue((int)ApplicationKey.COM_MRFid, MrfidCB.SelectedItem);
             //ApplicationState.SetValue((int)ApplicationKey.COM_SRFid, SrfidCB.SelectedItem);
             ApplicationState.SetMRfidCOM(MrfidCB.SelectedItem.ToString());
+#if DUALCAB
             ApplicationState.SetSRfidCOM(SrfidCB.SelectedItem.ToString());
+#endif
 
             //ApplicationState.SetValue((int)ApplicationKey.COM_MVein, MVeinCB.SelectedItem);
             ApplicationState.SetMVeinCOM(MVeinCB.SelectedItem.ToString());
@@ -107,7 +112,9 @@ namespace CFLMedCab.View
             BaseData<string> bdEquip =  ConsumingBll.GetInstance().GetIdByName<Equipment>(tbEquipName.Text.ToString());
             BaseData<string> bdHouse = ConsumingBll.GetInstance().GetIdByName<StoreHouse>(tbHouseName.Text.ToString());
             BaseData<string> bdMCab = ConsumingBll.GetInstance().GetIdByName<Equipment>(tbMCabName.Text.ToString());
+#if DUALCAB
             BaseData<string> bdSCab = ConsumingBll.GetInstance().GetIdByName<Equipment>(tbSCabName.Text.ToString());
+#endif
 
             string err = "无法获取";
 
@@ -138,6 +145,7 @@ namespace CFLMedCab.View
                 err += "主货架ID、";
             }
 
+#if DUALCAB
             if (bdSCab.code == 0)
             {
                 ApplicationState.SetSCabId(bdSCab.body.objects[0]);
@@ -146,7 +154,7 @@ namespace CFLMedCab.View
             {
                 err += "副货架ID、";
             }
-
+#endif
             if(err != "无法获取")
             {
                 MessageBox.Show(err.Remove(err.Length - 1) + "!", "温馨提示", MessageBoxButton.OK);
