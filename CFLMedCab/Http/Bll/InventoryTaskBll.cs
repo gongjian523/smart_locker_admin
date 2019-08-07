@@ -88,7 +88,6 @@ namespace CFLMedCab.Http.Bll
 
 			if (isSuccess)
 			{
-
 				//确认数据只有一条
 				if (!string.IsNullOrEmpty(task.body.objects[0].id))//id = AQACQqweJ4wBAAAAXRA4vCD_sxWaDwQA
 				{
@@ -105,25 +104,26 @@ namespace CFLMedCab.Http.Bll
 							{
 								logical_relation = "1 AND 2",
 								expressions =
-								{
-									new QueryParam.Expressions
-									{
-										field = "InventoryTaskId",
-										@operator = "==",
-										operands =  {$"'{ HttpUtility.UrlEncode(task.body.objects[0].id) }'"}
-									},
-									new QueryParam.Expressions
-									{
-										field = "Status",
-										@operator = "==",
-										operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
-									},
-									new QueryParam.Expressions
-									{
-										field = "EquipmentId",
-										@operator = "==",
-										operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
-									}
+                                {
+                                    new QueryParam.Expressions
+                                    {
+                                        field = "InventoryTaskId",
+                                        @operator = "==",
+                                        operands =  {$"'{ HttpUtility.UrlEncode(task.body.objects[0].id) }'"}
+                                    },
+                                    new QueryParam.Expressions
+                                    {
+                                        field = "Status",
+                                        @operator = "==",
+                                        operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
+                                    },
+                                    new QueryParam.Expressions
+                                    {
+                                        field = "EquipmentId",
+                                        @operator = "==",
+                                        operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
+                                    }
+                                
 							}
 						}
 					}
@@ -430,12 +430,10 @@ namespace CFLMedCab.Http.Bll
 				{
 					ConfirmDate = now,
 					Status = DocumentStatus.已完成.ToString(),
-					//TODO: 需要当前设备id，货位id和库房id
 					GoodsLocationId = goodsLocationId,
 					EquipmentId = ApplicationState.GetEquipId(),
 					StoreHouseId = ApplicationState.GetHouseId()
 				});
-
 			});
 
 			var inventoryOrders = HttpHelper.GetInstance().Post(new PostParam<InventoryOrder>()
@@ -472,23 +470,18 @@ namespace CFLMedCab.Http.Bll
 						{
 							it.CommodityInventoryId = CommodityInventoryDetails.body.objects.Where(cit => cit.CommodityId == it.CommodityId).First().id;
 						});
-
 					}
-
 				}
 
 				List<InventoryDetail> inventoryDetailList = new List<InventoryDetail>();
 
 				commodityCodes.ForEach(it =>
 				{
-
-
 					inventoryDetailList.Add(new InventoryDetail
 					{
 						CommodityInventoryId = it.CommodityInventoryId,
 						InventoryOrderId = inventoryOrders.body.Where(iit => iit.GoodsLocationId == it.GoodsLocationId).Select(iit => iit.id).First(),
 						CommodityCodeId = it.id
-
 					});
 				});
 

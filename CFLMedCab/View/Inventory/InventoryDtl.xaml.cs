@@ -5,6 +5,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using Newtonsoft.Json;
@@ -163,7 +164,6 @@ namespace CFLMedCab.View.Inventory
 				name = inputStr;
             }
 
-
             BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(name);
 
 			//校验是否含有数据
@@ -174,6 +174,11 @@ namespace CFLMedCab.View.Inventory
 				MessageBox.Show("获取商品信息失败" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
 				return;
 			}
+
+            bdCommodityCode.body.objects[0].EquipmentId = inventoryOrder.EquipmentId;
+            bdCommodityCode.body.objects[0].StoreHouseId = inventoryOrder.StoreHouseId;
+            bdCommodityCode.body.objects[0].GoodsLocationId = inventoryOrder.GoodsLocationId;
+            bdCommodityCode.body.objects[0].GoodsLocationName = inventoryOrder.GoodsLocationName;
 
             adds.Add(bdCommodityCode.body.objects[0]);
 #endif
@@ -193,6 +198,7 @@ namespace CFLMedCab.View.Inventory
                 }));
             }));
         }
+
 
         /// <summary>
         /// 盘点确认

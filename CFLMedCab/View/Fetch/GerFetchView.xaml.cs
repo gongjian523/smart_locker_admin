@@ -44,13 +44,16 @@ namespace CFLMedCab.View.Fetch
         public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         private Timer endTimer;
 
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
 
 		private bool isSuccess;
-
 
 		public GerFetchView(HashSet<CommodityEps> afterEps)
         {
@@ -63,10 +66,17 @@ namespace CFLMedCab.View.Fetch
             endTimer.Enabled = true;
             endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+
             HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = afterEps;
 
+            //LoadingDataEvent(this, true);
             List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+            //LoadingDataEvent(this, false);
             if (commodityCodeList == null || commodityCodeList.Count <= 0)
             {
                 MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
@@ -74,7 +84,9 @@ namespace CFLMedCab.View.Fetch
                 return;
             }
 
+            //LoadingDataEvent(this, true);
             bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+            //LoadingDataEvent(this, false);
             //校验是否含有数据
             HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
 			if (!isSuccess)
@@ -90,6 +102,12 @@ namespace CFLMedCab.View.Fetch
             bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
                 it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
             });
+        }
+
+
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            
         }
 
         /// <summary>
@@ -131,11 +149,13 @@ namespace CFLMedCab.View.Fetch
         {
 			if (isSuccess)
 			{
-				BasePostData<CommodityInventoryChange> bdBasePostData =
+                LoadingDataEvent(this, true);
+                BasePostData<CommodityInventoryChange> bdBasePostData =
 						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.一般领用);
+                LoadingDataEvent(this, false);
 
-				//校验是否含有数据
-				HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
+                //校验是否含有数据
+                HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
 				if (!isSuccess1)
 				{
 					MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);

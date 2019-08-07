@@ -17,10 +17,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Label  x:Name="lbInputCode" Grid.Row="0"  Style="{StaticResource lblTitle1}"/>
-                    <!--<TextBox k:TouchScreenKeyboard.TouchScreenKeyboard="True"  x:Name="tbInputCode" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" Text="" 
-                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
-                             Width="{Binding Path=ActualWidth,ElementName=GridView}" PreviewKeyDown="SearchBox_OnKeyDown"/>-->
-                    <TextBox x:Name="tbInputCode" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" Text="" 
+                    <TextBox x:Name="tbInputCode" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" FontSize="22"
                              VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
                              Width="{Binding Path=ActualWidth,ElementName=GridView}" PreviewKeyDown="SearchBox_OnKeyDown" />
                     <StackPanel  Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">

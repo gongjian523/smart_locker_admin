@@ -79,11 +79,25 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
+            //无法进入下一个页面，将输入框代码文字清空，并且重新设置焦点
+            if(!HandleEnterDetail())
+            {
+                tbInputCode.Text = "";
+                tbInputCode.Focus();
+            }
+        }
+
+        /// <summary>
+        /// 处理输入事件
+        /// </summary>
+        /// <returns></returns>
+        private bool HandleEnterDetail()
+        {
             var inputStr = tbInputCode.Text;
             if (string.IsNullOrWhiteSpace(inputStr))
             {
                 MessageBox.Show("单号不可以为空！", "温馨提示", MessageBoxButton.OK);
-                return;
+                return false;
             }
 
             TaskOrder taskOrder;
@@ -108,16 +122,16 @@ namespace CFLMedCab.View.Fetch
                 if (!isSuccess)
                 {
                     MessageBox.Show("无法获取领用单详情！" + fetchParam.bdConsumingOrder.message, "温馨提示", MessageBoxButton.OK);
-                    return;
+                    return false;
                 }
 
                 fetchParam.bdOperationOrderGoodsDetail = ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
-				//校验是否含有数据
-				HttpHelper.GetInstance().ResultCheck(fetchParam.bdOperationOrderGoodsDetail, out bool isSuccess1);
+                //校验是否含有数据
+                HttpHelper.GetInstance().ResultCheck(fetchParam.bdOperationOrderGoodsDetail, out bool isSuccess1);
 				if (!isSuccess1)
 				{
 					MessageBox.Show("无法获取手术单物品详情！" + fetchParam.bdOperationOrderGoodsDetail.message, "温馨提示", MessageBoxButton.OK);
-					return;
+					return false;
 				}
 
                 HashSet<CommodityEps> hs = ApplicationState.GetGoodsInfo();
@@ -131,13 +145,13 @@ namespace CFLMedCab.View.Fetch
             {
                 BaseData<PrescriptionBill> baseData = ConsumingBll.GetInstance().GetPrescriptionBill(name);
 
-				//校验是否含有数据
-				HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+                //校验是否含有数据
+                HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
 
 				if (!isSuccess)
                 {
                     MessageBox.Show("无法获取处方单！" + baseData.message, "温馨提示", MessageBoxButton.OK);
-                    return;
+                    return false;
                 }
 
 				EnterPrescriptionOpenEvent(this,new ConsumingOrder {
@@ -148,8 +162,10 @@ namespace CFLMedCab.View.Fetch
                     }
                 });
             }
+
+            return true;
         }
-        
+
         /// <summary>
         /// 扫码查询事件
         /// </summary>
@@ -195,5 +211,7 @@ namespace CFLMedCab.View.Fetch
         //{
         //    kbHandler.Hide();
         //}
+
+        
     }
 }

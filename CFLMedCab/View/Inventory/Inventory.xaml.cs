@@ -92,11 +92,25 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onEnterInventoryDetail(object sender, RoutedEventArgs e)
         {
+            //无法进入下一个页面，将输入框代码文字清空，并且重新设置焦点
+            if (!HanleInventoryDetail())
+            {
+                tbInputNumbers.Text = "";
+                tbInputNumbers.Focus();
+            }
+        }
+
+        /// <summary>
+        /// 处理进入盘点详情事件
+        /// </summary>
+        /// <returns></returns>
+        private bool HanleInventoryDetail()
+        {
             string inputStr = tbInputNumbers.Text;
             if (string.IsNullOrWhiteSpace(inputStr))
             {
                 MessageBox.Show("盘点任务单号不可以为空！", "温馨提示", MessageBoxButton.OK);
-                return;
+                return false;
             }
 
             TaskOrder taskOrder;
@@ -106,28 +120,30 @@ namespace CFLMedCab.View.Inventory
                 taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
                 taskName = taskOrder.name;
             }
-			catch (Exception ex)
-			{
-				LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
-				taskName = inputStr;
-			}
+            catch (Exception ex)
+            {
+                LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
+                taskName = inputStr;
+            }
 
-			BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
+            BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
 
 
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdInventoryTask, out bool isSuccess);
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(bdInventoryTask, out bool isSuccess);
 
-			if (!isSuccess)
+            if (!isSuccess)
             {
                 MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
-                return;
+                return false;
             }
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 EnterInventoryDetailEvent(this, bdInventoryTask.body.objects[0]);
             }));
+
+            return true;
         }
 
         /// <summary>

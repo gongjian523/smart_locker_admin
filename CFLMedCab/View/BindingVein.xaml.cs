@@ -37,6 +37,10 @@ namespace CFLMedCab.View
         public delegate void UserPwDLoginHandler(object sender, User e);
         public event UserPwDLoginHandler UserPwDLoginEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         private string CaptchaToken { get; set; }
 
 #if LOCALSDK
@@ -120,13 +124,17 @@ namespace CFLMedCab.View
             siParam.source = "app";
 
             //获取用户Token
+            LoadingDataEvent(this, true);
             var data1 = UserLoginBll.GetInstance().GetUserToken(siParam);
+            LoadingDataEvent(this, false);
 
-            if(data1.code != 0)
+            if (data1.code != 0)
             {
+                LoadingDataEvent(this, true);
                 var data = UserLoginBll.GetInstance().GetCaptchaImageToken();
+                LoadingDataEvent(this, false);
 
-                if(data.code != 0)
+                if (data.code != 0)
                 {
                     Dispatcher.BeginInvoke(new Action(() => {
                         WarnInfo.Content = "获取账号失败，请再次输入用户信息、密码以及验证，并重新" + (bBinding?"绑定" :"登录") + "!";
@@ -176,7 +184,9 @@ namespace CFLMedCab.View
                     ApplicationState.SetAccessToken(data1.body.access_token);
                     ApplicationState.SetRefreshToken(data1.body.refresh_token);
 
+                    LoadingDataEvent(this, true);
                     BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
+                    LoadingDataEvent(this, false);
                     if (bdData.code != 0 || (bdData.code == 0 && bdData.body.objects == null))
                     {
                         WarnInfo2.Content = "获取用户信息失败！" + bdData.message;
@@ -270,13 +280,15 @@ namespace CFLMedCab.View
             userBll.UpdateCurrentUsers(user);
             this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
 #else
-			BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
+            LoadingDataEvent(this, true);
+            BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
             {
                 regfeature = Convert.ToBase64String(regfeature),
                 finger_name = "finger1"
             });
+            LoadingDataEvent(this, false);
 
-            if(data.code == 0)
+            if (data.code == 0)
                 this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
             else
                 this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = data.message));
@@ -289,7 +301,10 @@ namespace CFLMedCab.View
         {
             this.Dispatcher.BeginInvoke(new Action(() =>
             {
+                LoadingDataEvent(this, true);
                 BaseData<User> bdData = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
+                LoadingDataEvent(this, false);
+
                 if (bdData.code != 0 || (bdData.code == 0 && bdData.body.objects == null) )
                 {
                     WarnInfo2.Content = "获取用户信息失败！" + bdData.message;

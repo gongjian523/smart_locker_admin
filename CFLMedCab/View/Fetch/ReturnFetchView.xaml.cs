@@ -43,7 +43,11 @@ namespace CFLMedCab.View.Fetch
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
         public delegate void EnterReturnFetchHandler(object sender, RoutedEventArgs e);
-        public event EnterReturnFetchHandler EnterReturnFetch;
+        public event EnterReturnFetchHandler EnterReturnFetchEvent;
+
+        //显示加载数据的进度条
+        //public delegate void LoadingDataHandler(object sender, bool e);
+        //public event LoadingDataHandler LoadingDataEvent;
 
         private HashSet<CommodityEps> after;
         BaseData<CommodityCode> bdCommodityCode;
@@ -106,7 +110,7 @@ namespace CFLMedCab.View.Fetch
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
             endTimer.Close();
-            EnterReturnFetch(this, null);
+            EnterReturnFetchEvent(this, null);
         }
 
         /// <summary>

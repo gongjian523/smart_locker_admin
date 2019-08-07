@@ -125,11 +125,25 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
+            //无法进入下一个页面，将输入框代码文字清空，并且重新设置焦点
+            if (!HandleEnterDetail())
+            {
+                tbInputNumbers.Text = "";
+                tbInputNumbers.Focus();
+            }
+        }
+
+        /// <summary>
+        /// 处理输入事件
+        /// </summary>
+        /// <returns></returns>
+        private bool HandleEnterDetail()
+        {
             string inputStr = tbInputNumbers.Text;
             if (string.IsNullOrWhiteSpace(inputStr))
             {
                 MessageBox.Show("上架工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
-                return;
+                return false;
             }
 
             TaskOrder taskOrder;
@@ -144,21 +158,20 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 name = inputStr;
             }
 
-            //name = "OS20190721000052";
-
-            //ShowLoadDataEvent(this, null);
             BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);
-            //HideLoadDataEvent(this, null);
 
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
-            if(!isSuccess)
+            if (!isSuccess)
             {
                 MessageBox.Show("此上架工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
-                return;
+                return false;
             }
 
             EnterReplenishmentDetailEvent(this, baseDataShelfTask.body.objects[0]);
+
+            return true;
         }
+
 
         /// <summary>
         /// 扫码查询事件

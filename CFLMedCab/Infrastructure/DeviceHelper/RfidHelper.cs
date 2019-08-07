@@ -10,6 +10,8 @@ using System.Timers;
 using System.Linq;
 using System.Windows;
 using Newtonsoft.Json;
+using CFLMedCab.Infrastructure.ToolHelper;
+using System.Threading.Tasks;
 
 /// <summary>
 /// rfid工具类
@@ -257,6 +259,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             string com1 = ApplicationState.GetMRfidCOM();
             HashSet<string> com1HashSet = new HashSet<string>();
 
+            string log = "";
+
 #if DUALCAB
             //string com4 = "COM4";
             string com4 = ApplicationState.GetSRfidCOM();
@@ -306,6 +310,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
                 currentEpcDataHs.Add(commodityEps);
                 Console.WriteLine(commodityEps.CommodityCodeName + commodityEps.CommodityName);
+                log += commodityEps.CommodityCodeName + " ";
             }
 
 #if DUALCAB
@@ -325,9 +330,14 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
                 currentEpcDataHs.Add(commodityEps);
                 Console.WriteLine(commodityEps.CommodityCodeName + commodityEps.CommodityName);
-
+                log += commodityEps.CommodityCodeName + " ";
             }
 #endif
+
+            Task.Factory.StartNew(a =>
+            {
+                LogUtils.Debug(log);
+            }, log);
 
             Console.WriteLine("RFID NUM:" + currentEpcDataHs.Count());
             return currentEpcDataHs;
@@ -646,8 +656,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				return msgHs;
 			}
-
 		}
-
 	}
 }

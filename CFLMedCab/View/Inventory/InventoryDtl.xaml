@@ -71,8 +71,10 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                         <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+                    <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">
                         <Grid  x:Name="myGrid">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
@@ -133,8 +135,9 @@
                             </ListView.View>
                         </ListView>
                     </Grid>
-                    <TextBox  x:Name="codeInputTb"  Height="48" Grid.Row="1" Grid.ColumnSpan="2" Width="500" PreviewKeyDown="SearchBox_OnKeyDown"  Text="请输入商品编码或者扫描二维码" FontSize="24"/>
-                    <Button Style="{StaticResource AddButton}" x:Name="btnAddProduct" Grid.Column="2" Grid.Row="1" Content="新增实际库存商品"  Height="48"    Click="onAddProduct" HorizontalAlignment="Right"/>
+                    <Label  x:Name="codeTitleLb"  Height="48" Grid.Row="1"  Grid.ColumnSpan="2" Width="220"  Content="请输入扫描商品编码" FontSize="22" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
+                    <TextBox  x:Name="codeInputTb"  Height="48" Grid.Row="1" Grid.Column="1"  Grid.ColumnSpan="2"  Width="300" PreviewKeyDown="SearchBox_OnKeyDown"  FontSize="22" />
+                    <Button Style="{StaticResource AddButton1}" x:Name="btnAddProduct" Grid.Column="4" Grid.Row="1" Content="添加商品"   Click="onAddProduct" HorizontalAlignment="Right"/>
                 </Grid>
             </Border>
             <Border  Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">

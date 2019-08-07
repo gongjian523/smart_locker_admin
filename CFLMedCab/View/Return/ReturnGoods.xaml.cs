@@ -117,11 +117,25 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void EnterDetail_Click(object sender, RoutedEventArgs e)
         {
+            //无法进入下一个页面，将输入框代码文字清空，并且重新设置焦点
+            if (!HandleEnterDetail())
+            {
+                tbInputNumbers.Text = "";
+                tbInputNumbers.Focus();
+            }
+        }
+
+        /// <summary>
+        /// 处理输入事件
+        /// </summary>
+        /// <returns></returns>
+        private bool HandleEnterDetail()
+        {
             string inputStr = tbInputNumbers.Text;
             if (string.IsNullOrWhiteSpace(inputStr))
             {
                 MessageBox.Show("拣货工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
-                return;
+                return false;
             }
 
             TaskOrder taskOrder;
@@ -131,10 +145,10 @@ namespace CFLMedCab.View.Return
                 taskOrder = JsonConvert.DeserializeObject<TaskOrder>(inputStr);
                 name = taskOrder.name;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-				LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
-				name = inputStr;
+                LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
+                name = inputStr;
             }
 
             //ShowLoadDataEvent(this, true);
@@ -145,11 +159,14 @@ namespace CFLMedCab.View.Return
             if (!isSuccess)
             {
                 MessageBox.Show("此拣货工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
-                return;
+                return false;
             }
 
             EnterReturnGoodsDetailEvent(this, baseDataPickTask.body.objects[0]);
+
+            return true;
         }
+
 
         /// <summary>
         /// 扫码查询事件

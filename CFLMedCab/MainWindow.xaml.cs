@@ -323,7 +323,7 @@ namespace CFLMedCab
 #else
             User user = null;
 #endif
-
+            onLoadingData(this,true);
             string info = "等待检测指静脉的时候发生错误";
             string info2 = "请再次进行验证";
             if(e == -2)
@@ -398,6 +398,8 @@ namespace CFLMedCab
 #endif
                 }
             }
+
+            onLoadingData(this, false);
 
 #if LOCALSDK 
             if (e < 0 || user.id == 0)
@@ -578,6 +580,7 @@ namespace CFLMedCab
                 GerFetchView gerFetchView = new GerFetchView(hs);
                 gerFetchView.EnterPopCloseEvent += new GerFetchView.EnterPopCloseHandler(onEnterPopClose);
                 gerFetchView.EnterGerFetch += new GerFetchView.EnterFetchOpenHandler(onEnterGerFetch);
+                gerFetchView.LoadingDataEvent += new GerFetchView.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(gerFetchView);
             }));
         }
@@ -913,7 +916,7 @@ namespace CFLMedCab
             {
                 ReturnFetchView returnFetchView = new ReturnFetchView(hs);
                 returnFetchView.EnterPopCloseEvent += new ReturnFetchView.EnterPopCloseHandler(onEnterPopClose);
-                returnFetchView.EnterReturnFetch += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
+                returnFetchView.EnterReturnFetchEvent += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
                 FullFrame.Navigate(returnFetchView);
             }));
         }
@@ -1605,6 +1608,7 @@ namespace CFLMedCab
             BindingVein bindingVein = new BindingVein();
             bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
             bindingVein.UserPwDLoginEvent += new BindingVein.UserPwDLoginHandler(onUserPwDLogin);
+            bindingVein.LoadingDataEvent += new BindingVein.LoadingDataHandler(onLoadingData);
             PopFrame.Navigate(bindingVein);
 #if TESTENV
 #else
@@ -1878,12 +1882,8 @@ namespace CFLMedCab
 #if TESTENV        
             TestGoods testGoods = new TestGoods();
             testGoods.GetCurrentRFid();
-#else
-            //System.Timers.Timer iniGoodstimer = new System.Timers.Timer(1000);
-            //iniGoodstimer.AutoReset = false;
-            //iniGoodstimer.Enabled = true;
-            //iniGoodstimer.Elapsed += new ElapsedEventHandler(onInitGoods);
 #endif
+
         }
         #endregion
 
@@ -1902,6 +1902,16 @@ namespace CFLMedCab
             e.Cancel = true;
         }
 
+
+        private void onLoadingData(object sender, bool e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                LoadingView.Visibility = e ? Visibility.Visible : Visibility.Hidden;
+                LoadDataPR.IsActive = e ? true : false;
+            }));
+        }
+
 		/// <summary>
 		/// 空闲监听定时
 		/// </summary>
@@ -1914,10 +1924,10 @@ namespace CFLMedCab
 				System.Windows.MessageBox.Show("GetLastInputInfo Failed!");
 			else
 			{
-				if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 > 10)
-				{
-					//System.Windows.MessageBox.Show("no operation for 5 minutes.");
-				}
+				//if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 > 20)
+				//{
+				//	System.Windows.MessageBox.Show("no operation for 5 minutes.");
+				//}
 			}
 
 		}

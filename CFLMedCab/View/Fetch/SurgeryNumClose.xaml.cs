@@ -118,22 +118,9 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            if(true)
-            { 
-                endTimer.Close();
-
-                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-                EndOperation(bExit);
-            }
-            else
-            {
-                //endTimer.Close();
-                //endTimer.Start();
-                //normalView.Visibility = Visibility.Collapsed;
-                //abnormalView.Visibility = Visibility.Visible;
-
-                //listView2.DataContext = bdCommodityDetail.body.objects;
-            }
+            endTimer.Close();
+            bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+            EndOperation(bExit);
         }
 
         /// <summary>

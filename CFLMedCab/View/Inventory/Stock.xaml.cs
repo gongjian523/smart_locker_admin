@@ -47,10 +47,10 @@ namespace CFLMedCab.View
             InitializeComponent();
             InitGoodsCodeNameCombox();
 
-            Timer invTimer = new Timer(100);
-            invTimer.AutoReset = false;
-            invTimer.Enabled = true;
-            invTimer.Elapsed += new ElapsedEventHandler(onInitData);
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
 
         }
 

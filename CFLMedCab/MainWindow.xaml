@@ -17,7 +17,12 @@
         <cvt:NavBtnVisiblityConverter x:Key="NavBtnVisiblityConverter"/>
     </Control.Resources>
     <Grid>
-        <Frame x:Name="KeyboardFrame" Panel.ZIndex="5" NavigationUIVisibility="Hidden"/>
+        <Grid x:Name="LoadingView" Panel.ZIndex="5" Visibility="Hidden"  >
+            <Grid>
+                <Controls:ProgressRing x:Name="LoadDataPR" IsActive="False"/>
+                <Grid Background="#000000" Opacity="0.0"/>
+            </Grid>
+        </Grid>
         <Frame x:Name="PopFrame" Panel.ZIndex="4" NavigationUIVisibility ="Hidden"/>
         <Grid x:Name="MaskView" Panel.ZIndex="3" Background="#000000" Opacity="0.5" Visibility="Hidden"></Grid>
         <Grid x:Name="LoginBkView"  Panel.ZIndex="2" Visibility="Visible" >
@@ -32,7 +37,7 @@
                 <TextBlock HorizontalAlignment="Center" Margin="0,61,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="55" 
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
                 <Button  HorizontalAlignment="Center" Margin="0,80,0,0"  Style="{StaticResource CommonNoButtonT2}" 
-                         Content="绑定指静脉或登录" Height="120" Width="320" Click="onEnterBindingVein"/>
+                         Content="绑定指静脉或登录" Height="120" Width="400" Click="onEnterBindingVein"/>
             </StackPanel>
         </Grid>
         <Grid x:Name="NaviView" Visibility="Visible" Panel.ZIndex="1">
