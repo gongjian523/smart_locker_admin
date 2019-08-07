@@ -729,6 +729,43 @@ namespace CFLMedCab.Http.Helper
 		/// <summary>
 		/// 同步获取post请求结果
 		/// </summary>
+		/// <param name="postParam">通用post参数</param>
+		/// <returns></returns>
+		public BasePostData<T> PostByAdminToken<T>(PostParam<T> postParam) where T : class
+		{
+
+			var handleEventWait = new HandleEventWait();
+			BasePostData<T> ret = null;
+
+
+			LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			var JsonBody = JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting);
+
+			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetAdminTokenHeaders()).Body(JsonBody).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			return ret;
+
+		}
+
+		/// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
 		/// <param name="url"></param>
 		/// <param name="postParam">post参数</param>
 		/// <returns></returns>
@@ -904,6 +941,8 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
+	
+
 		// <summary>
 		/// 同步获取post请求结果
 		/// </summary>
@@ -989,11 +1028,25 @@ namespace CFLMedCab.Http.Helper
             return Headers;
 		}
 
-        /// <summary>
-        /// 设置token值
-        /// </summary>
-        /// <returns></returns>
-        public void SetHeaders(string token)
+		/// <summary>
+		/// 获取admin Token
+		/// </summary>
+		/// <returns></returns>
+		public IDictionary<string, string> GetAdminTokenHeaders()
+		{
+			IDictionary<string, string> adminTokenHeaders = new Dictionary<string, string>
+			{
+				{ "x-token", "Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t" }
+			};
+
+			return adminTokenHeaders;
+		}
+
+		/// <summary>
+		/// 设置token值
+		/// </summary>
+		/// <returns></returns>
+		public void SetHeaders(string token)
 		{
             Headers.Clear();
             Headers.Add("x-token", token);

@@ -43,6 +43,7 @@ using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
 using CFLMedCab.Infrastructure.QuartzHelper.job;
 using CFLMedCab.Infrastructure.QuartzHelper.trigger;
 using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
+using Newtonsoft.Json;
 
 namespace CFLMedCab
 {
@@ -156,8 +157,7 @@ namespace CFLMedCab
             //InventoryTimer.Start();
 
             loadingDataPage = new LoadingData();
-
-            Task.Factory.StartNew(initCurrentGoodsInfo);
+			Task.Factory.StartNew(initCurrentGoodsInfo);
             Task.Factory.StartNew(startAutoInventory);
             
 
@@ -171,7 +171,7 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 #else
-            //Console.ReadKey();
+         
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
             int vienSt = vein.LoadingDevice();
@@ -505,7 +505,9 @@ namespace CFLMedCab
             ApplicationState.SetGoodsInfo(hs);
         }
 
-
+		/// <summary>
+		/// 开启自动任务盘点信息
+		/// </summary>
         private void startAutoInventory()
         {
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
@@ -1921,6 +1923,7 @@ namespace CFLMedCab
 			}
 
 		}
+
 	}
 
 	/// <summary>
