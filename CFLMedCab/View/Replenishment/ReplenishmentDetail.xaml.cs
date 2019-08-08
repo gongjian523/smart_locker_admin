@@ -72,7 +72,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 HttpHelper.GetInstance().ResultCheck(commodityDetail, out bool isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("获取上架单商品明细错误！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 

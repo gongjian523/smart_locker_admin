@@ -154,19 +154,22 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             bool bGotoAbnormal = true;
 
-            if (bdCommodityCode.code != 0 || bdCommodityDetail.code != 0)
+            if (isSuccess)
             {
-                bGotoAbnormal = false;
-            }
-            else
-            {
-                if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() == 0)
+                if (bdCommodityCode.code != 0 || bdCommodityDetail.code != 0)
                 {
                     bGotoAbnormal = false;
                 }
+                else
+                {
+                    if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() == 0)
+                    {
+                        bGotoAbnormal = false;
+                    }
+                }
             }
 
-            if (!bGotoAbnormal)
+            if (!bGotoAbnormal || !isSuccess)
             {
                 endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);

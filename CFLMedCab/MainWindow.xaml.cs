@@ -190,12 +190,12 @@ namespace CFLMedCab
 					}
 					else
 					{
-                        Console.ReadKey();
-                        if (RegisterVein())
-                        {
-							ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-                        }
-                        else
+       //                 Console.ReadKey();
+       //                 if (RegisterVein())
+       //                 {
+							//ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+       //                 }
+       //                 else
                         {
 							onFingerDetected(this, -2);
 						}
