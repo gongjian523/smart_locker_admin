@@ -42,11 +42,9 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterInventoryDetailLcoalHandler(object sender, int e);
         public event EnterInventoryDetailLcoalHandler EnterInventoryDetailLocalEvent;
 
-        public delegate void EnterPopInventoryHandler(object sender, System.EventArgs e);
-        public event EnterPopInventoryHandler EnterPopInventoryEvent;
-
-        public delegate void HidePopInventoryHandler(object sender, System.EventArgs e);
-        public event HidePopInventoryHandler HidePopInventoryEvent;
+        //显示或者隐藏正在盘点的页面
+        public delegate void SetPopInventoryHandler(object sender, bool e);
+        public event SetPopInventoryHandler SetPopInventoryEvent;
 
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
@@ -179,7 +177,7 @@ namespace CFLMedCab.View.Inventory
 
             if (btnItem.Name == "LocalInventoryBtn")
             {
-                EnterPopInventoryEvent(this, null);
+                SetPopInventoryEvent(this, true);
 
 #if TESTENV
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
@@ -202,7 +200,7 @@ namespace CFLMedCab.View.Inventory
 
                 GetInventoryList();
 
-                HidePopInventoryEvent(this, null);
+                SetPopInventoryEvent(this, false);
             }
             else
             {

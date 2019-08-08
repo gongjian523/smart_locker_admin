@@ -34,11 +34,8 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class InventoryDtl : UserControl
     {
-        public delegate void EnterPopInventoryHandler(object sender, RoutedEventArgs e);
-        public event EnterPopInventoryHandler EnterPopInventoryEvent;
-
-        public delegate void HidePopInventoryHandler(object sender, RoutedEventArgs e);
-        public event HidePopInventoryHandler HidePopInventoryEvent;
+        public delegate void SetPopInventoryHandler(object sender, bool e);
+        public event SetPopInventoryHandler SetPopInventoryEvent;
 
         public delegate void BackInventoryHandler(object sender, RoutedEventArgs e);
         public event BackInventoryHandler BackInventoryEvent;
@@ -87,7 +84,7 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onLoadData(object sender, EventArgs e)
         {
-            EnterPopInventoryEvent(this, null);
+            SetPopInventoryEvent(this, true);
 
             BaseData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(inventoryTask.name);
 
@@ -96,7 +93,7 @@ namespace CFLMedCab.View.Inventory
 
 			if (!isSuccess1)
 			{
-				HidePopInventoryEvent(this, null);
+                SetPopInventoryEvent(this, false);
 				MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
 				return;
 			}
@@ -109,7 +106,7 @@ namespace CFLMedCab.View.Inventory
 #endif
             list = CommodityCodeBll.GetInstance().GetCommodityCode(hs).body.objects.ToList();
 
-            HidePopInventoryEvent(this, null);
+            SetPopInventoryEvent(this, false);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {

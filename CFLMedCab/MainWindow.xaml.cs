@@ -1406,8 +1406,7 @@ namespace CFLMedCab
             Inventory inventory = new Inventory();
             inventory.EnterInventoryDetailEvent += new Inventory.EnterInventoryDetailHandler(onEnterInventoryDetail);
             inventory.EnterInventoryDetailLocalEvent += new Inventory.EnterInventoryDetailLcoalHandler(onEnterInventoryDetailLocal);
-            inventory.EnterPopInventoryEvent += new Inventory.EnterPopInventoryHandler(onEnterPopInventory);
-            inventory.HidePopInventoryEvent += new Inventory.HidePopInventoryHandler(onHidePopInventory);
+            inventory.SetPopInventoryEvent += new Inventory.SetPopInventoryHandler(onSetPopInventory);
             inventory.LoadingDataEvent += new Inventory.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(inventory);
@@ -1442,8 +1441,7 @@ namespace CFLMedCab
 
             InventoryDtl inventoryDetail = new InventoryDtl(e);
 
-            inventoryDetail.EnterPopInventoryEvent += new InventoryDtl.EnterPopInventoryHandler(onEnterPopInventory);
-            inventoryDetail.HidePopInventoryEvent += new InventoryDtl.HidePopInventoryHandler(onHidePopInventory);
+            inventoryDetail.SetPopInventoryEvent += new InventoryDtl.SetPopInventoryHandler(onSetPopInventory);
             inventoryDetail.BackInventoryEvent += new InventoryDtl.BackInventoryHandler(onBackInventory);
             inventoryDetail.OpenDoorEvent += new InventoryDtl.OpenDoorHandler(onInventoryDoorOpen);
             inventoryDetail.LoadingDataEvent += new InventoryDtl.LoadingDataHandler(onLoadingData);
@@ -1496,30 +1494,27 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 弹出库存盘点正在进行中
+        /// 弹出或者关闭库存盘点正在进行中的页面
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterPopInventory(object sender, System.EventArgs e)
+        private void onSetPopInventory(object sender, bool e)
         {
-            App.Current.Dispatcher.Invoke((Action)(() =>
+            if(e)
             {
-                InventoryOngoing inventoryOngoing = new InventoryOngoing();
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    InventoryOngoing inventoryOngoing = new InventoryOngoing();
+                    PopFrame.Visibility = Visibility.Visible;
+                    MaskView.Visibility = Visibility.Visible;
 
-                PopFrame.Navigate(inventoryOngoing);
-            }));
-        }
-
-        /// <summary>
-        /// 关闭库存盘点正在进行中
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onHidePopInventory(object sender, System.EventArgs e)
-        {
-            ClosePop();
+                    PopFrame.Navigate(inventoryOngoing);
+                }));
+            }
+            else
+            {
+                ClosePop();
+            }
         }
 
         /// <summary>
@@ -1587,8 +1582,7 @@ namespace CFLMedCab
 
             Stock stock = new Stock();
             stock.EnterStockDetailedEvent += new Stock.EnterStockDetailedHandler(onEnterStockDetailedEvent);
-            stock.EnterPopInventoryEvent += new Stock.EnterPopInventoryHandler(onEnterPopInventory);
-            stock.HidePopInventoryEvent += new Stock.HidePopInventoryHandler(onHidePopInventory);
+            stock.SetPopInventoryEvent += new Stock.SetPopInventoryHandler(onSetPopInventory);
             ContentFrame.Navigate(stock);
         }
 

@@ -34,11 +34,9 @@ namespace CFLMedCab.View
         public delegate void EnterStockDetailedHandler(object sender, Commodity commodity);
         public event EnterStockDetailedHandler EnterStockDetailedEvent;
 
-        public delegate void EnterPopInventoryHandler(object sender, RoutedEventArgs e);
-        public event EnterPopInventoryHandler EnterPopInventoryEvent;
-
-        public delegate void HidePopInventoryHandler(object sender, RoutedEventArgs e);
-        public event HidePopInventoryHandler HidePopInventoryEvent;
+        //提出或者隐藏盘点正在进行的页面
+        public delegate void SetPopInventoryHandler(object sender, bool e);
+        public event SetPopInventoryHandler SetPopInventoryEvent;
 
         private List<GoodDto> comboBoxList = new List<GoodDto>();
 
@@ -126,12 +124,12 @@ namespace CFLMedCab.View
             //int totalCount = 0;
             if (this.stockSnapshot.IsChecked == true)//库存快照
             {
-                EnterPopInventoryEvent(this, null);
+                SetPopInventoryEvent(this, true);
 
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
                 if(!isGetSuccess)
                 {
-                    HidePopInventoryEvent(this, null);
+                    SetPopInventoryEvent(this, false);
 
                     MessageBox.Show("盘点本地商品失败！", "温馨提示", MessageBoxButton.OK);
                     return;
@@ -139,9 +137,9 @@ namespace CFLMedCab.View
 
                 ApplicationState.SetGoodsInfo(hs);
 
-                List<Commodity> list = LocalGoodsChangeBll.GetCommodity();                
+                List<Commodity> list = LocalGoodsChangeBll.GetCommodity();
 
-                HidePopInventoryEvent(this, null);
+                SetPopInventoryEvent(this, false);
 
                 if (list == null)
                 {
