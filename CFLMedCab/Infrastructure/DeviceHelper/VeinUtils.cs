@@ -122,7 +122,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         //设置设备的签名信息
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_SetDevSign", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FV_SetDevSign(StringBuilder devName, byte[] srvsign, ushort devsignLen);
+        public static extern int FV_SetDevSign(StringBuilder devName, byte[] srvsign, ushort srvsignLen);
 
 
         StringBuilder[] devIdList = new StringBuilder[10];	//设备列表
@@ -535,9 +535,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         }
 
         //设置设备的签名信息
-        public int SetDevSign(byte[] srvsign, ushort devsignLen)
+        public int SetDevSign(byte[] srvsign, ushort srvsignLen)
         {
-            return FV_SetDevSign(devName, srvsign, devsignLen);
+            return FV_SetDevSign(devName, srvsign, srvsignLen);
         }
 
     }

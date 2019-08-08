@@ -1833,10 +1833,8 @@ namespace CFLMedCab
 #if TESTENV
 #else
             byte[] devSign = new byte[36];
-            ushort devSignLen = 0;
-
-            int veinSt = vein.GetDevSign(devSign,  out devSignLen);
-            if(veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
+			int veinSt = vein.GetDevSign(devSign, out ushort devSignLen);
+			if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
             {
                 LogUtils.Error("获取本地指静脉设备签名失败！" + veinSt);
                 return false;
@@ -1856,7 +1854,8 @@ namespace CFLMedCab
             }
 
 			byte[] serSign = HexHelper.StrToToHexByte(bdVeinRegister.body.srvsign);
-            veinSt = vein.SetDevSign(serSign, (ushort)serSign.Length);
+
+			veinSt = vein.SetDevSign(serSign, (ushort)serSign.Count());
 
             if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
             {
