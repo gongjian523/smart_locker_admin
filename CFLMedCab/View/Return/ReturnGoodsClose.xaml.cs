@@ -43,6 +43,10 @@ namespace CFLMedCab.View.Return
         public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         private Timer endTimer;
 
         private PickTask pickTask;
@@ -70,57 +74,76 @@ namespace CFLMedCab.View.Return
             ////工单号
             orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-
-            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = hs;
 
-			List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
-			if (commodityCodeList == null || commodityCodeList.Count <= 0)
-			{
-				MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                isSuccess = false;
-                return;
-			}
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+        }
 
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
-            if (!isSuccess)
+        /// <summary>
+        /// 数据加载
+        /// </summary>
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("获取商品信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
 
-            bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
-            if (!isSuccess)
-            {
-                MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                if (commodityCodeList == null || commodityCodeList.Count <= 0)
+                {
+                    MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                    isSuccess = false;
+                    return;
+                }
 
-			PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
+                LoadingDataEvent(this, true);
+                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                LoadingDataEvent(this, false);
 
-            int outCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
-            int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.AbnormalDisplay == "异常").ToList().Count;
-            int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取商品信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
 
-            outNum.Content = outCnt;
-            abnormalInNum.Content = abnormalInCnt;
-            abnormalOutNum.Content = abnormalOutCnt;
-            listView.DataContext = bdCommodityCode.body.objects;
+                bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
 
-            int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurShelfNumber > (item.Number - item.PickNumber)).Count();
+                LoadingDataEvent(this, true);
+                PickBll.GetInstance().GetPickTaskChange(bdCommodityCode, pickTask, bdCommodityDetail);
+                LoadingDataEvent(this, false);
 
-            if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
-            {
-                normalBtmView.Visibility = Visibility.Visible;
-                abnormalBtmView.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                normalBtmView.Visibility = Visibility.Collapsed;
-                abnormalBtmView.Visibility = Visibility.Visible;
-            }
+                int outCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
+                int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.AbnormalDisplay == "异常").ToList().Count;
+                int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
+
+                outNum.Content = outCnt;
+                abnormalInNum.Content = abnormalInCnt;
+                abnormalOutNum.Content = abnormalOutCnt;
+                listView.DataContext = bdCommodityCode.body.objects;
+
+                int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurShelfNumber > (item.Number - item.PickNumber)).Count();
+
+                if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
+                {
+                    normalBtmView.Visibility = Visibility.Visible;
+                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
+                }
+            }));
         }
 
         /// <summary>
@@ -165,7 +188,9 @@ namespace CFLMedCab.View.Return
         {
             if(isSuccess)
             {
+                LoadingDataEvent(this, true);
                 BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
+                LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
                 if (!isSuccess1)
@@ -174,7 +199,9 @@ namespace CFLMedCab.View.Return
                 }
                 else
                 {
+                    LoadingDataEvent(this, true);
                     BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask);
+                    LoadingDataEvent(this, false);
 
                     HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
 

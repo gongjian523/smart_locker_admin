@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -37,14 +38,19 @@ namespace CFLMedCab.View.Return
         public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickTask e);
         public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         public ReturnGoods(bool bReturnDown)
         {
             InitializeComponent();
             DataContext = this;
 
-            tbInputNumbers.Focus();
-
-            InitData();
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
         }
 
         private ObservableCollection<PickTask> _pickingOrderView = new ObservableCollection<PickTask>();
@@ -63,29 +69,33 @@ namespace CFLMedCab.View.Return
         /// <summary>
         /// 数据加载
         /// </summary>
-        private void InitData()
+        private void onInitData(object sender, ElapsedEventArgs e)
         {
-            PickingOrderList.Clear();
-
-            //ShowLoadDataEvent(this, true);
-            BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask();
-            //HideLoadDataEvent(this, true);
-
-            HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);
-            if (!isSuccess)
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("此拣货工单中失败！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                PickingOrderList.Clear();
 
-            List<PickTask> tasks = baseDataPickTask.body.objects;
-            tasks.ForEach(task => {
-                DateTime dt = Convert.ToDateTime(task.created_at);
-                task.created_at = dt.ToString("yyyy年MM月dd日");
-                PickingOrderList.Add(task);
-            });
+                LoadingDataEvent(this, true);
+                BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask();
+                LoadingDataEvent(this, false);
 
-            tbInputNumbers.Focus();
+                HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("此拣货工单中失败！", "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+
+                List<PickTask> tasks = baseDataPickTask.body.objects;
+                tasks.ForEach(task =>
+                {
+                    DateTime dt = Convert.ToDateTime(task.created_at);
+                    task.created_at = dt.ToString("yyyy年MM月dd日");
+                    PickingOrderList.Add(task);
+                });
+
+                tbInputNumbers.Focus();
+            }));
         }
 
         /// <summary>
@@ -151,9 +161,9 @@ namespace CFLMedCab.View.Return
                 name = inputStr;
             }
 
-            //ShowLoadDataEvent(this, true);
+            LoadingDataEvent(this, true);
             BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask(name);
-            //HideLoadDataEvent(this, true);
+            LoadingDataEvent(this, false);
 
             HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);
             if (!isSuccess)

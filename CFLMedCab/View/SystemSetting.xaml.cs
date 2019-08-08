@@ -118,8 +118,8 @@ namespace CFLMedCab.View
 	
 			//获取线上id
 			BaseData<string> bdEquip =  ConsumingBll.GetInstance().GetIdByName<Equipment>(tbEquipName.Text.ToString());
-            BaseData<string> bdHouse = ConsumingBll.GetInstance().GetIdByName<StoreHouse>(tbHouseName.Text.ToString());
-            BaseData<string> bdMCab = ConsumingBll.GetInstance().GetIdByName<Equipment>(tbMCabName.Text.ToString());
+            BaseData<string> bdHouse = ConsumingBll.GetInstance().GetIdByStoreHouseCode<StoreHouse>(tbHouseName.Text.ToString());
+            BaseData<string> bdMCab = ConsumingBll.GetInstance().GetIdByName<GoodsLocation>(tbMCabName.Text.ToString());
 #if DUALCAB
             BaseData<string> bdSCab = ConsumingBll.GetInstance().GetIdByName<Equipment>(tbSCabName.Text.ToString());
 #endif

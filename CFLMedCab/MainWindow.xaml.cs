@@ -115,8 +115,6 @@ namespace CFLMedCab
 
 			InitializeComponent();
 
-            
-
             foreach (Screen scr in Screen.AllScreens)
             {
                 if (scr.Primary)
@@ -501,7 +499,6 @@ namespace CFLMedCab
 #if TESTENV
             HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
 #else
-           
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 #endif
             ApplicationState.SetGoodsInfo(hs);
@@ -940,9 +937,7 @@ namespace CFLMedCab
             Replenishment replenishment = new Replenishment();
             replenishment.EnterReplenishmentDetailEvent += new Replenishment.EnterReplenishmentDetailHandler(onEnterReplenishmentDetail);
             replenishment.EnterReplenishmentDetailOpenEvent += new Replenishment.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
-
-            //replenishment.ShowLoadDataEvent += new Replenishment.ShowLoadDataHandler(onShowLoadingData);
-            //replenishment.HideLoadDataEvent += new Replenishment.HideLoadDataHandler(onHideLoadingData);
+            replenishment.LoadingDataEvent += new Replenishment.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(replenishment);
         }
@@ -957,6 +952,7 @@ namespace CFLMedCab
             ReplenishmentDetail replenishmentDetail = new ReplenishmentDetail(e);
             replenishmentDetail.EnterReplenishmentDetailOpenEvent += new ReplenishmentDetail.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
             replenishmentDetail.EnterReplenishmentEvent += new ReplenishmentDetail.EnterReplenishmentHandler(onEnterReplenishment);
+            replenishmentDetail.LoadingDataEvent += new ReplenishmentDetail.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(replenishmentDetail);
         }
@@ -971,6 +967,7 @@ namespace CFLMedCab
             NaviView.Visibility = Visibility.Hidden;
 
             ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
+            replenishmentDetailOpen.LoadingDataEvent += new ReplenishmentDetailOpen.LoadingDataHandler(onLoadingData);
             FullFrame.Navigate(replenishmentDetailOpen);
 
             MaskView.Visibility = Visibility.Visible;
@@ -1042,6 +1039,7 @@ namespace CFLMedCab
                 ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, hs);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
+                replenishmentClose.LoadingDataEvent += new ReplenishmentClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(replenishmentClose);
             }));
@@ -1079,6 +1077,7 @@ namespace CFLMedCab
                 ReplenishmentClose replenishmentClose = new ReplenishmentClose((ShelfTask)delegateGetMsg.userData, hs);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
+                replenishmentClose.LoadingDataEvent += new ReplenishmentClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(replenishmentClose);
             }));
@@ -1101,6 +1100,7 @@ namespace CFLMedCab
             ReturnGoods returnGoods = new ReturnGoods(false);
             returnGoods.EnterReturnGoodsDetailEvent += new ReturnGoods.EnterReturnGoodsDetailHandler(onEnterReturnGoodsDetail);
             returnGoods.EnterReturnGoodsDetailOpenEvent += new ReturnGoods.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
+            returnGoods.LoadingDataEvent += new ReturnGoods.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(returnGoods);
         }
@@ -1115,6 +1115,7 @@ namespace CFLMedCab
             ReturnGoodsDetail returnGoodsDetail = new ReturnGoodsDetail(e);
             returnGoodsDetail.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsDetail.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
             returnGoodsDetail.EnterReturnGoodsEvent += new ReturnGoodsDetail.EnterReturnGoodsHandler(onEnterReturnGoods);
+            returnGoodsDetail.LoadingDataEvent += new ReturnGoodsDetail.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(returnGoodsDetail);
         }
@@ -1130,6 +1131,8 @@ namespace CFLMedCab
             NaviView.Visibility = Visibility.Hidden;
 
             ReturnGoodsDetailOpen returnGoodsDetailOpen = new ReturnGoodsDetailOpen(e);
+            returnGoodsDetailOpen.LoadingDataEvent += new ReturnGoodsDetailOpen.LoadingDataHandler(onLoadingData);
+
             FullFrame.Navigate(returnGoodsDetailOpen);
 
             MaskView.Visibility = Visibility.Visible;
@@ -1189,6 +1192,7 @@ namespace CFLMedCab
                 ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(pickTask, hs);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
+                returnGoodsClose.LoadingDataEvent += new ReturnGoodsClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(returnGoodsClose);
             }));
@@ -1226,6 +1230,7 @@ namespace CFLMedCab
                 ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickTask)delegateGetMsg.userData, hs);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
+                returnGoodsClose.LoadingDataEvent += new ReturnGoodsClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(returnGoodsClose);
             }));
@@ -1244,8 +1249,7 @@ namespace CFLMedCab
 
             ReturnQuery returnQuery = new ReturnQuery();
             returnQuery.EnterReturnOpenEvent += new ReturnQuery.EnterReturnOpenHandler(onEnterReturnOpen);
-            //returnQuery.ShowLoadDataEvent += new ReturnQuery.ShowLoadDataHandler(onShowLoadingData);
-            //returnQuery.HideLoadDataEvent += new ReturnQuery.HideLoadDataHandler(onHideLoadingData);
+            returnQuery.LoadingDataEvent += new ReturnQuery.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(returnQuery);
         }
@@ -1312,6 +1316,7 @@ namespace CFLMedCab
                 returnClose.EnterReturnOpenEvent += new ReturnClose.EnterReturnOpenHandler(onEnterReturnOpen);
                 returnClose.EnterStockSwitchOpenEvent += new ReturnClose.EnterStockSwitchOpenHandler(onEnterStockSwitch);
                 returnClose.EnterPopCloseEvent += new ReturnClose.EnterPopCloseHandler(onEnterPopClose);
+                returnClose.LoadingDataEvent += new ReturnClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(returnClose);
             }));
@@ -1378,6 +1383,7 @@ namespace CFLMedCab
                 returnClose.EnterReturnOpenEvent += new ReturnClose.EnterReturnOpenHandler(onEnterReturnOpen);
                 returnClose.EnterStockSwitchOpenEvent += new ReturnClose.EnterStockSwitchOpenHandler(onEnterStockSwitch);
                 returnClose.EnterPopCloseEvent += new ReturnClose.EnterPopCloseHandler(onEnterPopClose);
+                returnClose.LoadingDataEvent += new ReturnClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(returnClose);
             }));

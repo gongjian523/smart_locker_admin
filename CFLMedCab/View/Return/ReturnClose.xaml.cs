@@ -47,6 +47,10 @@ namespace CFLMedCab.View.Return
         public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         private Timer endTimer;
 
         private bool isSuccess;
@@ -69,54 +73,72 @@ namespace CFLMedCab.View.Return
             lbTypeContent.Content = order == null ? "库存调整" : "回收下架";
 
             commodityRecovery = order;
-
-            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = afterEps;
 
-            List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
-            if (commodityCodeList == null || commodityCodeList.Count <= 0)
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+        }
+
+        /// <summary>
+        /// 数据加载
+        /// </summary>
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                isSuccess = false;
-                return;
-            }
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
 
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
-            if (!isSuccess)
-            {
-                MessageBox.Show("获取商品信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
-
-            listView.DataContext = bdCommodityCode.body.objects;
-            outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-            abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
-
-            //回收取货
-            if (order != null)
-            {
-                bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
-                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                });
-
-                if(bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count() > 0)
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                if (commodityCodeList == null || commodityCodeList.Count <= 0)
                 {
-                    normalBtmView.Visibility = Visibility.Collapsed;
-                    abnormalBtmView.Visibility = Visibility.Visible;
+                    MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                    isSuccess = false;
+                    return;
                 }
+
+                LoadingDataEvent(this, true);
+                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                LoadingDataEvent(this, false);
+
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取商品信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+
+                listView.DataContext = bdCommodityCode.body.objects;
+                outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+                abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+
+                //回收取货
+                if (commodityRecovery != null)
+                {
+                    bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
+                        it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                    });
+
+                    if (bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count() > 0)
+                    {
+                        normalBtmView.Visibility = Visibility.Collapsed;
+                        abnormalBtmView.Visibility = Visibility.Visible;
+                    }
+                    else
+                    {
+                        normalBtmView.Visibility = Visibility.Visible;
+                        abnormalBtmView.Visibility = Visibility.Collapsed;
+                    }
+                }
+                //回收取货
                 else
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;
                 }
-            }
-            //回收取货
-            else
-            {
-                normalBtmView.Visibility = Visibility.Visible;
-                abnormalBtmView.Visibility = Visibility.Collapsed;
-            }
+
+            }));
         }
 
         /// <summary>
@@ -168,7 +190,9 @@ namespace CFLMedCab.View.Return
             {
                 if (commodityRecovery == null)
                 {
+                    LoadingDataEvent(this, true);
                     BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeInStockChange(bdCommodityCode);
+                    LoadingDataEvent(this, false);
 
                     if (bdCommodityInventoryChange.code != 0)
                     {
@@ -179,7 +203,9 @@ namespace CFLMedCab.View.Return
                 }
                 else
                 {
+                    LoadingDataEvent(this, true);
                     BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, commodityRecovery);
+                    LoadingDataEvent(this, false);
 
                     if (bdCommodityInventoryChange.code != 0)
                     {

@@ -72,11 +72,44 @@ namespace CFLMedCab.Http.Bll
 		}
 
         /// <summary>
+        /// 通用业务，通过id查询名称,如果出错，返回出错信息
+        /// </summary>
+        public string GetStoreHouseCodeById<K> (string id) where K : StoreHouse
+        {
+            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+            {
+                @in =
+                {
+                field = "id",
+                in_list =  { HttpUtility.UrlEncode(id) }
+                }
+            });
+
+            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+
+            if (isSuccess)
+            {
+                return baseData.body.objects[0].StoreHouseCode;
+            }
+            else
+            {
+                return baseData.message;
+            }
+        }
+
+
+        /// <summary>
         /// 通用业务，通过name查询id,如果出错，返回出错信息
         /// </summary>
         public BaseData<string> GetIdByName<K>(string name) where K : BaseModel
         {
-            BaseData<string> baseDataRet = new BaseData<string>();
+            BaseData<string> baseDataRet = new BaseData<string>()
+            {
+                body = new BaseBody<string>()
+                {
+                    objects = new List<string>() { "" }
+                }
+            };
 
             BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
             {
@@ -93,7 +126,40 @@ namespace CFLMedCab.Http.Bll
 
             if (isSuccess)
             {
-                baseDataRet.body.objects[0] = baseData.body.objects[0].name;
+                baseDataRet.body.objects[0] = baseData.body.objects[0].id;
+            }
+            return baseDataRet;
+        }
+
+        /// <summary>
+        /// 通用业务，通过name查询id,如果出错，返回出错信息
+        /// </summary>
+        public BaseData<string> GetIdByStoreHouseCode<K>(string storeHouseCode) where K : StoreHouse
+        {
+            BaseData<string> baseDataRet = new BaseData<string>()
+            {
+                body = new BaseBody<string>()
+                {
+                    objects = new List<string>() { "" }
+                }
+            };
+
+            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+            {
+                @in =
+                {
+                field = "StoreHouseCode",
+                in_list =  { HttpUtility.UrlEncode(storeHouseCode) }
+                }
+            });
+
+            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+            baseDataRet.code = baseData.code;
+            baseDataRet.message = baseData.message;
+
+            if (isSuccess)
+            {
+                baseDataRet.body.objects[0] = baseData.body.objects[0].id;
             }
             return baseDataRet;
         }

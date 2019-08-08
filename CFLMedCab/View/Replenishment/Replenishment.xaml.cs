@@ -41,18 +41,19 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void EnterReplenishmentDetailOpenHandler(object sender, ShelfTask e);
         public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
 
-        public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
-        //public event ShowLoadDataHandler ShowLoadDataEvent;
-
-        public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
-        //public event HideLoadDataHandler HideLoadDataEvent;
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
 
         public Replenishment()
         {
             InitializeComponent();
             DataContext = this;
 
-            InitData();
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
         }
 
         private ObservableCollection<ShelfTask> _replenishOrderView = new ObservableCollection<ShelfTask>();
@@ -71,29 +72,33 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <summary>
         /// 数据加载
         /// </summary>
-        private void InitData()
+        private void onInitData(object sender, ElapsedEventArgs e)
         {
-            ReplenishOrderViewList.Clear();
-
-            //ShowLoadDataEvent(this, true);
-            BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask();
-            //HideLoadDataEvent(this, true);
-
-            HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
-            if (!isSuccess)
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("此上架工单中失败！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                ReplenishOrderViewList.Clear();
 
-            List<ShelfTask> tasks = baseDataShelfTask.body.objects;
-            tasks.ForEach(task => {
-                DateTime dt = Convert.ToDateTime(task.created_at); 
-                task.created_at = dt.ToString("yyyy年MM月dd日");               
-                ReplenishOrderViewList.Add(task);
-            });
+                LoadingDataEvent(this, true);
+                BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask();
+                LoadingDataEvent(this, false);
 
-            tbInputNumbers.Focus();
+                HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("此上架工单中失败！", "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+
+                List<ShelfTask> tasks = baseDataShelfTask.body.objects;
+                tasks.ForEach(task =>
+                {
+                    DateTime dt = Convert.ToDateTime(task.created_at);
+                    task.created_at = dt.ToString("yyyy年MM月dd日");
+                    ReplenishOrderViewList.Add(task);
+                });
+
+                tbInputNumbers.Focus();
+            }));
         }
         
         /// <summary>
@@ -158,7 +163,9 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 name = inputStr;
             }
 
+            LoadingDataEvent(this, true);
             BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);
+            LoadingDataEvent(this, false);
 
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
             if (!isSuccess)

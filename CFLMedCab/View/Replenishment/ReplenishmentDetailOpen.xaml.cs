@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -28,23 +29,45 @@ namespace CFLMedCab.View.ReplenishmentOrder
     /// </summary>
     public partial class ReplenishmentDetailOpen : UserControl
     {
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
+        ShelfTask shelfTask;
+
         public ReplenishmentDetailOpen(ShelfTask model)
         {
             InitializeComponent();
             operatorName.Content = ApplicationState.GetUserInfo().name;
             orderNum.Content = model.name;
+            shelfTask = model;
 
-            BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(model);
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+        }
 
-            HttpHelper.GetInstance().ResultCheck(commodityDetail, out bool isSuccess);
-            if (!isSuccess)
+        /// <summary>
+        /// 数据加载
+        /// </summary>
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                LoadingDataEvent(this, true);
+                BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
+                LoadingDataEvent(this, false);
 
-            listView.DataContext = commodityDetail.body.objects;
+                HttpHelper.GetInstance().ResultCheck(commodityDetail, out bool isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
 
+                listView.DataContext = commodityDetail.body.objects;
+            }));
         }
     }
 }

@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -38,6 +39,10 @@ namespace CFLMedCab.View.Return
         public delegate void EnterReturnGoodsHandler(object sender, RoutedEventArgs e);
         public event EnterReturnGoodsHandler EnterReturnGoodsEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         private PickTask pickTask;
 
         public ReturnGoodsDetail(PickTask task)
@@ -45,22 +50,38 @@ namespace CFLMedCab.View.Return
             InitializeComponent();
 
             pickTask = task;
-
             //操作人
             operatorName.Content = ApplicationState.GetUserInfo().name;
             //工单号
             orderNum.Content = task.name;
 
-            BaseData<PickCommodity> bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(task);
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+        }
 
-            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess);
-            if (!isSuccess)
+        /// <summary>
+        /// 数据加载
+        /// </summary>
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                LoadingDataEvent(this, true);
+                BaseData<PickCommodity> bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
+                LoadingDataEvent(this, false);
 
-            listView.DataContext = bdCommodityDetail.body.objects;
+
+                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("发生错误！", "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+
+                listView.DataContext = bdCommodityDetail.body.objects;
+            }));
         }
 
         /// <summary>

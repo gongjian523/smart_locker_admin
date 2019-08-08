@@ -134,10 +134,11 @@ namespace CFLMedCab.Http.Helper
 
 			}
 
-			LogUtils.Debug($"url参数为：{queryParamUrlStr.ToString()}");
+            string retStr = HttpConstant.Domain + HttpConstant.UrlPrefix + tableName + "/query" + queryParamUrlStr.ToString();
+            LogUtils.Debug($"url参数为：{retStr}");
 
-			return HttpConstant.Domain + HttpConstant.UrlPrefix + tableName + "/query" + queryParamUrlStr.ToString();
-		}
+            return retStr; 
+        }
 
 		/// <summary>
 		/// 根据表名获取创建数据url

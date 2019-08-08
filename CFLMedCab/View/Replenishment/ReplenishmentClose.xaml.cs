@@ -44,6 +44,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
 
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
+
         private ShelfTask shelfTask;
         private HashSet<CommodityEps> after;
 
@@ -71,57 +75,74 @@ namespace CFLMedCab.View.ReplenishmentOrder
             orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             shelfTask = task;
-
-            HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
             after = hs;
 
-            List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
-            if (commodityCodeList == null || commodityCodeList.Count <= 0)
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+        }
+
+        /// <summary>
+        /// 数据加载
+        /// </summary>
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
-                isSuccess = false;
-                return;
-            }
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                if (commodityCodeList == null || commodityCodeList.Count <= 0)
+                {
+                    MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
+                    isSuccess = false;
+                    return;
+                }
 
-            bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
-            if (!isSuccess)
-            {
-                MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                LoadingDataEvent(this, true);
+                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                LoadingDataEvent(this, false);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
 
-            bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
-            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
-            if (!isSuccess)
-            {
-                MessageBox.Show("获取上架任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
-                return;
-            }
+                LoadingDataEvent(this, true);
+                bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
+                LoadingDataEvent(this, false);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取上架任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
 
-            ShelfBll.GetInstance().GetShelfTaskChange(bdCommodityCode, shelfTask, bdCommodityDetail);
+                ShelfBll.GetInstance().GetShelfTaskChange(bdCommodityCode, shelfTask, bdCommodityDetail);
 
-            int inCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
-            int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1 && item.AbnormalDisplay == "异常").ToList().Count;
-            int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
+                int inCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
+                int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1 && item.AbnormalDisplay == "异常").ToList().Count;
+                int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
 
-            inNum.Content = inCnt;
-            abnormalInNum.Content = abnormalInCnt;
-            abnormalOutNum.Content = abnormalOutCnt;
-            int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => (item.CurShelfNumber > (item.NeedShelfNumber - item.AlreadyShelfNumber))).Count();
+                inNum.Content = inCnt;
+                abnormalInNum.Content = abnormalInCnt;
+                abnormalOutNum.Content = abnormalOutCnt;
+                int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => (item.CurShelfNumber > (item.NeedShelfNumber - item.AlreadyShelfNumber))).Count();
 
-            listView.DataContext = bdCommodityCode.body.objects;
+                listView.DataContext = bdCommodityCode.body.objects;
 
-            if(abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
-            {
-                normalBtmView.Visibility = Visibility.Visible;
-                abnormalBtmView.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                normalBtmView.Visibility = Visibility.Collapsed;
-                abnormalBtmView.Visibility = Visibility.Visible;
-            }
+                if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
+                {
+                    normalBtmView.Visibility = Visibility.Visible;
+                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
+                }
+            }));
         }
 
         /// <summary>
@@ -200,18 +221,22 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 else
                     abnormalCauses = AbnormalCauses.其他;
 
+                LoadingDataEvent(this, true);
                 BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, abnormalCauses);
+                LoadingDataEvent(this, false);
 
-				HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
+                HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
 				if (!isSuccess1)
 				{
 					MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
 				}
 				else
 				{
-					BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+                    LoadingDataEvent(this, true);
+                    BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+                    LoadingDataEvent(this, false);
 
-					HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
+                    HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
 
 					if (!isSuccess2)
 					{

@@ -36,11 +36,9 @@ namespace CFLMedCab.View.Return
         public delegate void EnterReturnOpenHandler(object sender, CommodityRecovery e);
         public event EnterReturnOpenHandler EnterReturnOpenEvent;
 
-        //public delegate void ShowLoadDataHandler(object sender, RoutedEventArgs e);
-        //public event ShowLoadDataHandler ShowLoadDataEvent;
-
-        //public delegate void HideLoadDataHandler(object sender, RoutedEventArgs e);
-        //public event HideLoadDataHandler HideLoadDataEvent;
+        //显示加载数据的进度条
+        public delegate void LoadingDataHandler(object sender, bool e);
+        public event LoadingDataHandler LoadingDataEvent;
 
         //KeyboardView kbHandler = new KeyboardView();
 
@@ -77,21 +75,17 @@ namespace CFLMedCab.View.Return
                 name = inputStr;
             }
 
-            //ShowLoadDataEvent(this, null);
-
+            LoadingDataEvent(this, true);
             BaseData<CommodityRecovery> bdCommodityRecovery = CommodityRecoveryBll.GetInstance().GetCommodityRecovery(name);
+            LoadingDataEvent(this, false);
 
-
-			HttpHelper.GetInstance().ResultCheck(bdCommodityRecovery, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(bdCommodityRecovery, out bool isSuccess);
 
 			if (!isSuccess)
 			{
 				MessageBox.Show("无法获取回收下架单详情！" + bdCommodityRecovery.message, "温馨提示", MessageBoxButton.OK);
 				return;
 			}
-
-            //HideLoadDataEvent(this, null);
-
             EnterReturnOpenEvent(this, bdCommodityRecovery.body.objects[0]);
         }
         
