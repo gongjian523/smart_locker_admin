@@ -34,9 +34,9 @@ namespace CFLMedCab.Http.Model.login
     public class VeinRegister
     {
         /// <summary>
-        /// 服务端返回的前面
+        /// 服务端返回的签名
         /// </summary>
-        public string sersign { get; set; }
+        public string srvsign { get; set; }
 
     }
 }

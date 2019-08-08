@@ -26,9 +26,8 @@ namespace CFLMedCab.Http.Bll
         public BaseSinglePostData<VeinRegister> VeinmatchRegister(VeinregisterPostParam param)
         {
             System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.devsign);
-
             //HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
-            return HttpHelper.GetInstance().PostByAdminToken<VeinRegister, VeinregisterPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param);
+            return HttpHelper.GetInstance().PostByAdminToken<VeinRegister, VeinregisterPostParam>(HttpHelper.GetVeinmatchRegisterUrl(), param);
         }
 
         /// <summary>

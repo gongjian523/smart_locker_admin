@@ -190,7 +190,8 @@ namespace CFLMedCab
 					}
 					else
 					{
-                        //if(RegisterVein())
+                        Console.ReadKey();
+                        //if (RegisterVein())
                         //{
                         //    onFingerDetected(this, -2);
                         //}
@@ -1831,7 +1832,7 @@ namespace CFLMedCab
             byte[] devSign = new byte[36];
             ushort devSignLen = 0;
 
-            int veinSt = vein.GetDevSign(devSign,  ref devSignLen);
+            int veinSt = vein.GetDevSign(devSign,  out devSignLen);
             if(veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
             {
                 LogUtils.Error("获取本地指静脉设备签名失败！" + veinSt);
@@ -1841,7 +1842,7 @@ namespace CFLMedCab
             string devStr = "";
             if (devSign != null)
             {
-                for (int i = 0; i < devSignLen; i++)
+                for (int i = 0; i < 36; i++)
                 {
                     devStr += devSign[i].ToString("X2");
                 }
@@ -1857,7 +1858,7 @@ namespace CFLMedCab
                 return false;
             }
 
-            string hexString = bdVeinRegister.body.sersign.Replace(" ", "");
+            string hexString = bdVeinRegister.body.srvsign.Replace(" ", "");
             if ((hexString.Length % 2) != 0)
                 hexString += " ";
             byte[] serSign = new byte[hexString.Length / 2];

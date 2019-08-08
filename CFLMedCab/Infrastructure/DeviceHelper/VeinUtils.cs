@@ -118,7 +118,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         //读取设备的签名信息
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_GetDevSign", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FV_GetDevSign(StringBuilder devName, byte[] devsign, ref UInt16 devsignLen);
+        public static extern int FV_GetDevSign(StringBuilder devName, byte[] devsign, out ushort devsignLen);
 
         //设置设备的签名信息
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_SetDevSign", CallingConvention = CallingConvention.Cdecl)]
@@ -529,9 +529,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         }
 
         //读取设备的签名信息
-        public int GetDevSign(byte[] devsign, ref ushort devsignLen)
+        public int GetDevSign(byte[] devsign, out ushort devsignLen)
         {
-            return FV_GetDevSign(devName, devsign, ref devsignLen);
+            return FV_GetDevSign(devName, devsign, out  devsignLen);
         }
 
         //设置设备的签名信息
