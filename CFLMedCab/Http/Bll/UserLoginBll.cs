@@ -27,8 +27,8 @@ namespace CFLMedCab.Http.Bll
         {
             System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.devsign);
 
-            HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
-            return HttpHelper.GetInstance().Post<VeinRegister, VeinregisterPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param, true);
+            //HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
+            return HttpHelper.GetInstance().PostByAdminToken<VeinRegister, VeinregisterPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param);
         }
 
         /// <summary>
@@ -50,8 +50,8 @@ namespace CFLMedCab.Http.Bll
 		{
             System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.regfeature);
 
-            HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
-            return HttpHelper.GetInstance().Post<VeinMatch, VeinmatchPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param, true);
+            //HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
+            return HttpHelper.GetInstance().PostByAdminToken<VeinMatch, VeinmatchPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param);
 		}
 
 

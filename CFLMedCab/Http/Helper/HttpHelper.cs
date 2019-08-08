@@ -890,6 +890,37 @@ namespace CFLMedCab.Http.Helper
 			return ret;
 		}
 
+
+		// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		public BaseSinglePostData<T> PostByAdminToken<T, K>(string url, K postParam) where T : class
+		{
+			var handleEventWait = new HandleEventWait();
+			BaseSinglePostData<T> ret = null;
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			JumpKick.HttpLib.Http.Post(url).Headers(GetAdminTokenHeaders()).Body(JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting)).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			return ret;
+		}
+
 		// <summary>
 		/// 同步获取post请求结果
 		/// </summary>
