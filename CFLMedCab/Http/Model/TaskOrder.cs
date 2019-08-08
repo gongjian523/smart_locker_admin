@@ -32,10 +32,5 @@ namespace CFLMedCab.Http.Model
         /// 标签码
         /// </summary>
         public string CommodityCodeName { get; set; }
-
-        /// <summary>
-        /// 商品名
-        /// </summary>
-        public string CommodityName { get; set; }
     }
 }
