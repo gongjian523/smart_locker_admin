@@ -37,7 +37,7 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-                        logical_relation = "1 AND 2 AND 3",
+                        logical_relation = "1 AND 2 AND (3 OR 4) ",
                         expressions =
 						{
 							new QueryParam.Expressions
@@ -46,17 +46,23 @@ namespace CFLMedCab.Http.Bll
 								@operator = "==",
 								operands =  {$"'{ HttpUtility.UrlEncode(taskName) }'"}
 							},
-							new QueryParam.Expressions
-							{
-								field = "Status",
-								@operator = "==",
-								operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
-							},
                             new QueryParam.Expressions
                             {
                                 field = "Operator",
                                 @operator = "==",
                                 operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Status",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.待盘点.ToString()) }'" }
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Status",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(InventoryTaskStatus.盘点中.ToString()) }'" }
                             }
                         }
 					}

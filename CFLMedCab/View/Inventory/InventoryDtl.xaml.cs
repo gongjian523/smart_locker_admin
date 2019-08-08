@@ -61,7 +61,6 @@ namespace CFLMedCab.View.Inventory
             InitializeComponent();
 
             DataContext = this;
-            Code = task.name;
             CreateTime = DateTime.Now;
             Type = 1;
             Status = 0;
@@ -104,15 +103,23 @@ namespace CFLMedCab.View.Inventory
 #else
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 #endif
-            list = CommodityCodeBll.GetInstance().GetCommodityCode(hs).body.objects.ToList();
+            if(hs.Count > 0)
+            {
+                list = CommodityCodeBll.GetInstance().GetCommodityCode(hs).body.objects.ToList();
+            }
+            else
+            {
+                list = new List<CommodityCode>();
+            }
+            inventoryOrder.GoodsLocationName = CommodityCodeBll.GetInstance().GetStoreHouseCodeById<StoreHouse>(inventoryOrder.GoodsLocationId);
 
             SetPopInventoryEvent(this, false);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                Code = inventoryOrder.name;
                 goodsDtllistConfirmView.DataContext = list;
                 goodsDtllistConfirmView.Items.Refresh();
-
                 codeInputTb.Focus();
 
             }));

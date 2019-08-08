@@ -89,7 +89,13 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		[Description("待确认")]
 
-		待确认 = 3
+		待确认 = 3,
 
-	}
+        /// <summary>
+        /// 盘点中
+        /// </summary>
+        [Description("盘点中")]
+        盘点中 = 4
+
+    }
 }
