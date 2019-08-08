@@ -191,14 +191,14 @@ namespace CFLMedCab
 					else
 					{
                         Console.ReadKey();
-                        //if (RegisterVein())
-                        //{
-                        //    onFingerDetected(this, -2);
-                        //}
-                        //else
+                        if (RegisterVein())
                         {
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+							ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
                         }
+                        else
+                        {
+							onFingerDetected(this, -2);
+						}
                     }
 				}
             }
@@ -1824,7 +1824,10 @@ namespace CFLMedCab
             inventoryDetailHandler = null;
         }
 
-
+		/// <summary>
+		/// 签名注册
+		/// </summary>
+		/// <returns></returns>
         private bool RegisterVein()
         {
 #if TESTENV
@@ -1839,15 +1842,9 @@ namespace CFLMedCab
                 return false;
             }
 
-            string devStr = "";
-            if (devSign != null)
-            {
-                for (int i = 0; i < 36; i++)
-                {
-                    devStr += devSign[i].ToString("X2");
-                }
-            }
-
+			//转换成16进制字符串
+            string devStr = HexHelper.ByteToHexStr(devSign);
+            
             BaseSinglePostData<VeinRegister> bdVeinRegister = UserLoginBll.GetInstance().VeinmatchRegister(new VeinregisterPostParam {
                 devsign = devStr
             });
@@ -1858,14 +1855,9 @@ namespace CFLMedCab
                 return false;
             }
 
-            string hexString = bdVeinRegister.body.srvsign.Replace(" ", "");
-            if ((hexString.Length % 2) != 0)
-                hexString += " ";
-            byte[] serSign = new byte[hexString.Length / 2];
-            for (int i = 0; i < serSign.Length; i++)
-                serSign[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+			byte[] serSign = HexHelper.StrToToHexByte(bdVeinRegister.body.srvsign);
+            veinSt = vein.SetDevSign(serSign, (ushort)serSign.Length);
 
-            veinSt = vein.SetDevSign(devSign, (ushort)serSign.Length);
             if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
             {
                 LogUtils.Error("设置本地指静脉设备签名失败！" + veinSt);
