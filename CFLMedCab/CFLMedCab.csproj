@@ -688,15 +688,21 @@
     <Folder Include="Controls\Controls\" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Lib\BioVein.Win32.dll" />
-    <Content Include="Lib\BioVein1x.Win32.dll" />
-    <Content Include="Lib\BioVein3x.Win32.dll" />
-    <Content Include="Lib\GReaderApi.dll">
+    <EmbeddedResource Include="BioVein.Win32.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Lib\IWshRuntimeLibrary.dll" />
-    <Content Include="Lib\VeinMatch.Win32.dll" />
-    <Resource Include="MyProject.xml" />
+    </EmbeddedResource>
+    <EmbeddedResource Include="BioVein1x.Win32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BioVein3x.Win32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="VeinMatch.Win32.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyProject.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Resource Include="Resources\Images\btn-ReturnAll.png" />
     <Resource Include="Resources\Images\btn-StockAdjust.png" />
     <Resource Include="Resources\Images\btn-SysSetting.png" />
@@ -706,6 +712,10 @@
     <Resource Include="Resources\Images\to-right.png" />
     <Resource Include="Resources\Images\to-left.png" />
     <Resource Include="Resources\Images\ico-calendar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Lib\GReaderApi.dll" />
+    <Content Include="Lib\IWshRuntimeLibrary.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
