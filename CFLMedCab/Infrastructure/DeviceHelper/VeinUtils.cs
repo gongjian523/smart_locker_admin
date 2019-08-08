@@ -118,11 +118,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         //读取设备的签名信息
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_GetDevSign", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FV_GetDevSign(StringBuilder devName, byte[] devsign, out UInt16 devsignLen);
+        public static extern int FV_GetDevSign(StringBuilder devName, byte[] devsign, out ushort devsignLen);
 
         //设置设备的签名信息
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_SetDevSign", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FV_SetDevSign(StringBuilder devName, byte[] srvsign, UInt16 devsignLen);
+        public static extern int FV_SetDevSign(StringBuilder devName, byte[] srvsign, ushort srvsignLen);
 
 
         StringBuilder[] devIdList = new StringBuilder[10];	//设备列表
@@ -529,15 +529,15 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         }
 
         //读取设备的签名信息
-        public int GetDevSign(byte[] devsign, out UInt16 devsignLen)
+        public int GetDevSign(byte[] devsign, out ushort devsignLen)
         {
             return FV_GetDevSign(devName, devsign, out devsignLen);
         }
 
         //设置设备的签名信息
-        public int SetDevSign(byte[] srvsign, UInt16 devsignLen)
+        public int SetDevSign(byte[] srvsign, ushort srvsignLen)
         {
-            return FV_SetDevSign(devName, srvsign, devsignLen);
+            return FV_SetDevSign(devName, srvsign, srvsignLen);
         }
 
     }
