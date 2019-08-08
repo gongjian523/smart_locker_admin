@@ -52,11 +52,10 @@ namespace CFLMedCab.View.Inventory
         public int Type { get; set; }
         public int Status { get; set; }
 
-        private InventoryTask inventoryTask;
         private InventoryOrder inventoryOrder;
         private List<CommodityCode> list = new List<CommodityCode>();
 
-        public InventoryDtl(InventoryTask task)
+        public InventoryDtl(InventoryOrder order)
         {
             InitializeComponent();
 
@@ -64,8 +63,8 @@ namespace CFLMedCab.View.Inventory
             CreateTime = DateTime.Now;
             Type = 1;
             Status = 0;
-
-            inventoryTask = task;
+            Code = inventoryOrder.name;
+            inventoryOrder = order;
 
             goodsDtllistConfirmView.DataContext = list;
 
@@ -85,19 +84,6 @@ namespace CFLMedCab.View.Inventory
         {
             SetPopInventoryEvent(this, true);
 
-            BaseData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(inventoryTask.name);
-
-			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccess1);
-
-			if (!isSuccess1)
-			{
-                SetPopInventoryEvent(this, false);
-				MessageBox.Show("无法获取盘点任务单！", "温馨提示", MessageBoxButton.OK);
-				return;
-			}
-
-            inventoryOrder = bdInventoryOrder.body.objects[0];
 #if TESTENV
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
@@ -111,17 +97,15 @@ namespace CFLMedCab.View.Inventory
             {
                 list = new List<CommodityCode>();
             }
-            inventoryOrder.GoodsLocationName = CommodityCodeBll.GetInstance().GetStoreHouseCodeById<StoreHouse>(inventoryOrder.GoodsLocationId);
+            inventoryOrder.GoodsLocationName = CommodityCodeBll.GetInstance().GetNameById<GoodsLocation>(inventoryOrder.GoodsLocationId);
 
             SetPopInventoryEvent(this, false);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                Code = inventoryOrder.name;
                 goodsDtllistConfirmView.DataContext = list;
                 goodsDtllistConfirmView.Items.Refresh();
                 codeInputTb.Focus();
-
             }));
         }
 
@@ -302,8 +286,5 @@ namespace CFLMedCab.View.Inventory
                 onAddProduct(this, null);
             }
         }
-
-
-
     }
 }

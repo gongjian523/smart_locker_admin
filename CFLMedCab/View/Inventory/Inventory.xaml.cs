@@ -36,7 +36,7 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class Inventory : UserControl
     {
-        public delegate void EnterInventoryDetailHandler(object sender, InventoryTask e);
+        public delegate void EnterInventoryDetailHandler(object sender, InventoryOrder e);
         public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
 
         public delegate void EnterInventoryDetailLcoalHandler(object sender, int e);
@@ -156,9 +156,23 @@ namespace CFLMedCab.View.Inventory
                 return false;
             }
 
+
+            LoadingDataEvent(this, true);
+            BaseData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(bdInventoryTask.body.objects[0].name);
+            LoadingDataEvent(this, false);
+
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccess1);
+            if (!isSuccess1)
+            {
+                SetPopInventoryEvent(this, false);
+                MessageBox.Show("无法获取盘点单！", "温馨提示", MessageBoxButton.OK);
+                return false;
+            }
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                EnterInventoryDetailEvent(this, bdInventoryTask.body.objects[0]);
+                EnterInventoryDetailEvent(this, bdInventoryOrder.body.objects[0]);
             }));
 
             return true;
