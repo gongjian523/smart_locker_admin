@@ -300,6 +300,7 @@
     <Compile Include="Infrastructure\DeviceHelper\LockerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\RfidHelper.cs" />
     <Compile Include="Infrastructure\ToolHelper\GetRandomString.cs" />
+    <Compile Include="Infrastructure\ToolHelper\HexHelper.cs" />
     <Compile Include="Infrastructure\ToolHelper\ImageUtils.cs" />
     <Compile Include="Infrastructure\ToolHelper\LogUtils.cs" />
     <Compile Include="Model\Constant\Contant.cs" />
