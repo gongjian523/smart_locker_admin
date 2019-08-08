@@ -49,7 +49,7 @@ namespace CFLMedCab.View.Fetch
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        private Timer endTimer;
+        //private Timer endTimer;
         bool bExit;
 
         private FetchParam fetchParam;
@@ -68,10 +68,10 @@ namespace CFLMedCab.View.Fetch
             surgeryNum.Content = param.bdConsumingOrder.body.objects[0].name;
             after = afterEps;
 
-            endTimer = new Timer(Contant.ClosePageEndTimer);
-            endTimer.AutoReset = false;
-            endTimer.Enabled = true;
-            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+            //endTimer = new Timer(Contant.ClosePageEndTimer);
+            //endTimer.AutoReset = false;
+            //endTimer.Enabled = true;
+            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -130,7 +130,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param> 
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
+            //endTimer.Close();
             EnterSurgeryNumOpenEvent(this, fetchParam);
         }
 
@@ -141,24 +141,40 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
+            //endTimer.Close();
             bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
             EndOperation(bExit);
         }
 
+        ///// <summary>
+        ///// 结束定时器超时
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        //{
+        //    App.Current.Dispatcher.Invoke((Action)(() => {
+        //        EndOperation(true);
+        //    }));
+        //}
+
         /// <summary>
-        /// 结束定时器超时
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        /// 长时间未操作界面
+        /// </summary>        
+        public void onExitTimerExpired()
         {
-            App.Current.Dispatcher.Invoke((Action)(() => {
-                EndOperation(true);
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                EndOperation(true, false);
             }));
         }
 
-        private void EndOperation(bool bExit)
+        /// <summary>
+        /// 结束操作，包括主动提交和长时间未操作界面被动提交
+        /// </summary>
+        /// <param name="bExit">退出登陆还是回到首页</param>
+        /// <param name="bAutoSubmit">是否是主动提交</param>
+        private void EndOperation(bool bExit, bool bAutoSubmit = true)
         {
             if(isSuccess)
             {
@@ -170,7 +186,7 @@ namespace CFLMedCab.View.Fetch
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
 
-				if (!isSuccess1)
+				if (!isSuccess1 && bAutoSubmit)
 				{
 					MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 				}
@@ -179,7 +195,12 @@ namespace CFLMedCab.View.Fetch
 			}
 
             ApplicationState.SetGoodsInfo(after);
-            EnterPopCloseEvent(this, bExit);
+
+            //主动提交，需要发送退出事件
+            if (bAutoSubmit)
+            {
+                EnterPopCloseEvent(this, bExit);
+            }
         }
 
         private void onConfirmed(object sender, RoutedEventArgs e)
@@ -227,7 +248,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
+            //endTimer.Close();
             EndOperation(bExit);
         }
 

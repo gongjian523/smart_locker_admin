@@ -54,7 +54,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         BaseData<CommodityCode> bdCommodityCode;
         BaseData<ShelfTaskCommodityDetail> bdCommodityDetail;
 
-        private Timer endTimer;
+        //private Timer endTimer;
 
         bool bExit;
 
@@ -64,10 +64,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             InitializeComponent();
 
-            endTimer = new Timer(Contant.ClosePageEndTimer);
-            endTimer.AutoReset = false;
-            endTimer.Enabled = true;
-            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+            //endTimer = new Timer(Contant.ClosePageEndTimer);
+            //endTimer.AutoReset = false;
+            //endTimer.Enabled = true;
+            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             //操作人
             operatorName.Content = ApplicationState.GetUserInfo().name;
@@ -171,7 +171,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
             if (!bGotoAbnormal || !isSuccess)
             {
-                endTimer.Close();
+                //endTimer.Close();
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
                 EndOperation(bExit);
             }
@@ -191,38 +191,62 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
+            //endTimer.Close();
             EnterReplenishmentDetailOpenEvent(this, shelfTask);
             return;
         }
 
+        ///// <summary>
+        ///// 结束定时器超时
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        //{
+        //    App.Current.Dispatcher.Invoke((Action)(() =>
+        //    {
+        //        EndOperation(true);
+        //    }));
+        //}
+
         /// <summary>
-        /// 结束定时器超时
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        /// 长时间未操作界面
+        /// </summary>        
+        public void onExitTimerExpired()
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                EndOperation(true);
+                EndOperation(true, false);
             }));
         }
 
-        private void EndOperation(bool bEixt)
+        /// <summary>
+        /// 结束操作，包括主动提交和长时间未操作界面被动提交
+        /// </summary>
+        /// <param name="bExit">退出登陆还是回到首页</param>
+        /// <param name="bAutoSubmit">是否是主动提交</param>
+        private void EndOperation(bool bExit, bool bAutoSubmit = true)
         {
             if(isSuccess)
             {
                 AbnormalCauses abnormalCauses;
 
                 if ((bool)bthShortHide.IsChecked)
-                    abnormalCauses=AbnormalCauses.商品缺失;
+                    abnormalCauses = AbnormalCauses.商品缺失;
                 else if ((bool)bthLossHide.IsChecked)
                     abnormalCauses = AbnormalCauses.商品遗失;
                 else if ((bool)bthBadHide.IsChecked)
-                    abnormalCauses = AbnormalCauses.商品遗失;
-                else
+                    abnormalCauses = AbnormalCauses.商品损坏;
+                else if ((bool)bthOtherHide.IsChecked)
                     abnormalCauses = AbnormalCauses.其他;
+                else
+                    abnormalCauses = AbnormalCauses.未选;
+
+                //长时间未操作，状态一律改成异常
+                if(!bAutoSubmit)
+                {
+                    shelfTask.Status = DocumentStatus.异常.ToString();
+                }
 
                 LoadingDataEvent(this, true);
                 BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, abnormalCauses);
@@ -231,17 +255,20 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
 				if (!isSuccess1)
 				{
-					MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    if(bAutoSubmit)
+                    {
+                        MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    }
 				}
 				else
 				{
                     LoadingDataEvent(this, true);
-                    BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask);
+                    BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask, bAutoSubmit);
                     LoadingDataEvent(this, false);
 
                     HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
 
-					if (!isSuccess2)
+					if (!isSuccess2 && bAutoSubmit)
 					{
 						MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
 					}
@@ -249,7 +276,11 @@ namespace CFLMedCab.View.ReplenishmentOrder
             }
 
             ApplicationState.SetGoodsInfo(after);
-            EnterPopCloseEvent(this, bEixt);
+
+            if(bAutoSubmit)
+            {
+                EnterPopCloseEvent(this, bExit);
+            }
         }
 
         /// <summary>
@@ -303,7 +334,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
+            //endTimer.Close();
             EndOperation(bExit);
         }
 

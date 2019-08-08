@@ -58,12 +58,12 @@ namespace CFLMedCab.View.Fetch
 
             if (type == ConsumingOrderType.医嘱处方领用)
             {
-                lbInputCode.Content = "请输入医嘱处方领号或扫描医嘱处方领单二维码";
+                lbInputCode.Content = "请输入医嘱处方单号或扫描二维码";
                 btnNoCode.Visibility = Visibility.Hidden;
             }
             else
             {
-                lbInputCode.Content = "请输入手术单号或扫描手术单二维码";
+                lbInputCode.Content = "请输入手术领用单号或扫描二维码";
                 btnNoCode.Visibility = Visibility.Visible;
             }
 
@@ -115,6 +115,7 @@ namespace CFLMedCab.View.Fetch
                 FetchParam fetchParam = new FetchParam();
                 LoadingDataEvent(this, true);
                 fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
+                LoadingDataEvent(this, false);
 
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(fetchParam.bdConsumingOrder, out bool isSuccess);
@@ -126,6 +127,7 @@ namespace CFLMedCab.View.Fetch
 
                 LoadingDataEvent(this, true);
                 fetchParam.bdOperationOrderGoodsDetail = ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(fetchParam.bdConsumingOrder);
+                LoadingDataEvent(this, false);
 
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(fetchParam.bdOperationOrderGoodsDetail, out bool isSuccess1);

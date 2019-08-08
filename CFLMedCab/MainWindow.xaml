@@ -19,7 +19,7 @@
     <Grid>
         <Grid x:Name="LoadingView" Panel.ZIndex="5" Visibility="Hidden"  >
             <Grid>
-                <Controls:ProgressRing x:Name="LoadDataPR" IsActive="False"/>
+                <Controls:ProgressRing x:Name="LoadDataPR" IsActive="False" Foreground="#FD854E" Height="120" Width="120"/>
                 <Grid Background="#000000" Opacity="0.0"/>
             </Grid>
         </Grid>

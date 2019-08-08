@@ -51,7 +51,7 @@ namespace CFLMedCab.View.Return
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        private Timer endTimer;
+        //private Timer endTimer;
 
         private bool isSuccess;
 
@@ -63,10 +63,10 @@ namespace CFLMedCab.View.Return
         {
             InitializeComponent();
 
-            endTimer = new Timer(Contant.ClosePageEndTimer);
-            endTimer.AutoReset = false;
-            endTimer.Enabled = true;
-            endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
+            //endTimer = new Timer(Contant.ClosePageEndTimer);
+            //endTimer.AutoReset = false;
+            //endTimer.Enabled = true;
+            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetUserInfo().name;
@@ -148,7 +148,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
+            //endTimer.Close();
             Button btn = (Button)sender;
             EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
@@ -160,7 +160,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            endTimer.Close();
+            //endTimer.Close();
 
             if (commodityRecovery == null)
             {
@@ -172,19 +172,35 @@ namespace CFLMedCab.View.Return
             }
         }
 
+        ///// <summary>
+        ///// 结束定时器超时
+        ///// </summary>
+        ///// <param name="sender"></param>
+        ///// <param name="e"></param>
+        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        //{
+        //    App.Current.Dispatcher.Invoke((Action)(() => {
+        //        EndOperation(true);
+        //    }));
+        //}
+
         /// <summary>
-        /// 结束定时器超时
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEndTimerExpired(object sender, ElapsedEventArgs e)
+        /// 长时间未操作界面
+        /// </summary>        
+        public void onExitTimerExpired()
         {
-            App.Current.Dispatcher.Invoke((Action)(() => {
-                EndOperation(true);
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                EndOperation(true, false);
             }));
         }
 
-        private void EndOperation(bool bExit)
+        /// <summary>
+        /// 结束操作，包括主动提交和长时间未操作界面被动提交
+        /// </summary>
+        /// <param name="bExit">退出登陆还是回到首页</param>
+        /// <param name="bAutoSubmit">是否是主动提交</param>
+        private void EndOperation(bool bExit, bool bAutoSubmit = true)
         {
             if(isSuccess)
             {
@@ -204,7 +220,7 @@ namespace CFLMedCab.View.Return
                 else
                 {
                     LoadingDataEvent(this, true);
-                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, commodityRecovery);
+                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, commodityRecovery, bAutoSubmit);
                     LoadingDataEvent(this, false);
 
                     if (bdCommodityInventoryChange.code != 0)

@@ -190,8 +190,12 @@ namespace CFLMedCab
 					}
 					else
 					{
-         
-                        if (RegisterVein())
+       //                 Console.ReadKey();
+       //                 if (RegisterVein())
+       //                 {
+							//ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+       //                 }
+       //                 else
                         {
 							onFingerDetected(this, -2);
 						}
@@ -1853,7 +1857,7 @@ namespace CFLMedCab
 
 			veinSt = vein.SetDevSign(serSign, (ushort)serSign.Count());
 
-            if (veinSt != VeinUtils.FV_ERRCODE_FUNCTION_INVALID)
+            if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
             {
                 LogUtils.Error("设置本地指静脉设备签名失败！" + veinSt);
                 return false;
@@ -1912,18 +1916,19 @@ namespace CFLMedCab
 		/// <param name="e"></param>
 		private void IdleTime(object sender, EventArgs e)
 		{
-
 			if (!GetLastInputInfo(ref mLastInputInfo))
-				System.Windows.MessageBox.Show("GetLastInputInfo Failed!");
-			else
-			{
-				//if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 > 20)
-				//{
-				//	System.Windows.MessageBox.Show("no operation for 5 minutes.");
-				//}
-			}
+            {
+                System.Windows.MessageBox.Show("GetLastInputInfo Failed!");
+                return;
+            }
 
-		}
+            if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 < 20)
+            {
+                return;
+            }
+
+            System.Windows.MessageBox.Show("no operation for 5 minutes.");
+        }
 
 	}
 

@@ -216,7 +216,7 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="baseDataCommodityCode"></param>
         /// <returns></returns>
-        public BasePostData<CommodityInventoryChange> CreateCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, CommodityRecovery commodityRecovery)
+        public BasePostData<CommodityInventoryChange> CreateCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, CommodityRecovery commodityRecovery, bool bAutoSubmit)
         {
             if (null == baseDataCommodityCode)
             {
@@ -233,7 +233,7 @@ namespace CFLMedCab.Http.Bll
             {
                 outList.ForEach(commodityCode =>
                 {
-                    var temp = new CommodityInventoryChange()
+                    CommodityInventoryChange cic = new CommodityInventoryChange()
                     {
                         CommodityCodeId = commodityCode.id,
                         SourceBill = new SourceBill
@@ -244,8 +244,40 @@ namespace CFLMedCab.Http.Bll
                         ChangeStatus = CommodityInventoryChangeStatus.待回收.ToString(),
                         StoreHouseId = commodityRecovery.StoreHouse
                     };
-                    changes.Add(temp);
+
+                    if(!bAutoSubmit)
+                    {
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
+                    }
+                    changes.Add(cic);
                 });
+            }
+
+            if(!bAutoSubmit)
+            {
+                //创建商品库存变更记录资料【入库::上架】
+                var inList = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 1).ToList();
+                if (null != inList || inList.Count > 0)
+                {
+                    inList.ForEach(commodityCode =>
+                    {
+                        CommodityInventoryChange cic = new CommodityInventoryChange()
+                        {
+                            CommodityCodeId = commodityCode.id,
+                            SourceBill = new SourceBill
+                            {
+                                object_name = "CommodityRecovery",
+                                object_id = commodityRecovery.id
+                            },
+                            ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                            StoreHouseId = commodityCode.StoreHouseId,
+                            EquipmentId = commodityCode.EquipmentId,
+                            GoodsLocationId = commodityCode.GoodsLocationId,
+                            AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString()
+                         };
+                        changes.Add(cic);
+                    });
+                }
             }
 
             return CreateCommodityInventoryChange(changes);

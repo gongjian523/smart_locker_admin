@@ -365,11 +365,12 @@ namespace CFLMedCab.Http.Bll
 
 		}
 
-
         /// <summary>
         /// 更新上架任务单
         /// </summary>
-        /// <param name="baseDataShelfTask">最后结果集</param>
+        /// <param name="shelfTask"></param>
+        /// <param name="abnormalCauses"></param>
+        /// <param name="bAutoSubmit">是否是主动提交</param>
         /// <returns></returns>
         public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask, AbnormalCauses abnormalCauses)
         {
@@ -381,7 +382,7 @@ namespace CFLMedCab.Http.Bll
                 version = shelfTask.version
             };
 
-            if (shelfTask.Status == DocumentStatus.异常.ToString())
+            if (shelfTask.Status == DocumentStatus.异常.ToString() && abnormalCauses != AbnormalCauses.未选)
             {
                 task.AbnormalCauses = abnormalCauses.ToString();
             }
@@ -395,13 +396,14 @@ namespace CFLMedCab.Http.Bll
             return basePutData;
         }
 
-		/// <summary>
-		/// 上架的库存变化
-		/// </summary>
-		/// <param name="baseDatacommodityCode"></param>
-		/// <param name="shelfTask"></param>
-		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> CreateShelfTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, ShelfTask shelfTask)
+        /// <summary>
+        /// 上架的库存变化
+        /// </summary>
+        /// <param name="baseDataCommodityCode"></param>
+        /// <param name="shelfTask"></param>
+        /// <param name="bAutoSubmit">是否是主动提交</param>
+        /// <returns></returns>
+        public BasePostData<CommodityInventoryChange> CreateShelfTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, ShelfTask shelfTask, bool bAutoSubmit)
 		{
 
 			BasePostData<CommodityInventoryChange> retBaseSinglePostDataCommodityInventoryChange = null;
@@ -411,26 +413,12 @@ namespace CFLMedCab.Http.Bll
 
 			if (isSuccess)
 			{
-
 				var CommodityCodes = baseDataCommodityCode.body.objects;
-
 				var CommodityInventoryChanges = new List<CommodityInventoryChange>(CommodityCodes.Count);
 
-				CommodityCodes.ForEach(it=> {
-
-					string changeStatus;
-
-					if (it.operate_type == (int)OperateType.出库)
-					{
-						changeStatus = CommodityInventoryChangeStatus.已消耗.ToString();
-					}
-					else
-					{
-						changeStatus = CommodityInventoryChangeStatus.正常.ToString();
-					}
-
-
-                    CommodityInventoryChanges.Add(new CommodityInventoryChange()
+                CommodityCodes.ForEach(it =>
+                {
+                    CommodityInventoryChange cic = new CommodityInventoryChange()
                     {
                         CommodityCodeId = it.id,//商品码【扫描】
                         SourceBill = new SourceBill()//来源单据
@@ -438,12 +426,30 @@ namespace CFLMedCab.Http.Bll
                             object_name = typeof(ShelfTask).Name,
                             object_id = shelfTask.id
                         },
-                        ChangeStatus = changeStatus,
                         EquipmentId = ApplicationState.GetEquipId(),
                         StoreHouseId = ApplicationState.GetHouseId(),
                         GoodsLocationId = it.GoodsLocationId
-					});
-				});
+                    };
+
+                    if (it.operate_type == (int)OperateType.出库)
+                    {
+                        cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
+                    }
+                    else
+                    {
+                        cic.ChangeStatus = CommodityInventoryChangeStatus.正常.ToString();
+                        cic.EquipmentId = it.EquipmentId;
+                        cic.StoreHouseId = it.StoreHouseId;
+                        cic.GoodsLocationId = it.GoodsLocationId;
+                    }
+
+                    if (!bAutoSubmit)
+                    {
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
+                    }
+
+                    CommodityInventoryChanges.Add(cic);
+                });
 
 				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
 			}

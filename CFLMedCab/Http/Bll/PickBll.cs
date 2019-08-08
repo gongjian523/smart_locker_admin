@@ -375,13 +375,14 @@ namespace CFLMedCab.Http.Bll
         }
 
 
-		/// <summary>
-		/// 拣货的库存变化
-		/// </summary>
-		/// <param name="baseDatacommodityCode"></param>
-		/// <param name="pickTask"></param>
-		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> CreatePickTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, PickTask pickTask)
+        /// <summary>
+        /// 拣货的库存变化
+        /// </summary>
+        /// <param name="baseDatacommodityCode"></param>
+        /// <param name="pickTask"></param>
+        /// <param name="bAutoSubmit">是否是主动提交</param>
+        /// <returns></returns>
+        public BasePostData<CommodityInventoryChange> CreatePickTaskCommodityInventoryChange(BaseData<CommodityCode> baseDataCommodityCode, PickTask pickTask, bool bAutoSubmit)
 		{
 
 			BasePostData<CommodityInventoryChange> retBaseSinglePostDataCommodityInventoryChange = null;
@@ -398,29 +399,36 @@ namespace CFLMedCab.Http.Bll
 
 				CommodityCodes.ForEach(it=> {
 
-					string changeStatus;
+                    CommodityInventoryChange cic = new CommodityInventoryChange()
+                    {
+                        CommodityCodeId = it.id,//商品码【扫描】
+                        SourceBill = new SourceBill()//来源单据
+                        {
+                            object_name = typeof(PickTask).Name,
+                            object_id = pickTask.id
+                        }
+                    };
 
-					if (it.operate_type == (int)OperateType.出库)
-					{
-						changeStatus = CommodityInventoryChangeStatus.拣货作业.ToString();
-					}
-					else
-					{
-						changeStatus = CommodityInventoryChangeStatus.正常.ToString();
-					}
+                    if (it.operate_type == (int)OperateType.出库)
+                    {
+                        cic.ChangeStatus = CommodityInventoryChangeStatus.拣货作业.ToString();
+                    }
+                    else
+                    {
+                        cic.ChangeStatus = CommodityInventoryChangeStatus.正常.ToString();
+                        cic.EquipmentId = it.EquipmentId;
+                        cic.StoreHouseId = it.StoreHouseId;
+                        cic.GoodsLocationId = it.GoodsLocationId;
+                    }
 
+                    if(!bAutoSubmit)
+                    {
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
+                    }
 
-					CommodityInventoryChanges.Add(new CommodityInventoryChange()
-					{
-						CommodityCodeId = it.id,//商品码【扫描】
-						SourceBill = new SourceBill()//来源单据
-						{
-							object_name = typeof(PickTask).Name,
-							object_id = pickTask.id
-						},
-						ChangeStatus = changeStatus
-					});
-				});
+                    CommodityInventoryChanges.Add(cic);
+
+                });
 
 				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
 			}

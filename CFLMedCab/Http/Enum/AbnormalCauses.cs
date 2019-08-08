@@ -34,7 +34,13 @@ namespace CFLMedCab.Http.Enum
         /// 其他
         /// </summary>
         [Description("其他")]
-        其他 = 4
+        其他 = 4,
 
-	}
+        /// <summary>
+        /// 未选
+        /// </summary>
+        [Description("未选")]
+        未选 = 5
+
+    }
 }
