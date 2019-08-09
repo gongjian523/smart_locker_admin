@@ -24,7 +24,6 @@ using CFLMedCab.Test;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Controls;
-using System.Windows.Forms;
 using static CFLMedCab.Model.Enum.UserIdEnum;
 using CFLMedCab.Infrastructure.BootUpHelper;
 using CFLMedCab.Http.Bll;
@@ -44,6 +43,8 @@ using CFLMedCab.Infrastructure.QuartzHelper.job;
 using CFLMedCab.Infrastructure.QuartzHelper.trigger;
 using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
 using Newtonsoft.Json;
+using CFLMedCab.Model.Enum;
+using System.Windows.Controls;
 
 namespace CFLMedCab
 {
@@ -60,10 +61,14 @@ namespace CFLMedCab
 		private LASTINPUTINFO mLastInputInfo;
 		#endregion
 
-		private DispatcherTimer ShowTimer;
+		//private DispatcherTimer ShowTimer;
         //private DispatcherTimer InventoryTimer;
 
 #if TESTENV
+        private System.Timers.Timer testTimer;
+        private FetchParam testFetchPara = new FetchParam();
+        private ShelfTask testROPara = new ShelfTask();
+        private PickTask testPOPara = new PickTask();
 #else
 #if VEINSERIAL
         private VeinHelper vein;
@@ -71,29 +76,28 @@ namespace CFLMedCab
         private VeinUtils vein;
 #endif
 #endif
-        [Obsolete]
-        private InventoryBll inventoryBll = new InventoryBll();
+
+        //[Obsolete]
+        //private InventoryBll inventoryBll = new InventoryBll();
 
 #if DUALCAB
         private int cabClosedNum;
 #endif
-
-        private InventoryDtl inventoryDetailHandler;
-
+        /// <summary>
+        /// 子页面的句柄
+        /// </summary>
+        private UserControl subViewHandler;
+        /// <summary>
+        /// 子页面的类型
+        /// </summary>
+        private SubViewType subViewType;
         private TestGoods test = new TestGoods();
 
-        private LoadingData loadingDataPage;
-
 #if TESTENV
-        private System.Timers.Timer testTimer;
-        private FetchParam testFetchPara = new FetchParam();
-        private ShelfTask testROPara = new ShelfTask();
-        private PickTask testPOPara = new PickTask();
-#endif
 
+#endif
         public MainWindow()
         {
-
 			#region 空闲时间处理相关定义
 			mLastInputInfo = new LASTINPUTINFO();
 			mLastInputInfo.cbSize = Marshal.SizeOf(mLastInputInfo);
@@ -115,7 +119,7 @@ namespace CFLMedCab
 
 			InitializeComponent();
 
-            foreach (Screen scr in Screen.AllScreens)
+            foreach (System.Windows.Forms.Screen scr in System.Windows.Forms.Screen.AllScreens)
             {
                 if (scr.Primary)
                 {
@@ -143,22 +147,19 @@ namespace CFLMedCab
 
             DataContext = this;
 
-            ShowTime();
-            ShowTimer = new DispatcherTimer();
-            ShowTimer.Tick += new EventHandler(ShowCurTimer);//起个Timer一直获取当前时间
-            ShowTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
-            ShowTimer.Start();
+            //ShowTime();
+            //ShowTimer = new DispatcherTimer();
+            //ShowTimer.Tick += new EventHandler(ShowCurTimer);//起个Timer一直获取当前时间
+            //ShowTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
+            //ShowTimer.Start();
 
             //InventoryTimer = new DispatcherTimer();
             //InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer, 每分钟检查是否有扫描计划
             //InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
             //InventoryTimer.Start();
 
-            loadingDataPage = new LoadingData();
 			Task.Factory.StartNew(initCurrentGoodsInfo);
             Task.Factory.StartNew(startAutoInventory);
-            
-
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -169,7 +170,6 @@ namespace CFLMedCab
             Console.WriteLine("onStart");
             vein.ChekVein();
 #else
-         
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
             int vienSt = vein.LoadingDevice();
@@ -220,30 +220,32 @@ namespace CFLMedCab
 		[Obsolete]
         private void onInventoryTimer(object sender, EventArgs e)
         {
-            List <InventoryPlanLDB> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
+            //List <InventoryPlanLDB> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
 
-            foreach(var item in listPan)
-            {
-                DateTime date1 = DateTime.Now;
-                DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0,2)), int.Parse(item.inventorytime_str.Substring(3,2)), 0);
+            //foreach(var item in listPan)
+            //{
+            //    DateTime date1 = DateTime.Now;
+            //    DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0,2)), int.Parse(item.inventorytime_str.Substring(3,2)), 0);
 
-                TimeSpan timeSpan = date2 - date1;
+            //    TimeSpan timeSpan = date2 - date1;
 
-                if (timeSpan.TotalMinutes < 1 && timeSpan.TotalMinutes > -1 )
-                {
-                    bool isGetSuccess;
-                    RfidHelper.GetEpcDataJson(out isGetSuccess);
+            //    if (timeSpan.TotalMinutes < 1 && timeSpan.TotalMinutes > -1 )
+            //    {
+            //        bool isGetSuccess;
+            //        RfidHelper.GetEpcDataJson(out isGetSuccess);
 
-                    return;
-                }
-                Console.WriteLine("onInventoryTimer:" + timeSpan.TotalMinutes);
-            }
+            //        return;
+            //    }
+            //    Console.WriteLine("onInventoryTimer:" + timeSpan.TotalMinutes);
+            //}
         }
 
-
+        //登录提示框消失后
         private void onLoginInfoHidenEvent(object sender, LoginStatus e)
         {
             ClosePop();
+
+            SetSubViewInfo(null, SubViewType.Login);
 
             if (e.LoginState == 0)
             {
@@ -384,7 +386,7 @@ namespace CFLMedCab
                         user = data.body.user;
 
                         ApplicationState.SetAccessToken(data.body.accessToken);
-                        ApplicationState.SetAccessToken(data.body.refresh_token);
+                        ApplicationState.SetRefreshToken(data.body.refresh_token);
 
                         HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
                     }
@@ -415,16 +417,17 @@ namespace CFLMedCab
                         LoginString2 = info2
                     });
 
-                    PopFrame.Visibility = Visibility.Visible;
-                    MaskView.Visibility = Visibility.Visible;
-
                     loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
 
-                    PopFrame.Navigate(loginInfo);
+                    onShowPopFrame(loginInfo);
+                    //PopFrame.Visibility = Visibility.Visible;
+                    //MaskView.Visibility = Visibility.Visible;
+                    //PopFrame.Navigate(loginInfo);
                 }));
             }
             else
             {
+                // 进入首页
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     LoginBkView.Visibility = Visibility.Hidden;
@@ -437,10 +440,11 @@ namespace CFLMedCab
                     SetNavBtnVisiblity(user.Role);
                     tbNameText.Text = user.name;
 #endif
-
                 }));
+
+                //进入首页，将句柄设置成null，避免错误调用
+                SetSubViewInfo(null, SubViewType.Home);
             }
-            
         }
 #endif
 #endif
@@ -477,17 +481,110 @@ namespace CFLMedCab
 #endif
         }
 
-        private void ShowCurTimer(object sender, EventArgs e)
+        //ShowTime方法
+        //private void ShowTime()
+        //{
+        //    //获得年月日
+        //    tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
+        //}
+
+        //private void ShowCurTimer(object sender, EventArgs e)
+        //{
+        //    ShowTime();
+        //}
+
+
+        /// <summary>
+        /// 设置子页面信息
+        /// </summary>
+        /// <param name="handler"></param>
+        /// <param name="type"></param>
+        private void SetSubViewInfo(UserControl handler, SubViewType type)
         {
-            ShowTime();
+            subViewHandler = handler;
+            subViewType = type;
         }
 
-        //ShowTime方法
-        private void ShowTime()
+        /// <summary>
+        /// 空闲监听定时
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void IdleTime(object sender, EventArgs e)
         {
-            //获得年月日
-            this.tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
+            //显示当前时间
+            tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
+
+            if (!GetLastInputInfo(ref mLastInputInfo))
+            {
+                System.Windows.MessageBox.Show("GetLastInputInfo Failed!");
+                return;
+            }
+
+            if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 < 60)
+            {
+                return;
+            }
+
+            if (subViewType == SubViewType.Login)
+                return;
+
+            switch(subViewType)
+            {
+                case SubViewType.GerFetchClose:
+                    ((GerFetchView)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.SurFetchWoOrderClose:
+                    ((SurgeryNoNumClose)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.SurFetchWOrderClose:
+                    ((SurgeryNumClose)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.ReturnFetchClose:
+                    ((ReturnFetchView)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.ReturnClose:
+                    ((ReturnClose)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.ReturnGoodsClose:
+                    ((ReturnGoodsClose)subViewHandler).onExitTimerExpired();
+                    break;
+            }
+            onReturnToLogin();
         }
+
+        //退出登录，回到登录页
+        private void onReturnToLogin()
+        {
+            PopFrame.Visibility = Visibility.Hidden;
+            MaskView.Visibility = Visibility.Hidden;
+
+            NaviView.Visibility = Visibility.Visible;
+            HomePageView.Visibility = Visibility.Visible;
+            btnBackHP.Visibility = Visibility.Hidden;
+
+            LoginBkView.Visibility = Visibility.Visible;
+            //回到登陆页
+            SetSubViewInfo(null, SubViewType.Login);
+#if TESTENV
+#else
+#if VEINSERIAL
+            vein.ChekVein();
+#else
+            ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+            //Task.Factory.StartNew(vein.DetectFinger);
+#endif
+#endif
+        }
+
+        private void onShowPopFrame(object content)
+        {
+            PopFrame.Visibility = Visibility.Visible;
+            MaskView.Visibility = Visibility.Visible;
+
+            PopFrame.Navigate(content);
+        }
+
 
         private void onExitApp(object sender, RoutedEventArgs e)
         {
@@ -513,8 +610,8 @@ namespace CFLMedCab
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
 
-        #region 领用
-        #region 一般领用
+#region 领用
+#region 一般领用
         /// <summary>
         /// 一般领用
         /// </summary>
@@ -528,6 +625,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
+            //进入一般领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -582,13 +681,16 @@ namespace CFLMedCab
                 gerFetchView.EnterGerFetch += new GerFetchView.EnterFetchOpenHandler(onEnterGerFetch);
                 gerFetchView.LoadingDataEvent += new GerFetchView.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(gerFetchView);
+
+                //进入一般领用关门页面
+                SetSubViewInfo(gerFetchView, SubViewType.GerFetchClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region 手术领用
+#region 手术领用
 
-        #region 无手术单领用和医嘱处方领用
+#region 无手术单领用和医嘱处方领用
         /// <summary>
         /// 进入手术无单领用和医嘱处方领用-开门状态
         /// </summary>
@@ -600,6 +702,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
+            //进入一般手术无单领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -671,6 +775,8 @@ namespace CFLMedCab
                 surgeryNoNumClose.EnterSurgeryNoNumOpenEvent += new SurgeryNoNumClose.EnterSurgeryNoNumOpenHandler(onEnterGerFetch);
                 surgeryNoNumClose.LoadingDataEvent += new SurgeryNoNumClose.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(surgeryNoNumClose);
+                //进入一般手术无单领用和医嘱处方的关门页面
+                SetSubViewInfo(surgeryNoNumClose, SubViewType.SurFetchWoOrderClose);
             }));
         }
 #endregion
@@ -699,6 +805,8 @@ namespace CFLMedCab
             surgeryQuery.LoadingDataEvent += new SurgeryQuery.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(surgeryQuery);
+            //进入一般手术有单领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
         /// <summary>
         /// 手术领用详情页面
@@ -710,6 +818,8 @@ namespace CFLMedCab
             SurgeryOrderDetail surgeryOrderDetail = new SurgeryOrderDetail(fetchParam);
             surgeryOrderDetail.EnterSurgeryNumOpenEvent += new SurgeryOrderDetail.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
             ContentFrame.Navigate(surgeryOrderDetail);
+            //进入一般手术领用单产品详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
@@ -735,12 +845,15 @@ namespace CFLMedCab
 
             SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(fetchParam);
             FullFrame.Navigate(surgeryNumOpen);
+            //进入手术有单领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
 
-            MaskView.Visibility = Visibility.Visible;
-            PopFrame.Visibility = Visibility.Visible;
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
-            PopFrame.Navigate(openCabinet);
+            onShowPopFrame(openCabinet);
+            //MaskView.Visibility = Visibility.Visible;
+            //PopFrame.Visibility = Visibility.Visible;
+            //PopFrame.Navigate(openCabinet);
 
 #if TESTENV
             testTimer = new System.Timers.Timer(10000);
@@ -757,7 +870,6 @@ namespace CFLMedCab
 #else
             List<string> listCom = ApplicationState.GetAllLockerCom();
 #endif
-
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
             delegateGetMsg.userData = fetchParam;
@@ -796,6 +908,8 @@ namespace CFLMedCab
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
                 surgeryNumClose.LoadingDataEvent += new SurgeryNumClose.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(surgeryNumClose);
+                //进入手术有单领用关门页面，
+                SetSubViewInfo(surgeryNumClose, SubViewType.SurFetchWOrderClose);
             }));
         }
 #else
@@ -806,7 +920,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNumLockerEvent(object sender, bool isClose)
         {
-
             if (!isClose)
                 return;
             System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
@@ -824,7 +937,6 @@ namespace CFLMedCab
                 return;
             }
 #endif
-
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
@@ -843,13 +955,15 @@ namespace CFLMedCab
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
                 surgeryNumClose.LoadingDataEvent += new SurgeryNumClose.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(surgeryNumClose);
+                //进入手术有单领用关门页面，
+                SetSubViewInfo(surgeryNumClose, SubViewType.SurFetchWOrderClose);
             }));
         }
 #endif
 #endregion
 #endregion
 
-        #region 领用退回
+#region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -863,6 +977,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
+            //进入领用退回开门页面
+            SetSubViewInfo(null, SubViewType.Others);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -919,12 +1035,14 @@ namespace CFLMedCab
                 returnFetchView.EnterReturnFetchEvent += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
                 returnFetchView.LoadingDataEvent += new ReturnFetchView.LoadingDataHandler(onLoadingData);
                 FullFrame.Navigate(returnFetchView);
+                //进入领用退回关门页面
+                SetSubViewInfo(returnFetchView, SubViewType.ReturnFetchClose);
             }));
         }
 #endregion
-        #endregion
+#endregion
 
-        #region Replenishment
+#region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -941,6 +1059,8 @@ namespace CFLMedCab
             replenishment.LoadingDataEvent += new Replenishment.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(replenishment);
+            //进入上架页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
@@ -956,6 +1076,8 @@ namespace CFLMedCab
             replenishmentDetail.LoadingDataEvent += new ReplenishmentDetail.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(replenishmentDetail);
+            //进入上架任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
@@ -970,12 +1092,15 @@ namespace CFLMedCab
             ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
             replenishmentDetailOpen.LoadingDataEvent += new ReplenishmentDetailOpen.LoadingDataHandler(onLoadingData);
             FullFrame.Navigate(replenishmentDetailOpen);
+            //进入上架任务单详情开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
 
-            MaskView.Visibility = Visibility.Visible;
-            PopFrame.Visibility = Visibility.Visible;
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
-            PopFrame.Navigate(openCabinet);
+            onShowPopFrame(openCabinet);
+            //MaskView.Visibility = Visibility.Visible;
+            //PopFrame.Visibility = Visibility.Visible;
+            //PopFrame.Navigate(openCabinet);
 
             SpeakerHelper.Sperker("柜门已开，请您按照要求上架，上架完毕请关闭柜门");
 
@@ -1043,6 +1168,8 @@ namespace CFLMedCab
                 replenishmentClose.LoadingDataEvent += new ReplenishmentClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(replenishmentClose);
+                //进入上架任务单关门页面
+                SetSubViewInfo(replenishmentClose, SubViewType.ReplenishmentClose);
             }));
         }
 #else
@@ -1081,15 +1208,17 @@ namespace CFLMedCab
                 replenishmentClose.LoadingDataEvent += new ReplenishmentClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(replenishmentClose);
+                //进入上架任务单关门页面
+                SetSubViewInfo(replenishmentClose, SubViewType.ReplenishmentClose);
             }));
         }
 #endif
 
-        #endregion
+#endregion
 
-        #region  ReturnGoods
+#region  ReturnGoods
         /// <summary>
-        /// 进入退货出库页面
+        /// 进入拣货页面
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1104,10 +1233,12 @@ namespace CFLMedCab
             returnGoods.LoadingDataEvent += new ReturnGoods.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(returnGoods);
+            //进入拣货页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
-        /// 进入退货出库详情页面
+        /// 进入拣货详情页面
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1119,11 +1250,13 @@ namespace CFLMedCab
             returnGoodsDetail.LoadingDataEvent += new ReturnGoodsDetail.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(returnGoodsDetail);
+            //进入拣货任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
 
         /// <summary>
-        /// 进入退货出库详情页面-开门状态
+        /// 进入拣货任务单详情页面-开门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1135,12 +1268,15 @@ namespace CFLMedCab
             returnGoodsDetailOpen.LoadingDataEvent += new ReturnGoodsDetailOpen.LoadingDataHandler(onLoadingData);
 
             FullFrame.Navigate(returnGoodsDetailOpen);
+            //进入拣货任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
 
-            MaskView.Visibility = Visibility.Visible;
-            PopFrame.Visibility = Visibility.Visible;
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
-            PopFrame.Navigate(openCabinet);
+            onShowPopFrame(openCabinet);
+            //MaskView.Visibility = Visibility.Visible;
+            //PopFrame.Visibility = Visibility.Visible;
+            //PopFrame.Navigate(openCabinet);
 
             SpeakerHelper.Sperker("柜门已开，请您按照要求拣货，拣货完毕请关闭柜门");
 
@@ -1178,7 +1314,7 @@ namespace CFLMedCab
 
 #if TESTENV
         /// <summary>
-        /// 进入拣货单详情页-关门状态
+        /// 进入拣货任务单详情页-关门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1200,7 +1336,7 @@ namespace CFLMedCab
         }
 #else
         /// <summary>
-        /// 进入拣货单详情页-关门状态
+        /// 进入拣货任务单详情页-关门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1234,6 +1370,8 @@ namespace CFLMedCab
                 returnGoodsClose.LoadingDataEvent += new ReturnGoodsClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(returnGoodsClose);
+                //进入拣货任务单详情页面
+                SetSubViewInfo(returnGoodsClose, SubViewType.ReturnGoodsClose);
             }));
         }
 #endif
@@ -1253,6 +1391,8 @@ namespace CFLMedCab
             returnQuery.LoadingDataEvent += new ReturnQuery.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(returnQuery);
+            //进入回收取货页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
@@ -1266,6 +1406,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
+            //进入回收取货开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -1277,10 +1419,8 @@ namespace CFLMedCab
             LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
             delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnClose);
             delegateGetMsg.userData = e;
-
             cabClosedNum = 0;
 #endif
-
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
         }
 
@@ -1320,6 +1460,8 @@ namespace CFLMedCab
                 returnClose.LoadingDataEvent += new ReturnClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(returnClose);
+                //进入回收取货关门页面
+                SetSubViewInfo(returnClose, SubViewType.ReturnClose);
             }));
         }
 
@@ -1336,6 +1478,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(4);
             FullFrame.Navigate(gerFetchState);
+            //进入库存调整开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -1387,13 +1531,13 @@ namespace CFLMedCab
                 returnClose.LoadingDataEvent += new ReturnClose.LoadingDataHandler(onLoadingData);
 
                 FullFrame.Navigate(returnClose);
+                //进入库存调整关门页面
+                SetSubViewInfo(returnClose, SubViewType.ReturnClose);
             }));
         }
+#endregion
 
-
-        #endregion
-
-        #region Inventory
+#region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -1411,6 +1555,8 @@ namespace CFLMedCab
             inventory.LoadingDataEvent += new Inventory.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(inventory);
+            //进入库存盘点页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
@@ -1427,6 +1573,8 @@ namespace CFLMedCab
             inventoryDetailLocal.BackInventoryEvent += new InventoryDtlLocal.BackInventoryHandler(onBackInventory);
 
             FullFrame.Navigate(inventoryDetailLocal);
+            //进入本地盘点详情，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
 
@@ -1447,9 +1595,9 @@ namespace CFLMedCab
             inventoryDetail.OpenDoorEvent += new InventoryDtl.OpenDoorHandler(onInventoryDoorOpen);
             inventoryDetail.LoadingDataEvent += new InventoryDtl.LoadingDataHandler(onLoadingData);
 
-            inventoryDetailHandler = inventoryDetail;
-
             FullFrame.Navigate(inventoryDetail);
+            //进入盘点详情
+            SetSubViewInfo(inventoryDetail, SubViewType.InventoryDtl);
         }
 
         /// <summary>
@@ -1461,7 +1609,9 @@ namespace CFLMedCab
         {
             btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Visible;
-            inventoryDetailHandler = null;
+
+            //回到盘点页，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
 
@@ -1470,6 +1620,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        [Obsolete]
         private void onEnterPopAddProduct(object sender, RoutedEventArgs e)
         {
             AddProduct addProduct = new AddProduct();
@@ -1477,10 +1628,10 @@ namespace CFLMedCab
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
-
-                PopFrame.Navigate(addProduct);
+                onShowPopFrame(addProduct);
+                //PopFrame.Visibility = Visibility.Visible;
+                //MaskView.Visibility = Visibility.Visible;
+                //PopFrame.Navigate(addProduct);
             }));
         }
 
@@ -1489,6 +1640,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+        [Obsolete]
         private void onHidePopAddProduct(object sender, RoutedEventArgs e)
         {
             ClosePop();
@@ -1506,10 +1658,10 @@ namespace CFLMedCab
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     InventoryOngoing inventoryOngoing = new InventoryOngoing();
-                    PopFrame.Visibility = Visibility.Visible;
-                    MaskView.Visibility = Visibility.Visible;
-
-                    PopFrame.Navigate(inventoryOngoing);
+                    onShowPopFrame(inventoryOngoing);
+                    //PopFrame.Visibility = Visibility.Visible;
+                    //MaskView.Visibility = Visibility.Visible;
+                    //PopFrame.Navigate(inventoryOngoing);
                 }));
             }
             else
@@ -1548,7 +1700,9 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onInventoryDoorCloseTest(object sender, EventArgs e)
         {
-            inventoryDetailHandler.SetButtonVisibility(true);
+            if (subViewHandler == null || subViewType != SubViewType.InventoryDtl) 
+                return;
+            ((InventoryDtl)subViewHandler).SetButtonVisibility(true);
         }
 #else
         /// <summary>
@@ -1564,10 +1718,10 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
-            if (inventoryDetailHandler == null)
+            if (subViewHandler == null || subViewType != SubViewType.InventoryDtl) 
                 return;
 
-            inventoryDetailHandler.SetButtonVisibility(true);
+            ((InventoryDtl)subViewHandler).SetButtonVisibility(true);
         }
 #endif
 
@@ -1585,6 +1739,8 @@ namespace CFLMedCab
             stock.EnterStockDetailedEvent += new Stock.EnterStockDetailedHandler(onEnterStockDetailedEvent);
             stock.SetPopInventoryEvent += new Stock.SetPopInventoryHandler(onSetPopInventory);
             ContentFrame.Navigate(stock);
+            //进入库存盘点页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         private void onEnterStockDetailedEvent(object sender, Commodity commodity)
@@ -1594,10 +1750,10 @@ namespace CFLMedCab
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
-
-                PopFrame.Navigate(stockDetailed);
+                onShowPopFrame(stockDetailed);
+                //PopFrame.Visibility = Visibility.Visible;
+                //MaskView.Visibility = Visibility.Visible;
+                //PopFrame.Navigate(stockDetailed);
             }));
         }
 
@@ -1647,15 +1803,18 @@ namespace CFLMedCab
             SystemSetting systemSetting = new SystemSetting();
 
             ContentFrame.Navigate(systemSetting);
+            //进入系统设置页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
-        /// 弹出关门提示框
+        /// 关门事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void onEnterPopClose(object sender, bool e)
         {
+            //进入首页
             if (!e)
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
@@ -1665,6 +1824,7 @@ namespace CFLMedCab
                     btnBackHP.Visibility = Visibility.Hidden;
                 }));
             }
+            //弹出退出登录提示框
             else
             {
                 CloseCabinet closeCabinet = new CloseCabinet();
@@ -1672,16 +1832,16 @@ namespace CFLMedCab
 
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    PopFrame.Visibility = Visibility.Visible;
-                    MaskView.Visibility = Visibility.Visible;
-
-                    PopFrame.Navigate(closeCabinet);
+                    onShowPopFrame(closeCabinet);
+                    //PopFrame.Visibility = Visibility.Visible;
+                    //MaskView.Visibility = Visibility.Visible;
+                    //PopFrame.Navigate(closeCabinet);
                 }));
             }
         }
 
         /// <summary>
-        /// 关门提示框关闭
+        /// 操作完成弹出框消失
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1689,22 +1849,23 @@ namespace CFLMedCab
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                PopFrame.Visibility = Visibility.Hidden;
-                MaskView.Visibility = Visibility.Hidden;
-                NaviView.Visibility = Visibility.Visible;
-                HomePageView.Visibility = Visibility.Visible;
-                btnBackHP.Visibility = Visibility.Hidden;
+                onReturnToLogin();
+//                PopFrame.Visibility = Visibility.Hidden;
+//                MaskView.Visibility = Visibility.Hidden;
+//                NaviView.Visibility = Visibility.Visible;
+//                HomePageView.Visibility = Visibility.Visible;
+//                btnBackHP.Visibility = Visibility.Hidden;
 
-#if TESTENV
-#else
-                LoginBkView.Visibility = Visibility.Visible;
-#if VEINSERIAL
-                vein.ChekVein();
-#else
-				//Task.Factory.StartNew(vein.DetectFinger);
-				ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-#endif
-#endif
+//                LoginBkView.Visibility = Visibility.Visible;
+//                //回到登陆页
+//                SetSubViewInfo(null, SubViewType.Login);
+
+//#if VEINSERIAL
+//                vein.ChekVein();
+//#else
+//                //Task.Factory.StartNew(vein.DetectFinger);
+//                ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+//#endif
 			}));
         }
 
@@ -1728,11 +1889,10 @@ namespace CFLMedCab
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 InventoryOngoing inventoryOngoing = new InventoryOngoing();
-
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
-
-                PopFrame.Navigate(inventoryOngoing);
+                onShowPopFrame(inventoryOngoing);
+                //PopFrame.Visibility = Visibility.Visible;
+                //MaskView.Visibility = Visibility.Visible;
+                //PopFrame.Navigate(inventoryOngoing);
             }));
         }
 
@@ -1750,35 +1910,6 @@ namespace CFLMedCab
             }));
         }
 
-        /// <summary>
-        /// 弹出获取数据提示框
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onShowLoadingData(object sender, RoutedEventArgs e)
-        {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Visible;
-                MaskView.Visibility = Visibility.Visible;
-
-                PopFrame.Navigate(loadingDataPage);
-            }));
-        }
-
-        /// <summary>
-        /// 弹出获取数据提示框
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onHideLoadingData(object sender, RoutedEventArgs e)
-        {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                ClosePop();
-            }));
-        }
-
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             Taskbar.HideTask(true);
@@ -1791,22 +1922,24 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onExit(object sender, RoutedEventArgs e)
         {
-            NaviView.Visibility = Visibility.Visible;
-            HomePageView.Visibility = Visibility.Visible;
-            btnBackHP.Visibility = Visibility.Hidden;
-            LoginBkView.Visibility = Visibility.Visible;
-#if TESTENV
+            onReturnToLogin();
+//            //PopFrame.Visibility = Visibility.Hidden;
+//            //MaskView.Visibility = Visibility.Hidden;
 
-#else
-#if VEINSERIAL
-            vein.ChekVein();
-#else
-			ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-			//Task.Factory.StartNew(vein.DetectFinger);
-#endif
-#endif
-            inventoryDetailHandler = null;
+//            NaviView.Visibility = Visibility.Visible;
+//            HomePageView.Visibility = Visibility.Visible;
+//            btnBackHP.Visibility = Visibility.Hidden;
 
+//            LoginBkView.Visibility = Visibility.Visible;
+//            //回到登陆页
+//            SetSubViewInfo(null, SubViewType.Login);
+
+//#if VEINSERIAL
+//            vein.ChekVein();
+//#else
+//            ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+//            //Task.Factory.StartNew(vein.DetectFinger);
+//#endif
         }
 
         /// <summary>
@@ -1819,9 +1952,10 @@ namespace CFLMedCab
             NaviView.Visibility = Visibility.Visible;
             HomePageView.Visibility = Visibility.Visible;
             btnBackHP.Visibility = Visibility.Hidden;
-            Taskbar.HideTask(true);
+            //Taskbar.HideTask(true);
 
-            inventoryDetailHandler = null;
+            //退出登录，进入登录页
+            SetSubViewInfo(null,SubViewType.Home);
         }
 
 		/// <summary>
@@ -1866,7 +2000,7 @@ namespace CFLMedCab
             return true;
         }
 
-        #region test
+#region test
 
         private void MockData()
         {
@@ -1876,13 +2010,13 @@ namespace CFLMedCab
             //test.InitPickingOrder();
             //test.InitSurgerOrder();
 
-#if TESTENV        
+#if TESTENV
             TestGoods testGoods = new TestGoods();
             testGoods.GetCurrentRFid();
 #endif
 
         }
-        #endregion
+#endregion
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
@@ -1908,28 +2042,6 @@ namespace CFLMedCab
                 LoadDataPR.IsActive = e ? true : false;
             }));
         }
-
-		/// <summary>
-		/// 空闲监听定时
-		/// </summary>
-		/// <param name="sender"></param>
-		/// <param name="e"></param>
-		private void IdleTime(object sender, EventArgs e)
-		{
-			if (!GetLastInputInfo(ref mLastInputInfo))
-            {
-                System.Windows.MessageBox.Show("GetLastInputInfo Failed!");
-                return;
-            }
-
-            if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 < 20)
-            {
-                return;
-            }
-
-            System.Windows.MessageBox.Show("no operation for 5 minutes.");
-        }
-
 	}
 
 	/// <summary>

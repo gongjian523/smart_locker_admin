@@ -82,8 +82,6 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BaseData<ShelfTask> GetShelfTask()
 		{
-
-			
 			//获取待完成上架工单
 			BaseData<ShelfTask> baseDataShelfTask = HttpHelper.GetInstance().Get<ShelfTask>(new QueryParam
 			{
@@ -149,7 +147,6 @@ namespace CFLMedCab.Http.Bll
 		public BaseData<ShelfTaskCommodityDetail> GetShelfTaskCommodityDetail(BaseData<ShelfTask> baseDataShelfTask)
 		{
 
-
 			//校验是否含有数据，如果含有数据，拼接具体字段
 			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 
@@ -198,7 +195,6 @@ namespace CFLMedCab.Http.Bll
 			//baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
 
 			return baseDataShelfTaskCommodityDetail;
-
 		}
 
 

@@ -33,7 +33,7 @@ namespace CFLMedCab.View
         }
 
         /// <summary>
-        /// 三秒之后显示提示消息
+        /// 三秒之后隐藏提示消息
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>

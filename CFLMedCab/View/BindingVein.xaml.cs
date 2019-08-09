@@ -162,7 +162,6 @@ namespace CFLMedCab.View
             }
             else
             {
-
                 if(bBinding)
                 {
                     loginView.Visibility = Visibility.Collapsed;
