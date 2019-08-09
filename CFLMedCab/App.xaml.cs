@@ -83,8 +83,10 @@ namespace CFLMedCab
 		void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
 		{
 			//处理完后，我们需要将Handler=true表示已此异常已处理过
-			LogUtils.Error(e.ToString());
+			LogUtils.Error(e.Exception.Message + "\r\n" + e.Exception.StackTrace);
 			e.Handled = true;
+			MessageBox.Show(e.Exception.Message + "\r\n" + e.Exception.StackTrace, "系统信息");
+			
 		}
 
 	}

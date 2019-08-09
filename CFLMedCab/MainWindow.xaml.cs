@@ -22,14 +22,11 @@ using CFLMedCab.DTO.Replenish;
 using CFLMedCab.DTO.Picking;
 using CFLMedCab.Test;
 using CFLMedCab.Controls;
-using CFLMedCab.Infrastructure.BootUpHelper;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using System.Threading;
 using System.Threading.Tasks;
 using CFLMedCab.Http.Model.Base;
-using CFLMedCab.Http.Model.login;
-using CFLMedCab.Http.Model.param;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using System.Runtime.InteropServices;
@@ -39,6 +36,8 @@ using CFLMedCab.Infrastructure.QuartzHelper.trigger;
 using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
 using CFLMedCab.Model.Enum;
 using System.Windows.Controls;
+using CFLMedCab.Http.Model.login;
+using CFLMedCab.Http.Model.param;
 
 namespace CFLMedCab
 {
@@ -92,7 +91,6 @@ namespace CFLMedCab
 #endif
         public MainWindow()
         {
-			LogUtils.Warn("测试打印");
 			#region 空闲时间处理相关定义
 			mLastInputInfo = new LASTINPUTINFO();
 			mLastInputInfo.cbSize = Marshal.SizeOf(mLastInputInfo);
