@@ -546,6 +546,9 @@ namespace CFLMedCab
                 case SubViewType.ReturnFetchClose:
                     ((ReturnFetchView)subViewHandler).onExitTimerExpired();
                     break;
+                case SubViewType.ReplenishmentClose:
+                    ((ReplenishmentClose)subViewHandler).onExitTimerExpired();
+                    break;
                 case SubViewType.ReturnClose:
                     ((ReturnClose)subViewHandler).onExitTimerExpired();
                     break;
