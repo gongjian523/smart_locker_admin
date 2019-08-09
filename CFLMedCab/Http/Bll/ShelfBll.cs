@@ -311,7 +311,18 @@ namespace CFLMedCab.Http.Bll
 					{
 						if (sfdCommodityIds.Contains(it.CommodityId))
 						{
-							it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+							var shelfTaskCommodityDetail = shelfTaskCommodityDetails.Where(item => item.CommodityId == it.CommodityId).First();
+
+							if ((shelfTaskCommodityDetail.NeedShelfNumber - shelfTaskCommodityDetail.AlreadyShelfNumber) >= ++ shelfTaskCommodityDetail.CountShelfNumber)
+							{
+								it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+							}
+							else
+							{
+								it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+							}
+
+							
 						}
 						else
 						{
