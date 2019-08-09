@@ -280,7 +280,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Infrastructure\DeviceHelper\VeinUtils.cs" />
-    <Compile Include="Http\test\HttpLib.cs" />
     <Compile Include="Http\Constant\HttpConstant.cs" />
     <Compile Include="Http\Helper\HttpHelper.cs" />
     <Compile Include="Http\Helper\BllHelper.cs" />

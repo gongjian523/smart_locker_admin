@@ -98,11 +98,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			if (0 == msgBaseStop.RtCode)
 			{
 				isGetSuccess = true;
-				Console.WriteLine("Stop successful.");
+				LogUtils.Debug("Stop successful.");
 			}
 			else
 			{
-				Console.WriteLine("Stop error.");
+				LogUtils.Debug("Stop error.");
 				isGetSuccess = false;
 			}
 	
@@ -128,12 +128,12 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			clientConn.SendSynMsg(msgBaseSetPower);
 			if (0 == msgBaseSetPower.RtCode)
 			{
-				Console.WriteLine("Power configuration successful.");
+				LogUtils.Debug("Power configuration successful.");
 				isGetSuccess = true;
 			}
 			else
 			{
-				Console.WriteLine("Power configuration error.");
+				LogUtils.Debug("Power configuration error.");
 				isGetSuccess = false;
 
 			}
@@ -160,11 +160,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			if (0 == msgBaseInventoryEpc.RtCode)
 			{
 				isGetSuccess = true;
-				Console.WriteLine("Inventory epc successful.");
+				LogUtils.Debug("Inventory epc successful.");
 			}
 			else
 			{
-				Console.WriteLine("Inventory epc error.");
+				LogUtils.Debug("Inventory epc error.");
 				isGetSuccess = false;
 			}
 
@@ -309,7 +309,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 };
 
                 currentEpcDataHs.Add(commodityEps);
-                Console.WriteLine(commodityEps.CommodityCodeName + commodityEps.CommodityName);
+                LogUtils.Debug(commodityEps.CommodityCodeName + commodityEps.CommodityName);
                 log += commodityEps.CommodityCodeName + " ";
             }
 
@@ -329,7 +329,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 };
 
                 currentEpcDataHs.Add(commodityEps);
-                Console.WriteLine(commodityEps.CommodityCodeName + commodityEps.CommodityName);
+                LogUtils.Debug(commodityEps.CommodityCodeName + commodityEps.CommodityName);
                 log += commodityEps.CommodityCodeName + " ";
             }
 #endif
@@ -339,7 +339,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 LogUtils.Debug(log);
             }, log);
 
-            Console.WriteLine("RFID NUM:" + currentEpcDataHs.Count());
+            LogUtils.Debug("RFID NUM:" + currentEpcDataHs.Count());
             return currentEpcDataHs;
 		}
 
@@ -477,9 +477,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				clientConn.SendSynMsg(msgBaseStop);
 				if (0 == msgBaseStop.RtCode)
 				{
-					Console.WriteLine("Stop successful.");
+					LogUtils.Debug("Stop successful.");
 				}
-				else { Console.WriteLine("Stop error."); }
+				else { LogUtils.Debug("Stop error."); }
 
 				// 功率配置, 将4个天线功率都设置为30dBm.
 				MsgBaseSetPower msgBaseSetPower = new MsgBaseSetPower
@@ -495,10 +495,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				clientConn.SendSynMsg(msgBaseSetPower);
 				if (0 == msgBaseSetPower.RtCode)
 				{
-					Console.WriteLine("Power configuration successful.");
+					LogUtils.Debug("Power configuration successful.");
 				}
-				else { Console.WriteLine("Power configuration error."); }
-				Console.WriteLine("Enter any character to start reading the tag.");
+				else { LogUtils.Debug("Power configuration error."); }
+				LogUtils.Debug("Enter any character to start reading the tag.");
 				Console.ReadKey();
 
 				// 4个天线读卡, 读取EPC数据区以及TID数据区
@@ -514,22 +514,22 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				clientConn.SendSynMsg(msgBaseInventoryEpc);
 				if (0 == msgBaseInventoryEpc.RtCode)
 				{
-					Console.WriteLine("Inventory epc successful.");
+					LogUtils.Debug("Inventory epc successful.");
 				}
-				else { Console.WriteLine("Inventory epc error."); }
+				else { LogUtils.Debug("Inventory epc error."); }
 				Console.ReadKey();
 
 				// 停止读卡，空闲态
 				clientConn.SendSynMsg(msgBaseStop);
 				if (0 == msgBaseStop.RtCode)
 				{
-					Console.WriteLine("Stop successful.");
+					LogUtils.Debug("Stop successful.");
 				}
-				else { Console.WriteLine("Stop error."); }
+				else { LogUtils.Debug("Stop error."); }
 			}
 			else
 			{
-				Console.WriteLine("Connect failure.");
+				LogUtils.Debug("Connect failure.");
 			}
 			Console.ReadKey();
 			clientConn.Close();
@@ -541,7 +541,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			// 标签回调数量较多，请将标签数据先缓存起来再作业务处理
 			if (null != msg && 0 == msg.logBaseEpcInfo.Result)
 			{
-				Console.WriteLine(msg.logBaseEpcInfo.ToString());
+				LogUtils.Debug(msg.logBaseEpcInfo.ToString());
 			}
 		}
 		
@@ -550,7 +550,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		{
 			if (null != msg)
 			{
-				Console.WriteLine("Epc log over.");
+				LogUtils.Debug("Epc log over.");
 			}
 		}
 
@@ -598,7 +598,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			// 标签回调数量较多，请将标签数据先缓存起来再作业务处理
 				if (null != msg && 0 == msg.logBaseEpcInfo.Result)
 				{
-					Console.WriteLine(msg.logBaseEpcInfo.ToString());
+					LogUtils.Debug(msg.logBaseEpcInfo.ToString());
 					msgHs.Add(msg.logBaseEpcInfo.Epc);
 
 				}
@@ -611,7 +611,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				if (null != msg)
 				{
-					Console.WriteLine("Epc log over.");
+					LogUtils.Debug("Epc log over.");
 					//发送停止状态；并停止当前连接
 					//SendSynBaseStopMsg(currentClientConn);
 					currentClientConn.Close();
@@ -628,7 +628,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				// 标签回调数量较多，请将标签数据先缓存起来再作业务处理
 				if (null != msg && 0 == msg.Result)
 				{
-					Console.WriteLine(msg.ToString());
+					LogUtils.Debug(msg.ToString());
 					msgHs.Add(msg.Epc);
 
 				}
@@ -641,7 +641,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				if (null != msg)
 				{
-					Console.WriteLine("Epc log over.");
+					LogUtils.Debug("Epc log over.");
 					//发送停止状态；并停止当前连接
 					//SendSynBaseStopMsg(currentClientConn);
 					currentClientConn.Close();

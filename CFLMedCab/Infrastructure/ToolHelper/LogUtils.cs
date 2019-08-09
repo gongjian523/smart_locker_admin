@@ -1,11 +1,6 @@
 ﻿using log4net;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace CFLMedCab.Infrastructure.ToolHelper
 {
@@ -36,11 +31,10 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// Debug
         /// </summary>
         /// <param name="msg">日志信息</param>
-        public static void Debug(string msg)
+        public static void Debug(object msg)
         {
-			Console.WriteLine($"Debug@{msg}");
-			//log.Debug(msg);
-			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Debug), msg);
+			log.Debug(msg);
+			//ThreadPool.QueueUserWorkItem(new WaitCallback(log.Debug), msg);
 		
         }
         /// <summary>
@@ -48,12 +42,11 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// </summary>
         /// <param name="msg">日志信息</param>
         /// <param name="exception">错误信息</param>
-        public static void Debug(string msg, Exception exception)
+        public static void Debug(object msg, Exception exception)
         {
-			Console.WriteLine($"Debug@{msg}");
-			Console.WriteLine($"Exception@{exception.Message}");
 			log.Debug(msg, exception);
-        }
+			//ThreadPool.QueueUserWorkItem(p => {log.Debug(msg, exception);});
+		}
 
         #endregion
 
@@ -62,23 +55,21 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// Info
         /// </summary>
         /// <param name="msg">日志信息</param>
-        public static void Info(string msg)
+        public static void Info(object msg)
         {
-			Console.WriteLine($"Info@{msg}");
-			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Info), msg);
-			
+			log.Info(msg);
+			//ThreadPool.QueueUserWorkItem(new WaitCallback(log.Info), msg);
         }
         /// <summary>
         /// Info
         /// </summary>
         /// <param name="msg">日志信息</param>
         /// <param name="exception">错误信息</param>
-        public static void Info(string msg, Exception exception)
+        public static void Info(object msg, Exception exception)
         {
-			Console.WriteLine($"Info@{msg}");
-			Console.WriteLine($"Exception@{exception.Message}");
 			log.Info(msg, exception);
-        }
+			//ThreadPool.QueueUserWorkItem(p => {log.Info(msg, exception);});
+		}
         #endregion
 
         #region 03-WARN（警告）
@@ -86,22 +77,21 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// Warn
         /// </summary>
         /// <param name="msg">日志信息</param>
-        public static void Warn(string msg)
+        public static void Warn(object msg)
         {
-			Console.WriteLine($"Warn@{msg}");
-			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Warn), msg);
-        }
+			log.Warn(msg);
+			//ThreadPool.QueueUserWorkItem(new WaitCallback(log.Warn), msg);
+		}
         /// <summary>
         /// Warn
         /// </summary>
         /// <param name="msg">日志信息</param>
         /// <param name="exception">错误信息</param>
-        public static void Warn(string msg, Exception exception)
+        public static void Warn(object msg, Exception exception)
         {
-			Console.WriteLine($"Warn@{msg}");
-			Console.WriteLine($"Exception@{exception.Message}");
 			log.Warn(msg, exception);
-        }
+			//ThreadPool.QueueUserWorkItem(p => {log.Warn(msg, exception);});
+		}
         #endregion
 
         #region 04-ERROR（一般错误）
@@ -109,21 +99,20 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// Error
         /// </summary>
         /// <param name="msg">日志信息</param>
-        public static void Error(string msg)
+        public static void Error(object msg)
         {
-			Console.WriteLine($"Error@{msg}");
-			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Error), msg);
-        }
+			log.Error(msg);
+			//ThreadPool.QueueUserWorkItem(new WaitCallback(log.Error), msg);
+		}
         /// <summary>
         /// Error
         /// </summary>
         /// <param name="msg">日志信息</param>
         /// <param name="exception">错误信息</param>
-        public static void Error(string msg, Exception exception)
+        public static void Error(object msg, Exception exception)
         {
-			Console.WriteLine($"Error@{msg}");
-			Console.WriteLine($"Exception@{exception.Message}");
 			log.Error(msg, exception);
+			//ThreadPool.QueueUserWorkItem(p => {log.Error(msg, exception);});
         }
         #endregion
 
@@ -132,24 +121,20 @@ namespace CFLMedCab.Infrastructure.ToolHelper
         /// Fatal
         /// </summary>
         /// <param name="msg">日志信息</param>
-        public static void Fatal(string msg)
+        public static void Fatal(object msg)
         {
-			Console.WriteLine($"Fatal@{msg}");
-			ThreadPool.QueueUserWorkItem(new WaitCallback(log.Fatal), msg);
+			log.Fatal(msg);
+			//ThreadPool.QueueUserWorkItem(new WaitCallback(log.Fatal), msg);
         }
         /// <summary>
         /// Fatal
         /// </summary>
         /// <param name="msg">日志信息</param>
         /// <param name="exception">错误信息</param>
-        public static void Fatal(string msg, Exception exception)
-        {
-			Console.WriteLine($"Fatal@{msg}");
-			Console.WriteLine($"Exception@{exception.Message}");
-            //log.Fatal(msg, exception);
-            ThreadPool.QueueUserWorkItem( p => {
-                log.Fatal(msg, exception);
-            });
+        public static void Fatal(object msg, Exception exception)
+		{
+			log.Fatal(msg, exception);
+			//ThreadPool.QueueUserWorkItem( p => {log.Fatal(msg, exception);});
         }
         #endregion
     }

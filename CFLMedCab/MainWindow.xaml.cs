@@ -21,17 +21,12 @@ using System.Collections;
 using CFLMedCab.DTO.Replenish;
 using CFLMedCab.DTO.Picking;
 using CFLMedCab.Test;
-using CFLMedCab.DTO.Goodss;
-using CFLMedCab.DTO.Surgery;
 using CFLMedCab.Controls;
-using static CFLMedCab.Model.Enum.UserIdEnum;
 using CFLMedCab.Infrastructure.BootUpHelper;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using CFLMedCab.Http.Constant;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.login;
 using CFLMedCab.Http.Model.param;
@@ -42,7 +37,6 @@ using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
 using CFLMedCab.Infrastructure.QuartzHelper.job;
 using CFLMedCab.Infrastructure.QuartzHelper.trigger;
 using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
-using Newtonsoft.Json;
 using CFLMedCab.Model.Enum;
 using System.Windows.Controls;
 
@@ -98,6 +92,7 @@ namespace CFLMedCab
 #endif
         public MainWindow()
         {
+			LogUtils.Warn("测试打印");
 			#region 空闲时间处理相关定义
 			mLastInputInfo = new LASTINPUTINFO();
 			mLastInputInfo.cbSize = Marshal.SizeOf(mLastInputInfo);
@@ -109,14 +104,10 @@ namespace CFLMedCab
 			#endregion
 
 			//线程池设置
-			ThreadPool.SetMaxThreads(15, 20);
-			ThreadPool.SetMinThreads(1, 1);
+			ThreadPool.SetMaxThreads(100, 100);
+			ThreadPool.SetMinThreads(5, 5);
 
-			Taskbar.HideTask(true);
-
-            //开启启动
-            BootUpHelper.GetInstance().SetMeAutoStart();
-
+			
 			InitializeComponent();
 
             foreach (System.Windows.Forms.Screen scr in System.Windows.Forms.Screen.AllScreens)
@@ -167,7 +158,7 @@ namespace CFLMedCab
             //vein = new VeinHelper("COM9", 9600);
             vein = new VeinHelper(veinCom, 9600);
             vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
-            Console.WriteLine("onStart");
+            LogUtils.Debug("onStart");
             vein.ChekVein();
 #else
             vein = VeinUtils.GetInstance();
@@ -234,10 +225,11 @@ namespace CFLMedCab
             //        bool isGetSuccess;
             //        RfidHelper.GetEpcDataJson(out isGetSuccess);
 
-            //        return;
-            //    }
-            //    Console.WriteLine("onInventoryTimer:" + timeSpan.TotalMinutes);
+            //        LogUtils.Debug("onInventoryTimer:" + timeSpan.TotalMinutes);
+            //        }
+                
             //}
+            return;
         }
 
         //登录提示框消失后
@@ -249,7 +241,7 @@ namespace CFLMedCab
 
             if (e.LoginState == 0)
             {
-                Console.WriteLine("onLoginInfoHidenEvent");
+                LogUtils.Debug("onLoginInfoHidenEvent");
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -269,7 +261,7 @@ namespace CFLMedCab
         {
             int id = vein.GetVeinId();
 
-            System.Diagnostics.Debug.WriteLine("VeinId {0}", id);
+            LogUtils.Debug("VeinId {0}", id);
 
             if (id >= 0)
             {
@@ -310,7 +302,7 @@ namespace CFLMedCab
             }
             else
             {
-                Console.WriteLine("onReceivedDataVein");
+                LogUtils.Debug("onReceivedDataVein");
                 vein.ChekVein();
             }
 
@@ -335,9 +327,17 @@ namespace CFLMedCab
 
             if (e == 0)
             {
-                byte[] macthfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
+				DateTime LoginStartTime = DateTime.Now;
+				
+				byte[] macthfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
 
-                if (vein.GrabFeature(macthfeature, out info) == VeinUtils.FV_ERRCODE_SUCCESS)
+				bool isGrabFeature = (vein.GrabFeature(macthfeature, out info) == VeinUtils.FV_ERRCODE_SUCCESS);
+
+				DateTime grabFeatureEndTime = DateTime.Now;
+
+				LogUtils.Debug($"调用检测指纹Sdk耗时{grabFeatureEndTime.Subtract(LoginStartTime).TotalMilliseconds}");
+
+				if (isGrabFeature)
                 {
 #if LOCALSDK
                     List<CurrentUser> userList = userBll.GetAllUsers();
@@ -396,8 +396,11 @@ namespace CFLMedCab
                         info2 = "请先绑定指静脉";
                         LogUtils.Error(data.message);
                     }
+
+					DateTime grabFeatureHttpEndTime = DateTime.Now;
+					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
 #endif
-                }
+				}
             }
 
             onLoadingData(this, false);
@@ -649,7 +652,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterGerFectchLockerEvent(object sender, bool isClose)
         {
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
@@ -729,7 +732,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterSurgeryNoNumLockerEvent(object sender, bool isClose)
         {
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
@@ -922,7 +925,7 @@ namespace CFLMedCab
         {
             if (!isClose)
                 return;
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
 #if DUALCAB
             cabClosedNum--;
@@ -1001,7 +1004,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnFetchLockerEvent(object sender, bool isClose)
         {
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
@@ -1181,7 +1184,7 @@ namespace CFLMedCab
         private void onEnterReplenishmentCloseEvent(object sender, bool isClose)
         {
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
@@ -1343,7 +1346,7 @@ namespace CFLMedCab
         private void onEnterReturnGoodsCloseEvent(object sender, bool isClose)
         {
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
@@ -1432,7 +1435,7 @@ namespace CFLMedCab
         private void onEnterReturnClose(object sender, bool isClose)
         {
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
@@ -1503,7 +1506,7 @@ namespace CFLMedCab
         private void onEnterStockSwitchClose(object sender, bool isClose)
         {
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
@@ -1713,7 +1716,7 @@ namespace CFLMedCab
         private void onInventoryDoorClose(object sender, bool isClose)
         {
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            System.Diagnostics.Debug.WriteLine("返回开锁状态{0}", isClose);
+            LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;

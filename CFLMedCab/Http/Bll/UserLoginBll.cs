@@ -25,7 +25,7 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseSinglePostData<VeinRegister> VeinmatchRegister(VeinregisterPostParam param)
         {
-            System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.devsign);
+            LogUtils.Debug("VeinmatchLogin: " + param.devsign);
             //HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
             return HttpHelper.GetInstance().PostByAdminToken<VeinRegister, VeinregisterPostParam>(HttpHelper.GetVeinmatchRegisterUrl(), param);
         }
@@ -47,31 +47,31 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BaseSinglePostData<VeinMatch> VeinmatchLogin(VeinmatchPostParam param)
 		{
-            System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + param.regfeature);
+			LogUtils.Debug("VeinmatchLogin: " + param.regfeature);
 
             //HttpHelper.GetInstance().SetHeaders("Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t");
             return HttpHelper.GetInstance().PostByAdminToken<VeinMatch, VeinmatchPostParam>(HttpHelper.GetVeinmatchLoginUrl(), param);
 		}
 
 
-        ///// <summary>
-        ///// 指静脉识别 
-        ///// </summary>
-        ///// <param name="param">请求参数</param>
-        ///// <returns></returns>
-        //public BasePostData<string> VeinmatchLogin(string regfeature)
-        //{
-        //    //匿名类
-        //    System.Diagnostics.Debug.WriteLine("VeinmatchLogin: " + regfeature);
-        //    return HttpHelper.GetInstance().Post<string, object>(new { regfeature }, HttpHelper.GetVeinmatchLoginUrl());
-        //}
+		///// <summary>
+		///// 指静脉识别 
+		///// </summary>
+		///// <param name="param">请求参数</param>
+		///// <returns></returns>
+		//public BasePostData<string> VeinmatchLogin(string regfeature)
+		//{
+		//    //匿名类
+		//    LogUtils.Debug("VeinmatchLogin: " + regfeature);
+		//    return HttpHelper.GetInstance().Post<string, object>(new { regfeature }, HttpHelper.GetVeinmatchLoginUrl());
+		//}
 
-        /// <summary>
-        /// 获取token，根据用户参数
-        /// </summary>
-        /// <param name="account"></param>
-        /// <returns></returns>
-        public BaseData<string> GetUserToken(Account account)
+		/// <summary>
+		/// 获取token，根据用户参数
+		/// </summary>
+		/// <param name="account"></param>
+		/// <returns></returns>
+		public BaseData<string> GetUserToken(Account account)
 		{
 			//获取账户数据
 			BaseData<Account> baseDataAccount = HttpHelper.GetInstance().Get<Account>(new QueryParam
