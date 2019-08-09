@@ -180,11 +180,11 @@ namespace CFLMedCab
 					else
 					{
        //                 Console.ReadKey();
-       //                 if (RegisterVein())
-       //                 {
-							//ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-       //                 }
-       //                 else
+                        if (RegisterVein())
+                        {
+							ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+                        }
+                        else
                         {
 							onFingerDetected(this, -2);
 						}
@@ -1995,7 +1995,7 @@ namespace CFLMedCab
 
 			veinSt = vein.SetDevSign(serSign, (ushort)serSign.Count());
 
-            if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
+            if (veinSt != VeinUtils.FV_ERRCODE_FUNCTION_INVALID)
             {
                 LogUtils.Error("设置本地指静脉设备签名失败！" + veinSt);
                 return false;
