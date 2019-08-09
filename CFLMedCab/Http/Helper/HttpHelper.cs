@@ -9,10 +9,10 @@ using System;
 using CFLMedCab.Http.Model.param;
 using System.Text;
 using CFLMedCab.Http.Enum;
-using CFLMedCab.Http.Model.login;
 using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Http.Aop;
 
 namespace CFLMedCab.Http.Helper
 {
@@ -558,6 +558,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
+		[Log]
 		public BaseData<T> Get<T>() where T : class
 		{
 
@@ -580,12 +581,13 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
-        /// <summary>
-        /// 同步获取get请求结果
-        /// </summary>
-        /// <param name="url">已经拼接好的url</param>
-        /// <returns></returns>
-        public BaseData<T> Get<T>(string url) where T : class
+		/// <summary>
+		/// 同步获取get请求结果
+		/// </summary>
+		/// <param name="url">已经拼接好的url</param>
+		/// <returns></returns>
+		[Log]
+		public BaseData<T> Get<T>(string url) where T : class
         {
             var handleEventWait = new HandleEventWait();
             BaseData<T> ret = null;
@@ -606,12 +608,13 @@ namespace CFLMedCab.Http.Helper
 
         }
 
-        /// <summary>
-        /// 同步获取get请求结果
-        /// </summary>
-        /// <param name="url">已经拼接好的url</param>
-        /// <returns></returns>
-        public string Get<T>(string urlPrefix, T queryParam) where T : class
+		/// <summary>
+		/// 同步获取get请求结果
+		/// </summary>
+		/// <param name="url">已经拼接好的url</param>
+		/// <returns></returns>
+		[Log]
+		public string Get<T>(string urlPrefix, T queryParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
             string ret = null;
@@ -635,12 +638,13 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-        /// <summary>
-        /// 同步获取get请求结果
-        /// </summary>
-        /// <param name="url">已经拼接好的url</param>
-        /// <returns></returns>
-        public BasePostData<T> Get<T,K>(string urlPrefix, K queryParam) where T: class
+		/// <summary>
+		/// 同步获取get请求结果
+		/// </summary>
+		/// <param name="url">已经拼接好的url</param>
+		/// <returns></returns>
+		[Log]
+		public BasePostData<T> Get<T,K>(string urlPrefix, K queryParam) where T: class
         {
             var handleEventWait = new HandleEventWait();
 			BasePostData<T> ret = null;
@@ -664,12 +668,13 @@ namespace CFLMedCab.Http.Helper
 
 
 
-        /// <summary>
-        /// 同步获取post请求结果
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public BasePostData<T> Post<T>(T postParam) where T : class
+		/// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		[Log]
+		public BasePostData<T> Post<T>(T postParam) where T : class
 		{
 
 			var handleEventWait = new HandleEventWait();
@@ -702,6 +707,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="postParam">通用post参数</param>
 		/// <returns></returns>
+		[Log]
 		public BasePostData<T> Post<T>(PostParam<T> postParam) where T : class
 		{
 
@@ -739,6 +745,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="postParam">通用post参数</param>
 		/// <returns></returns>
+		[Log]
 		public BasePostData<T> PostByAdminToken<T>(PostParam<T> postParam) where T : class
 		{
 
@@ -777,6 +784,7 @@ namespace CFLMedCab.Http.Helper
 		/// <param name="url"></param>
 		/// <param name="postParam">post参数</param>
 		/// <returns></returns>
+		[Log]
 		public BasePostData<T> Post<T, K>(K postParam, string url) where T : class
 		{
 
@@ -808,12 +816,13 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
-        /// <summary>
-        /// 同步获取post请求结果
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public BasePostData<T> Post<T>(string url) where T : class
+		/// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		[Log]
+		public BasePostData<T> Post<T>(string url) where T : class
         {
             var handleEventWait = new HandleEventWait();
 			BasePostData<T> ret = null;
@@ -833,12 +842,13 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-        // <summary>
-        /// 同步获取post请求结果
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public BaseSinglePostData<T> Post<T>(string url, bool single) where T : class
+		// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		[Log]
+		public BaseSinglePostData<T> Post<T>(string url, bool single) where T : class
         {
             var handleEventWait = new HandleEventWait();
 			BaseSinglePostData<T> ret = null;
@@ -863,6 +873,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
+		[Log]
 		public BaseSinglePostData<T> Post<T, K>(string url, K postParam, bool isSingle) where T : class
 		{
 			var handleEventWait = new HandleEventWait();
@@ -894,6 +905,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
+		[Log]
 		public BaseSinglePostData<T> PostByAdminToken<T, K>(string url, K postParam) where T : class
 		{
 			var handleEventWait = new HandleEventWait();
@@ -924,6 +936,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
+		[Log]
 		public BasePostData<T> Post<T,K>(string url, K postParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
@@ -949,12 +962,13 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-        // <summary>
-        /// 同步获取post请求结果
-        /// </summary>
-        /// <param name="url"></param>
-        /// <returns></returns>
-        public BasePostData<T> Post<T, K>(string url, K postParam,  IDictionary<string, string> headerParam) where T : class
+		// <summary>
+		/// 同步获取post请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		[Log]
+		public BasePostData<T> Post<T, K>(string url, K postParam,  IDictionary<string, string> headerParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
 			BasePostData<T> ret = null;
@@ -979,13 +993,14 @@ namespace CFLMedCab.Http.Helper
             return ret;
         }
 
-	
+
 
 		// <summary>
 		/// 同步获取post请求结果
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
+		[Log]
 		public BaseSinglePostData<T> Post<T, K>(string url, K postParam, IDictionary<string, string> headerParam, bool isS) where T : class
 		{
 			var handleEventWait = new HandleEventWait();
@@ -1016,6 +1031,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
+		[Log]
 		public BasePutData<T> Put<T>(T putParam) where T : BaseModel
 		{
 
