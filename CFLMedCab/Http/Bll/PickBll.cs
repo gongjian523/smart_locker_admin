@@ -300,9 +300,18 @@ namespace CFLMedCab.Http.Bll
 					}
 					else
 					{
-						if (sfdCommodityIds.Contains(it.CommodityId))
+                        if (sfdCommodityIds.Contains(it.CommodityId))
 						{
-							it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                            var pickTaskCommodityDetail = pickTaskCommodityDetails.Where(item => item.CommodityId == it.CommodityId).First();
+
+                            if ((pickTaskCommodityDetail.Number - pickTaskCommodityDetail.PickNumber) >= ++pickTaskCommodityDetail.CountPickNumber)
+                            {
+                                it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                            }
+                            else
+                            {
+                                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                            }
 						}
 						else
 						{
@@ -412,6 +421,7 @@ namespace CFLMedCab.Http.Bll
                     if (it.operate_type == (int)OperateType.出库)
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.拣货作业.ToString();
+                        cic.StoreHouseId = it.StoreHouseId;
                     }
                     else
                     {
@@ -421,7 +431,7 @@ namespace CFLMedCab.Http.Bll
                         cic.GoodsLocationId = it.GoodsLocationId;
                     }
 
-                    if(!bAutoSubmit)
+                    if(!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
                     {
                         cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                     }

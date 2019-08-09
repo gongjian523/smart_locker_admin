@@ -110,16 +110,22 @@ namespace CFLMedCab.Http.Model
 		public string CommodityName { get; set; }
 
         /// <summary>
-        /// 商品名
+        /// 计划拣货数
         /// </summary>
         [JsonIgnore]
         public int PlanShelfNumber { get; set; }
 
 
         /// <summary>
-        /// 商品名
+        /// 当前拣货数
         /// </summary>
         [JsonIgnore]
         public int CurShelfNumber { get; set; }
+
+        /// <summary>
+        /// 拣货计数器
+        /// </summary>
+        [JsonIgnore]
+        public int CountPickNumber { get; set; } = 0;
     }
 }

@@ -433,14 +433,15 @@ namespace CFLMedCab.Http.Bll
                             object_name = typeof(ShelfTask).Name,
                             object_id = shelfTask.id
                         },
-                        EquipmentId = ApplicationState.GetEquipId(),
-                        StoreHouseId = ApplicationState.GetHouseId(),
-                        GoodsLocationId = it.GoodsLocationId
+                        //EquipmentId = ApplicationState.GetEquipId(),
+                        //StoreHouseId = ApplicationState.GetHouseId(),
+                        //GoodsLocationId = it.GoodsLocationId
                     };
 
                     if (it.operate_type == (int)OperateType.出库)
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
+                        cic.StoreHouseId = ApplicationState.GetHouseId();
                     }
                     else
                     {
@@ -450,7 +451,7 @@ namespace CFLMedCab.Http.Bll
                         cic.GoodsLocationId = it.GoodsLocationId;
                     }
 
-                    if (!bAutoSubmit)
+                    if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
                     {
                         cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                     }
