@@ -115,5 +115,11 @@ namespace CFLMedCab.Http.Model
         [JsonIgnore]
         public int PlanShelfNumber { get; set; }
 
-    }
+		/// <summary>
+		/// 上架数量计数
+		/// </summary>
+		[JsonIgnore]
+		public int CountShelfNumber { get; set; } = 0;
+
+	}
 }
