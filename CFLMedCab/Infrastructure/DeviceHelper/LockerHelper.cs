@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.Infrastructure.ToolHelper;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Ports;
@@ -43,7 +44,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex);
+				LogUtils.Error(ex.ToString());
 				isConnect = false;
 			}
 		
@@ -73,7 +74,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex);
+				LogUtils.Error(ex.ToString());
 				isConnect = false;
 			}
 
@@ -97,7 +98,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex);
+				LogUtils.Error(ex.ToString());
 				isGetSuccess = false;
 			}
 
@@ -135,7 +136,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 			catch (Exception ex)
 			{
-				System.Diagnostics.Debug.WriteLine(ex);
+				LogUtils.Error(ex.ToString());
 				isGetSuccess = false;
 			}
 
@@ -237,7 +238,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			GetLockerData("com1", out bool isGetSuccess);
 			watch.Stop();  //停止监视
 			TimeSpan timespan = watch.Elapsed;  //获取当前实例测量得出的总时间
-			System.Diagnostics.Debug.WriteLine("打开窗口代码执行时间：{0}(毫秒)", timespan.TotalMilliseconds);  //总毫秒数
+			LogUtils.Debug($"打开窗口代码执行时间：{timespan.TotalMilliseconds}(毫秒)");  //总毫秒数
 			Console.ReadKey();
 		}
 
@@ -447,7 +448,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				{
 					//当前时间大于等于语音播报间隔，才播报，否则丢弃该次播报
 					long diff2 = currentTimerTime - timerLastTime;
-					System.Diagnostics.Debug.WriteLine("时间差{0}", diff2);
+					LogUtils.Debug($"时间差{diff2}");
 					if (diff2 >= voiceBroadcastTimeInterval)
 					{
 						//记录这次时间

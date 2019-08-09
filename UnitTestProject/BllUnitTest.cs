@@ -14,6 +14,7 @@ using CFLMedCab.Infrastructure.QuartzHelper.job;
 using CFLMedCab.Infrastructure.QuartzHelper.quartzEnum;
 using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
 using CFLMedCab.Infrastructure.QuartzHelper.trigger;
+using CFLMedCab.Infrastructure.ToolHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using static CFLMedCab.Http.Bll.ConsumingBll;
@@ -89,7 +90,7 @@ namespace UnitTestProject
 			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0], baseDataShelfTaskCommodityDetail);
 
 			BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(baseDataShelfTask.body.objects[0], AbnormalCauses.商品损坏 );
-			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0]);
+			BasePostData<CommodityInventoryChange> basePostData  = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0], true);
 
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
@@ -133,18 +134,18 @@ namespace UnitTestProject
         {
             //根据通过【领⽤用单码】从表格 【领⽤用单】中查询获取领⽤用单的id，以及markId（作废标识）。（如果领⽤用单作废标识为【是】则弹窗提醒⼿手术单作废，跳转回前⻚页）
             //var temp = ConsumingBll.GetInstance().GetConsumingOrder("456465412321");
-            //Console.WriteLine(temp.body.objects[0].id);
+            //LogUtils.Debug(temp.body.objects[0].id);
             /*            var id = "AQACQqweDg8BAAAAlQ6o8NWbsxUtQwQA";*//*
             //通过【关联领⽤用单】(ConsumingOrder.id= ConsumingGoodsDetail.ConsumingOrderId）从表格 【领⽤用商品明细】中查询获取领⽤用商品的列列表信息。
             var lists = ConsumingBll.GetInstance().GetOperationOrderGoodsDetail(temp);
-            Console.WriteLine(lists);
+            LogUtils.Debug(lists);
             //通过【商品编码】从表格【商品库存管理理】中查询商品详情获得商品名称。
             var details = ConsumingBll.GetInstance().GetPrescriptionOrderGoodsDetail(temp);
-            Console.WriteLine(details);
+            LogUtils.Debug(details);
 */
             //根据医嘱处方名称获取医嘱处方信息
             var temp2 = ConsumingBll.GetInstance().GetPrescriptionBill("456465412321");
-            Console.WriteLine(temp2.body.objects[0]);
+            LogUtils.Debug(temp2.body.objects[0]);
         }
         /// <summary>
         /// 领用模块接口模拟
@@ -160,7 +161,7 @@ namespace UnitTestProject
                 StoreHouseId = null,//领用库房【暂未知数据来源】
                 Type = ConsumingOrderType.一般领用.ToString()
             });
-            Console.WriteLine(temp);
+            LogUtils.Debug(temp);
             //移动端 通过【领⽤用单编号】 查找更更新【领⽤用单】的领⽤用状态为 ‘已完成’
 
             var puttemp = ConsumingBll.GetInstance().UpdateConsumingOrderStatus(new ConsumingOrder()
@@ -170,7 +171,7 @@ namespace UnitTestProject
                 version = 4//必须和当前数据版本保持一致
             });
 
-            Console.WriteLine(puttemp);
+            LogUtils.Debug(puttemp);
         }
         /// <summary>
         /// 测试领用部分商品库存变更记录创建
@@ -193,7 +194,7 @@ namespace UnitTestProject
                             }
                         });
 
-                        Console.WriteLine(temp);
+                        LogUtils.Debug(temp);
             */
             //根据商品码变更列表和来源单据创建库存变更记录资料
             BaseData<CommodityCode> baseDataCommodityCode = GetBaseData();
@@ -204,7 +205,7 @@ namespace UnitTestProject
                 object_id = ""
             };
             var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDataCommodityCode, sourceBill);
-            Console.WriteLine(changes);
+            LogUtils.Debug(changes);
 
         }
 
@@ -216,16 +217,16 @@ namespace UnitTestProject
         {
             //var name = "L00000010";
             //var temp = RollbackBll.GetInstance().GetGoodsLocation(name);
-            //Console.WriteLine(temp);
+            //LogUtils.Debug(temp);
 
             //var commodityCode = "C00000053";
             //var temp2 = RollbackBll.GetInstance().GetCommodity(commodityCode);
 
-            //Console.WriteLine(temp2);
+            //LogUtils.Debug(temp2);
 
             var baseDetail = GetBaseData();
             var change = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDetail);
-            Console.WriteLine(change);
+            LogUtils.Debug(change);
 
         }
         [TestMethod]
@@ -245,14 +246,14 @@ namespace UnitTestProject
 
 			var taskName = "IT20190723000015";
             var temp = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(taskName);
-            Console.WriteLine(temp);
+            LogUtils.Debug(temp);
 
 			
 
 /*            //通过【盘点任务名称】从表格【盘点任务】中查询获取盘点任务id。• 通过【盘点任务单】（InventoryTask.id =InventoryOrder.InventoryTaskId）从表格【盘点单】中查询获得盘点单列列表
             var taskName = "IT20190723000015";
             var inventoryOrders = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(taskName);
-            Console.WriteLine(inventoryOrders);
+            LogUtils.Debug(inventoryOrders);
 
             //移动端 更更新【盘点单管理理】的盘点状态为 ‘已确认’
             var inventoryOrder = InventoryTaskBll.GetInstance().UpdateInventoryOrderStatus(new InventoryOrder()
@@ -262,7 +263,7 @@ namespace UnitTestProject
                 ConfirmDate = "2019-07-24T15:19:00Z",
                 version = 0
             });
-            Console.WriteLine(inventoryOrder);*/
+            LogUtils.Debug(inventoryOrder);*/
 
 
             //• 通过当前【设备编码/id】从表格 【设备管理理】（Equipment）中查询获取设备的’⾃自动盘点计划’（InventoryPlanId）。
@@ -271,7 +272,7 @@ namespace UnitTestProject
             //var equipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA";//设备ID
             var plans = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId(equipmentName);
             //var plans = InventoryTaskBll.GetInstance().GetInventoryPlanByEquipmnetNameOrId(equipmentId);
-            Console.WriteLine(plans);
+            LogUtils.Debug(plans);
 
             var createOrder = InventoryTaskBll.GetInstance().CreateInventoryOrder(new List<InventoryOrder>() {
                 new InventoryOrder()
@@ -334,12 +335,12 @@ namespace UnitTestProject
                 phone = "+86 18408252063",
                 password = ""
             });
-            Console.WriteLine(token);
+            LogUtils.Debug(token);
             var userInfo = UserLoginBll.GetInstance().GetUserInfo("+86 18408252063");
-            Console.WriteLine(userInfo);
+            LogUtils.Debug(userInfo);
 
             //var temp = UserLoginBll.GetInstance().GetCaptchaImageToken();
-            //Console.WriteLine(temp);
+            //LogUtils.Debug(temp);
 
         }
 
@@ -348,7 +349,7 @@ namespace UnitTestProject
         {
             var password = "";
             var pas64 = Convert.ToBase64String(Encoding.Default.GetBytes(password));
-            Console.WriteLine(pas64);
+            LogUtils.Debug(pas64);
         }
 	}
 }

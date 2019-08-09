@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CFLMedCab.Infrastructure.ToolHelper;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -194,11 +195,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 devNum = 0;
                 for (int i = 0; devIdList[i].Length > 0; i++)
                     devNum++;
-                System.Diagnostics.Debug.WriteLine("Enumeration device successful, the number of devices is " + devNum);
+                LogUtils.Debug("Enumeration device successful, the number of devices is " + devNum);
             }
             else
             {
-                System.Diagnostics.Debug.WriteLine("Enum device failed! ret=" + ret);
+                LogUtils.Debug("Enum device failed! ret=" + ret);
             }
         }
 
@@ -210,7 +211,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             int ret = FV_LoadingDevice(devName, serialName, 9600, 2);
             if (FV_ERRCODE_SUCCESS != ret)
             {
-                System.Diagnostics.Debug.WriteLine("Loading device failed! ret=" + ret);
+                LogUtils.Debug("Loading device failed! ret=" + ret);
             }
 
             return ret;
@@ -226,16 +227,16 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             ret = FV_InitDevice(devName);
             if (FV_ERRCODE_SUCCESS != ret)
             {
-                System.Diagnostics.Debug.WriteLine("CabS: init failed! ret = " + ret);
+                LogUtils.Debug("CabS: init failed! ret = " + ret);
                 return ret;
             }
 
             //2.打开某设备
             ret = FV_OpenDevice(devName, 0);
             if (FV_ERRCODE_SUCCESS == ret)
-                System.Diagnostics.Debug.WriteLine("CabS: open successed! ret=" + ret);
+                LogUtils.Debug("CabS: open successed! ret=" + ret);
             else
-                System.Diagnostics.Debug.WriteLine("CabS: open failed! ret=" + ret);
+                LogUtils.Debug("CabS: open failed! ret=" + ret);
 
             return ret;
         }
@@ -278,7 +279,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 					if (3 < wErrCount)
 					{
-						System.Diagnostics.Debug.WriteLine("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
+						LogUtils.Debug("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
 						FingerDetectedEvent(this, -1);
 						return;
 					}
@@ -291,7 +292,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 						//手指还没有移开
 						if (0 == (wDetectCnt % nStartCnt))
 						{
-							System.Diagnostics.Debug.WriteLine("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
+							LogUtils.Debug("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
 							i++;
 						}
 						Thread.Sleep(nInterval);
@@ -299,7 +300,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 					else
 					{
 						//手指已经移开
-						System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
+						LogUtils.Debug("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
 						FingerDetectedEvent(this, 0);
 						return;
 					}
@@ -339,7 +340,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
                     if (3 < wErrCount)
                     {
-                        System.Diagnostics.Debug.WriteLine("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
+                        LogUtils.Debug("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
                         FingerDetectedEvent(this, -1);
                         return ;
                     }
@@ -352,7 +353,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                         //手指还没有移开
                         if (0 == (wDetectCnt % nStartCnt))
                         {
-                            System.Diagnostics.Debug.WriteLine("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
+                            LogUtils.Debug("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
                             i++;
                         }
                         Thread.Sleep(nInterval);
@@ -360,7 +361,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     else
                     {
                         //手指已经移开
-                        System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
+                        LogUtils.Debug("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
                         FingerDetectedEvent(this, 0);
                         return;
                     }
@@ -399,7 +400,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
                     if (3 < wErrCount)
                     {
-                        System.Diagnostics.Debug.WriteLine("Wait for" + stateE + "finger error!");
+                        LogUtils.Debug("Wait for" + stateE + "finger error!");
                         info = "等待" + state + "指静脉时发生错误!";
                         return -1;
                     }
@@ -411,20 +412,20 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     {//手指还没有移开
                         if (0 == (wDetectCnt % nStartCnt))
                         {
-                            System.Diagnostics.Debug.WriteLine("Please " + stateE + " finger " + i);//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
+                            LogUtils.Debug("Please " + stateE + " finger " + i);//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
                             i++;
                         }
                         Thread.Sleep(nInterval);
                     }
                     else
                     {//手指已经移开
-                        System.Diagnostics.Debug.WriteLine("Finger detected correct " + stateE);
+                        LogUtils.Debug("Finger detected correct " + stateE);
                         return 0;
                     }
                 }
             }
 
-            System.Diagnostics.Debug.WriteLine("Wait for " + stateE + " finger to timeout!");
+            LogUtils.Debug("Wait for " + stateE + " finger to timeout!");
             info = "等待" + state + "指静脉超时!";
             return -1;
         }
@@ -450,7 +451,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 if (FV_ERRCODE_SUCCESS != ret)
                 {
                     //采集的模板不属于同一根手指，结束采集
-                    System.Diagnostics.Debug.WriteLine("It must be the same finger!");
+                    LogUtils.Debug("It must be the same finger!");
                     info = "本次采集的手指和上一个不同！" + ret;
                     return ret;
                 }
@@ -465,11 +466,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         {
             int ret = FV_GrabFeature(devName, macthfeature, (char)0x00);
             if (FV_ERRCODE_SUCCESS != ret){
-                System.Diagnostics.Debug.WriteLine("Read vein feature read failed, error code= " + ret);
+                LogUtils.Debug("Read vein feature read failed, error code= " + ret);
                 info = "采集指静脉特征失败！ " + ret;
             }
             else{
-                System.Diagnostics.Debug.WriteLine("Read vein feature read successfully.");
+                LogUtils.Debug("Read vein feature read successfully.");
                 info = "采集指静脉特征成功！";
             }
             return ret;
@@ -522,7 +523,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 //这里aifeature传参若为某个用户的内存，比对成功下直接被修改，不用在手动更新
                 //如果aifeature传参不是某个用户的内存，需要拷贝自己更新
 
-                System.Diagnostics.Debug.WriteLine("Dynamic features have been updated.\r\n");
+                LogUtils.Debug("Dynamic features have been updated.\r\n");
             }
 
             return ret;

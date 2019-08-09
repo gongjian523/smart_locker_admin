@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Model;
+using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using SqlSugar;
 using System;
@@ -60,9 +61,9 @@ namespace CFLMedCab.Infrastructure.DbHelper
             //调式代码 用来打印SQL 
             Db.Aop.OnLogExecuting = (sql, pars) =>
             {
-                Console.WriteLine(sql + "\r\n" +
+				LogUtils.Debug(sql + "\r\n" +
                     Db.Utilities.SerializeObject(pars.ToDictionary(it => it.ParameterName, it => it.Value)));
-                Console.WriteLine();
+                
             };
 
             //创建领用单表

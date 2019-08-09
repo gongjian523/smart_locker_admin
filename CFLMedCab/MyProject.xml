@@ -36,7 +36,8 @@
   </device>
   <!-- quartz信息 -->
   <quartz>
-    <inventory_task_cron>0 15 21 * * ? </inventory_task_cron>
+    <!-- 00:00:00 执行盘点计划拉取任务 -->
+    <inventory_task_cron>0 0 0 * * ? </inventory_task_cron>
   </quartz>
   <!-- admin_token信息 -->
   <admin_token>
