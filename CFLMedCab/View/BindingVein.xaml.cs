@@ -43,11 +43,6 @@ namespace CFLMedCab.View
 
         private string CaptchaToken { get; set; }
 
-#if LOCALSDK
-        private UserBll userBll = new UserBll();
-        private CurrentUser user = new CurrentUser();
-#endif
-
         VeinUtils vein = VeinUtils.GetInstance();
 
         public BindingVein()
@@ -89,16 +84,6 @@ namespace CFLMedCab.View
             Dispatcher.BeginInvoke(new Action(() => {
                 WarnInfo.Content = "";
             }));
-
-#if LOCALSDK
-            user = userBll.GetUserByName(tbInputName.Text);
-
-            if (user == null)
-            {
-                WarnInfo.Content = "无法获取用户信息，请重新输入！";
-                return;
-            }
-#else
 
             if (tbInputName.Text == "" || tbInputPsw.Password.ToString() == "")
             {
@@ -196,7 +181,6 @@ namespace CFLMedCab.View
                     }
                 }
             }
-#endif
         }
 
         private void Binding()
@@ -273,12 +257,6 @@ namespace CFLMedCab.View
                 Array.Copy(subregfeature, 0, regfeature, i* VeinUtils.FV_FEATURE_SIZE,VeinUtils.FV_FEATURE_SIZE);
             }
 
-#if LOCALSDK
-            user.reg_feature = Convert.ToBase64String(regfeature);
-            user.ai_feature = Convert.ToBase64String(regfeature);
-            userBll.UpdateCurrentUsers(user);
-            this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
-#else
             LoadingDataEvent(this, true);
             BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
             {
@@ -291,8 +269,6 @@ namespace CFLMedCab.View
                 this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉采集成功！"));
             else
                 this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = data.message));
-#endif
-
         }
 
 

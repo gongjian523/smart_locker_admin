@@ -318,11 +318,9 @@ namespace CFLMedCab
         private void onFingerDetected(object sender, int e)
         {
             LoginStatus sta = new LoginStatus();
-#if LOCALSDK
-            CurrentUser user = new CurrentUser();
-#else
+
             User user = null;
-#endif
+
             onLoadingData(this,true);
             string info = "等待检测指静脉的时候发生错误";
             string info2 = "请再次进行验证";
@@ -346,43 +344,6 @@ namespace CFLMedCab
 
 				if (isGrabFeature)
                 {
-                    #if LOCALSDK
-                    List<CurrentUser> userList = userBll.GetAllUsers();
-
-                    foreach (var item in userList)
-                    {
-                        if (item.reg_feature == null)
-                            continue;
-
-                        if (item.ai_feature == null)
-                            item.ai_feature = item.reg_feature;
-
-                        byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT *VeinUtils.FV_FEATURE_SIZE ];
-                        regfeature = Convert.FromBase64String(item.reg_feature);
-
-                        byte[] aifeature = new byte[VeinUtils.FV_DYNAMIC_FEATURE_CNT*VeinUtils.FV_FEATURE_SIZE];
-                        aifeature = Convert.FromBase64String(item.ai_feature);
-
-                        uint diff = 0;
-                        uint ailen = VeinUtils.FV_DYNAMIC_FEATURE_CNT * VeinUtils.FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
-
-                        if (vein.Match(macthfeature, regfeature, VeinUtils.FEATURE_COLLECT_CNT, aifeature, ref diff, (int)VeinUtils.Match_Flg.M_1_1, ref ailen) 
-                            == VeinUtils.FV_ERRCODE_SUCCESS)
-                        {
-                            user = item;
-                            if(ailen > 0)
-                            {
-                                item.ai_feature = Convert.ToBase64String(aifeature);
-                                userBll.UpdateCurrentUsers(item);
-                            }
-                            break;
-                        }
-                    }
-
-                    info = "没有找到和当前指静脉匹配的用户";
-                    info2 = "请先绑定指静脉";
-
-                    #else
                     BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
                     {
                         regfeature = Convert.ToBase64String(macthfeature)
@@ -406,17 +367,11 @@ namespace CFLMedCab
 
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
 					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
-                    #endif
 				}
             }
-
             onLoadingData(this, false);
 
-#if LOCALSDK 
-            if (e < 0 || user.id == 0)
-#else
             if (e < 0 || user ==null)
-#endif
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
@@ -448,15 +403,10 @@ namespace CFLMedCab
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     LoginBkView.Visibility = Visibility.Hidden;
-#if LOCALSDK
-                    ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
-                    SetNavBtnVisiblity(user.role);
-                    tbNameText.Text = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
-#else
+
                     ApplicationState.SetUserInfo(user);
                     SetNavBtnVisiblity(user.Role);
                     tbNameText.Text = user.name;
-#endif
                 }));
 
                 //进入首页，将句柄设置成null，避免错误调用
@@ -466,15 +416,10 @@ namespace CFLMedCab
 #endif
 #endif
 
-#if LOCALSDK
-        private void SetNavBtnVisiblity(int role)
-        {
-            bool isMedicalStuff = ((UserIdType)role == UserIdType.医生 || (UserIdType)role == UserIdType.护士 || (UserIdType)role == UserIdType.医院管理员) ? true : false;
-#else
+
         private void SetNavBtnVisiblity(string  role)
         {
             bool isMedicalStuff = (role == "医院医护人员") ? true : false;
-#endif
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -490,12 +435,6 @@ namespace CFLMedCab
             NavBtnEnterSysSetting.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
 
             btnExitApp.Visibility = Visibility.Visible;
-#if TESTENV
-#else
-#if LOCALSDK
-            btnExitApp.Visibility = ((UserIdType)role == UserIdType.SPD经理) ? Visibility.Visible : Visibility.Hidden;
-#endif
-#endif
         }
 
         /// <summary>
