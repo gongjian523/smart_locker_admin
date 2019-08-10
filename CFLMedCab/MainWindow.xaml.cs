@@ -38,6 +38,8 @@ using CFLMedCab.Model.Enum;
 using System.Windows.Controls;
 using CFLMedCab.Http.Model.login;
 using CFLMedCab.Http.Model.param;
+using WindowsInput.Native;
+using WindowsInput;
 
 namespace CFLMedCab
 {
@@ -52,9 +54,10 @@ namespace CFLMedCab
 		private static extern bool GetLastInputInfo(ref LASTINPUTINFO plii);
 		private DispatcherTimer mIdleTimer;
 		private LASTINPUTINFO mLastInputInfo;
-		#endregion
+        #endregion
 
-		//private DispatcherTimer ShowTimer;
+        private System.Timers.Timer processRingTimer;
+
         //private DispatcherTimer InventoryTimer;
 
 #if TESTENV
@@ -147,7 +150,13 @@ namespace CFLMedCab
             //InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
             //InventoryTimer.Start();
 
-			Task.Factory.StartNew(initCurrentGoodsInfo);
+            processRingTimer = new System.Timers.Timer(1000*60*5);
+            processRingTimer.AutoReset = false;
+            processRingTimer.Enabled = false;
+            processRingTimer.Elapsed += new ElapsedEventHandler(onProcessRingTimerExpired);
+
+
+            Task.Factory.StartNew(initCurrentGoodsInfo);
             Task.Factory.StartNew(startAutoInventory);
 #if TESTENV
 #else
@@ -337,7 +346,7 @@ namespace CFLMedCab
 
 				if (isGrabFeature)
                 {
-#if LOCALSDK
+                    #if LOCALSDK
                     List<CurrentUser> userList = userBll.GetAllUsers();
 
                     foreach (var item in userList)
@@ -373,7 +382,7 @@ namespace CFLMedCab
                     info = "没有找到和当前指静脉匹配的用户";
                     info2 = "请先绑定指静脉";
 
-#else
+                    #else
                     BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
                     {
                         regfeature = Convert.ToBase64String(macthfeature)
@@ -391,13 +400,13 @@ namespace CFLMedCab
                     else
                     {
                         info = "没有找到和当前指静脉匹配的用户" + data.message;
-                        info2 = "请先绑定指静脉";
+                        info2 = "请先绑定指静脉或者再次尝试";
                         LogUtils.Error(data.message);
                     }
 
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
 					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
-#endif
+                    #endif
 				}
             }
 
@@ -428,6 +437,13 @@ namespace CFLMedCab
             }
             else
             {
+                //
+                InputSimulator inputSimulator = new InputSimulator();
+                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.SPACE);
+                Thread.Sleep(100);
+                inputSimulator.Keyboard.KeyPress(VirtualKeyCode.SPACE);
+
+
                 // 进入首页
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
@@ -481,19 +497,6 @@ namespace CFLMedCab
 #endif
 #endif
         }
-
-        //ShowTime方法
-        //private void ShowTime()
-        //{
-        //    //获得年月日
-        //    tbDateText.Text = DateTime.Now.ToString("yyyy年MM月dd日 HH:mm:ss");
-        //}
-
-        //private void ShowCurTimer(object sender, EventArgs e)
-        //{
-        //    ShowTime();
-        //}
-
 
         /// <summary>
         /// 设置子页面信息
@@ -589,7 +592,6 @@ namespace CFLMedCab
             PopFrame.Navigate(content);
         }
 
-
         private void onExitApp(object sender, RoutedEventArgs e)
         {
             Taskbar.HideTask(false);
@@ -614,8 +616,8 @@ namespace CFLMedCab
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
 
-#region 领用
-#region 一般领用
+        #region 领用
+        #region 一般领用
         /// <summary>
         /// 一般领用
         /// </summary>
@@ -690,11 +692,11 @@ namespace CFLMedCab
                 SetSubViewInfo(gerFetchView, SubViewType.GerFetchClose);
             }));
         }
-#endregion
+        #endregion
 
-#region 手术领用
+        #region 手术领用
 
-#region 无手术单领用和医嘱处方领用
+        #region 无手术单领用和医嘱处方领用
         /// <summary>
         /// 进入手术无单领用和医嘱处方领用-开门状态
         /// </summary>
@@ -785,7 +787,7 @@ namespace CFLMedCab
         }
 #endregion
 
-#region 有手术单领用
+        #region 有手术单领用
         /// <summary>
         /// 手术领用医嘱处方领用
         /// </summary>
@@ -965,9 +967,9 @@ namespace CFLMedCab
         }
 #endif
 #endregion
-#endregion
+        #endregion
 
-#region 领用退回
+        #region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -1044,9 +1046,9 @@ namespace CFLMedCab
             }));
         }
 #endregion
-#endregion
+        #endregion
 
-#region Replenishment
+        #region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -1220,7 +1222,7 @@ namespace CFLMedCab
 
 #endregion
 
-#region  ReturnGoods
+        #region  ReturnGoods
         /// <summary>
         /// 进入拣货页面
         /// </summary>
@@ -1541,7 +1543,7 @@ namespace CFLMedCab
         }
 #endregion
 
-#region Inventory
+        #region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -2004,8 +2006,7 @@ namespace CFLMedCab
             return true;
         }
 
-#region test
-
+        #region test
         private void MockData()
         {
             //test.InitGoodsInfo();
@@ -2020,7 +2021,7 @@ namespace CFLMedCab
 #endif
 
         }
-#endregion
+        #endregion
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
@@ -2037,21 +2038,45 @@ namespace CFLMedCab
             e.Cancel = true;
         }
 
-
+        #region ProcessRing
+        /// <summary>
+        /// LoadingDataEvent的处理函数，显示或者隐藏精度环
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onLoadingData(object sender, bool e)
         {
+            //开启定时器
+            if(e)
+            {
+                processRingTimer.Start();
+            }
+            else
+            {
+                processRingTimer.Stop();
+            }
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 LoadingView.Visibility = e ? Visibility.Visible : Visibility.Hidden;
                 LoadDataPR.IsActive = e ? true : false;
             }));
         }
-	}
 
-	/// <summary>
-	/// 空闲监听定时结构体
-	/// </summary>
-	[StructLayout(LayoutKind.Sequential)]
+        private void onProcessRingTimerExpired(object sender, EventArgs e)
+        {
+            //定时器超时，隐藏进度环
+            onLoadingData(this, false);
+            return;
+        }
+        #endregion
+
+    }
+
+    /// <summary>
+    /// 空闲监听定时结构体
+    /// </summary>
+    [StructLayout(LayoutKind.Sequential)]
 	struct LASTINPUTINFO
 	{
 		// 设置结构体块容量
