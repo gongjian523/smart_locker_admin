@@ -76,7 +76,7 @@ namespace CFLMedCab.View.Return
             }
 
             LoadingDataEvent(this, true);
-            BaseData<CommodityRecovery> bdCommodityRecovery = CommodityRecoveryBll.GetInstance().GetCommodityRecovery(name);
+            BaseData<CommodityRecovery> bdCommodityRecovery = CommodityRecoveryBll.GetInstance().GetCommodityRecovery(name.ToUpper());
             LoadingDataEvent(this, false);
 
             HttpHelper.GetInstance().ResultCheck(bdCommodityRecovery, out bool isSuccess);

@@ -162,7 +162,7 @@ namespace CFLMedCab.View.Return
             }
 
             LoadingDataEvent(this, true);
-            BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask(name);
+            BaseData<PickTask> baseDataPickTask = PickBll.GetInstance().GetPickTask(name.ToUpper());
             LoadingDataEvent(this, false);
 
             HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);

@@ -114,7 +114,7 @@ namespace CFLMedCab.View.Fetch
             {
                 FetchParam fetchParam = new FetchParam();
                 LoadingDataEvent(this, true);
-                fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name);
+                fetchParam.bdConsumingOrder = ConsumingBll.GetInstance().GetConsumingOrder(name.ToUpper());
                 LoadingDataEvent(this, false);
 
                 //校验是否含有数据

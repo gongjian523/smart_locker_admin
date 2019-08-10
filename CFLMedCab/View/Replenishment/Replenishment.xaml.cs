@@ -164,7 +164,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             }
 
             LoadingDataEvent(this, true);
-            BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name);
+            BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask(name.ToUpper());
             LoadingDataEvent(this, false);
 
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);

@@ -17,9 +17,6 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Label  x:Name="lbInputCode" Grid.Row="0" Content="请输入商品回收任务单号或扫描任务单二维码"   Style="{StaticResource lblTitle1}"/>
-                    <!--<TextBox k:TouchScreenKeyboard.TouchScreenKeyboard="True"  x:Name="tbInputCode" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" Text="" 
-                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
-                             Width="{Binding Path=ActualWidth,ElementName=GridView}" PreviewKeyDown="SearchBox_OnKeyDown"/>-->
                     <TextBox x:Name="tbInputCode" Grid.Row="1"  Height="48" Margin="0 10"  TextWrapping="Wrap" Text="" 
                              VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
                              Width="{Binding Path=ActualWidth,ElementName=GridView}" PreviewKeyDown="SearchBox_OnKeyDown" />

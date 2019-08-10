@@ -156,7 +156,7 @@ namespace CFLMedCab.View.Inventory
             }
 
             LoadingDataEvent(this, true);
-            BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(name);
+            BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(name.ToUpper());
             LoadingDataEvent(this, false);
 
             //校验是否含有数据

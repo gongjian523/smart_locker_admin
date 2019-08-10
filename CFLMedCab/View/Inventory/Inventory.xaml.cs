@@ -144,7 +144,7 @@ namespace CFLMedCab.View.Inventory
             }
 
             LoadingDataEvent(this, true);
-            BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName);
+            BaseData<InventoryTask> bdInventoryTask = InventoryTaskBll.GetInstance().GetInventoryTaskByInventoryTaskName(taskName.ToUpper());
             LoadingDataEvent(this, false);
 
             //校验是否含有数据
