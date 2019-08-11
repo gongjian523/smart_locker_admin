@@ -126,8 +126,9 @@ namespace CFLMedCab.Http.Bll
 				shelfTasks.ForEach(it =>
 				{
                     ids.ForEach(id => {
-                        it.NeedShelfTotalNumber = shelfTaskCommodityDetails.Where(sit => sit.ShelfTaskId == it.id && sit.GoodsLocationId == id).GroupBy(sit => new { sit.ShelfTaskId, sit.GoodsLocationId}).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).Single();
-                        if(it.NeedShelfTotalNumber != 0)
+                        //it.NeedShelfTotalNumber = shelfTaskCommodityDetails.Where(sit => sit.ShelfTaskId == it.id && sit.GoodsLocationId == id).GroupBy(sit => new { sit.ShelfTaskId, sit.GoodsLocationId}).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).Single();
+                        it.NeedShelfTotalNumber = 1;
+                        if (it.NeedShelfTotalNumber != 0)
                         {
                             it.GoodLocationName = ApplicationState.GetCabNameById(id);
                             taskList.Add(it);
@@ -204,10 +205,12 @@ namespace CFLMedCab.Http.Bll
 
             //baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
 
-            var shelfTaskIds = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess1);
 
-            if (baseDataShelfTaskCommodityDetail.body.objects != null)
+            if (isSuccess && isSuccess1)
             {
+                var shelfTaskIds = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
                 baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => shelfTaskIds.Contains(it.ShelfTaskId)).ToList();
             }
             return baseDataShelfTaskCommodityDetail;

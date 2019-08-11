@@ -111,7 +111,7 @@
                     <Border Grid.Row="0" Padding="5"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="累计库存数量：" Style="{StaticResource lblTitle5}"/>
-                            <Label Name="totalNum" Content="入库明细" Style="{StaticResource lblTitle3}"/>
+                            <Label Name="totalNum" Style="{StaticResource lblTitle3}"/>
                             <Label Content="个" Style="{StaticResource lblTitle5}"/>
                         </StackPanel>
                     </Border>
@@ -130,7 +130,7 @@
                                 <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CommodityName}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding name}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

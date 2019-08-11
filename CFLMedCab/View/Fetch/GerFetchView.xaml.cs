@@ -48,8 +48,6 @@ namespace CFLMedCab.View.Fetch
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        //private Timer endTimer;
-
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
 
@@ -61,11 +59,6 @@ namespace CFLMedCab.View.Fetch
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
             operatorName.Content = ApplicationState.GetUserInfo().name;
             after = afterEps;
-
-            //endTimer = new Timer(Contant.ClosePageEndTimer);
-            //endTimer.AutoReset = false;
-            //endTimer.Enabled = true;
-            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -117,8 +110,7 @@ namespace CFLMedCab.View.Fetch
         /// <param name="sender"></param>
         /// <param name="e"></param> 
         public void onNoEndOperation(object sender, RoutedEventArgs e)
-        {
-            //endTimer.Close();
+        { 
             EnterGerFetch(this, null);
         }
 
@@ -129,22 +121,9 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
             Button btn = (Button)sender;
             EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
-
-        ///// <summary>
-        ///// 结束定时器超时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
-        //{
-        //    App.Current.Dispatcher.Invoke((Action)(()=> {
-        //        EndOperation(true);
-        //    }));
-        //}
 
         /// <summary>
         /// 长时间未操作界面

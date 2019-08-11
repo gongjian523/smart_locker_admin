@@ -47,8 +47,6 @@ namespace CFLMedCab.View.Return
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        //private Timer endTimer;
-
         private PickTask pickTask;
         private HashSet<CommodityEps> after;
 
@@ -62,11 +60,6 @@ namespace CFLMedCab.View.Return
         public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs)
         {
             InitializeComponent();
-
-            //endTimer = new Timer(Contant.ClosePageEndTimer);
-            //endTimer.AutoReset = false;
-            //endTimer.Enabled = true;
-            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             pickTask = task;
             //操作人
@@ -153,7 +146,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
+            
             bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
             EndOperation(bExit);  
         }
@@ -165,23 +158,10 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
+            
             EnterReturnGoodsDetailOpenEvent(this, pickTask);
             return;
         }
-
-        ///// <summary>
-        ///// 结束定时器超时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
-        //{
-        //    App.Current.Dispatcher.Invoke((Action)(() =>
-        //    {
-        //        EndOperation(true);
-        //    }));
-        //}
 
         /// <summary>
         /// 长时间未操作界面
@@ -283,7 +263,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
+            
             EndOperation(bExit);
         }
 

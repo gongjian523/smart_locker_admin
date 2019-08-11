@@ -151,8 +151,6 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BaseData<PickCommodity> GetPickTaskCommodityDetail(BaseData<PickTask> baseDataPickTask)
 		{
-
-
 			//校验是否含有数据，如果含有数据，拼接具体字段
 			BaseData<PickCommodity> baseDataPickTaskCommodityDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 
@@ -202,9 +200,12 @@ namespace CFLMedCab.Http.Bll
 
             //baseDataPickTaskCommodityDetail.body.objects = baseDataPickTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
 
-            var pickTaskIds = baseDataPickTask.body.objects.Select(it => it.id).ToList();
-            if (baseDataPickTaskCommodityDetail.body.objects != null)
+            HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(baseDataPickTaskCommodityDetail, out bool isSuccess1);
+
+            if (isSuccess && isSuccess1)
             {
+                var pickTaskIds = baseDataPickTask.body.objects.Select(it => it.id).ToList();
                 baseDataPickTaskCommodityDetail.body.objects = baseDataPickTaskCommodityDetail.body.objects.Where(it => pickTaskIds.Contains(it.PickTaskId)).ToList();
             }
 

@@ -49,7 +49,6 @@ namespace CFLMedCab.View.Fetch
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        //private Timer endTimer;
         bool bExit;
 
         private FetchParam fetchParam;
@@ -67,11 +66,6 @@ namespace CFLMedCab.View.Fetch
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             surgeryNum.Content = param.bdConsumingOrder.body.objects[0].name;
             after = afterEps;
-
-            //endTimer = new Timer(Contant.ClosePageEndTimer);
-            //endTimer.AutoReset = false;
-            //endTimer.Enabled = true;
-            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -130,7 +124,6 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param> 
         public void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
             EnterSurgeryNumOpenEvent(this, fetchParam);
         }
 
@@ -141,7 +134,6 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
             bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
             EndOperation(bExit);
         }
@@ -248,7 +240,6 @@ namespace CFLMedCab.View.Fetch
         /// <param name="e"></param>
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
             EndOperation(bExit);
         }
 

@@ -46,8 +46,6 @@ namespace CFLMedCab.View.Fetch
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        //private Timer endTimer;
-
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
         private ConsumingOrder consumingOrder;
@@ -61,11 +59,6 @@ namespace CFLMedCab.View.Fetch
 
             consumingOrder = order;
             consumingOrderType = type;
-
-            //endTimer = new Timer(Contant.ClosePageEndTimer);
-            //endTimer.AutoReset = false;
-            //endTimer.Enabled = true;
-            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetUserInfo().name;
@@ -140,22 +133,9 @@ namespace CFLMedCab.View.Fetch
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
-        {
-            //endTimer.Close();
+        { 
             EnterSurgeryNoNumOpenEvent(this, null);
         }
-
-        ///// <summary>
-        ///// 结束定时器超时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
-        //{
-        //    App.Current.Dispatcher.Invoke((Action)(() => {
-        //        EndOperation(true);
-        //    }));
-        //}
 
         /// <summary>
         /// 长时间未操作界面

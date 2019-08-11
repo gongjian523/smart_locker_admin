@@ -51,8 +51,6 @@ namespace CFLMedCab.View.Return
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        //private Timer endTimer;
-
         private bool isSuccess;
 
         private HashSet<CommodityEps> after;
@@ -62,11 +60,6 @@ namespace CFLMedCab.View.Return
         public ReturnClose(HashSet<CommodityEps> afterEps, CommodityRecovery order)
         {
             InitializeComponent();
-
-            //endTimer = new Timer(Contant.ClosePageEndTimer);
-            //endTimer.AutoReset = false;
-            //endTimer.Enabled = true;
-            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetUserInfo().name;
@@ -148,7 +141,6 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
             Button btn = (Button)sender;
             EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
@@ -160,8 +152,6 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
-
             if (commodityRecovery == null)
             {
                 EnterStockSwitchOpenEvent(this, null);
@@ -171,18 +161,6 @@ namespace CFLMedCab.View.Return
                 EnterReturnOpenEvent(this, commodityRecovery);
             }
         }
-
-        ///// <summary>
-        ///// 结束定时器超时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
-        //{
-        //    App.Current.Dispatcher.Invoke((Action)(() => {
-        //        EndOperation(true);
-        //    }));
-        //}
 
         /// <summary>
         /// 长时间未操作界面

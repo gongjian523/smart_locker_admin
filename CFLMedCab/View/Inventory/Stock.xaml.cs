@@ -86,21 +86,25 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void onStockSnapshot(object sender, RoutedEventArgs e)
         {
-            queryFilter.Visibility = Visibility.Collapsed;
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                queryFilter.Visibility = Visibility.Collapsed;
 
-            ResetGoodsCodeNameCombox();
+                ResetGoodsCodeNameCombox();
 
-            goodsCodeSP.Visibility = Visibility.Visible;
-            operating_time.Visibility = Visibility.Hidden;
+                goodsCodeSP.Visibility = Visibility.Visible;
+                operating_time.Visibility = Visibility.Hidden;
 
-            stockSnapshotQuery.Visibility = Visibility.Visible;
-            validityQuery.Visibility = Visibility.Hidden;
-            stockQuery.Visibility = Visibility.Hidden;
+                stockSnapshotQuery.Visibility = Visibility.Visible;
+                validityQuery.Visibility = Visibility.Hidden;
+                stockQuery.Visibility = Visibility.Hidden;
 
-            Content0.Visibility = Visibility.Visible;
-            Content1.Visibility = Visibility.Hidden;
-            Content2.Visibility = Visibility.Hidden;
-            queryData(this, null);
+                Content0.Visibility = Visibility.Visible;
+                Content1.Visibility = Visibility.Hidden;
+                Content2.Visibility = Visibility.Hidden;
+                queryData(this, null);
+            }));
+
         }
 
         /// <summary>
@@ -137,6 +141,8 @@ namespace CFLMedCab.View
 
                 ApplicationState.SetGoodsInfo(hs);
 
+
+
                 List<Commodity> list = LocalGoodsChangeBll.GetCommodity();
 
                 SetPopInventoryEvent(this, false);
@@ -144,6 +150,7 @@ namespace CFLMedCab.View
                 if (list == null)
                 {
                     MessageBox.Show("获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
+                    return;
                 }
 
                 listView.DataContext = list;

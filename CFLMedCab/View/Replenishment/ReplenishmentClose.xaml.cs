@@ -54,8 +54,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
         BaseData<CommodityCode> bdCommodityCode;
         BaseData<ShelfTaskCommodityDetail> bdCommodityDetail;
 
-        //private Timer endTimer;
-
         bool bExit;
 
         private bool isSuccess;
@@ -63,11 +61,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public ReplenishmentClose(ShelfTask task, HashSet<CommodityEps> hs)
         {
             InitializeComponent();
-
-            //endTimer = new Timer(Contant.ClosePageEndTimer);
-            //endTimer.AutoReset = false;
-            //endTimer.Enabled = true;
-            //endTimer.Elapsed += new ElapsedEventHandler(onEndTimerExpired);
 
             //操作人
             operatorName.Content = ApplicationState.GetUserInfo().name;
@@ -171,7 +164,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
             if (!bGotoAbnormal || !isSuccess)
             {
-                //endTimer.Close();
+                
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
                 EndOperation(bExit);
             }
@@ -191,23 +184,10 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
+            
             EnterReplenishmentDetailOpenEvent(this, shelfTask);
             return;
         }
-
-        ///// <summary>
-        ///// 结束定时器超时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
-        //{
-        //    App.Current.Dispatcher.Invoke((Action)(() =>
-        //    {
-        //        EndOperation(true);
-        //    }));
-        //}
 
         /// <summary>
         /// 长时间未操作界面
@@ -334,7 +314,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onSubmit(object sender, RoutedEventArgs e)
         {
-            //endTimer.Close();
+            
             EndOperation(bExit);
         }
 

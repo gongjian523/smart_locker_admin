@@ -40,6 +40,8 @@ using CFLMedCab.Http.Model.login;
 using CFLMedCab.Http.Model.param;
 using WindowsInput.Native;
 using WindowsInput;
+using System.Xml;
+using CFLMedCab.Model.Constant;
 
 namespace CFLMedCab
 {
@@ -514,7 +516,7 @@ namespace CFLMedCab
                 return;
             }
 
-            if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 < 60)
+            if ((Environment.TickCount - (long)mLastInputInfo.dwTime) / 1000 < (60 * Contant.IdleTimeExpireLength))
             {
                 return;
             }
@@ -563,6 +565,14 @@ namespace CFLMedCab
 
             //回到登陆页
             SetSubViewInfo(null, SubViewType.Login);
+
+            //用adminToken取代旧用户的accessToken，
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load($"{ApplicationState.GetProjectRootPath()}/MyProject.xml");
+            XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
+            XmlNode adminToken = root.SelectSingleNode("admin_token");//指向设备节点
+            HttpHelper.GetInstance().SetHeaders(adminToken.InnerText);
+
 #if TESTENV
 #else
 #if VEINSERIAL

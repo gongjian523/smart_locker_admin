@@ -9,9 +9,10 @@ namespace CFLMedCab.Model.Constant
     static class Contant
     {
 #if TESTENV
-        public const int ClosePageEndTimer = 1000*60*1;
+        public const int IdleTimeExpireLength = 10;
 #else
-        public const int ClosePageEndTimer = 1000*60*3;
+        public const int IdleTimeExpireLength = 10;
 #endif
+
     }
 }
