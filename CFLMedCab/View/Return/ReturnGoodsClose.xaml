@@ -57,7 +57,7 @@
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}" Margin="0 0 0 20" Grid.ColumnSpan="2">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Label Content="当前领出库了" Style="{StaticResource lblTitle1}"/>
+                                <Label Content="当前出库了" Style="{StaticResource lblTitle1}"/>
                                 <Label Content=" " Name="outNum" Style="{StaticResource lblTitleRed}"/>
                                 <Label Content="个商品，其中异常操作" Style="{StaticResource lblTitle1}"/>
                                 <Label Content=" " Name="abnormalOutNum" Style="{StaticResource lblTitleRed}"/>

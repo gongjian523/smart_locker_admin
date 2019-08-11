@@ -63,7 +63,7 @@ namespace CFLMedCab.View.Inventory
             CreateTime = DateTime.Now;
             Type = 1;
             Status = 0;
-            Code = inventoryOrder.name;
+            Code = order.name;
             inventoryOrder = order;
 
             goodsDtllistConfirmView.DataContext = list;

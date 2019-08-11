@@ -31,7 +31,7 @@
     <srfid_com>COM4</srfid_com>
 
     <!-- 主柜指静脉串口信息 -->
-    <mvein_com>COM9</mvein_com>
+    <mvein_com>COM7</mvein_com>
     
   </device>
   <!-- quartz信息 -->
