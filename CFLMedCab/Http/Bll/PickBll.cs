@@ -109,16 +109,27 @@ namespace CFLMedCab.Http.Bll
 
                 if (isSuccess)
                 {
+                    List<string> ids = ApplicationState.GetAllCabIds();
+                    List<PickTask> taskList = new List<PickTask>();
+
                     var pickTasks = baseDataPickTask.body.objects;
                     var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects;
                     pickTasks.ForEach(it =>
                     {
+                        ids.ForEach(id => {
+                            it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id && sit.GoodsLocationId == id).GroupBy(sit => new { sit.PickTaskId, sit.GoodsLocationId }).Select(group => group.Sum(sit => (sit.Number - sit.PickNumber))).Single();
+                            if (it.NeedPickTotalNumber != 0)
+                            {
+                                it.GoodLocationName = ApplicationState.GetCabNameById(id);
+                                taskList.Add(it);
+                            }
+                        });
+
                         it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => sit.Number)).FirstOrDefault();
                     });
 
-                    baseDataPickTask.body.objects = pickTasks.Where(it => it.NeedPickTotalNumber != 0).ToList();
+                    baseDataPickTask.body.objects = taskList;
                 }
-
             }
 
             return baseDataPickTask;

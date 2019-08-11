@@ -117,14 +117,25 @@ namespace CFLMedCab.Http.Bll
 
 			if (isSuccess)
 			{
+                List<string> ids = ApplicationState.GetAllCabIds();
+
+                List<ShelfTask> taskList = new List<ShelfTask>();
+
 				var shelfTasks = baseDataShelfTask.body.objects;
 				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
 				shelfTasks.ForEach(it =>
 				{
-					it.NeedShelfTotalNumber = shelfTaskCommodityDetails.Where(sit => sit.ShelfTaskId == it.id).GroupBy(sit => sit.ShelfTaskId).Select(group => group.Sum(sit => sit.NeedShelfNumber)).Single();
+                    ids.ForEach(id => {
+                        it.NeedShelfTotalNumber = shelfTaskCommodityDetails.Where(sit => sit.ShelfTaskId == it.id && sit.GoodsLocationId == id).GroupBy(sit => new { sit.ShelfTaskId, sit.GoodsLocationId}).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).Single();
+                        if(it.NeedShelfTotalNumber != 0)
+                        {
+                            it.GoodLocationName = ApplicationState.GetCabNameById(id);
+                            taskList.Add(it);
+                        }                      
+                    });
 				});
 
-				baseDataShelfTask.body.objects = shelfTasks.Where(it=>it.NeedShelfTotalNumber != 0).ToList();
+				baseDataShelfTask.body.objects = taskList;
 			}
 
 			return baseDataShelfTask;

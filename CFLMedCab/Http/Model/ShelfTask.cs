@@ -71,5 +71,11 @@ namespace CFLMedCab.Http.Model
 		[JsonIgnore]
 		public int NeedShelfTotalNumber { get; set; }
 
-	}
+        /// <summary>
+        /// 货柜号
+        /// </summary>
+        [JsonIgnore]
+        public string GoodLocationName{ get; set; }
+
+    }
 }

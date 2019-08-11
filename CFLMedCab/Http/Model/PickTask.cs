@@ -69,5 +69,10 @@ namespace CFLMedCab.Http.Model
 		[JsonIgnore]
 		public int NeedPickTotalNumber { get; set; }
 
-	}
+        /// <summary>
+        /// 货柜号
+        /// </summary>
+        [JsonIgnore]
+        public string GoodLocationName { get; set; }
+    }
 }

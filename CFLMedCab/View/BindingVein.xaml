@@ -9,7 +9,7 @@
     <Grid Height="600" Width="920">
         <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
             <Grid>
-                <Grid x:Name="loginView" Margin="50,40,50,20">
+                <Grid x:Name="loginView" Margin="50,40,50,20" >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -45,21 +45,21 @@
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Button x:Name="btnBinding" Style="{StaticResource CommonNoButtonT2}" Content="绑定指静脉"   Width="245" Height="80"    Click="onBindingVein"/>
-                        <Button x:Name="btnLogin" Style="{StaticResource CommonNoButtonT2}" Content="登录"   Grid.Column="1" Width="245" Height="80"  Click="onBindingVein"/>
-                        <Button Style="{StaticResource CommonNoButtonT2}" Content="退出"   Grid.Column="2" Width="245" Height="80"  Click="onExitApp"/>
+                        <Button x:Name="btnLogin" Style="{StaticResource CommonNoButtonT2}" Content="登录"   Grid.Column="1" Width="245" Height="80"  Click="onPswLogin"/>
+                        <Button Style="{StaticResource CommonNoButtonT2}" Content="退出"   Grid.Column="2" Width="245" Height="80"  Click="onHidePopClose"/>
                     </Grid>
                 </Grid>
-                <Grid x:Name="BindingView" Visibility="Collapsed" >
+                <Grid x:Name="bindingView"  Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <StackPanel Grid.Row="0" Margin="0,100,0,0">
-                        <Label x:Name="GuidInfo"  Margin="0,15,0,0"  Style="{StaticResource lblTitle1_2}" Content="请将手指放在指静脉模块上！"/>
+                        <Label x:Name="GuidInfo"  Margin="0,15,0,0"  Style="{StaticResource lblTitle1_2}" />
                         <Label x:Name="WarnInfo2"  Margin="0,50,0,0"  Style="{StaticResource lblTitle1_2}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1">
-                        <Button x:Name="rebindingBtn" Style="{StaticResource CommonNoButtonT2}" Content="重新绑定" Width="300" Height="80"   Margin="80,0,0,0" HorizontalAlignment="Center" Click="onBindingVein" Visibility="Hidden"/>
+                        <Button x:Name="rebindingBtn" Style="{StaticResource CommonNoButtonT2}" Content="重新绑定" Width="300" Height="80"   Margin="80,0,0,0" HorizontalAlignment="Center" Click="onRebindingVein" Visibility="Hidden"/>
                         <Button Style="{StaticResource CommonNoButtonT2}" Content="退出" Width="300" Height="80"  Margin="160,0,0,0"  HorizontalAlignment="Center" Click="onHidePopClose"/>
                     </StackPanel>
                 </Grid>

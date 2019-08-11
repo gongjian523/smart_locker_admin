@@ -421,7 +421,7 @@ namespace CFLMedCab.Infrastructure
         }
 
         /// <summary>
-        /// 获取副货柜ID
+        /// 保存副货柜ID
         /// </summary>
         /// <param name="cabId"></param>
         public static void SetSCabId(string cabId)
@@ -431,13 +431,29 @@ namespace CFLMedCab.Infrastructure
         }
 
         /// <summary>
-        /// 保存副货柜ID
+        /// 获取副货柜ID
         /// </summary>
         /// <returns></returns>
         public static string GetSCabId()
         {
             return GetValue<string>((int)ApplicationKey.SCabId);
         }
+
+        /// <summary>
+        /// 获取所有货柜Id
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllCabIds()
+        {
+            List<string> list = new List<string>();
+
+            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.MCabId));
+#if DUALCAB
+            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.SCabId);
+#endif
+            return list;
+        }
+
 
         /// <summary>
         /// 保存副货柜名字
@@ -457,6 +473,24 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.SCabName);
         }
+
+        /// <summary>
+        /// 通过货柜id查询货柜名字
+        /// </summary>
+        /// <param name="com"></param>
+        /// <returns></returns>
+        public static string GetCabNameById(string id)
+        {
+            if (id == GetValue<string>((int)ApplicationKey.MCabId))
+                return GetValue<string>((int)ApplicationKey.MCabName);
+#if DUALCAB
+            else if (id == GetValue<string>((int)ApplicationKey.SCabId))
+                return GetValue<string>((int)ApplicationKey.SCabName);
+#endif
+            else
+                return GetValue<string>((int)ApplicationKey.MCabName);
+        }
+
 
         /// <summary>
         /// 通过Rfid串口查询货柜名字

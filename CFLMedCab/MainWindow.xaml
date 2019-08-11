@@ -46,7 +46,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid  Background="#FFFFFF">
-                <Image Width="201" Height="39" HorizontalAlignment="Left" Margin="20,0,0,0" >
+                <Image Width="201" Height="39"  x:Name="imLogo" HorizontalAlignment="Left" Margin="20,0,0,0"    >
                     <Image.Source>
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/logo.png" />
                     </Image.Source>

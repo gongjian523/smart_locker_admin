@@ -440,7 +440,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             int ret = FV_GrabFeature(devName, regfeature, (char)0x00);
             if (FV_ERRCODE_SUCCESS != ret)
             {
-                info = "无法采集到指静脉特征！" + ret;
+                LogUtils.Debug("无法采集到指静脉特征:" + ret);
+                info = "无法采集到指静脉特征!";
                 return ret;
             }
 
@@ -451,8 +452,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 if (FV_ERRCODE_SUCCESS != ret)
                 {
                     //采集的模板不属于同一根手指，结束采集
-                    LogUtils.Debug("It must be the same finger!");
-                    info = "本次采集的手指和上一个不同！" + ret;
+                    LogUtils.Debug("比对指静脉特征失败：" + ret);
+                    info = "本次采集的手指和上一个不同！";
                     return ret;
                 }
             }
@@ -466,11 +467,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         {
             int ret = FV_GrabFeature(devName, macthfeature, (char)0x00);
             if (FV_ERRCODE_SUCCESS != ret){
-                LogUtils.Debug("Read vein feature read failed, error code= " + ret);
-                info = "采集指静脉特征失败！ " + ret;
+                LogUtils.Debug("采集指静脉特征失败：" + ret);
+                info = "采集指静脉特征失败！";
             }
             else{
-                LogUtils.Debug("Read vein feature read successfully.");
+                LogUtils.Debug("采集指静脉特征成功.");
                 info = "采集指静脉特征成功！";
             }
             return ret;

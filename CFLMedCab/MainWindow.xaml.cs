@@ -150,7 +150,7 @@ namespace CFLMedCab
             //InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
             //InventoryTimer.Start();
 
-            processRingTimer = new System.Timers.Timer(1000*60*5);
+            processRingTimer = new System.Timers.Timer(1000*60*1);
             processRingTimer.AutoReset = false;
             processRingTimer.Enabled = false;
             processRingTimer.Elapsed += new ElapsedEventHandler(onProcessRingTimerExpired);
@@ -188,7 +188,7 @@ namespace CFLMedCab
 					}
 					else
 					{
-       //                 Console.ReadKey();
+                        //Console.ReadKey();
                         if (RegisterVein())
                         {
 							ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
@@ -261,8 +261,7 @@ namespace CFLMedCab
 			}
         }
 
-#if TESTENV
-#else
+        #region 指静脉
 #if VEINSERIAL
         private void onReceivedDataVein(object sender, SerialDataReceivedEventArgs e)
         {
@@ -315,6 +314,11 @@ namespace CFLMedCab
 
         }
 #else
+        /// <summary>
+        /// 指静脉检测到手指
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void onFingerDetected(object sender, int e)
         {
             LoginStatus sta = new LoginStatus();
@@ -360,9 +364,9 @@ namespace CFLMedCab
                     }
                     else
                     {
-                        info = "没有找到和当前指静脉匹配的用户" + data.message;
+                        info = "没有找到和当前指静脉匹配的用户";
                         info2 = "请先绑定指静脉或者再次尝试";
-                        LogUtils.Error(data.message);
+                        LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
                     }
 
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
@@ -392,29 +396,67 @@ namespace CFLMedCab
             }
             else
             {
-                //
+                
                 InputSimulator inputSimulator = new InputSimulator();
-                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.SPACE);
+                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
+                //inputSimulator.Keyboard.KeyPress(VirtualKeyCode.SPACE);
                 Thread.Sleep(100);
-                inputSimulator.Keyboard.KeyPress(VirtualKeyCode.SPACE);
-
+                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
 
                 // 进入首页
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    LoginBkView.Visibility = Visibility.Hidden;
+                    onEnterHomePage(user);
 
-                    ApplicationState.SetUserInfo(user);
-                    SetNavBtnVisiblity(user.Role);
-                    tbNameText.Text = user.name;
+                    //LoginBkView.Visibility = Visibility.Hidden;
+                    //ApplicationState.SetUserInfo(user);
+                    //SetNavBtnVisiblity(user.Role);
+                    //tbNameText.Text = user.name;
                 }));
-
-                //进入首页，将句柄设置成null，避免错误调用
-                SetSubViewInfo(null, SubViewType.Home);
             }
         }
 #endif
-#endif
+
+        /// <summary>
+        /// 指静脉签名注册
+        /// </summary>
+        /// <returns></returns>
+        private bool RegisterVein()
+        {
+            byte[] devSign = new byte[36];
+            int veinSt = vein.GetDevSign(devSign, out ushort devSignLen);
+            if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
+            {
+                LogUtils.Error("获取本地指静脉设备签名失败！" + veinSt);
+                return false;
+            }
+
+            //转换成16进制字符串
+            string devStr = HexHelper.ByteToHexStr(devSign);
+
+            BaseSinglePostData<VeinRegister> bdVeinRegister = UserLoginBll.GetInstance().VeinmatchRegister(new VeinregisterPostParam
+            {
+                devsign = devStr
+            });
+            HttpHelper.GetInstance().ResultCheck(bdVeinRegister, out bool isSuccess);
+            if (!isSuccess)
+            {
+                LogUtils.Error("获取服务器指静脉设备签名失败！");
+                return false;
+            }
+
+            byte[] serSign = HexHelper.StrToToHexByte(bdVeinRegister.body.srvsign);
+
+            veinSt = vein.SetDevSign(serSign, (ushort)serSign.Count());
+
+            if (veinSt != VeinUtils.FV_ERRCODE_FUNCTION_INVALID)
+            {
+                LogUtils.Error("设置本地指静脉设备签名失败！" + veinSt);
+                return false;
+            }
+            return true;
+        }
+        #endregion
 
 
         private void SetNavBtnVisiblity(string  role)
@@ -510,6 +552,7 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Hidden;
 
             LoginBkView.Visibility = Visibility.Visible;
+
             //回到登陆页
             SetSubViewInfo(null, SubViewType.Login);
 #if TESTENV
@@ -521,6 +564,20 @@ namespace CFLMedCab
             //Task.Factory.StartNew(vein.DetectFinger);
 #endif
 #endif
+        }
+
+        //登陆，进入首页
+        private void onEnterHomePage(User user)
+        {
+            LoginBkView.Visibility = Visibility.Hidden;
+            PopFrame.Visibility = Visibility.Hidden;
+
+            ApplicationState.SetUserInfo(user);
+            SetNavBtnVisiblity(user.Role);
+            tbNameText.Text = user.name;
+
+            //进入首页，将句柄设置成null，避免错误调用
+            SetSubViewInfo(null, SubViewType.Home);
         }
 
         private void onShowPopFrame(object content)
@@ -1731,12 +1788,13 @@ namespace CFLMedCab
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                LoginBkView.Visibility = Visibility.Hidden;
-                PopFrame.Visibility = Visibility.Hidden;
+                onEnterHomePage(e);
+                //LoginBkView.Visibility = Visibility.Hidden;
+                //PopFrame.Visibility = Visibility.Hidden;
 
-                ApplicationState.SetUserInfo(e);
-                SetNavBtnVisiblity(e.Role);
-                tbNameText.Text = e.name;
+                //ApplicationState.SetUserInfo(e);
+                //SetNavBtnVisiblity(e.Role);
+                //tbNameText.Text = e.name;
             }));
         }
 
@@ -1899,50 +1957,8 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Hidden;
             //Taskbar.HideTask(true);
 
-            //退出登录，进入登录页
+            //退出登录，进入首页
             SetSubViewInfo(null,SubViewType.Home);
-        }
-
-		/// <summary>
-		/// 签名注册
-		/// </summary>
-		/// <returns></returns>
-        private bool RegisterVein()
-        {
-#if TESTENV
-#else
-            byte[] devSign = new byte[36];
-			int veinSt = vein.GetDevSign(devSign, out ushort devSignLen);
-			if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
-            {
-                LogUtils.Error("获取本地指静脉设备签名失败！" + veinSt);
-                return false;
-            }
-
-			//转换成16进制字符串
-            string devStr = HexHelper.ByteToHexStr(devSign);
-            
-            BaseSinglePostData<VeinRegister> bdVeinRegister = UserLoginBll.GetInstance().VeinmatchRegister(new VeinregisterPostParam {
-                devsign = devStr
-            });
-            HttpHelper.GetInstance().ResultCheck(bdVeinRegister, out bool isSuccess);
-            if(!isSuccess)
-            {
-                LogUtils.Error("获取服务器指静脉设备签名失败！");
-                return false;
-            }
-
-			byte[] serSign = HexHelper.StrToToHexByte(bdVeinRegister.body.srvsign);
-
-			veinSt = vein.SetDevSign(serSign, (ushort)serSign.Count());
-
-            if (veinSt != VeinUtils.FV_ERRCODE_FUNCTION_INVALID)
-            {
-                LogUtils.Error("设置本地指静脉设备签名失败！" + veinSt);
-                return false;
-            }
-#endif
-            return true;
         }
 
         #region test
