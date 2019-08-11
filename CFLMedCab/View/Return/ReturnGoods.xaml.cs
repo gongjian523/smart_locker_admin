@@ -82,7 +82,7 @@ namespace CFLMedCab.View.Return
                 HttpHelper.GetInstance().ResultCheck(baseDataPickTask, out bool isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("此拣货工单中失败！", "温馨提示", MessageBoxButton.OK);
+                    //MessageBox.Show("此拣货工单中失败！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 

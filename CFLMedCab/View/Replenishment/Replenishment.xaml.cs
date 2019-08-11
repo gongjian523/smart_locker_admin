@@ -85,7 +85,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("此上架工单中失败！", "温馨提示", MessageBoxButton.OK);
+                    //MessageBox.Show("此上架工单中失败！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 

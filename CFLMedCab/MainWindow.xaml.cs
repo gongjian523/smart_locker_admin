@@ -321,6 +321,9 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onFingerDetected(object sender, int e)
         {
+#if TESTENV
+            return;
+#else
             LoginStatus sta = new LoginStatus();
 
             User user = null;
@@ -414,6 +417,7 @@ namespace CFLMedCab
                     //tbNameText.Text = user.name;
                 }));
             }
+#endif
         }
 #endif
 
@@ -423,6 +427,9 @@ namespace CFLMedCab
         /// <returns></returns>
         private bool RegisterVein()
         {
+#if TESTENV
+            return true;
+#else
             byte[] devSign = new byte[36];
             int veinSt = vein.GetDevSign(devSign, out ushort devSignLen);
             if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
@@ -455,8 +462,9 @@ namespace CFLMedCab
                 return false;
             }
             return true;
+#endif
         }
-        #endregion
+#endregion
 
 
         private void SetNavBtnVisiblity(string  role)
@@ -612,8 +620,8 @@ namespace CFLMedCab
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
 
-        #region 领用
-        #region 一般领用
+#region 领用
+#region 一般领用
         /// <summary>
         /// 一般领用
         /// </summary>
@@ -688,11 +696,11 @@ namespace CFLMedCab
                 SetSubViewInfo(gerFetchView, SubViewType.GerFetchClose);
             }));
         }
-        #endregion
+#endregion
 
-        #region 手术领用
+#region 手术领用
 
-        #region 无手术单领用和医嘱处方领用
+#region 无手术单领用和医嘱处方领用
         /// <summary>
         /// 进入手术无单领用和医嘱处方领用-开门状态
         /// </summary>
@@ -783,7 +791,7 @@ namespace CFLMedCab
         }
 #endregion
 
-        #region 有手术单领用
+#region 有手术单领用
         /// <summary>
         /// 手术领用医嘱处方领用
         /// </summary>
@@ -963,9 +971,9 @@ namespace CFLMedCab
         }
 #endif
 #endregion
-        #endregion
+#endregion
 
-        #region 领用退回
+#region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -1042,9 +1050,9 @@ namespace CFLMedCab
             }));
         }
 #endregion
-        #endregion
+#endregion
 
-        #region Replenishment
+#region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -1218,7 +1226,7 @@ namespace CFLMedCab
 
 #endregion
 
-        #region  ReturnGoods
+#region  ReturnGoods
         /// <summary>
         /// 进入拣货页面
         /// </summary>
@@ -1539,7 +1547,7 @@ namespace CFLMedCab
         }
 #endregion
 
-        #region Inventory
+#region Inventory
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -1961,7 +1969,7 @@ namespace CFLMedCab
             SetSubViewInfo(null,SubViewType.Home);
         }
 
-        #region test
+#region test
         private void MockData()
         {
             //test.InitGoodsInfo();
@@ -1976,7 +1984,7 @@ namespace CFLMedCab
 #endif
 
         }
-        #endregion
+#endregion
 
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
@@ -1993,7 +2001,7 @@ namespace CFLMedCab
             e.Cancel = true;
         }
 
-        #region ProcessRing
+#region ProcessRing
         /// <summary>
         /// LoadingDataEvent的处理函数，显示或者隐藏精度环
         /// </summary>
@@ -2024,7 +2032,7 @@ namespace CFLMedCab
             onLoadingData(this, false);
             return;
         }
-        #endregion
+#endregion
 
     }
 

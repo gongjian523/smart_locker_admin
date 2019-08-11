@@ -172,12 +172,14 @@ namespace CFLMedCab.View
             {
                 MessageBox.Show(err.Remove(err.Length - 1) + "!", "温馨提示", MessageBoxButton.OK);
             }
+            else
+            {
+                MessageBox.Show("保存成功!", "温馨提示", MessageBoxButton.OK);
+            }
 
 			//节点修改值保存
 			xmlDoc.Save(xmlPath);
-
-
-		}
+        }
 
         private void onItemChanged(object sender, RoutedEventArgs e)
         {
