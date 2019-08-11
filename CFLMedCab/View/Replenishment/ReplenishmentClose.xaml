@@ -56,7 +56,7 @@
                         </Grid.RowDefinitions>
                         <Border Style="{StaticResource TipBorder}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Label Content="当前领入库了" Style="{StaticResource lblTitle1}"/>
+                                <Label Content="当前入库了" Style="{StaticResource lblTitle1}"/>
                                 <Label Content=" " Name="inNum" Style="{StaticResource lblTitleRed}"/>
                                 <Label Content="个商品，其中异常操作"  Style="{StaticResource lblTitle1}"/>
                                 <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
