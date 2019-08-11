@@ -160,10 +160,7 @@ namespace CFLMedCab.Http.Bll
 
 			//校验是否含有数据，如果含有数据，拼接具体字段
 			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
-
-				var shelfTaskIds = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
 				
-
 				return hh.Get<ShelfTaskCommodityDetail>(new QueryParam
 				{
 					//@in =
@@ -175,15 +172,17 @@ namespace CFLMedCab.Http.Bll
                     {
                         filter =
                         {
-                            logical_relation = "1 AND 2 AND 3",
+                            //logical_relation = "1 AND 2 AND 3",
+                            logical_relation = "1 AND 2",
                             expressions =
                             {
-                                new QueryParam.Expressions
-                                {
-                                    field = "ShelfTaskId",
-                                    @operator = "INRANGE",
-                                    operands =  BllHelper.OperandsProcess(shelfTaskIds)
-                                },
+                                //这种写法有问题，暂时把这个条件删除，在后面过滤
+                                //new QueryParam.Expressions
+                                //{
+                                //    field = "ShelfTaskId",
+                                //    @operator = "INRANGE",
+                                //    operands =  BllHelper.OperandsProcess(shelfTaskIds)
+                                //},
                                 new QueryParam.Expressions
                                 {
                                     field = "StoreHouseId",
@@ -203,9 +202,15 @@ namespace CFLMedCab.Http.Bll
 
 			}, baseDataShelfTask);
 
-			//baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
+            //baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
 
-			return baseDataShelfTaskCommodityDetail;
+            var shelfTaskIds = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
+
+            if (baseDataShelfTaskCommodityDetail.body.objects != null)
+            {
+                baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => shelfTaskIds.Contains(it.ShelfTaskId)).ToList();
+            }
+            return baseDataShelfTaskCommodityDetail;
 		}
 
 

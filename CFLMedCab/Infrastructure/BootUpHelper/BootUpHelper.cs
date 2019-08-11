@@ -39,7 +39,7 @@ namespace CFLMedCab.Infrastructure.BootUpHelper
 		/// <summary>
 		/// 快捷方式名称-任意自定义
 		/// </summary>
-		private const string QuickName = "乘法云";
+		private const string QuickName = "乘法云链";
 
 		/// <summary>
 		/// 自动获取系统自动启动目录
@@ -76,7 +76,7 @@ namespace CFLMedCab.Infrastructure.BootUpHelper
 				}
 				else if (shortcutPaths.Count < 1)//不存在则创建快捷方式
 				{
-					CreateShortcut(systemStartPath, QuickName, appAllPath, "乘法云");
+					CreateShortcut(systemStartPath, QuickName, appAllPath, "乘法云链");
 				}
 			}
 			else//开机不启动

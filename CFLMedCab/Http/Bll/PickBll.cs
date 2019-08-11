@@ -156,10 +156,10 @@ namespace CFLMedCab.Http.Bll
 			//校验是否含有数据，如果含有数据，拼接具体字段
 			BaseData<PickCommodity> baseDataPickTaskCommodityDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 
-				var pickTaskIds = baseDataPickTask.body.objects.Select(it => it.id).ToList();
-				
+                //var pickTaskIds = baseDataPickTask.body.objects.Select(it => it.id).ToList();
 
-				return hh.Get<PickCommodity>(new QueryParam
+
+                return hh.Get<PickCommodity>(new QueryParam
 				{
 					//@in =
 					//{
@@ -170,15 +170,17 @@ namespace CFLMedCab.Http.Bll
                     {
                         filter =
                         {
-                            logical_relation = "1 AND 2 AND 3",
+                            //logical_relation = "1 AND 2 AND 3",
+                            logical_relation = "1 AND 2",
                             expressions =
                             {
-                                new QueryParam.Expressions
-                                {
-                                    field = "PickTaskId",
-                                    @operator = "INRANGE",
-                                    operands =  BllHelper.OperandsProcess(pickTaskIds)
-                                },
+                                //这种写法有问题，暂时把这个条件删除，在后面过滤
+                                //new QueryParam.Expressions
+                                //{
+                                //    field = "PickTaskId",
+                                //    @operator = "INRANGE",
+                                //    operands =  BllHelper.OperandsProcess(pickTaskIds)
+                                //},
                                 new QueryParam.Expressions
                                 {
                                     field = "StoreHouseId",
@@ -198,9 +200,15 @@ namespace CFLMedCab.Http.Bll
 
 			}, baseDataPickTask);
 
-			//baseDataPickTaskCommodityDetail.body.objects = baseDataPickTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
+            //baseDataPickTaskCommodityDetail.body.objects = baseDataPickTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
 
-			return baseDataPickTaskCommodityDetail;
+            var pickTaskIds = baseDataPickTask.body.objects.Select(it => it.id).ToList();
+            if (baseDataPickTaskCommodityDetail.body.objects != null)
+            {
+                baseDataPickTaskCommodityDetail.body.objects = baseDataPickTaskCommodityDetail.body.objects.Where(it => pickTaskIds.Contains(it.PickTaskId)).ToList();
+            }
+
+            return baseDataPickTaskCommodityDetail;
 
 		}
 
@@ -219,7 +227,7 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-						logical_relation = "1",
+						logical_relation = "1 AND 2",
 						expressions =
 						{
 							new QueryParam.Expressions

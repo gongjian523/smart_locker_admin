@@ -21,7 +21,7 @@ namespace CFLMedCab
 
 		protected override void OnStartup(StartupEventArgs e)
 		{
-			ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "乘法云", out bool createNew);
+			ProgramStarted = new EventWaitHandle(false, EventResetMode.AutoReset, "乘法云链", out bool createNew);
 
 			if (!createNew)
 			{
