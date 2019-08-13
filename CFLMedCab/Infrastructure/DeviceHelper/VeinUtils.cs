@@ -207,8 +207,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         public int LoadingDevice()
         {
             //枚举设备，带回设备名称列表
-
+            DateTime startTime = DateTime.Now;
             int ret = FV_LoadingDevice(devName, serialName, 9600, 2);
+            DateTime endTime = DateTime.Now;
+            LogUtils.Debug($"调用LoadingDeviceSdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
             if (FV_ERRCODE_SUCCESS != ret)
             {
                 LogUtils.Debug("Loading device failed! ret=" + ret);
@@ -224,7 +226,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             int ret;
 
             //1.初始化设备
+            DateTime startTime = DateTime.Now;
             ret = FV_InitDevice(devName);
+            DateTime endTime = DateTime.Now;
+            LogUtils.Debug($"调用LoadingDeviceSdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+         
             if (FV_ERRCODE_SUCCESS != ret)
             {
                 LogUtils.Debug("CabS: init failed! ret = " + ret);
@@ -232,7 +238,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             }
 
             //2.打开某设备
+            startTime = DateTime.Now;
             ret = FV_OpenDevice(devName, 0);
+            endTime = DateTime.Now;
+            LogUtils.Debug($"调用OpenDeviceSdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
             if (FV_ERRCODE_SUCCESS == ret)
                 LogUtils.Debug("CabS: open successed! ret=" + ret);
             else
@@ -245,10 +254,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         public void SetDetectFingerState(bool state)
         {
             bExitDetect = state;
+            LogUtils.Debug("Set bExitDetect " + (state ? "true":"false"));
         }
 
-		// 等待手指某状态（ 0移开；3放置 ） 
-		public void DetectFinger(object obj)
+        // 检测手指是否放置到指静脉设备上 
+        public void DetectFinger(object obj)
 		{
 			int wDetectCnt = 0;                         //循环检测次数
 			int wErrCount = 0;                          //检测产生错误的次数
@@ -261,18 +271,22 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			int flg = 3;
 			bExitDetect = false;
+            LogUtils.Debug("Set bExitDetect false");
 
-			string stateE = flg != 0 ? "Place" : "Remove";  //0移开；3放置
+            string stateE = flg != 0 ? "Place" : "Remove";  //0移开；3放置
 			string state = flg != 0 ? "放置" : "移开";  //0移开；3放置
 
 			//等待移开手指、
 			int i = 0;
 			while (!bExitDetect)
 			{ //循环检测手指
-
-				nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
-				if (FV_ERRCODE_SUCCESS != nRetVal)
-				{//检测时产生错误。
+                LogUtils.Debug($"调用FingerDetect1 开始");
+                DateTime startTime = DateTime.Now;
+                nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
+                DateTime endTime = DateTime.Now;
+                LogUtils.Debug($"调用FingerDetect1 Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+                if (FV_ERRCODE_SUCCESS != nRetVal)
+                {//检测时产生错误。
 					wErrCount++;
 
 					Thread.Sleep(nInterval);
@@ -308,8 +322,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 		}
 
-		//检测手指是否放置到指静脉设备上  
-		public void  DetectFinger()
+        //检测手指是否放置到指静脉设备上  
+        public void DetectFinger()
         {
             int wDetectCnt = 0;                         //循环检测次数
             int wErrCount = 0;                          //检测产生错误的次数
@@ -331,7 +345,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             while (!bExitDetect)
             { //循环检测手指
 
+                LogUtils.Debug($"调用FingerDetect2 开始");
+                DateTime startTime = DateTime.Now;
                 nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
+                DateTime endTime = DateTime.Now;
+                LogUtils.Debug($"调用FingerDetect2 Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
                 if (FV_ERRCODE_SUCCESS != nRetVal)
                 {//检测时产生错误。
                     wErrCount++;
@@ -342,7 +360,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     {
                         LogUtils.Debug("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
                         FingerDetectedEvent(this, -1);
-                        return ;
+                        return;
                     }
                 }
                 else
@@ -391,7 +409,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             while (nDetectTimes > wDetectCnt++)
             { //循环检测手指
 
+                LogUtils.Debug($"调用FingerDetect3 开始");
+                DateTime startTime = DateTime.Now;
                 nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
+                DateTime endTime = DateTime.Now;
+                LogUtils.Debug($"调用FingerDetect3 Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
                 if (FV_ERRCODE_SUCCESS != nRetVal)
                 {//检测时产生错误。
                     wErrCount++;
@@ -437,7 +459,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             info = "";
 
             //采集指静脉模板
+            LogUtils.Debug($"调用GrabFeature 开始");
+            DateTime startTime = DateTime.Now;
             int ret = FV_GrabFeature(devName, regfeature, (char)0x00);
+            DateTime endTime = DateTime.Now;
+            LogUtils.Debug($"调用GrabFeature Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
             if (FV_ERRCODE_SUCCESS != ret)
             {
                 LogUtils.Debug("无法采集到指静脉特征:" + ret);
@@ -448,7 +474,12 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             //第一枚以后的特征要与它之前的特征进行简单验证，简单判断是否同一手指
             if (feature_getCnt > 0)
             {
+                LogUtils.Debug($"调用GrabFeature 开始");
+                startTime = DateTime.Now;
                 ret = FV_IsSameFinger(regfeature, sampfeature, (byte)feature_getCnt, (char)0x03);
+                endTime = DateTime.Now;
+                LogUtils.Debug($"调用GrabFeature Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+
                 if (FV_ERRCODE_SUCCESS != ret)
                 {
                     //采集的模板不属于同一根手指，结束采集
@@ -533,13 +564,22 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         //读取设备的签名信息
         public int GetDevSign(byte[] devsign, out ushort devsignLen)
         {
-            return FV_GetDevSign(devName, devsign, out devsignLen);
+            DateTime startTime = DateTime.Now;
+            int ret = FV_GetDevSign(devName, devsign, out devsignLen);
+            DateTime endTime  = DateTime.Now;
+            LogUtils.Debug($"调用GetDevSign Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+
+            return ret;
         }
 
         //设置设备的签名信息
         public int SetDevSign(byte[] srvsign, ushort srvsignLen)
         {
-            return FV_SetDevSign(devName, srvsign, srvsignLen);
+            DateTime startTime = DateTime.Now;
+            int ret = FV_SetDevSign(devName, srvsign, srvsignLen);
+            DateTime endTime = DateTime.Now;
+            LogUtils.Debug($"调用SetDevSign Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+            return ret;
         }
 
     }

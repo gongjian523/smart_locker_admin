@@ -110,8 +110,8 @@ namespace CFLMedCab
 			ThreadPool.SetMaxThreads(100, 100);
 			ThreadPool.SetMinThreads(5, 5);
 
-			
 			InitializeComponent();
+            LogUtils.Debug("MainWindow initial...");
 
             foreach (System.Windows.Forms.Screen scr in System.Windows.Forms.Screen.AllScreens)
             {
@@ -141,12 +141,6 @@ namespace CFLMedCab
 
             DataContext = this;
 
-            //ShowTime();
-            //ShowTimer = new DispatcherTimer();
-            //ShowTimer.Tick += new EventHandler(ShowCurTimer);//起个Timer一直获取当前时间
-            //ShowTimer.Interval = new TimeSpan(0, 0, 0, 1, 0);
-            //ShowTimer.Start();
-
             //InventoryTimer = new DispatcherTimer();
             //InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer, 每分钟检查是否有扫描计划
             //InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
@@ -157,9 +151,10 @@ namespace CFLMedCab
             processRingTimer.Enabled = false;
             processRingTimer.Elapsed += new ElapsedEventHandler(onProcessRingTimerExpired);
 
-
             Task.Factory.StartNew(initCurrentGoodsInfo);
             Task.Factory.StartNew(startAutoInventory);
+
+            LogUtils.Debug("Task initial...");
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -172,6 +167,7 @@ namespace CFLMedCab
 #else
             vein = VeinUtils.GetInstance();
             vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
+                        
             int vienSt = vein.LoadingDevice();
 
             if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
@@ -182,7 +178,7 @@ namespace CFLMedCab
             {
 				if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
 				{
-					vienSt = vein.OpenDevice();
+                    vienSt = vein.OpenDevice();
 
                     if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
 					{                          
@@ -204,8 +200,8 @@ namespace CFLMedCab
             }
 #endif
 #endif
+            LogUtils.Debug("Vein initial...");
         }
-
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
         {

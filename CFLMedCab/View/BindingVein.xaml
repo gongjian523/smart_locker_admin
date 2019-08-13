@@ -24,12 +24,12 @@
                         </Grid.ColumnDefinitions>
 
                         <Label  Content="请输入用户名"   Margin="0,15,0,0"  Style="{StaticResource lblTitle1}"/>
-                        <TextBox x:Name="tbInputName"  Grid.Column="1" Height="48"  Width="595" Margin="10,15,0,0"  TextWrapping="Wrap" Text="18628293148" 
+                        <TextBox x:Name="tbInputName"  Grid.Column="1" Height="48"  Width="595" Margin="10,15,0,0"  TextWrapping="Wrap"  
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="20"/>
                         <Label Content="请输入密码"  Grid.Row="1" Margin="0,15,0,0"  Style="{StaticResource lblTitle1}" />
                         <PasswordBox x:Name="tbInputPsw"  Grid.Row="1" Grid.Column="1" Height="48" Width="595"  Margin="10,15,0,0"            
                             GotFocus="TbInputPsw_GotFocus"
-                                     VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="20" Password="cfy12345"/>
+                                     VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  FontSize="20" />
                         <Label x:Name="lbInputAuth" Content="请输入验证码"  Grid.Row="2" Margin="0,15,0,0"  Style="{StaticResource lblTitle1}" Visibility="Hidden"/>
                         <TextBox x:Name="tbInputAuth" Grid.Row="2" Grid.Column="1" Height="48" Width="595" Margin="10,15,10,0"  TextWrapping="Wrap" Text="" 
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" Visibility="Hidden"/>

@@ -34,7 +34,7 @@ namespace CFLMedCab
 
 			//控制台信息展示
 			ConsoleManager.Show();
-
+            
 			// 注册Application_Error（全局捕捉异常）
 			DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
 
@@ -77,6 +77,7 @@ namespace CFLMedCab
 
 			ApplicationState.SetMVeinCOM(device.SelectSingleNode("mvein_com").InnerText); //"COM9"
 
+            LogUtils.Debug("App config initial...");
 		}
 
 		//全局异常处理逻辑
@@ -86,7 +87,6 @@ namespace CFLMedCab
 			LogUtils.Error(e.Exception.Message + "\r\n" + e.Exception.StackTrace);
 			e.Handled = true;
 			MessageBox.Show(e.Exception.Message + "\r\n" + e.Exception.StackTrace, "系统信息");
-			
 		}
 
 	}

@@ -198,13 +198,22 @@ namespace CFLMedCab.View.Inventory
 #else
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 #endif
+                BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
+
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+
+                if(!isSuccess)
+                {
+                    MessageBox.Show("盘点时获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
+                }
+
                 List<GoodsDto> list = new List<GoodsDto>();
-                foreach (var item in hs.ToList())
+                foreach (var item in bdCommodityCode.body.objects)
                 {
                     GoodsDto goodItem = new GoodsDto
                     {
                         name = item.CommodityName,
-                        code = item.CommodityCodeName,
+                        code = item.name,
                         position = item.GoodsLocationName
                     };
                     list.Add(goodItem);
