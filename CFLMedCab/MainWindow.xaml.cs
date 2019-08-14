@@ -91,6 +91,10 @@ namespace CFLMedCab
         private SubViewType subViewType;
         private TestGoods test = new TestGoods();
 
+        //实例化一个互斥锁,用来保证同一时间内只有一个线程调用指静脉sdk
+        public static Mutex mutex = new Mutex();
+
+        bool bUsing = false;
 #if TESTENV
 
 #endif
@@ -189,7 +193,9 @@ namespace CFLMedCab
                         //Console.ReadKey();
                         if (RegisterVein())
                         {
-							ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+                            //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+                            LogUtils.Debug("detectFinger in initial...");
+                            ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
                         }
                         else
                         {
@@ -252,14 +258,40 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-				//Task.Factory.StartNew(vein.DetectFinger);
-				ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+                //Task.Factory.StartNew(vein.DetectFinger);
+                //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+                LogUtils.Debug("detectFinger in onLoginInfoHidenEvent...");
+                ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
 #endif
 #endif
-			}
+            }
         }
 
         #region 指静脉
+        void detectFinger(object obj)
+        {
+            if(bUsing)
+            {
+                LogUtils.Debug("detectFinger bUsing true return");
+                return;
+            }
+            else
+            {
+                LogUtils.Debug("detectFinger bUsing false turn true");
+                bUsing = true;
+            }
+
+            mutex.WaitOne();
+#if TESTENV
+#else
+            vein.DetectFinger(obj);
+#endif
+            mutex.ReleaseMutex();
+            LogUtils.Debug("detectFinger bUsing true turn false");
+            bUsing = false;
+        }
+
+
 #if VEINSERIAL
         private void onReceivedDataVein(object sender, SerialDataReceivedEventArgs e)
         {
@@ -322,6 +354,10 @@ namespace CFLMedCab
 #if TESTENV
             return;
 #else
+            mutex.WaitOne();
+            bUsing = true;
+            LogUtils.Debug("detectFinger bUsing turn true 1");
+
             LoginStatus sta = new LoginStatus();
 
             User user = null;
@@ -415,6 +451,9 @@ namespace CFLMedCab
                     //tbNameText.Text = user.name;
                 }));
             }
+            bUsing = false;
+            LogUtils.Debug("detectFinger bUsing turn false 1");
+            mutex.ReleaseMutex();
 #endif
         }
 #endif
@@ -478,11 +517,9 @@ namespace CFLMedCab
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnAll.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStockSwitch.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterInvtory.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterStock.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterInvtory.Visibility = Visibility.Visible;
+            NavBtnEnterStock.Visibility = Visibility.Visible;
             NavBtnEnterSysSetting.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-
-            btnExitApp.Visibility = Visibility.Visible;
         }
 
         /// <summary>
@@ -550,6 +587,7 @@ namespace CFLMedCab
         //退出登录，回到登录页
         private void onReturnToLogin()
         {
+            LogUtils.Debug("onReturnToLogin");
             PopFrame.Visibility = Visibility.Hidden;
             MaskView.Visibility = Visibility.Hidden;
 
@@ -574,8 +612,9 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.ChekVein();
 #else
-            ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
             //Task.Factory.StartNew(vein.DetectFinger);
+            ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
 #endif
 #endif
         }
@@ -1783,11 +1822,6 @@ namespace CFLMedCab
         {
             PopFrame.Visibility = Visibility.Visible;
 
-            BindingVein bindingVein = new BindingVein();
-            bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
-            bindingVein.UserPwDLoginEvent += new BindingVein.UserPwDLoginHandler(onUserPwDLogin);
-            bindingVein.LoadingDataEvent += new BindingVein.LoadingDataHandler(onLoadingData);
-            PopFrame.Navigate(bindingVein);
 #if TESTENV
 #else
 #if VEINSERIAL
@@ -1796,6 +1830,13 @@ namespace CFLMedCab
             vein.SetDetectFingerState(true);
 #endif
 #endif
+
+            BindingVein bindingVein = new BindingVein(mutex);
+            bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
+            bindingVein.UserPwDLoginEvent += new BindingVein.UserPwDLoginHandler(onUserPwDLogin);
+            bindingVein.LoadingDataEvent += new BindingVein.LoadingDataHandler(onLoadingData);
+            PopFrame.Navigate(bindingVein);
+            LogUtils.Debug("EnerBindingVein");
         }
 
         private void onUserPwDLogin(object sender, User e)
@@ -2039,7 +2080,6 @@ namespace CFLMedCab
             return;
         }
 #endregion
-
     }
 
     /// <summary>

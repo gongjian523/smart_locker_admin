@@ -365,16 +365,22 @@ namespace CFLMedCab.Http.Bll
 
 					}, baseDataCommodityCode, out bool isSuccess1);
 
-
-
 					baseDataCommodityCode.body.objects.ForEach(it =>
 					{
 
 						if (isSuccess1)
 						{
 							var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == it.CommodityId).First();
-							it.CommodityName = commodity.name;
-						}
+
+                            if(commodity == null)
+                            {
+                                it.CommodityName = "未知商品";
+                            }
+                            else
+                            {
+                                it.CommodityName = commodity.name;
+                            }
+                        }
 
 						CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.name == it.name).First();
 						it.operate_type = simpleCommodityCode.operate_type;
@@ -386,7 +392,6 @@ namespace CFLMedCab.Http.Bll
 						it.StoreHouseName = simpleCommodityCode.StoreHouseName;
 						it.operate_type = simpleCommodityCode.operate_type;
 					});
-
 				}
 			}
 			else

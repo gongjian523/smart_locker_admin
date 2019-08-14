@@ -18,6 +18,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
@@ -47,9 +48,13 @@ namespace CFLMedCab.View
 
         VeinUtils vein = VeinUtils.GetInstance();
 
-        public BindingVein()
+        //从主页面传来的互斥锁，用来防止在同时时间调用sdk;
+        Mutex mt;
+
+        public BindingVein(Mutex mutex)
         {
             InitializeComponent();
+            mt = mutex;
 
             //timer = new Timer(1000 * 10 * 60);
             //timer.AutoReset = false;
@@ -115,7 +120,9 @@ namespace CFLMedCab.View
             bindingView.Visibility = Visibility.Visible;
             rebindingBtn.Visibility = Visibility.Hidden;
 
-            Task.Factory.StartNew(Binding);    
+            Task task =  Task.Factory.StartNew(a => {
+                Binding();
+            }, true);
         }
 
         /// <summary>
@@ -125,7 +132,9 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         public void onRebindingVein(object sender, EventArgs e)
         {
-            Task.Factory.StartNew(Binding);
+            Task.Factory.StartNew(a => {
+                Binding();
+                }, false);
         }
 
         /// <summary>
@@ -268,43 +277,55 @@ namespace CFLMedCab.View
             bdUserToken.message = ResultCode.Result_Exception.ToString();
             return bdUserToken;
         }
-
+        
         /// <summary>
         /// 绑定流程
         /// </summary>
-        private void Binding()
+        /// <param name="bInitial"></param>
+        private void Binding(bool bInitial = true)
         {
             int ret;
 
+            mt.WaitOne();
+
             Dispatcher.BeginInvoke(new Action(() => {
                 WarnInfo2.Content = "";
+                rebindingBtn.Visibility = Visibility.Hidden;
+                bindingExitBtn.Visibility = Visibility.Hidden;
             }));
 
-            ret = vein.LoadingDevice();
-
-            if (ret != 0 && ret != VeinUtils.FV_ERRCODE_EXISTING)
+            if(bInitial)
             {
-                LogUtils.Error("初始化指静脉设备失败: " + ret);
-                Dispatcher.BeginInvoke(new Action(() => {
-                    WarnInfo2.Content = "初始化指静脉设备失败，请联系工作人员!";
-                    rebindingBtn.Visibility = Visibility.Visible;
-                }));
-                return;
-            }
+                ret = vein.LoadingDevice();
 
-            //vein.EnumDevice();
-
-            if(ret != VeinUtils.FV_ERRCODE_EXISTING)
-            {
-                ret = vein.OpenDevice();
-                if (ret != 0)
+                if (ret != 0 && ret != VeinUtils.FV_ERRCODE_EXISTING)
                 {
-                    LogUtils.Error("无法打开指静脉设备: " + ret);
+                    LogUtils.Error("初始化指静脉设备失败: " + ret);
                     Dispatcher.BeginInvoke(new Action(() => {
-                        WarnInfo2.Content = "无法打开指静脉设备，请联系工作人员!";
+                        WarnInfo2.Content = "初始化指静脉设备失败，请联系工作人员!";
                         rebindingBtn.Visibility = Visibility.Visible;
+                        bindingExitBtn.Visibility = Visibility.Visible;
                     }));
+                    mt.ReleaseMutex();
                     return;
+                }
+
+                //vein.EnumDevice();
+
+                if (ret != VeinUtils.FV_ERRCODE_EXISTING)
+                {
+                    ret = vein.OpenDevice();
+                    if (ret != 0)
+                    {
+                        LogUtils.Error("无法打开指静脉设备: " + ret);
+                        Dispatcher.BeginInvoke(new Action(() => {
+                            WarnInfo2.Content = "无法打开指静脉设备，请联系工作人员!";
+                            rebindingBtn.Visibility = Visibility.Visible;
+                            bindingExitBtn.Visibility = Visibility.Visible;
+                        }));
+                        mt.ReleaseMutex();
+                        return;
+                    }
                 }
             }
 
@@ -375,16 +396,20 @@ namespace CFLMedCab.View
                         Dispatcher.BeginInvoke(new Action(() => {
                             WarnInfo2.Content = "采集指静脉失误3次，请重新开始指静脉绑定流程!";
                             rebindingBtn.Visibility = Visibility.Visible;
+                            bindingExitBtn.Visibility = Visibility.Visible;
                         }));
+
+                        mt.ReleaseMutex();
                         return;
                     }
                     else
                     {
-                        //睡眠1s后重新开始采集指静脉
-                        System.Threading.Thread.Sleep(1000 * 5);
+                        //睡眠2s后重新开始采集指静脉
+                        Thread.Sleep(1000 * 2);
                     }
                 }
             }
+            mt.ReleaseMutex();
 
             LoadingDataEvent(this, true);
             BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
@@ -396,14 +421,18 @@ namespace CFLMedCab.View
 
             if (data.code == 0)
             {
-                this.Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "指静脉绑定成功！"));
+                this.Dispatcher.BeginInvoke(new Action(() => {
+                    GuidInfo.Content = "指静脉绑定成功！";
+                    bindingExitBtn.Visibility = Visibility.Visible;
+                }));
             }  
             else
             {
                 LogUtils.Error("向主系统绑定指静脉特征失败：" + data.message);
                 this.Dispatcher.BeginInvoke(new Action(() => {
-                    GuidInfo.Content = "指静脉绑定成功";
+                    GuidInfo.Content = "指静脉绑定失败";
                     rebindingBtn.Visibility = Visibility.Visible;
+                    bindingExitBtn.Visibility = Visibility.Visible;
                 }));
             }                
         }

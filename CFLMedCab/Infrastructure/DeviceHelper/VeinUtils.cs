@@ -260,7 +260,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         // 检测手指是否放置到指静脉设备上 
         public void DetectFinger(object obj)
 		{
-			int wDetectCnt = 0;                         //循环检测次数
+            LogUtils.Debug($"调用DetectFinger1开始");
+            int wDetectCnt = 0;                         //循环检测次数
 			int wErrCount = 0;                          //检测产生错误的次数
 			byte u1FingerStatus = 0;           //手指状态
 
@@ -278,8 +279,15 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			//等待移开手指、
 			int i = 0;
-			while (!bExitDetect)
-			{ //循环检测手指
+			while (true)
+			{   
+                if(bExitDetect)
+                {
+                    LogUtils.Debug($"调用DetectFinger1退出1");
+                    return;
+                }
+
+                //循环检测手指
                 LogUtils.Debug($"调用FingerDetect1 开始");
                 DateTime startTime = DateTime.Now;
                 nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
@@ -295,7 +303,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 					{
 						LogUtils.Debug("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
 						FingerDetectedEvent(this, -1);
-						return;
+                        LogUtils.Debug($"调用DetectFinger1结束： -1");
+                        return;
 					}
 				}
 				else
@@ -316,76 +325,80 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 						//手指已经移开
 						LogUtils.Debug("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
 						FingerDetectedEvent(this, 0);
-						return;
+                        LogUtils.Debug($"调用DetectFinger1结束： 0");
+                        return;
 					}
 				}
 			}
-		}
+        }
 
         //检测手指是否放置到指静脉设备上  
-        public void DetectFinger()
-        {
-            int wDetectCnt = 0;                         //循环检测次数
-            int wErrCount = 0;                          //检测产生错误的次数
-            byte u1FingerStatus = 0;           //手指状态
+        //public void DetectFinger()
+        //{
+        //    int wDetectCnt = 0;                         //循环检测次数
+        //    int wErrCount = 0;                          //检测产生错误的次数
+        //    byte u1FingerStatus = 0;           //手指状态
 
-            int nRetVal;
-            int nDetectTimes = D_FINGER_DETECT_PERIOD / D_FINGER_DETECT_INTERVAL;
-            int nInterval = D_FINGER_DETECT_INTERVAL;
-            int nStartCnt = nDetectTimes / 30;
+        //    int nRetVal;
+        //    int nDetectTimes = D_FINGER_DETECT_PERIOD / D_FINGER_DETECT_INTERVAL;
+        //    int nInterval = D_FINGER_DETECT_INTERVAL;
+        //    int nStartCnt = nDetectTimes / 30;
 
-            int flg = 3;
-            bExitDetect = false;
+        //    int flg = 3;
+        //    bExitDetect = false;
 
-            string stateE = flg != 0 ? "Place" : "Remove";  //0移开；3放置
-            string state = flg != 0 ? "放置" : "移开";  //0移开；3放置
+        //    string stateE = flg != 0 ? "Place" : "Remove";  //0移开；3放置
+        //    string state = flg != 0 ? "放置" : "移开";  //0移开；3放置
 
-            //等待移开手指、
-            int i = 0;
-            while (!bExitDetect)
-            { //循环检测手指
+        //    //等待移开手指、
+        //    int i = 0;
+        //    while (!bExitDetect)
+        //    { //循环检测手指
 
-                LogUtils.Debug($"调用FingerDetect2 开始");
-                DateTime startTime = DateTime.Now;
-                nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
-                DateTime endTime = DateTime.Now;
-                LogUtils.Debug($"调用FingerDetect2 Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
-                if (FV_ERRCODE_SUCCESS != nRetVal)
-                {//检测时产生错误。
-                    wErrCount++;
+        //        LogUtils.Debug($"调用FingerDetect2 开始");
+        //        DateTime startTime = DateTime.Now;
+        //        nRetVal = FV_FingerDetect(devName, ref u1FingerStatus);
+        //        DateTime endTime = DateTime.Now;
+        //        LogUtils.Debug($"调用FingerDetect2 Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+        //        if (FV_ERRCODE_SUCCESS != nRetVal)
+        //        {//检测时产生错误。
+        //            wErrCount++;
 
-                    Thread.Sleep(nInterval);
+        //            Thread.Sleep(nInterval);
 
-                    if (3 < wErrCount)
-                    {
-                        LogUtils.Debug("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
-                        FingerDetectedEvent(this, -1);
-                        return;
-                    }
-                }
-                else
-                {
-                    wErrCount = 0;
-                    if ((flg & 0xFF) != u1FingerStatus)
-                    {
-                        //手指还没有移开
-                        if (0 == (wDetectCnt % nStartCnt))
-                        {
-                            LogUtils.Debug("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
-                            i++;
-                        }
-                        Thread.Sleep(nInterval);
-                    }
-                    else
-                    {
-                        //手指已经移开
-                        LogUtils.Debug("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
-                        FingerDetectedEvent(this, 0);
-                        return;
-                    }
-                }
-            }
-        }
+        //            if (3 < wErrCount)
+        //            {
+        //                LogUtils.Debug("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
+        //                FingerDetectedEvent(this, -1);
+        //                LogUtils.Debug($"调用DetectFinger结束 -1");
+        //                return;
+        //            }
+        //        }
+        //        else
+        //        {
+        //            wErrCount = 0;
+        //            if ((flg & 0xFF) != u1FingerStatus)
+        //            {
+        //                //手指还没有移开
+        //                if (0 == (wDetectCnt % nStartCnt))
+        //                {
+        //                    LogUtils.Debug("Please " + stateE + " finger " + i + " " + Thread.CurrentThread.ManagedThreadId.ToString());//客户可以根据自己的系统情况采用语音、图片、文字等方式进行提示
+        //                    i++;
+        //                }
+        //                Thread.Sleep(nInterval);
+        //            }
+        //            else
+        //            {
+        //                //手指已经移开
+        //                LogUtils.Debug("Finger detected correct " + stateE + " " + Thread.CurrentThread.ManagedThreadId.ToString());
+        //                FingerDetectedEvent(this, 0);
+        //                LogUtils.Debug($"调用DetectFinger结束 0");
+        //                return;
+        //            }
+        //        }
+        //    }
+        //    LogUtils.Debug($"调用DetectFinger结束 退出");
+        //}
 
         // 等待手指某状态（ 0移开；3放置 ） 
         public int WaitState(int flg, out string info)

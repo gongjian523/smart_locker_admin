@@ -58,7 +58,7 @@
 
                 <Button Style="{StaticResource ReturnButton}" Content="退出"     Name="btnExit" Margin="-150,5,0,5" HorizontalAlignment="Center"   Click="onExit" />
                 <Button Style="{StaticResource ReturnButton}" Content="回到首页" Name="btnBackHP"  Margin="-600,5,0,5" HorizontalAlignment="Center"  Click="onBackToHP" Visibility="Hidden"/>
-                <Button Style="{StaticResource ReturnButton}" Content="退出程序" Name="btnExitApp"  Margin="220,5,0,5" HorizontalAlignment="Center"  Click="onExitApp" />
+                <Button Style="{StaticResource ReturnButton}" Content="退出程序" Name="btnExitApp"  Margin="220,5,0,5" HorizontalAlignment="Center"  Click="onExitApp" Visibility="Collapsed"/>
 
                 <TextBlock Height="Auto"
                     Margin="0,0,150,0"

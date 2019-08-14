@@ -197,40 +197,49 @@ namespace CFLMedCab.View.Inventory
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+
 #endif
-                BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
-
-                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
-
-                if(!isSuccess)
+                if(hs.Count == 0)
                 {
-                    MessageBox.Show("盘点时获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("医疗柜中没有任何商品！", "温馨提示", MessageBoxButton.OK);
                 }
-
-                List<GoodsDto> list = new List<GoodsDto>();
-                foreach (var item in bdCommodityCode.body.objects)
+                else
                 {
-                    GoodsDto goodItem = new GoodsDto
+                    BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
+                    HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+
+                    if (!isSuccess)
                     {
-                        name = item.CommodityName,
-                        code = item.name,
-                        position = item.GoodsLocationName
-                    };
-                    list.Add(goodItem);
+                        MessageBox.Show("盘点时获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
+                    }
+                    else
+                    {
+                        List<GoodsDto> list = new List<GoodsDto>();
+                        foreach (var item in bdCommodityCode.body.objects)
+                        {
+                            GoodsDto goodItem = new GoodsDto
+                            {
+                                name = item.CommodityName,
+                                code = item.name,
+                                position = item.GoodsLocationName
+                            };
+                            list.Add(goodItem);
+                        }
+
+                        id = inventoryBll.NewInventory(list, InventoryType.Manual);
+
+                        GetInventoryList();
+                        EnterInventoryDetailLocalEvent(this, id);
+                    }
                 }
-
-                id = inventoryBll.NewInventory(list, InventoryType.Manual);
-
-                GetInventoryList();
 
                 SetPopInventoryEvent(this, false);
             }
             else
             {
                 id = (int)btnItem.CommandParameter;
+                EnterInventoryDetailLocalEvent(this, id);
             }
-
-            EnterInventoryDetailLocalEvent(this, id);
         }
 
         private void SearchBox_OnKeyDown(object sender, KeyEventArgs e)
@@ -240,7 +249,6 @@ namespace CFLMedCab.View.Inventory
                 onEnterInventoryDetail(this, null);
             }
         }
-
 
         private void GetInventoryList()
         {

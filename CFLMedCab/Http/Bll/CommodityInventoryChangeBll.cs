@@ -101,7 +101,7 @@ namespace CFLMedCab.Http.Bll
                 };
             }
             List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
-            var count = baseDataCommodityCode.body.objects.Select(it => it.operate_type == 0).Count();
+            var count = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 0).Count();
             if(count > 0)//当出库数量大于0说明在领用需要创建领用单
             {
                 var consumingOrder = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
