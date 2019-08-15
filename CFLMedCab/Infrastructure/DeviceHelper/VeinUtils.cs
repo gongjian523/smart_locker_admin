@@ -250,6 +250,25 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return ret;
         }
 
+
+        //初始化并打开设备
+        public int CloseDevice()
+        {
+            int ret;
+
+            //1.初始化设备
+            DateTime startTime = DateTime.Now;
+            ret = FV_CloseDevice(devName);
+            DateTime endTime = DateTime.Now;
+            LogUtils.Debug($"调用CloseDeviceSdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+
+            if (FV_ERRCODE_SUCCESS != ret)
+            {
+                LogUtils.Debug("CabS: close failed! ret = " + ret);
+            }
+            return ret;
+        }
+
         // 设置是否退出监测的状态变量（true 退出）
         public void SetDetectFingerState(bool state)
         {
@@ -277,6 +296,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             string stateE = flg != 0 ? "Place" : "Remove";  //0移开；3放置
 			string state = flg != 0 ? "放置" : "移开";  //0移开；3放置
 
+            DateTime startDT = DateTime.Now;
+
 			//等待移开手指、
 			int i = 0;
 			while (true)
@@ -286,6 +307,43 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     LogUtils.Debug($"调用DetectFinger1退出1");
                     return;
                 }
+
+                ////每5分钟重启
+                //if(DateTime.Now.Subtract(startDT).TotalSeconds > 5 * 60)
+                //{
+                //    int actCount = 0;
+                //    for(actCount = 0; actCount < 3; actCount++)
+                //    {
+                //        nRetVal = FV_CloseDevice(devName);
+                         
+                //        if(nRetVal != FV_ERRCODE_SUCCESS)
+                //        {
+                //            LogUtils.Debug("关闭指静脉设备失败！");
+                //            continue;
+                //        }
+
+                //        Thread.Sleep(1000);
+
+                //        nRetVal = FV_OpenDevice(devName,0);
+
+                //        if (nRetVal == FV_ERRCODE_SUCCESS)
+                //        {
+                //            startDT = DateTime.Now;
+                //            break;
+                //        }
+                //        else
+                //        {
+                //            LogUtils.Debug("打开指静脉设备失败！");
+                //        }
+                //    }
+
+                //    //失败3次之后，就需要重新
+                //    if(actCount == 3)
+                //    {
+                //        FingerDetectedEvent(this, -1);
+                //        return;
+                //    }
+                //}
 
                 //循环检测手指
                 LogUtils.Debug($"调用FingerDetect1 开始");
