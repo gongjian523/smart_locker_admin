@@ -337,10 +337,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 //        }
                 //    }
 
-                //    //失败3次之后，就需要重新
+                //    //失败3次之后，就需要重启软件
                 //    if(actCount == 3)
                 //    {
-                //        FingerDetectedEvent(this, -1);
+                //        FingerDetectedEvent(this, -3);
                 //        return;
                 //    }
                 //}
