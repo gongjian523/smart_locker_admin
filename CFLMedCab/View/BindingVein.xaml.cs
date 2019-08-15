@@ -11,6 +11,7 @@ using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -32,7 +33,7 @@ namespace CFLMedCab.View
     /// </summary>
     public partial class BindingVein : UserControl
     {
-        //private Timer timer;
+        private System.Timers.Timer timer;
 
         public delegate void HidePopCloseHandler(object sender, RoutedEventArgs e);
         public event HidePopCloseHandler HidePopCloseEvent;
@@ -51,15 +52,33 @@ namespace CFLMedCab.View
         //从主页面传来的互斥锁，用来防止在同时时间调用sdk;
         Mutex mt;
 
-        public BindingVein(Mutex mutex)
+        public BindingVein(Mutex mutex, BindingVeinViewType type)
         {
             InitializeComponent();
             mt = mutex;
 
-            //timer = new Timer(1000 * 10 * 60);
-            //timer.AutoReset = false;
-            //timer.Enabled = true;
-            //timer.Elapsed += new ElapsedEventHandler(onHidePopClose);
+            //只有指静脉绑定和用户名密码登陆才显示输入用户名和密码的输入框
+            lbInputName.Visibility = (type != BindingVeinViewType.VeinLogin) ? Visibility.Visible : Visibility.Hidden;
+            tbInputName.Visibility = (type != BindingVeinViewType.VeinLogin) ? Visibility.Visible : Visibility.Hidden;
+            lbInputPsw.Visibility = (type != BindingVeinViewType.VeinLogin) ? Visibility.Visible : Visibility.Hidden;
+            tbInputPsw.Visibility = (type != BindingVeinViewType.VeinLogin) ? Visibility.Visible : Visibility.Hidden;
+
+            //显示相应功能按钮
+            btnBinding.Visibility = (type == BindingVeinViewType.VeinBinding)? Visibility.Visible : Visibility.Hidden;
+            btnLogin.Visibility = (type == BindingVeinViewType.PswLogin) ? Visibility.Visible : Visibility.Hidden;
+            
+            //进行指静脉登录，直接进入登录流程，无需显示一下按钮
+            btnVeinLogin.Visibility = Visibility.Hidden;
+            btnExitBindingView.Visibility = (type != BindingVeinViewType.VeinLogin) ? Visibility.Visible : Visibility.Hidden;
+            if(type == BindingVeinViewType.VeinLogin)
+            {
+                timer = new System.Timers.Timer(500);
+                timer.AutoReset = false;
+                timer.Enabled = true;
+                timer.Elapsed += new ElapsedEventHandler(onVeinLogin);
+
+                WarnInfo.Content = "请将手指放在指静脉模块上";
+            }
         }
 
         /// <summary>
@@ -184,6 +203,19 @@ namespace CFLMedCab.View
             }
 
         }
+
+        /// <summary>
+        /// 指静脉登录
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void onVeinLogin(object sender, EventArgs e)
+        {
+            Task.Factory.StartNew(a => {
+                VeinLogin();
+            }, false);
+        }
+
 
         private void SetTokens(string accessToken, string refreshToken)
         {
@@ -437,8 +469,130 @@ namespace CFLMedCab.View
             }                
         }
 
+
         /// <summary>
-        /// 单次采集和比对流程
+        /// 指静脉登陆流程
+        /// </summary>
+        /// <param name="bInitial"></param>
+        private void VeinLogin(bool bInitial = true)
+        {
+            int ret;
+
+            mt.WaitOne();
+
+            Dispatcher.BeginInvoke(new Action(() => {
+                WarnInfo.Content = "请将手指放在指静脉模块上";
+                btnVeinLogin.Visibility = Visibility.Hidden;
+                btnExitBindingView.Visibility = Visibility.Hidden;
+            }));
+
+            if (bInitial)
+            {
+                ret = vein.LoadingDevice();
+
+                if (ret != 0 && ret != VeinUtils.FV_ERRCODE_EXISTING)
+                {
+                    LogUtils.Error("初始化指静脉设备失败: " + ret);
+                    Dispatcher.BeginInvoke(new Action(() => {
+                        WarnInfo.Content = "初始化指静脉设备失败，请联系工作人员!";
+                        btnVeinLogin.Visibility = Visibility.Visible;
+                        btnExitBindingView.Visibility = Visibility.Visible;
+                    }));
+                    mt.ReleaseMutex();
+                    return;
+                }
+
+                //vein.EnumDevice();
+
+                if (ret != VeinUtils.FV_ERRCODE_EXISTING)
+                {
+                    ret = vein.OpenDevice();
+                    if (ret != 0)
+                    {
+                        LogUtils.Error("无法打开指静脉设备: " + ret);
+                        Dispatcher.BeginInvoke(new Action(() => {
+                            WarnInfo.Content = "无法打开指静脉设备，请联系工作人员!";
+                            btnVeinLogin.Visibility = Visibility.Visible;
+                            btnExitBindingView.Visibility = Visibility.Visible;
+                        }));
+                        mt.ReleaseMutex();
+                        return;
+                    }
+                }
+            }
+
+            byte[] matchfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
+
+            for (int errCnt = 0; errCnt < VeinUtils.FEATURE_COLLECT_CNT; errCnt++)
+            {
+                if (errCnt != 0)
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        WarnInfo.Content = "请将手指放在指静脉模块上";
+                    }));
+                }
+
+                if (Sample(matchfeature))
+                {
+                    Dispatcher.BeginInvoke(new Action(() =>
+                    {
+                        WarnInfo.Content = "请将手指从指静脉模块上移开！";
+                    }));
+                    break;
+                }
+                else
+                {
+                    errCnt++;
+                    if (errCnt == 3)
+                    {
+                        Dispatcher.BeginInvoke(new Action(() => {
+                            WarnInfo.Content = "请点击“登录”按钮，重新开始登录!";
+                            btnVeinLogin.Visibility = Visibility.Visible;
+                            btnExitBindingView.Visibility = Visibility.Visible;
+                        }));
+
+                        mt.ReleaseMutex();
+                        return;
+                    }
+                    else
+                    {
+                        //睡眠2s后重新开始采集指静脉
+                        Thread.Sleep(1000 * 2);
+                    }
+                }
+            }
+            mt.ReleaseMutex();
+
+            LoadingDataEvent(this, true);
+            BaseSinglePostData<VeinMatch> bdVeinMatch = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
+            {
+                regfeature = Convert.ToBase64String(matchfeature)
+            });
+            LoadingDataEvent(this, false);
+
+            if (bdVeinMatch.code == 0)
+            {
+                LogUtils.Error("指静脉登录成功");
+                this.Dispatcher.BeginInvoke(new Action(() => {
+                    SetTokens(bdVeinMatch.body.accessToken, bdVeinMatch.body.refresh_token);
+                    UserPwDLoginEvent(this, bdVeinMatch.body.user);
+                }));
+            }
+            else
+            {
+                LogUtils.Error("指静脉登录失败：没有找到和当前指静脉匹配的用户：" + bdVeinMatch.message);
+
+                this.Dispatcher.BeginInvoke(new Action(() => {
+                    WarnInfo.Content = "指静脉登录失败,请先绑定指静脉或者再次登录";
+                    btnVeinLogin.Visibility = Visibility.Visible;
+                    btnExitBindingView.Visibility = Visibility.Visible;
+                }));
+            }
+        }
+
+        /// <summary>
+        /// 单次采集和比对流程，用于指静脉绑定流程
         /// </summary>
         /// <param name="feature_getCnt"></param>
         /// <param name="regfeature"></param>
@@ -478,6 +632,39 @@ namespace CFLMedCab.View
                 return false;
             }
 
+            return true;
+        }
+
+
+        /// <summary>
+        /// 单次采集流程，用于指静脉登陆流程
+        /// </summary>
+        /// <param name="matchfeature"></param>
+        /// <returns></returns>
+        private bool Sample(byte[] matchfeature)
+        {
+            //等待手指放置
+            if (vein.WaitState(0x03, out string info) < 0)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    WarnInfo.Content = info;
+                }));
+                matchfeature = null;
+                return false;
+            }
+
+            LoadingDataEvent(this, true);
+            if (vein.GrabFeature(matchfeature, out info) != 0)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    WarnInfo.Content = info;
+                }));
+                LoadingDataEvent(this, false);
+                return false;
+            }
+            LoadingDataEvent(this, false);
             return true;
         }
 

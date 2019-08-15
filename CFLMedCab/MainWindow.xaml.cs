@@ -193,9 +193,8 @@ namespace CFLMedCab
                         //Console.ReadKey();
                         if (RegisterVein())
                         {
-                            //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-                            LogUtils.Debug("detectFinger in initial...");
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
+                            //LogUtils.Debug("detectFinger in initial...");
+                            //ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
                         }
                         else
                         {
@@ -258,10 +257,8 @@ namespace CFLMedCab
 #if VEINSERIAL
                 vein.ChekVein();
 #else
-                //Task.Factory.StartNew(vein.DetectFinger);
-                //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-                LogUtils.Debug("detectFinger in onLoginInfoHidenEvent...");
-                ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
+                //LogUtils.Debug("detectFinger in onLoginInfoHidenEvent...");
+                //ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
 #endif
 #endif
             }
@@ -377,19 +374,12 @@ namespace CFLMedCab
             }
 
             if (e == 0)
-            {
-				DateTime LoginStartTime = DateTime.Now;
-				
+            {				
 				byte[] macthfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
-
 				bool isGrabFeature = (vein.GrabFeature(macthfeature, out info) == VeinUtils.FV_ERRCODE_SUCCESS);
-
-				DateTime grabFeatureEndTime = DateTime.Now;
-
-				LogUtils.Debug($"调用检测指纹Sdk耗时{grabFeatureEndTime.Subtract(LoginStartTime).TotalMilliseconds}");
-
 				if (isGrabFeature)
                 {
+                    DateTime grabFeatureEndTime = DateTime.Now;
                     BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
                     {
                         regfeature = Convert.ToBase64String(macthfeature)
@@ -617,9 +607,7 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.ChekVein();
 #else
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-            //Task.Factory.StartNew(vein.DetectFinger);
-            ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
 #endif
 #endif
         }
@@ -1835,8 +1823,22 @@ namespace CFLMedCab
             vein.SetDetectFingerState(true);
 #endif
 #endif
+            BindingVeinViewType type;
 
-            BindingVein bindingVein = new BindingVein(mutex);
+            if((sender as Button).Name == "btnVeinBinding")
+            {
+                type = BindingVeinViewType.VeinBinding;
+            }
+            else if ((sender as Button).Name == "btnVeinLogin")
+            {
+                type = BindingVeinViewType.VeinLogin;
+            }
+            else
+            {
+                type = BindingVeinViewType.PswLogin;
+            }
+
+            BindingVein bindingVein = new BindingVein(mutex, type);
             bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
             bindingVein.UserPwDLoginEvent += new BindingVein.UserPwDLoginHandler(onUserPwDLogin);
             bindingVein.LoadingDataEvent += new BindingVein.LoadingDataHandler(onLoadingData);

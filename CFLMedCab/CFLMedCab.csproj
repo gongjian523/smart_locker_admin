@@ -314,6 +314,7 @@
     <Compile Include="Infrastructure\ToolHelper\ImageUtils.cs" />
     <Compile Include="Infrastructure\ToolHelper\LogUtils.cs" />
     <Compile Include="Model\Constant\Contant.cs" />
+    <Compile Include="Model\Enum\BindingVeinViewType.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
     <Compile Include="Model\Enum\NavBtnEnum.cs" />

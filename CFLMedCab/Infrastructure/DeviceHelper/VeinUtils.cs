@@ -567,7 +567,13 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         //获取特征与已注册特征比对
         public int GrabFeature (byte[] macthfeature, out string info)
         {
+
+            LogUtils.Debug($"调用GrabFeature 开始");
+            DateTime startTime = DateTime.Now;
             int ret = FV_GrabFeature(devName, macthfeature, (char)0x00);
+            DateTime endTime = DateTime.Now;
+            LogUtils.Debug($"调用GrabFeature Sdk耗时{endTime.Subtract(startTime).TotalMilliseconds}");
+
             if (FV_ERRCODE_SUCCESS != ret){
                 LogUtils.Debug("采集指静脉特征失败：" + ret);
                 info = "采集指静脉特征失败！";
