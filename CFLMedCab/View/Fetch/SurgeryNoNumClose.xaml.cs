@@ -171,9 +171,9 @@ namespace CFLMedCab.View.Fetch
 					{
 						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 					}
-
-				}
-				else
+                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "SurgeryConsumingOrder");
+                }
+                else
 				{
                     LoadingDataEvent(this, true);
                     BasePostData<CommodityInventoryChange> bdBasePostData =
@@ -187,10 +187,9 @@ namespace CFLMedCab.View.Fetch
 					{
 						MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 					}
-
-				}
-				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
-			}
+                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "PrescriptionConsumingOrder");
+                }
+            }
 
             ApplicationState.SetGoodsInfo(after);
 

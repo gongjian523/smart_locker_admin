@@ -3,6 +3,7 @@ using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using SqlSugar;
@@ -181,14 +182,15 @@ namespace CFLMedCab.Http.Bll
 			{
 				List<LocalCommodityCode> localCommodityCodes = baseDataCommodityCode.body.objects.MapToListIgnoreId<CommodityCode, LocalCommodityCode>();
 
-
 				var createTime = DateTime.Now;
+                var operater = ApplicationState.GetUserInfo().name;
 
 				localCommodityCodes.ForEach(it =>
 				{
 					it.sourceBill = sourceBill;
 					it.create_time = createTime;
-				});
+                    it.operater = operater;
+                });
 
 				//事务防止多插入产生脏数据
 				result = SqlSugarHelper.GetInstance().Db.Ado.UseTran(() =>

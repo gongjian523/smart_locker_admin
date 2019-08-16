@@ -87,7 +87,11 @@ namespace CFLMedCab.Http.Model
 		[SugarColumn(IsNullable = true)]
 		public DateTime create_time { get; set; }
 
+        /// <summary>
+        /// 操作人
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string operater { get; set; }
 
-
-	}
+    }
 }

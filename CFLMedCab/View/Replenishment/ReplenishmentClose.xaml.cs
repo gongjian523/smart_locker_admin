@@ -253,6 +253,8 @@ namespace CFLMedCab.View.ReplenishmentOrder
 						MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
 					}
 				}
+
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTask");
             }
 
             ApplicationState.SetGoodsInfo(after);

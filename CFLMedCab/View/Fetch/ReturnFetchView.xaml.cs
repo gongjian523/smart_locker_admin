@@ -167,7 +167,7 @@ namespace CFLMedCab.View.Fetch
 					MessageBox.Show("提交结果失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
 				}
 
-				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
+				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingReturnOrder");
 			}
 
             ApplicationState.SetGoodsInfo(after);

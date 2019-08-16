@@ -213,6 +213,9 @@ namespace CFLMedCab.View.Return
                         MessageBox.Show("创建取货任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
+
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "PickTask");
+
             }
 
             ApplicationState.SetGoodsInfo(after);

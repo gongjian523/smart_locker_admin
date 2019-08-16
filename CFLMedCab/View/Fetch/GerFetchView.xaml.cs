@@ -158,8 +158,8 @@ namespace CFLMedCab.View.Fetch
 
 				}
 
-				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingReturnOrder");
-			}
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
+            }
 
             ApplicationState.SetGoodsInfo(after);
 
