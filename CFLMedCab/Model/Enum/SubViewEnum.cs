@@ -59,6 +59,11 @@ namespace CFLMedCab.Model.Enum
         ReturnGoodsClose,
 
         /// <summary>
+        /// 开门页
+        /// </summary>
+        DoorOpen,
+
+        /// <summary>
         /// 其他页
         /// </summary>
         Others,

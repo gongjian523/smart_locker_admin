@@ -58,6 +58,8 @@ namespace CFLMedCab
 		private LASTINPUTINFO mLastInputInfo;
         #endregion
 
+        private InputSimulator inputSimulator = new InputSimulator();
+
         private System.Timers.Timer processRingTimer;
 
         //private DispatcherTimer InventoryTimer;
@@ -95,9 +97,8 @@ namespace CFLMedCab
         public static Mutex mutex = new Mutex();
 
         bool bUsing = false;
-#if TESTENV
 
-#endif
+
         public MainWindow()
         {
 			#region 空闲时间处理相关定义
@@ -438,12 +439,7 @@ namespace CFLMedCab
             }
             else
             {
-                
-                InputSimulator inputSimulator = new InputSimulator();
-                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
-                //inputSimulator.Keyboard.KeyPress(VirtualKeyCode.SPACE);
-                Thread.Sleep(100);
-                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
+                SimulateKeybordInput0();
 
                 // 进入首页
                 App.Current.Dispatcher.Invoke((Action)(() =>
@@ -559,7 +555,8 @@ namespace CFLMedCab
                 return;
             }
 
-            if (subViewType == SubViewType.Login)
+            //处于登录页，不用处理：当货柜门打开的时候，不能强制退出登陆
+            if (subViewType == SubViewType.Login || subViewType == SubViewType.DoorOpen)
                 return;
 
             switch(subViewType)
@@ -588,6 +585,17 @@ namespace CFLMedCab
             }
             onReturnToLogin();
         }
+
+        /// <summary>
+        /// 模拟从键盘向系统输入0
+        /// </summary>
+        protected void SimulateKeybordInput0()
+        {           
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
+            Thread.Sleep(100);
+            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
+        }
+
 
         //退出登录，回到登录页
         private void onReturnToLogin()
@@ -685,8 +693,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
-            //进入一般领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
+            //进入一般领用开门页面，将句柄设置成null，类型设置成DoorOpen
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -733,6 +741,9 @@ namespace CFLMedCab
 
             //关闭盘点中弹窗
             ClosePop();
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
             
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -762,8 +773,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
-            //进入一般手术无单领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
+            //进入一般手术无单领用开门页面，将句柄设置成null，类型设置成DoorOpen
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -818,7 +829,10 @@ namespace CFLMedCab
 
             //关闭盘点中弹窗
             ClosePop();
-            
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 SurgeryNoNumClose surgeryNoNumClose;
@@ -865,7 +879,7 @@ namespace CFLMedCab
             surgeryQuery.LoadingDataEvent += new SurgeryQuery.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(surgeryQuery);
-            //进入一般手术有单领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
+            //进入手术有单领用查询页面，将句柄设置成null，类型设置成other，避免错误调用
             SetSubViewInfo(null, SubViewType.Others);
         }
         /// <summary>
@@ -905,8 +919,8 @@ namespace CFLMedCab
 
             SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(fetchParam);
             FullFrame.Navigate(surgeryNumOpen);
-            //进入手术有单领用开门页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
+            //进入手术有单领用开门页面，将句柄设置成null，类型设置成DoorOpen
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
@@ -1005,6 +1019,9 @@ namespace CFLMedCab
             //关闭盘点中弹窗
             ClosePop();
 
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
+
             LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
             FetchParam fetchParam = (FetchParam)delegateGetMsg.userData;
 
@@ -1038,7 +1055,7 @@ namespace CFLMedCab
             GerFetchState gerFetchState = new GerFetchState(2);
             FullFrame.Navigate(gerFetchState);
             //进入领用退回开门页面
-            SetSubViewInfo(null, SubViewType.Others);
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -1087,6 +1104,9 @@ namespace CFLMedCab
 
             //关闭盘点中弹窗
             ClosePop();
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -1152,8 +1172,8 @@ namespace CFLMedCab
             ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
             replenishmentDetailOpen.LoadingDataEvent += new ReplenishmentDetailOpen.LoadingDataHandler(onLoadingData);
             FullFrame.Navigate(replenishmentDetailOpen);
-            //进入上架任务单详情开门页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
+            //进入上架任务单详情开门页面，将句柄设置成null，类型设置成DoorOpen，避免错误调用
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
@@ -1260,6 +1280,9 @@ namespace CFLMedCab
             //关闭盘点中弹窗
             ClosePop();
 
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 ReplenishmentClose replenishmentClose = new ReplenishmentClose((ShelfTask)delegateGetMsg.userData, hs);
@@ -1328,8 +1351,8 @@ namespace CFLMedCab
             returnGoodsDetailOpen.LoadingDataEvent += new ReturnGoodsDetailOpen.LoadingDataHandler(onLoadingData);
 
             FullFrame.Navigate(returnGoodsDetailOpen);
-            //进入拣货任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
+            //进入拣货任务单详情页面，将句柄设置成null，类型设置成DoorOpen
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
@@ -1422,6 +1445,9 @@ namespace CFLMedCab
             //关闭盘点中弹窗
             ClosePop();
 
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickTask)delegateGetMsg.userData, hs);
@@ -1466,8 +1492,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(1);
             FullFrame.Navigate(gerFetchState);
-            //进入回收取货开门页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
+            //进入回收取货开门页面，将句柄设置成null，类型设置成DoorOpen
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -1485,7 +1511,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 进入进入库存调整-关门状态
+        /// 进入回收取货-关门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1510,6 +1536,9 @@ namespace CFLMedCab
 
             //关闭盘点中弹窗
             ClosePop();
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -1538,8 +1567,8 @@ namespace CFLMedCab
 
             GerFetchState gerFetchState = new GerFetchState(4);
             FullFrame.Navigate(gerFetchState);
-            //进入库存调整开门页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
+            //进入库存调整开门页面，将句柄设置成null，类型设置成DoorOpen
+            SetSubViewInfo(null, SubViewType.DoorOpen);
 
             List<string> com = ApplicationState.GetAllLockerCom();
 
@@ -1581,6 +1610,9 @@ namespace CFLMedCab
 
             //关闭盘点中弹窗
             ClosePop();
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -1748,6 +1780,9 @@ namespace CFLMedCab
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onInventoryDoorClose);
+
+            //盘点开门的时候，句柄还是设置成InventoryDtl使用的句柄，将状态设置成DoorOpen
+            SetSubViewInfo(subViewHandler, SubViewType.DoorOpen);
 #endif
         }
 
@@ -1778,10 +1813,13 @@ namespace CFLMedCab
             if (!isClose)
                 return;
 
-            if (subViewHandler == null || subViewType != SubViewType.InventoryDtl) 
+            if (subViewHandler == null || subViewType != SubViewType.DoorOpen) 
                 return;
 
             ((InventoryDtl)subViewHandler).SetButtonVisibility(true);
+
+            //盘点开门的时候，句柄还是设置成InventoryDtl使用的句柄，状态恢复成InventoryDtl
+            SetSubViewInfo(subViewHandler, SubViewType.InventoryDtl);
         }
 #endif
 
@@ -2084,7 +2122,8 @@ namespace CFLMedCab
             onLoadingData(this, false);
             return;
         }
-#endregion
+        #endregion
+
     }
 
     /// <summary>

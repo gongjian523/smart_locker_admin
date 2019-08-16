@@ -360,7 +360,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 					if (3 < wErrCount)
 					{
 						LogUtils.Debug("Wait for" + stateE + "finger error! " + Thread.CurrentThread.ManagedThreadId.ToString());
-						FingerDetectedEvent(this, -1);
+                        FingerDetectedEvent(this, -1);
                         LogUtils.Debug($"调用DetectFinger1结束： -1");
                         return;
 					}
