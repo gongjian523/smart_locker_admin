@@ -117,6 +117,7 @@ namespace CFLMedCab.Http.Bll
 
 			if (isSuccess)
 			{
+                //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
                 string id = ApplicationState.GetAllCabIds().ToList().First();
 
                 List<ShelfTask> taskList = new List<ShelfTask>();
@@ -300,22 +301,52 @@ namespace CFLMedCab.Http.Bll
 					{
 						it.CommodityName = GetNameById<Commodity>(it.CommodityId);
 					}
-
 				});
 			}
 
 			return baseDataShelfTaskCommodityDetail;
-
 		}
 
-		/// <summary>
-		/// 获取变化后的上架单
-		/// </summary>
-		/// <param name="baseDatacommodityCode"></param>
-		/// <param name="baseDataShelfTask"></param>
-		/// <param name="baseDataShelfTaskCommodityDetail"></param>
-		/// <returns></returns>
-		public void GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, ShelfTask shelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
+
+        /// <summary>
+        /// 根据上架单中所有货柜下的商品详情
+        /// </summary>
+        /// <param name="shelfTaskName"></param>
+        /// <returns></returns>
+        public BaseData<ShelfTaskCommodityDetail> GetShelfTaskAllCommodityDetail(ShelfTask shelfTask)
+        {
+            BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().Get<ShelfTaskCommodityDetail>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "ShelfTaskId",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(shelfTask.id) }'"}
+                            }
+                        }
+                    }
+                }
+
+            });
+
+            return baseDataShelfTaskCommodityDetail;
+        }
+
+        /// <summary>
+        /// 获取变化后的上架单
+        /// </summary>
+        /// <param name="baseDatacommodityCode"></param>
+        /// <param name="baseDataShelfTask"></param>
+        /// <param name="baseDataShelfTaskCommodityDetail"></param>
+        /// <returns></returns>
+        public void GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, ShelfTask shelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
 		{
 
 			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
@@ -329,7 +360,11 @@ namespace CFLMedCab.Http.Bll
                 //上架任务单商品码
 				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
 
-				var commodityCodes = baseDatacommodityCode.body.objects;
+                //WARING 这种取法的的前提是shelfTaskCommodityDetails中全是一个货柜的产品，前面获取数据的做法是错误的，没有将货位id加进去，
+                //在后续多柜中改正
+                var goodsLocationId = shelfTaskCommodityDetails.First().GoodsLocationId;
+
+                var commodityCodes = baseDatacommodityCode.body.objects;
 
                 //商品异常状态回显
                 commodityCodes.ForEach(it=> {
@@ -350,9 +385,7 @@ namespace CFLMedCab.Http.Bll
 							else
 							{
 								it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-							}
-
-							
+							}						
 						}
 						else
 						{
@@ -383,14 +416,28 @@ namespace CFLMedCab.Http.Bll
 
 					if (isAllNormal)
 					{
-						shelfTask.Status = DocumentStatus.已完成.ToString();
-					}
+                        //获取这个任务单中所有的商品详情
+                        BaseData<ShelfTaskCommodityDetail>  bdAllstcd =  GetShelfTaskAllCommodityDetail(shelfTask);
 
+                        HttpHelper.GetInstance().ResultCheck(bdAllstcd, out bool isSuccess2);
+
+                        if(isSuccess2)
+                        {
+                            //只有所有商品都完成了上架，不管在那个货架上，才能将这个任务单的状态改为“已完成”
+                            if(bdAllstcd.body.objects.Where(it => it.NeedShelfNumber != it.AlreadyShelfNumber && it.GoodsLocationId != goodsLocationId).Count() == 0 )
+                            {
+                                shelfTask.Status = DocumentStatus.已完成.ToString();
+                            }
+                        }
+                        else
+                        {
+                            LogUtils.Error("GetShelfTaskChange: GetShelfTaskAllCommodityDetail" + bdAllstcd.message);
+                        }
+                    }
 				}
 				else
 				{
 					shelfTask.Status = DocumentStatus.异常.ToString();
-					
 				}
 
                 foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
@@ -399,7 +446,6 @@ namespace CFLMedCab.Http.Bll
                     stcd.PlanShelfNumber = stcd.NeedShelfNumber - stcd.AlreadyShelfNumber;
                 }
             }
-
 		}
 
         /// <summary>

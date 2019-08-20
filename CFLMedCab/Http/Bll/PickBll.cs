@@ -109,6 +109,7 @@ namespace CFLMedCab.Http.Bll
 
                 if (isSuccess)
                 {
+                    //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
                     string id = ApplicationState.GetAllCabIds().ToList().First();
                     List<PickTask> taskList = new List<PickTask>();
 
@@ -293,14 +294,46 @@ namespace CFLMedCab.Http.Bll
 
 		}
 
-		/// <summary>
-		/// 获取变化后的拣货单
-		/// </summary>
-		/// <param name="baseDatacommodityCode"></param>
-		/// <param name="pickTask"></param>
-		/// <param name="baseDataPickTaskCommodityDetail"></param>
-		/// <returns></returns>
-		public void GetPickTaskChange(BaseData<CommodityCode> baseDatacommodityCode, PickTask pickTask, BaseData<PickCommodity> baseDataPickTaskCommodityDetail)
+        /// <summary>
+        /// 根据拣货任务单获取所有货柜下的商品详情
+        /// </summary>
+        /// <param name="pickTask"></param>
+        /// <returns></returns>
+        public BaseData<PickCommodity> GetPickTaskAllCommodityDetail(PickTask pickTask)
+        {
+
+            BaseData<PickCommodity> baseDataPickTaskCommodityDetail = HttpHelper.GetInstance().Get<PickCommodity>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "PickTaskId",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(pickTask.id) }'"}
+                            }
+                        }
+                    }
+                }
+
+            });
+
+            return baseDataPickTaskCommodityDetail;
+        }
+
+        /// <summary>
+        /// 获取变化后的拣货单
+        /// </summary>
+        /// <param name="baseDatacommodityCode"></param>
+        /// <param name="pickTask"></param>
+        /// <param name="baseDataPickTaskCommodityDetail"></param>
+        /// <returns></returns>
+        public void GetPickTaskChange(BaseData<CommodityCode> baseDatacommodityCode, PickTask pickTask, BaseData<PickCommodity> baseDataPickTaskCommodityDetail)
 		{
 
 
@@ -313,8 +346,12 @@ namespace CFLMedCab.Http.Bll
 				var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects.Where(item => item.Number != item.PickNumber);
 
 				var sfdCommodityIds = pickTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
-		
-				var commodityCodes = new List<CommodityCode>();
+
+                //WARING 这种取法的的前提是pickTaskCommodityDetails中全是一个货柜的产品，前面获取数据的做法是错误的，没有将货位id加进去，
+                //在后续多柜中改正
+                var goodsLocationId = pickTaskCommodityDetails.First().GoodsLocationId;
+
+                var commodityCodes = new List<CommodityCode>();
 
 				commodityCodes = baseDatacommodityCode.body.objects;
 
@@ -366,9 +403,24 @@ namespace CFLMedCab.Http.Bll
 
 					if (isAllNormal)
 					{
-						pickTask.BillStatus = DocumentStatus.已完成.ToString();
-					}
+                        //获取这个任务单中所有的商品详情
+                        BaseData<PickCommodity> bdAllpc = GetPickTaskAllCommodityDetail(pickTask);
 
+                        HttpHelper.GetInstance().ResultCheck(bdAllpc, out bool isSuccess2);
+
+                        if (isSuccess2)
+                        {
+                            //只有所有商品都完成了拣货，不管在那个货架上，才能将这个任务单的状态改为“已完成”
+                            if (bdAllpc.body.objects.Where(it => it.Number != it.PickNumber && it.GoodsLocationId != goodsLocationId).Count() == 0)
+                            {
+                                pickTask.BillStatus = DocumentStatus.已完成.ToString();
+                            }
+                        }
+                        else
+                        {
+                            LogUtils.Error("GetPickTaskChange: GetShelfTaskAllCommodityDetail" + bdAllpc.message);
+                        }
+					}
 				}
 				//else
 				//{
