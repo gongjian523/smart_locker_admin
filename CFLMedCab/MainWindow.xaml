@@ -36,12 +36,16 @@
                        Foreground="#FFFFFF" Text="欢迎使用乘法云链耗材管理系统"/>
                 <TextBlock HorizontalAlignment="Center" Margin="0,60,0,0"  FontFamily="Microsoft YaHei UI" FontWeight="Bold" FontSize="55" 
                        Foreground="#FFFFFF" Text="请您使用指静脉登录进行操作"/>
-                <StackPanel Orientation="Horizontal">
-                    <Button  HorizontalAlignment="Center" Margin="340,80,0,0"  Style="{StaticResource CommonNoButtonT2}" 
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Button  HorizontalAlignment="Right" Margin="0,80,50,0"  Style="{StaticResource CommonNoButtonT2}" 
                          Content="绑定指静脉或登录" Height="120" Width="400" Click="onEnterBindingVein"/>
-                    <Button  HorizontalAlignment="Center" Margin="120,80,0,0"  Style="{StaticResource CommonNoButtonT2}" 
+                    <Button  Grid.Column="1" HorizontalAlignment="Left" Margin="50,80,0,0"  Style="{StaticResource CommonNoButtonT2}" 
                          Content="退出程序 " Height="120" Width="400" Click="onExitApp"/>
-                </StackPanel>
+                </Grid>
             </StackPanel>
         </Grid>
         <Grid x:Name="NaviView" Visibility="Visible" Panel.ZIndex="1">
