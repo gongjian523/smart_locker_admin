@@ -133,7 +133,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         //COM9: 公司设备主柜串口
         //StringBuilder serialName = new StringBuilder("COM9:");
         //StringBuilder devName = new StringBuilder(ApplicationState.GetMCabName());
-        StringBuilder serialName = new StringBuilder(ApplicationState.GetMVeinCOM() + ":");
+        //StringBuilder serialName = new StringBuilder(ApplicationState.GetMVeinCOM() + ":");
+        StringBuilder serialName = new StringBuilder(ApplicationState.GetMVeinCOM());
 
         int devNum;                          //枚举设备数1~10
 
@@ -311,42 +312,47 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     return;
                 }
 
-                ////每5分钟重启
-                //if(DateTime.Now.Subtract(startDT).TotalSeconds > 5 * 60)
-                //{
-                //    int actCount = 0;
-                //    for(actCount = 0; actCount < 3; actCount++)
-                //    {
-                //        nRetVal = FV_CloseDevice(devName);
-                         
-                //        if(nRetVal != FV_ERRCODE_SUCCESS)
-                //        {
-                //            LogUtils.Debug("关闭指静脉设备失败！");
-                //            continue;
-                //        }
+                //每5分钟重启
+                int actCount = 0;
+                for (actCount = 0; actCount < 3; actCount++)
+                {
+                    LogUtils.Debug($"调用CloseDevice 开始");
+                    DateTime start1Time = DateTime.Now;
+                    nRetVal = FV_CloseDevice(devName);
+                    DateTime end1Time = DateTime.Now;
+                    LogUtils.Debug($"调用CloseDevice Sdk耗时{end1Time.Subtract(start1Time).TotalMilliseconds}");
 
-                //        Thread.Sleep(1000);
+                    if (nRetVal != FV_ERRCODE_SUCCESS)
+                    {
+                        LogUtils.Debug("关闭指静脉设备失败！");
+                        continue;
+                    }
 
-                //        nRetVal = FV_OpenDevice(devName,0);
+                    Thread.Sleep(1000);
+                    LogUtils.Debug($"调用OpenDevice 开始");
+                    start1Time = DateTime.Now;
+                    nRetVal = FV_OpenDevice(devName, 0);
+                    end1Time = DateTime.Now;
+                    LogUtils.Debug($"调用OpenDevice Sdk耗时{end1Time.Subtract(start1Time).TotalMilliseconds}");
 
-                //        if (nRetVal == FV_ERRCODE_SUCCESS)
-                //        {
-                //            startDT = DateTime.Now;
-                //            break;
-                //        }
-                //        else
-                //        {
-                //            LogUtils.Debug("打开指静脉设备失败！");
-                //        }
-                //    }
+                    if (nRetVal == FV_ERRCODE_SUCCESS)
+                    {
+                        startDT = DateTime.Now;
+                        break;
+                    }
+                    else
+                    {
+                        LogUtils.Debug("打开指静脉设备失败！");
+                    }
+                }
 
-                //    //失败3次之后，就需要重启软件
-                //    if(actCount == 3)
-                //    {
-                //        FingerDetectedEvent(this, -3);
-                //        return;
-                //    }
-                //}
+                //失败3次之后，就需要重启软件
+                if (actCount == 3)
+                {
+                    FingerDetectedEvent(this, -3);
+                    return;
+                }
+                
 
                 //循环检测手指
                 LogUtils.Debug($"调用FingerDetect1 开始");
@@ -392,6 +398,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				}
 			}
         }
+
 
         //检测手指是否放置到指静脉设备上  
         //public void DetectFinger()
