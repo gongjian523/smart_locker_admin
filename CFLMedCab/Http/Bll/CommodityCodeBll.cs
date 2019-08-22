@@ -379,6 +379,7 @@ namespace CFLMedCab.Http.Bll
                             {
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == it.CommodityId).First();
                                 it.CommodityName = commodity.name;
+                                it.Specifications = commodity.Specifications;
                             }
                         }
                         else
@@ -485,7 +486,6 @@ namespace CFLMedCab.Http.Bll
 
 			HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
 			return isSuccess;
-
 		}
 
 
@@ -497,10 +497,136 @@ namespace CFLMedCab.Http.Bll
 		{
 			//获取待完成上架工单
 			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>();
-			return HttpHelper.GetInstance().ResultCheck(baseData);
-
+            return HttpHelper.GetInstance().ResultCheck(baseData);
 		}
 
+        public BaseData<CommodityCode> GetExpirationAndManufactor(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
+        {
+            isSuccess = false;
 
-	}
+            //检查参数是否正确
+            if (null == bdCommodityCode.body.objects || bdCommodityCode.body.objects.Count <= 0)
+            {
+
+                bdCommodityCode.code = (int)ResultCode.Parameter_Exception;
+                bdCommodityCode.message = ResultCode.Parameter_Exception.ToString();
+
+                return bdCommodityCode; 
+            }
+
+            //通过【商品码】从表格【商品库存管理】中查询该条库存的id（CommodityInventoryDetailId）。
+            var commodityCodeIds = bdCommodityCode.body.objects.Select(it => it.id).Distinct().ToList();
+            var commodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventoryDetail>(new QueryParam
+            {
+                @in =
+                    {
+                        field = "CommodityCodeId",
+                        in_list = BllHelper.ParamUrlEncode(commodityCodeIds)
+                    }
+            });
+
+            HttpHelper.GetInstance().ResultCheck(commodityInventoryDetails, out bool isSuccess1);
+            if(!isSuccess1)
+            {
+                bdCommodityCode.code = (int)ResultCode.Result_Exception;
+                bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            bdCommodityCode.body.objects.ForEach(it =>
+            {
+                it.CommodityInventoryDetailId = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().id;
+            });
+
+            //通过【关联商品】（CommodityInventoryDetailId）从表格【商品库存货品明细】中获取相关货品列表。
+            var CommodityInventoryDetailIds = bdCommodityCode.body.objects.Select(it => it.CommodityInventoryDetailId).Distinct().ToList();
+            var commodityInventoryGoods = HttpHelper.GetInstance().Get<CommodityInventoryGoods>(new QueryParam
+            {
+                @in =
+                    {
+                        field = "CommodityInventoryDetailId",
+                        in_list = BllHelper.ParamUrlEncode(CommodityInventoryDetailIds)
+                    }
+            });
+
+            HttpHelper.GetInstance().ResultCheck(commodityInventoryGoods, out bool isSuccess2);
+            if (!isSuccess2)
+            {
+                bdCommodityCode.code = (int)ResultCode.Result_Exception;
+                bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            bdCommodityCode.body.objects.ForEach(it =>
+            {
+                //在CommodityInventoryGoods表中，如果一个CommodityInventoryDetailId 对应有多条记录，说明一个商品对应了多个货品，那就不属于单品，智能柜不用显示
+                if (commodityInventoryGoods.body.objects.Where(cig => cig.CommodityInventoryDetailId == it.CommodityInventoryDetailId).Count() == 1)
+                {
+                    it.BatchNumberId = commodityInventoryGoods.body.objects.Where(cid => cid.CommodityInventoryDetailId == it.CommodityInventoryDetailId).First().BatchNumberId;
+                    it.HospitalGoodsId = commodityInventoryGoods.body.objects.Where(cid => cid.CommodityInventoryDetailId == it.CommodityInventoryDetailId).First().HospitalGoodsId;
+                }
+            });
+
+            //通过【生产批号】（CommodityInventoryGoods.BatchNumberId）从表格【生产批号管理详情】中获得相关批号信息。
+            var batchNumberIds = bdCommodityCode.body.objects.Select(it => it.BatchNumberId).Distinct().ToList();
+            var batchNumber = HttpHelper.GetInstance().Get<BatchNumber>(new QueryParam
+            {
+                @in =
+                    {
+                        field = "id",
+                        in_list = BllHelper.ParamUrlEncode(batchNumberIds)
+                    }
+            });
+
+            HttpHelper.GetInstance().ResultCheck(batchNumber, out bool isSuccess3);
+            if (!isSuccess3)
+            {
+                bdCommodityCode.code = (int)ResultCode.Result_Exception;
+                bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            bdCommodityCode.body.objects.ForEach(it =>
+            {
+                if(it.BatchNumberId != null)
+                {
+                    it.ExpirationDate = batchNumber.body.objects.Where(bn => bn.id == it.BatchNumberId).First().ExpirationDate;
+                }
+            });
+
+            //通过【货品名称】（HospitalGoodsId）从表格【医院货品管理详情】中获得厂家名称。
+            var hospitalGoodsIds = bdCommodityCode.body.objects.Select(it => it.HospitalGoodsId).Distinct().ToList();
+            var hospitalGoods = HttpHelper.GetInstance().Get<HospitalGoods>(new QueryParam
+            {
+                @in =
+                    {
+                        field = "id",
+                        in_list = BllHelper.ParamUrlEncode(hospitalGoodsIds)
+                    }
+            });
+
+            HttpHelper.GetInstance().ResultCheck(hospitalGoods, out bool isSuccess4);
+            if (!isSuccess4)
+            {
+                bdCommodityCode.code = (int)ResultCode.Result_Exception;
+                bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            bdCommodityCode.body.objects.ForEach(it =>
+            {
+                if (it.HospitalGoodsId != null)
+                {
+                    it.ManufactorName = hospitalGoods.body.objects.Where(hg => hg.id == it.HospitalGoodsId).First().ManufactorName;
+                }
+            });
+
+            isSuccess = true;
+            return bdCommodityCode;
+        }
+    }
 }

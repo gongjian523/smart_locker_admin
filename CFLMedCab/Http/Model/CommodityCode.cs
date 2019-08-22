@@ -126,5 +126,41 @@ namespace CFLMedCab.Http.Model
 		[JsonIgnore]
 		public string QStatus { get; set; } = "正常";
 
+        /// <summary>
+        /// 商品库存明细
+        /// </summary>
+        [JsonIgnore]
+        public string CommodityInventoryDetailId { get; set; }
+
+        /// <summary>
+        /// 失效日期
+        /// </summary>
+        [JsonIgnore]
+        public string ExpirationDate { get; set; }
+
+        /// <summary>
+        /// 生产批号
+        /// </summary>
+        [JsonIgnore]
+        public string BatchNumberId { get; set; }
+
+        /// <summary>
+        /// 厂家名称
+        /// </summary>
+        [JsonIgnore]
+        public string ManufactorName { get; set; }
+
+        /// <summary>
+        /// 医院货品ID
+        /// </summary>
+        [JsonIgnore]
+        public string HospitalGoodsId { get; set; }
+
+        /// <summary>
+        /// 规格
+        /// </summary>
+        [JsonIgnore]
+        public string Specifications { get; set; }
+
     }
 }

@@ -77,8 +77,6 @@ namespace CFLMedCab.View
             onStockSnapshot(this, null);
         }
 
-
-
         /// <summary>
         /// 库存快照事件
         /// </summary>
@@ -140,8 +138,6 @@ namespace CFLMedCab.View
                 }
 
                 ApplicationState.SetGoodsInfo(hs);
-
-
 
                 List<Commodity> list = LocalGoodsChangeBll.GetCommodity();
 

@@ -207,6 +207,7 @@ namespace CFLMedCab.View.Inventory
                 {
                     BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
                     HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+                    CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
 
                     if (!isSuccess)
                     {
@@ -223,6 +224,20 @@ namespace CFLMedCab.View.Inventory
                                 code = item.name,
                                 position = item.GoodsLocationName
                             };
+
+                            if(isSuccess2)
+                            {
+                                goodItem.Specifications = item.Specifications;
+                                if(item.ManufactorName != null)
+                                {
+                                    goodItem.ManufactorName = item.ManufactorName;
+                                }
+                                if(item.ExpirationDate != null)
+                                {
+                                    goodItem.ExpirationDate = item.ExpirationDate;
+                                }
+                            }
+
                             list.Add(goodItem);
                         }
 

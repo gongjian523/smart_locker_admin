@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              xmlns:local="clr-namespace:CFLMedCab.View.Inventory"
-             mc:Ignorable="d" Width="1200" Height="600" >
+             mc:Ignorable="d" Width="1600" Height="800" >
     <UserControl.Resources>
         <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
     </UserControl.Resources>
@@ -18,13 +18,19 @@
             </Grid.RowDefinitions>
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" x:Name="column1"/>
                 <Grid Grid.Column="1" x:Name="column2"/>
                 <Grid Grid.Column="2" x:Name="column3"/>
+                <Grid Grid.Column="3" x:Name="column4"/>
+                <Grid Grid.Column="4" x:Name="column5"/>
+                <Grid Grid.Column="5" x:Name="column6"/>
             </Grid>
             <Label Grid.Row="0" Content="库存"  Style="{StaticResource lblTitle5}"/>
             
@@ -45,7 +51,28 @@
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>
                         </GridViewColumn>
-                        <GridViewColumn Header="货位"  Width="{Binding ElementName=column3,Path=ActualWidth}">
+                        <GridViewColumn Header="规格" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Specifications}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="失效日期" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ExpirationDate}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="厂商" Width="{Binding ElementName=column5,Path=ActualWidth}">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="货位"  Width="{Binding ElementName=column6,Path=ActualWidth}">
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=GoodsLocationName}"/>

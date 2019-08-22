@@ -26,6 +26,8 @@ namespace CFLMedCab.Http.Bll
             List<Commodity> commodityLists = null;
             if (isSuccess)
             {
+                //获取有效期和生产商
+                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(baseCommodityCodes, out bool isSuccess2);
                 var tempList = baseCommodityCodes.body.objects;
                 //商品列表集合
                 commodityLists = tempList

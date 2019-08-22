@@ -107,5 +107,24 @@ namespace CFLMedCab.Model
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public int num_differences { get; set; }
+
+
+        /// <summary>
+        /// 有效期
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string ExpirationDate { get; set; }
+
+        /// <summary>
+        /// 生产商
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string ManufactorName { get; set; }
+
+        /// <summary>
+        /// 规格
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string Specifications { get; set; }
     }
 }

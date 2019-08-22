@@ -47,9 +47,18 @@ namespace CFLMedCab.DTO.Goodss
         public bool  confirm_btn_visibility { get; set; }
 
         /// <summary>
-        /// 业务单号
+        /// 规格
         /// </summary>
-        public string business_order_code { get; set; }
+        public string Specifications { get; set; }
 
-	}
+        /// <summary>
+        /// 有效期
+        /// </summary>
+        public string ExpirationDate { get; set; }
+
+        /// <summary>
+        /// 厂商
+        /// </summary>
+        public string ManufactorName { get; set; }
+    }
 }

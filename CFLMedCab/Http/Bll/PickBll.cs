@@ -336,7 +336,6 @@ namespace CFLMedCab.Http.Bll
         public void GetPickTaskChange(BaseData<CommodityCode> baseDatacommodityCode, PickTask pickTask, BaseData<PickCommodity> baseDataPickTaskCommodityDetail)
 		{
 
-
 			HttpHelper.GetInstance().ResultCheck(baseDataPickTaskCommodityDetail, out bool isSuccess);
 
             HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);

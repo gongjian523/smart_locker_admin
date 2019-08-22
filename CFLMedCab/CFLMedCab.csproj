@@ -239,7 +239,9 @@
     <Compile Include="Http\Model\Base\BaseModel.cs" />
     <Compile Include="Http\Model\Base\BaseSinglePostData.cs" />
     <Compile Include="Http\Model\Base\BasePutData.cs" />
+    <Compile Include="Http\Model\BatchNumber.cs" />
     <Compile Include="Http\Model\CommodityInventoryDetail.cs" />
+    <Compile Include="Http\Model\CommodityInventoryGoods.cs" />
     <Compile Include="Http\Model\CommodityRecovery.cs" />
     <Compile Include="Http\Model\CommoditySnapshot.cs" />
     <Compile Include="Http\Model\Common\SourceBill.cs" />
@@ -256,6 +258,7 @@
     <Compile Include="Http\Model\Equipment.cs" />
     <Compile Include="Http\Model\FetchParam.cs" />
     <Compile Include="Http\Model\GoodsLocation.cs" />
+    <Compile Include="Http\Model\HospitalGoods.cs" />
     <Compile Include="Http\Model\Local\LocalCommodityCode.cs" />
     <Compile Include="Http\Model\InventoryDetail.cs" />
     <Compile Include="Http\Model\InventoryOrder.cs" />
