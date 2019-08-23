@@ -136,7 +136,7 @@ namespace CFLMedCab.Http.Model
         /// 失效日期
         /// </summary>
         [JsonIgnore]
-        public string ExpirationDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
 
         /// <summary>
         /// 生产批号

@@ -60,7 +60,7 @@ namespace CFLMedCab.DTO.Goodss
         /// <summary>
         /// 有效期
         /// </summary>
-        public string ExpirationDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
 
         /// <summary>
         /// 厂商

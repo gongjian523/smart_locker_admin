@@ -38,59 +38,43 @@ namespace CFLMedCab.View
         public delegate void SetPopInventoryHandler(object sender, bool e);
         public event SetPopInventoryHandler SetPopInventoryEvent;
 
-        private List<GoodDto> comboBoxList = new List<GoodDto>();
+        private List<Commodity> comboBoxList = new List<Commodity>();
+        private List<LocalCommodityCode> comboBoxList2 = new List<LocalCommodityCode>();
+
+        //库存快照列表数据
+        private List<Commodity> listViewData = new List<Commodity>();
+        //有效期查询列表数据
+        private List<CommodityCode> listView1Data = new List<CommodityCode>();
+        //出入库查询列表数据
+        private List<LocalCommodityCode> listView2Data = new List<LocalCommodityCode>();
+
+        Timer iniTimer;
 
         public Stock()
         {
             InitializeComponent();
-            InitGoodsCodeNameCombox();
+            
+            List<String> names = ConsumingBll.GetInstance().GetLocalCommodityName();
+            comboBoxList2.Add(new LocalCommodityCode { name = "全部" });
+            names.ForEach(item => {
+                comboBoxList2.Add(new LocalCommodityCode { name = item });
+            });
 
-            Timer iniTimer = new Timer(100);
+            iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
             iniTimer.Enabled = true;
             iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
-
-        }
-
-		[Obsolete]
-        private void onEndInventory(object sender, ElapsedEventArgs e)
-        {
-            GetGoodApo getGoodApo = new GetGoodApo();
-
-            Hashtable ht = RfidHelper.GetEpcData(out bool isGetSuccess);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-
-            HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
-            foreach (HashSet<string> goodsEpsData in ht.Values)
-            {
-                goodsEpsHashSetDatas.UnionWith(goodsEpsData);
-            }
-            getGoodApo.goodsEpsDatas = goodsEpsHashSetDatas;
-            getGoodApo.code = goods_code.SelectedValue == null || ((GoodDto)goods_code.SelectedValue).goods_code == "全部" ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
-            getGoodApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
-
-            listView.Items.Refresh();
         }
 
         private void onInitData(object sender, ElapsedEventArgs e)
         {
-            onStockSnapshot(this, null);
-        }
+            GetCurrentGoodsInfo();
 
-        /// <summary>
-        /// 库存快照事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onStockSnapshot(object sender, RoutedEventArgs e)
-        {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 queryFilter.Visibility = Visibility.Collapsed;
 
-                ResetGoodsCodeNameCombox();
-
-                goodsCodeSP.Visibility = Visibility.Visible;
+                goodsCodeSP.Visibility = Visibility.Hidden;
                 operating_time.Visibility = Visibility.Hidden;
 
                 stockSnapshotQuery.Visibility = Visibility.Visible;
@@ -102,7 +86,18 @@ namespace CFLMedCab.View
                 Content2.Visibility = Visibility.Hidden;
                 queryData(this, null);
             }));
+        }
 
+        /// <summary>
+        /// 库存快照事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onStockSnapshot(object sender, RoutedEventArgs e)
+        {
+            ResetGoodsNameComboxInSnapShot();
+            stockquery.IsChecked = true;
+            iniTimer.Enabled = true;
         }
 
         /// <summary>
@@ -113,7 +108,7 @@ namespace CFLMedCab.View
         private void onConditionQuery(object sender, RoutedEventArgs e)
         {
             queryFilter.Visibility = Visibility.Visible;
-            ResetGoodsCodeNameCombox();
+            ResetGoodsNameComboxInSnapShot();
         }
 
         /// <summary>
@@ -123,30 +118,16 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void queryData(object sender, RoutedEventArgs e)
         {
-            //int totalCount = 0;
             if (this.stockSnapshot.IsChecked == true)//库存快照
             {
-                SetPopInventoryEvent(this, true);
+                List<Commodity> list = listViewData;
 
-                HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
-                if(!isGetSuccess)
+                if ((Commodity)goods_name.SelectedValue != null)
                 {
-                    SetPopInventoryEvent(this, false);
-
-                    MessageBox.Show("盘点本地商品失败！", "温馨提示", MessageBoxButton.OK);
-                    return;
-                }
-
-                ApplicationState.SetGoodsInfo(hs);
-
-                List<Commodity> list = LocalGoodsChangeBll.GetCommodity();
-
-                SetPopInventoryEvent(this, false);
-
-                if (list == null)
-                {
-                    MessageBox.Show("获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
-                    return;
+                    if (((Commodity)goods_name.SelectedValue).name != "全部")
+                    {
+                        list = listViewData.Where(item => item.name == ((Commodity)goods_name.SelectedValue).name).ToList();
+                    }
                 }
 
                 listView.DataContext = list;
@@ -154,26 +135,29 @@ namespace CFLMedCab.View
             }
             if (this.validity.IsChecked == true)//效期查询
             {
-                //GetGoodsApo getGoodsApo = new GetGoodsApo();
-                //Hashtable ht = ApplicationState.GetValue<Hashtable>((int)ApplicationKey.CurGoods);
-                //HashSet<string> goodsEpsHashSetDatas = new HashSet<string>();
-                //foreach (HashSet<string> goodsEpsData in ht.Values)
-                //{
-                //    goodsEpsHashSetDatas.UnionWith(goodsEpsData);
-                //}
-                //if (single1.IsChecked == true)
-                //    getGoodsApo.expire_date = DateTime.Now.AddMonths(1);
-                //if (single2.IsChecked == true)
-                //    getGoodsApo.expire_date = DateTime.Now.AddMonths(2);
-                //if (single3.IsChecked == true)
-                //    getGoodsApo.expire_date = DateTime.Now.AddMonths(3);
+                List<CommodityCode> list = listView1Data;
 
-                //getGoodsApo.goodsEpsDatas = goodsEpsHashSetDatas;
-                //getGoodsApo.code = goods_code.SelectedValue == null || ((GoodDto)goods_code.SelectedValue).goods_code == "全部" ? "" : ((GoodDto)goods_code.SelectedValue).goods_code;
-                //getGoodsApo.name = goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
+                if ((Commodity)goods_name.SelectedValue != null)
+                {
+                    if (((Commodity)goods_name.SelectedValue).name != "全部")
+                    {
+                        list = listView1Data.Where(item => item.CommodityName == ((Commodity)goods_name.SelectedValue).name).ToList();
+                    }
+                }
 
-                //List<GoodsDto> goodDtos = goodsBll.GetValidityGoodsDto(getGoodsApo, out totalCount);
-                //listView1.DataContext = goodDtos;
+                if (goods_code.Text != "")
+                {
+                    list = list.Where(item => item.name.Contains(goods_code.Text)).ToList();
+                }
+
+                if (single1.IsChecked == true)
+                    list = list.Where(item=> item.ExpirationDate <DateTime.Now.AddMonths(1)).ToList();
+                if (single2.IsChecked == true)
+                    list = list.Where(item => item.ExpirationDate <DateTime.Now.AddMonths(2)).ToList();
+                if (single3.IsChecked == true)
+                    list = list.Where(item => item.ExpirationDate < DateTime.Now.AddMonths(3)).ToList();
+
+                listView1.DataContext = list;
             }
             else if (this.stock.IsChecked == true)//库存查询
             {
@@ -191,7 +175,14 @@ namespace CFLMedCab.View
                     DateTime time = Convert.ToDateTime(endTime.Text.Replace("0:00:00", "23:59:59"));
                     pageDataApo.endTime = new DateTime(time.Year, time.Month, time.Day, 23, 59, 59);
                 }
-                //goods_name.SelectedValue == null || ((GoodDto)goods_name.SelectedValue).name == "全部" ? "" : ((GoodDto)goods_name.SelectedValue).name;
+
+                if ((LocalCommodityCode)goods_name.SelectedValue != null)
+                {
+                    if (((LocalCommodityCode)goods_name.SelectedValue).name != "全部")
+                    {
+                        pageDataApo.name = ((LocalCommodityCode)goods_name.SelectedValue).name;
+                    }
+                }
 
                 List<LocalCommodityCode> list = ConsumingBll.GetInstance().GetLocalCommodityCodeChange(pageDataApo, out int count);
 
@@ -199,25 +190,22 @@ namespace CFLMedCab.View
             }
         }
 
-        public void InitGoodsCodeNameCombox()
+        private void ResetGoodsNameComboxInSnapShot()
         {
+            comboBoxList.Clear();
+            comboBoxList.Add(new Commodity { name = "全部" });
+            listViewData.ForEach(item => comboBoxList.Add(item));
 
-            if (comboBoxList.Where(it => it.name == "全部").ToList().Count <=0)
-                comboBoxList.Add(new GoodDto { name = "全部", goods_code = "全部" });
-
-            goods_name.ItemsSource = comboBoxList.OrderByDescending(it => it.goods_code);
-            goods_code.ItemsSource = comboBoxList.OrderByDescending(it => it.goods_code);
-            goods_name.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
-            goods_code.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
-
+            goods_name.ItemsSource = comboBoxList.OrderByDescending(it => it.name);
+            goods_name.SelectedItem = comboBoxList.Where(it => it.name == "全部").First();
         }
 
-        public void ResetGoodsCodeNameCombox()
+        private void ResetGoodsNameComboxInStockQuery()
         {
-            goods_name.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
-            goods_code.SelectedItem = comboBoxList.Where(it => it.goods_code == "全部").First();
+            goods_name.ItemsSource = comboBoxList2.OrderByDescending(it => it.name);
+            goods_name.SelectedItem = comboBoxList2.Where(it => it.name == "全部").First();
         }
-
+      
         /// <summary>
         /// 效期查询
         /// </summary>
@@ -230,8 +218,6 @@ namespace CFLMedCab.View
             goodsCodeSP.Visibility = Visibility.Visible;
             operating_time.Visibility = Visibility.Hidden;
 
-            ResetGoodsCodeNameCombox();
-
             stockSnapshotQuery.Visibility = Visibility.Hidden;
             validityQuery.Visibility = Visibility.Visible;
             stockQuery.Visibility = Visibility.Hidden;
@@ -239,7 +225,9 @@ namespace CFLMedCab.View
             Content0.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Visible;
             Content2.Visibility = Visibility.Hidden;
-            //queryCriteria();
+
+            ResetGoodsNameComboxInSnapShot();
+
             All.IsChecked = true;
             queryData(this, null);
         }
@@ -251,13 +239,10 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void StockQuery(object sender, RoutedEventArgs e)
         {
-
             queryFilter.Visibility = Visibility.Visible;
 
             goodsCodeSP.Visibility = Visibility.Hidden;
             operating_time.Visibility = Visibility.Visible;
-
-            ResetGoodsCodeNameCombox();
 
             stockSnapshotQuery.Visibility = Visibility.Hidden;
             validityQuery.Visibility = Visibility.Hidden;
@@ -266,6 +251,8 @@ namespace CFLMedCab.View
             Content0.Visibility = Visibility.Hidden;
             Content1.Visibility = Visibility.Hidden;
             Content2.Visibility = Visibility.Visible;
+
+            ResetGoodsNameComboxInStockQuery();
 
             outStock.IsChecked = true;
             queryData(this, null);
@@ -282,26 +269,31 @@ namespace CFLMedCab.View
             EnterStockDetailedEvent(this, commodity);
         }
 
-        /// <summary>
-        /// 商品名称选择框变化事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onGoodsNameChanged(object sender, RoutedEventArgs e)
+        private void GetCurrentGoodsInfo()
         {
+            SetPopInventoryEvent(this, true);
 
+#if TESTENV
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
+#else
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+#endif
+            ApplicationState.SetGoodsInfo(hs);
+
+            listViewData.Clear();
+            listViewData = LocalGoodsChangeBll.GetCommodity();
+
+            listView1Data.Clear();
+            listViewData.ForEach(item =>
+            {
+                if(item.codes.Count() > 0)
+                {
+                    listView1Data.AddRange(item.codes);
+                }
+            });
+
+            SetPopInventoryEvent(this, false);
         }
 
-
-        /// <summary>
-        /// 商品名称选择框变化事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onGoodsCodeChanged(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-}
+    }
 }

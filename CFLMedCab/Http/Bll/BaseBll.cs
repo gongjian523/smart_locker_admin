@@ -252,6 +252,7 @@ namespace CFLMedCab.Http.Bll
 			//查询语句
 			var queryable = SqlSugarHelper.GetInstance().Db.Queryable<LocalCommodityCode>()
 				.Distinct()
+                .OrderBy((lcc) => lcc.create_time, OrderByType.Desc)
 				.Select(it=>it.CommodityName).ToList();
 
 

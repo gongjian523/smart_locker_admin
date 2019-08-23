@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TESTENV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -349,9 +349,6 @@
     <Compile Include="View\KeyboardView.xaml.cs">
       <DependentUpon>KeyboardView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\LoadingData.xaml.cs">
-      <DependentUpon>LoadingData.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\Return\ReturnQuery.xaml.cs">
       <DependentUpon>ReturnQuery.xaml</DependentUpon>
     </Compile>
@@ -499,10 +496,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\KeyboardView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\LoadingData.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

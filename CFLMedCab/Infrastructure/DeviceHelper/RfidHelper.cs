@@ -170,86 +170,51 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 		}
 
-//#if TESTENV
-        //public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess)
-        //{
-        //    isGetSuccess = true;
-
-        //    var ret = new HashSet<CommodityEps>()
-        //        {
-        //            new CommodityEps
-        //            {
-        //                CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-        //                CommodityCodeName = "QR00000035",
-        //                CommodityName = "止血包",
-        //                EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-        //                EquipmentName = "E00000008",
-        //                GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-        //                GoodsLocationName = "L00000013"
-        //            }
-        //        };
-
-        //    return ret;
-        //}
-
-        //public static HashSet<CommodityEps> GetEpcDataJsonReplenishment(out bool isGetSuccess)
-        //{
-        //    isGetSuccess = true;
-
-        //    var ret = new HashSet<CommodityEps>()
-        //       {
-        //            new CommodityEps
-        //            {
-        //                CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-        //                CommodityCodeName = "QR00000035",
-        //                CommodityName = "止血包",
-        //                EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-        //                EquipmentName = "E00000008",
-        //                GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-        //                GoodsLocationName = "L00000013"
-        //            }
-        //        };
-
-        //    return ret;
-        //}
-
         public static HashSet<CommodityEps> GetEpcDataJsonInventory(out bool isGetSuccess)
         {
             isGetSuccess = true;
-
+            string com1 = ApplicationState.GetMRfidCOM();
             var ret = new HashSet<CommodityEps>()
-               {
-                    //new CommodityEps
-                    //{
-                    //    CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-                    //    CommodityCodeName = "QR00000035",
-                    //    CommodityName = "止血包",
-                    //    EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-                    //    EquipmentName = "E00000008",
-                    //    GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-                    //    GoodsLocationName = "L00000013"
-                    //},
-                    new CommodityEps
-                    {
-                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
-                        CommodityCodeName = "QR00000038",
-                        CommodityName = "止血包",
-                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-                        EquipmentName = "E00000008",
-                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-                        GoodsLocationName = "L00000013"
-                    }
-                };
+            {
+                new CommodityEps
+                {
+                    CommodityCodeName = "RF00000327",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                },
+                new CommodityEps
+                {
+                    CommodityCodeName = "RF00000333",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                },
+                new CommodityEps
+                {
+                    CommodityCodeName = "RF00000324",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                }
+            };
             return ret;
         }
-
 
 		/// <summary>
 		/// 根据eps json获取eps对象数据
 		/// </summary>
 		/// <param name="isGetSuccess"></param>
 		/// <returns></returns>
-		
 		public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess)
 		{
 
@@ -343,63 +308,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return currentEpcDataHs;
 		}
 
-
-        /// <summary>
-        /// 获取rfid的epc数据，目前只有主柜(COM1)和副柜(COM4)信息
-        /// </summary>
-#if TESTENV
-        public static Hashtable GetEpcData(out bool isGetSuccess)
-        {
-            isGetSuccess = true;
-            TestGoods testGoods = new TestGoods();
-
-            return testGoods.GetCurrentRFid(); 
-        }
-#else
-        [Obsolete]
-        public static Hashtable GetEpcData(out bool isGetSuccess)
-		{
-			isGetSuccess = true;
-
-            //string com1 = "COM1";
-            string com1 = ApplicationState.GetMRfidCOM();
-#if DUALCAB
-            //string com4 = "COM4";
-            string com4 = ApplicationState.GetSRfidCOM();
-#endif
-
-            Hashtable currentEpcDataHt = new Hashtable();
-
-			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
-			if (isCom1Connect)
-			{
-				currentEpcDataHt.Add(com1, DealComData(com1ClientConn, com1, out isGetSuccess));
-			}
-			else
-			{
-				isGetSuccess = false;
-			}
-
-#if DUALCAB
-			GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
-			if (isCom4Connect)
-			{
-				currentEpcDataHt.Add(com4, DealComData(com4ClientConn, com4, out isGetSuccess));
-			}
-			else
-			{
-				isGetSuccess = false;
-			}
-#endif
-
-            WaitHandle.WaitAll(manualEvents.ToArray());
-			manualEvents.Clear();
-
-			return currentEpcDataHt;
-
-		}
-#endif
-
 		/// <summary>
 		/// 新版epc数据获取，规则rf码扫描到的字段的后八位，前加RF。例：2019072800000001 =》 RF00000001
 		/// </summary>
@@ -445,20 +353,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			return currentEpcDataHt;
 
 		}
-
-		[Obsolete]
-		public static void TestGetEpcData(object sender, ElapsedEventArgs elapsed)
-		{
-			Console.ReadKey();
-			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
-			watch.Start();  //开始监视代码运行时间
-			GetEpcData(out bool isGetSuccess);
-			watch.Stop();  //停止监视
-			TimeSpan timespan = watch.Elapsed;  //获取当前实例测量得出的总时间
-			System.Diagnostics.Debug.WriteLine("打开窗口代码执行时间：{0}(毫秒)", timespan.TotalMilliseconds);  //总毫秒数
-			Console.ReadKey();
-		}
-
 #region
 		public static void TestRFID(object sender, ElapsedEventArgs elapsed)
 		{

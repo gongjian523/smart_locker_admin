@@ -331,14 +331,6 @@ namespace CFLMedCab.Test
             fetchOrderBll.InitSurgerOrder(surgeryOrdersG);
         }
 
-		[Obsolete]
-        public void onInitGoods(object sender, EventArgs e)
-        {
-            bool isGetSuccess;
-            Hashtable ht = RfidHelper.GetEpcData(out isGetSuccess);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-        }
-
         public void TestLocker(object sender, ElapsedEventArgs e)
         {
             //Console.ReadKey();

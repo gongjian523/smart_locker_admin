@@ -191,7 +191,9 @@ namespace CFLMedCab.View.Inventory
 
             if (btnItem.Name == "LocalInventoryBtn")
             {
-                SetPopInventoryEvent(this, true);
+                //SetPopInventoryEvent(this, true);
+
+                LoadingDataEvent(this, true);
 
 #if TESTENV
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
@@ -199,7 +201,9 @@ namespace CFLMedCab.View.Inventory
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
 
 #endif
-                if(hs.Count == 0)
+                LoadingDataEvent(this, false);
+                //SetPopInventoryEvent(this, false);
+                if (hs.Count == 0)
                 {
                     MessageBox.Show("医疗柜中没有任何商品！", "温馨提示", MessageBoxButton.OK);
                 }
@@ -248,7 +252,7 @@ namespace CFLMedCab.View.Inventory
                     }
                 }
 
-                SetPopInventoryEvent(this, false);
+
             }
             else
             {

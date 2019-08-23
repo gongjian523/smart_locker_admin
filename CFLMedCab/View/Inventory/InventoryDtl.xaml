@@ -129,7 +129,7 @@
                                     <GridViewColumn Header="厂商" Width="{Binding ElementName=column5,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

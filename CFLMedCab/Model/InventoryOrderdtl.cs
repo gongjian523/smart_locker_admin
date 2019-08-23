@@ -113,7 +113,7 @@ namespace CFLMedCab.Model
         /// 有效期
         /// </summary>
         [SugarColumn(IsNullable = true)]
-        public string ExpirationDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
 
         /// <summary>
         /// 生产商

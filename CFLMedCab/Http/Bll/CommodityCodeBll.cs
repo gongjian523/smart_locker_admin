@@ -593,7 +593,7 @@ namespace CFLMedCab.Http.Bll
             {
                 if(it.BatchNumberId != null)
                 {
-                    it.ExpirationDate = batchNumber.body.objects.Where(bn => bn.id == it.BatchNumberId).First().ExpirationDate;
+                    it.ExpirationDate = Convert.ToDateTime(batchNumber.body.objects.Where(bn => bn.id == it.BatchNumberId).First().ExpirationDate);
                 }
             });
 

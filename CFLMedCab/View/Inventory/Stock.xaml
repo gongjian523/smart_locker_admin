@@ -22,8 +22,8 @@
             <Border  Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="库存查询"  Name="stockSnapshot" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  IsChecked="True" FontWeight="Bold" Click="onStockSnapshot"/>
-                    <RadioButton Content="有效期查询" Name="validity" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="EffectivePeriod" Visibility="Collapsed"/>
-                    <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="StockQuery" />
+                    <RadioButton Content="有效期查询" Name="validity" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="EffectivePeriod"/>
+                    <RadioButton Content="出入库记录查询" Name="stock" GroupName="menu1" FontSize="34" Style="{DynamicResource FrameNavButton}"  Margin="20,0,0,0" FontWeight="Bold" Click="StockQuery"/>
                 </StackPanel>
             </Border>
             <Border  Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" x:Name="gChoice">
@@ -49,29 +49,9 @@
                         </StackPanel>
                     </Grid>
                     <Grid Grid.Row="1" x:Name="queryFilter" Visibility="Collapsed" >
-                        <StackPanel x:Name="goodsCodeSP" Orientation="Horizontal" >
-                            <TextBlock Text="商品码" FontSize="22" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="goods_code" Height="50" Width="260"  HorizontalAlignment="Left" Margin="5,0,0,0" SelectionChanged="onGoodsCodeChanged">
-                                <ComboBox.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <Rectangle Fill="{Binding goods_code}" Width="16" Height="16" Margin="0,2,5,2" />
-                                            <TextBlock Name="test" Text="{Binding goods_code}"  FontSize="22"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ComboBox.ItemTemplate>
-                            </ComboBox>
-                        </StackPanel>
-                        <StackPanel Name="operating_time" Visibility="Hidden" HorizontalAlignment="Left"  Orientation="Horizontal"  >
-                            <DatePicker Style="{StaticResource LDatePickerStyle}" Height="50" Width="240" Name="startTime"  
-                                        Language="zh-CN" Controls:TextBoxHelper.Watermark="选择起始时间"/>
-                            <Label Content="至" MinHeight="48" FontSize="22" Margin="10,20"  HorizontalAlignment="Center"></Label>
-                            <DatePicker Style="{StaticResource LDatePickerStyle}" Height="50" Width="240" Name="endTime"
-                                        Language="zh-CN" Controls:TextBoxHelper.Watermark="选择结束时间"/>
-                        </StackPanel>
-                        <StackPanel x:Name="goodsNameSP"  Orientation="Horizontal" Margin="560,0,0,0">
+                        <StackPanel x:Name="goodsNameSP"  Orientation="Horizontal">
                             <TextBlock Text="商品名称" FontSize="22" VerticalAlignment="Center"/>
-                            <ComboBox x:Name="goods_name"   Height="50" Width="260" Margin="5,0,0,0"  SelectionChanged="onGoodsNameChanged">
+                            <ComboBox x:Name="goods_name"   Height="50" Width="260" Margin="5,0,0,0">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal">
@@ -81,7 +61,20 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                         </StackPanel>
+                        </StackPanel>
+                        <StackPanel x:Name="goodsCodeSP" Orientation="Horizontal" Margin="400,0,0,0">
+                            <TextBlock x:Name="goodsCodeTitle" Text="商品码" FontSize="22" VerticalAlignment="Center"/>
+                            <TextBox x:Name="goods_code" Height="48" Width="260" Margin="5,0,0,0"  TextWrapping="Wrap" FontSize="22"
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                             />
+                        </StackPanel>
+                        <StackPanel Name="operating_time" Visibility="Hidden" HorizontalAlignment="Left"  Orientation="Horizontal" Margin="400,0,0,0" >
+                            <DatePicker Style="{StaticResource LDatePickerStyle}" Height="50" Width="240" Name="startTime"  
+                                        Language="zh-CN" Controls:TextBoxHelper.Watermark="选择起始时间"/>
+                            <Label Content="至" MinHeight="48" FontSize="22" Margin="10,20"  HorizontalAlignment="Center"></Label>
+                            <DatePicker Style="{StaticResource LDatePickerStyle}" Height="50" Width="240" Name="endTime"
+                                        Language="zh-CN" Controls:TextBoxHelper.Watermark="选择结束时间"/>
+                        </StackPanel>
                         <Button Grid.Row="1"  Style="{StaticResource CommonNoButton}" Content="查询" HorizontalAlignment="Right"  Click="queryData" Margin="0,10,10,10"/>
                     </Grid>
                 </Grid>
@@ -100,13 +93,11 @@
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <!--<ColumnDefinition Width="*"/>-->
                         </Grid.ColumnDefinitions>
-                        <!--<Grid Grid.Column="0" x:Name="column1"/>-->
+                        <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
                         <Grid Grid.Column="2" x:Name="column3"/>
                         <Grid Grid.Column="3" x:Name="column4"/>
-                        <Grid Grid.Column="4" x:Name="column5"/>
                     </Grid>
                     <Border Grid.Row="0" Padding="5"  Width="{Binding ElementName=myGrid,Path=ActualWidth}">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -120,42 +111,28 @@
                               Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView AllowsColumnReorder="true">
-                                <!--<GridViewColumn Header="商品编码"  Width="{Binding ElementName=column1,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding goods_code}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>-->
-                                <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column1,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding name}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="货位" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                <GridViewColumn Header="货位" Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding GoodsLocationName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="库存数量" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                <GridViewColumn Header="库存数量" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Count}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <!--<GridViewColumn Header="最早失效期"  Width="{Binding ElementName=column5,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_time,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>-->
-                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                <GridViewColumn Header="操作"   Width="{Binding ElementName=column4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -163,7 +140,6 @@
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
-
                                 </GridViewColumn>
                             </GridView>
                         </ListView.View>
@@ -175,8 +151,9 @@
                 <Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
@@ -186,6 +163,7 @@
                         <Grid Grid.Column="2" x:Name="ycolumn3"/>
                         <Grid Grid.Column="3" x:Name="ycolumn4"/>
                         <Grid Grid.Column="4" x:Name="ycolumn5"/>
+                        <Grid Grid.Column="5" x:Name="ycolumn6"/>
                     </Grid>
 
                     <ListView  VerticalAlignment="Top" Grid.Row="1"  Name="listView1" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -196,35 +174,42 @@
                                 <GridViewColumn Header="商品名称"  Width="{Binding ElementName=ycolumn1,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CommodityName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="商品编码" Width="{Binding ElementName=ycolumn2,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding name}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="单品码" Width="{Binding ElementName=ycolumn2,Path=ActualWidth}">
+                                <GridViewColumn Header="规格" Width="{Binding ElementName=ycolumn3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding code}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Specifications}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="失效期"  Width="{Binding ElementName=ycolumn3,Path=ActualWidth}">
+                                <GridViewColumn Header="有效期"  Width="{Binding ElementName=ycolumn4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding expire_date,StringFormat='{}{0:yyyy年MM月dd日}',ConverterCulture=zh-CN}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ExpirationDate,StringFormat='{}{0:yyyy-MM-dd}',ConverterCulture=zh-CN}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="领用属性"  Width="{Binding ElementName=ycolumn4,Path=ActualWidth}">
+                                <GridViewColumn Header="厂商"  Width="{Binding ElementName=ycolumn5,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_type,Converter={StaticResource RequisitionAttributeConverter}}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="货位"  Width="{Binding ElementName=ycolumn5,Path=ActualWidth}">
+                                <GridViewColumn Header="货位"  Width="{Binding ElementName=ycolumn6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding position}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding GoodsLocationName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
@@ -243,7 +228,7 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="zcolumn1"/>
                         <Grid Grid.Column="1" x:Name="zcolumn2"/>
