@@ -510,7 +510,7 @@ namespace CFLMedCab
                 return;
             }
 
-            //处于登录页，不用处理：当货柜门打开的时候，不能强制退出登陆
+            //处于登录页，不用处理：当货柜门打开的时候，不能强制退出登录
             if (subViewType == SubViewType.Login || subViewType == SubViewType.DoorOpen)
                 return;
 
@@ -565,7 +565,7 @@ namespace CFLMedCab
 
             LoginBkView.Visibility = Visibility.Visible;
 
-            //回到登陆页
+            //回到登录页
             SetSubViewInfo(null, SubViewType.Login);
 
             //用adminToken取代旧用户的accessToken，
@@ -585,7 +585,7 @@ namespace CFLMedCab
 #endif
         }
 
-        //登陆，进入首页
+        //登录，进入首页
         private void onEnterHomePage(User user)
         {
             LoginBkView.Visibility = Visibility.Hidden;

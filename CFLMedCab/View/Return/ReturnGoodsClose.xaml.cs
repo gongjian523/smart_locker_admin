@@ -177,7 +177,7 @@ namespace CFLMedCab.View.Return
         /// <summary>
         /// 结束操作，包括主动提交和长时间未操作界面被动提交
         /// </summary>
-        /// <param name="bExit">退出登陆还是回到首页</param>
+        /// <param name="bExit">退出登录还是回到首页</param>
         /// <param name="bAutoSubmit">是否是主动提交</param>
         private void EndOperation(bool bExit, bool bAutoSubmit = true)
         {

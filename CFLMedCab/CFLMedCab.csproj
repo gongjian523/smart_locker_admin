@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TESTENV</DefineConstants>
+    <DefineConstants>DEBUG</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -290,9 +290,6 @@
     <Compile Include="DAL\GoodsDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
     <Compile Include="Infrastructure\DeviceHelper\SpeakerHelper.cs" />
-    <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Infrastructure\DeviceHelper\VeinUtils.cs" />
     <Compile Include="Http\Constant\HttpConstant.cs" />
     <Compile Include="Http\Helper\HttpHelper.cs" />
