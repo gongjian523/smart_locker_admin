@@ -62,8 +62,6 @@ namespace CFLMedCab
 
         private System.Timers.Timer processRingTimer;
 
-        //private DispatcherTimer InventoryTimer;
-
 #if TESTENV
         private System.Timers.Timer testTimer;
         private FetchParam testFetchPara = new FetchParam();
@@ -76,9 +74,6 @@ namespace CFLMedCab
         private VeinUtils vein;
 #endif
 #endif
-
-        //[Obsolete]
-        //private InventoryBll inventoryBll = new InventoryBll();
 
 #if DUALCAB
         private int cabClosedNum;
@@ -142,14 +137,7 @@ namespace CFLMedCab
             //this.Deactivated += MainWindow_Deactivated;
             //this.StateChanged += MainWindow_StateChanged;
 
-            MockData();
-
             DataContext = this;
-
-            //InventoryTimer = new DispatcherTimer();
-            //InventoryTimer.Tick += new EventHandler(onInventoryTimer);//起个Timer, 每分钟检查是否有扫描计划
-            //InventoryTimer.Interval = new TimeSpan(0, 0, 1, 0, 0);
-            //InventoryTimer.Start();
 
             processRingTimer = new System.Timers.Timer(1000*60*1);
             processRingTimer.AutoReset = false;
@@ -194,7 +182,6 @@ namespace CFLMedCab
                         //Console.ReadKey();
                         if (RegisterVein())
                         {
-                            //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
                             LogUtils.Debug("detectFinger in initial...");
                             ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
                         }
@@ -218,30 +205,6 @@ namespace CFLMedCab
         private void MainWindow_Deactivated(object sender, EventArgs e)
         {
             this.Topmost = true;
-        }
-
-		[Obsolete]
-        private void onInventoryTimer(object sender, EventArgs e)
-        {
-            //List <InventoryPlanLDB> listPan = inventoryBll.GetInventoryPlan().ToList().Where(item => item.status == 0).ToList();
-
-            //foreach(var item in listPan)
-            //{
-            //    DateTime date1 = DateTime.Now;
-            //    DateTime date2 = new DateTime(date1.Year, date1.Month, date1.Day, int.Parse(item.inventorytime_str.Substring(0,2)), int.Parse(item.inventorytime_str.Substring(3,2)), 0);
-
-            //    TimeSpan timeSpan = date2 - date1;
-
-            //    if (timeSpan.TotalMinutes < 1 && timeSpan.TotalMinutes > -1 )
-            //    {
-            //        bool isGetSuccess;
-            //        RfidHelper.GetEpcDataJson(out isGetSuccess);
-
-            //        LogUtils.Debug("onInventoryTimer:" + timeSpan.TotalMinutes);
-            //        }
-                
-            //}
-            return;
         }
 
         //登录提示框消失后
@@ -432,9 +395,6 @@ namespace CFLMedCab
                     loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
 
                     onShowPopFrame(loginInfo);
-                    //PopFrame.Visibility = Visibility.Visible;
-                    //MaskView.Visibility = Visibility.Visible;
-                    //PopFrame.Navigate(loginInfo);
                 }));
             }
             else
@@ -445,11 +405,6 @@ namespace CFLMedCab
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     onEnterHomePage(user);
-
-                    //LoginBkView.Visibility = Visibility.Hidden;
-                    //ApplicationState.SetUserInfo(user);
-                    //SetNavBtnVisiblity(user.Role);
-                    //tbNameText.Text = user.name;
                 }));
             }
             bUsing = false;
@@ -625,8 +580,6 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.ChekVein();
 #else
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-            //Task.Factory.StartNew(vein.DetectFinger);
             ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
 #endif
 #endif
@@ -925,9 +878,6 @@ namespace CFLMedCab
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             onShowPopFrame(openCabinet);
-            //MaskView.Visibility = Visibility.Visible;
-            //PopFrame.Visibility = Visibility.Visible;
-            //PopFrame.Navigate(openCabinet);
 
 #if TESTENV
             testTimer = new System.Timers.Timer(10000);
@@ -1178,9 +1128,6 @@ namespace CFLMedCab
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             onShowPopFrame(openCabinet);
-            //MaskView.Visibility = Visibility.Visible;
-            //PopFrame.Visibility = Visibility.Visible;
-            //PopFrame.Navigate(openCabinet);
 
             SpeakerHelper.Sperker("柜门已开，请您按照要求上架，上架完毕请关闭柜门");
 
@@ -1357,9 +1304,6 @@ namespace CFLMedCab
             OpenCabinet openCabinet = new OpenCabinet();
             openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
             onShowPopFrame(openCabinet);
-            //MaskView.Visibility = Visibility.Visible;
-            //PopFrame.Visibility = Visibility.Visible;
-            //PopFrame.Navigate(openCabinet);
 
             SpeakerHelper.Sperker("柜门已开，请您按照要求拣货，拣货完毕请关闭柜门");
 
@@ -1706,38 +1650,6 @@ namespace CFLMedCab
             SetSubViewInfo(null, SubViewType.Others);
         }
 
-
-        /// <summary>
-        /// 进入添加单品码弹出框
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        [Obsolete]
-        private void onEnterPopAddProduct(object sender, RoutedEventArgs e)
-        {
-            AddProduct addProduct = new AddProduct();
-            addProduct.HidePopAddProductEvent += new AddProduct.HidePopAddProductHandler (onHidePopAddProduct);
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                onShowPopFrame(addProduct);
-                //PopFrame.Visibility = Visibility.Visible;
-                //MaskView.Visibility = Visibility.Visible;
-                //PopFrame.Navigate(addProduct);
-            }));
-        }
-
-        /// <summary>
-        /// 关闭添加单品码弹出框
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        [Obsolete]
-        private void onHidePopAddProduct(object sender, RoutedEventArgs e)
-        {
-            ClosePop();
-        }
-
         /// <summary>
         /// 弹出或者关闭库存盘点正在进行中的页面
         /// </summary>
@@ -1751,9 +1663,6 @@ namespace CFLMedCab
                 {
                     InventoryOngoing inventoryOngoing = new InventoryOngoing();
                     onShowPopFrame(inventoryOngoing);
-                    //PopFrame.Visibility = Visibility.Visible;
-                    //MaskView.Visibility = Visibility.Visible;
-                    //PopFrame.Navigate(inventoryOngoing);
                 }));
             }
             else
@@ -1849,9 +1758,6 @@ namespace CFLMedCab
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 onShowPopFrame(stockDetailed);
-                //PopFrame.Visibility = Visibility.Visible;
-                //MaskView.Visibility = Visibility.Visible;
-                //PopFrame.Navigate(stockDetailed);
             }));
         }
 
@@ -1936,9 +1842,6 @@ namespace CFLMedCab
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     onShowPopFrame(closeCabinet);
-                    //PopFrame.Visibility = Visibility.Visible;
-                    //MaskView.Visibility = Visibility.Visible;
-                    //PopFrame.Navigate(closeCabinet);
                 }));
                 SetSubViewInfo(null, SubViewType.Login);
             }
@@ -1954,22 +1857,6 @@ namespace CFLMedCab
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 onReturnToLogin();
-//                PopFrame.Visibility = Visibility.Hidden;
-//                MaskView.Visibility = Visibility.Hidden;
-//                NaviView.Visibility = Visibility.Visible;
-//                HomePageView.Visibility = Visibility.Visible;
-//                btnBackHP.Visibility = Visibility.Hidden;
-
-//                LoginBkView.Visibility = Visibility.Visible;
-//                //回到登陆页
-//                SetSubViewInfo(null, SubViewType.Login);
-
-//#if VEINSERIAL
-//                vein.ChekVein();
-//#else
-//                //Task.Factory.StartNew(vein.DetectFinger);
-//                ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-//#endif
 			}));
         }
 
@@ -1994,9 +1881,6 @@ namespace CFLMedCab
             {
                 InventoryOngoing inventoryOngoing = new InventoryOngoing();
                 onShowPopFrame(inventoryOngoing);
-                //PopFrame.Visibility = Visibility.Visible;
-                //MaskView.Visibility = Visibility.Visible;
-                //PopFrame.Navigate(inventoryOngoing);
             }));
         }
 
@@ -2027,23 +1911,6 @@ namespace CFLMedCab
         private void onExit(object sender, RoutedEventArgs e)
         {
             onReturnToLogin();
-//            //PopFrame.Visibility = Visibility.Hidden;
-//            //MaskView.Visibility = Visibility.Hidden;
-
-//            NaviView.Visibility = Visibility.Visible;
-//            HomePageView.Visibility = Visibility.Visible;
-//            btnBackHP.Visibility = Visibility.Hidden;
-
-//            LoginBkView.Visibility = Visibility.Visible;
-//            //回到登陆页
-//            SetSubViewInfo(null, SubViewType.Login);
-
-//#if VEINSERIAL
-//            vein.ChekVein();
-//#else
-//            ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
-//            //Task.Factory.StartNew(vein.DetectFinger);
-//#endif
         }
 
         /// <summary>
@@ -2062,23 +1929,6 @@ namespace CFLMedCab
             SetSubViewInfo(null,SubViewType.Home);
         }
 
-#region test
-        private void MockData()
-        {
-            //test.InitGoodsInfo();
-            //test.InitUsersInfo();
-            //test.InitReplenishOrder();
-            //test.InitPickingOrder();
-            //test.InitSurgerOrder();
-
-#if TESTENV
-            TestGoods testGoods = new TestGoods();
-            testGoods.GetCurrentRFid();
-#endif
-
-        }
-#endregion
-
         private void MetroWindow_Closed(object sender, EventArgs e)
         {
            Taskbar.HideTask(true);
@@ -2094,7 +1944,7 @@ namespace CFLMedCab
             e.Cancel = true;
         }
 
-#region ProcessRing
+        #region ProcessRing
         /// <summary>
         /// LoadingDataEvent的处理函数，显示或者隐藏精度环
         /// </summary>
