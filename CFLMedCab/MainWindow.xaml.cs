@@ -1909,7 +1909,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 关门事件
+        /// 弹出退出登录提示框
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1924,6 +1924,8 @@ namespace CFLMedCab
                     HomePageView.Visibility = Visibility.Visible;
                     btnBackHP.Visibility = Visibility.Hidden;
                 }));
+                
+                SetSubViewInfo(null, SubViewType.Home);
             }
             //弹出退出登录提示框
             else
@@ -1938,6 +1940,7 @@ namespace CFLMedCab
                     //MaskView.Visibility = Visibility.Visible;
                     //PopFrame.Navigate(closeCabinet);
                 }));
+                SetSubViewInfo(null, SubViewType.Login);
             }
         }
 
