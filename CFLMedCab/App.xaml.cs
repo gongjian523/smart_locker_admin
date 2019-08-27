@@ -3,6 +3,7 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.BootUpHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -76,6 +77,25 @@ namespace CFLMedCab
 			ApplicationState.SetSRfidCOM(device.SelectSingleNode("srfid_com").InnerText); //"COM4"
 
 			ApplicationState.SetMVeinCOM(device.SelectSingleNode("mvein_com").InnerText); //"COM9"
+
+            XmlNode goodsLocaiton = device.SelectSingleNode("goods_loction");//指向货柜节点
+
+            List<Locations> list = new List<Locations>();
+            if(goodsLocaiton != null)
+            {
+                XmlNodeList locationNodeList = goodsLocaiton.ChildNodes;//获取货柜节点下的所有location子节点
+                foreach (XmlNode node in locationNodeList)
+                {
+                    list.Add(new Locations
+                    {
+                        Code = node.SelectSingleNode("location_name").InnerText,
+                        Id = node.SelectSingleNode("location_id").InnerText,
+                        LockerCom = node.SelectSingleNode("locker_com").InnerText,
+                        RFCom = node.SelectSingleNode("rfid_com").InnerText
+                    });
+                }
+            }
+            ApplicationState.SetLocations(list);
 
             LogUtils.Debug("App config initial...");
 		}

@@ -3,12 +3,28 @@
   <!-- 设备综合信息 -->
   <device>
     <!-- 具体设备信息 -->
-    <equip_name>E00000023</equip_name>
-    <equip_id>AQACQqweBhEBAAAAHqbqc0bEuRVw-gUA</equip_id>
+    <equip_name>E00000033</equip_name>
+    <equip_id>AQACQqweDg8BAAAABhFW0lBfuxXAxwgA</equip_id>
 
     <!-- 设备的库房信息 -->
-    <house_name>SR00000018</house_name>
-    <house_id>AQACQqweBhEBAAAAGNMAWxfEuRVq-gUA</house_id>
+    <house_name>SR00000024</house_name>
+    <house_id>AQACQqweDg8BAAAAdghCVk1fuxW_xwgA</house_id>
+
+    <!-- 货柜信息 -->
+    <goods_loction>
+      <location>
+        <location_name>L00000036</location_name>
+        <location_id>AQACQqweBhEBAAAA8zE1DlDEuRVx</location_id>
+        <locker_com>COM2</locker_com>
+        <rfid_com>COM1</rfid_com>
+      </location>
+      <location>
+        <location_name>L00000038</location_name>
+        <location_id>AQACQqweDg8BAAAAeDhOhHvEuRXdyQcA</location_id>
+        <locker_com>COM5</locker_com>
+        <rfid_com>COM4</rfid_com>
+      </location>
+    </goods_loction>
 
     <!-- 主柜货位信息 -->
     <mcab_name>L00000036</mcab_name>

@@ -75,6 +75,27 @@ namespace CFLMedCab.Http.Bll
         /// <summary>
         /// 通用业务，通过id查询名称,如果出错，返回出错信息
         /// </summary>
+        public BaseData<K> GetNameById<K>(string id, out bool isSuccess1) where K : BaseModel
+        {
+            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+            {
+                @in =
+                {
+                field = "id",
+                in_list =  { HttpUtility.UrlEncode(id) }
+                }
+            });
+
+            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+
+            isSuccess1 = isSuccess;
+
+            return baseData;
+        }
+
+        /// <summary>
+        /// 通用业务，通过id查询名称,如果出错，返回出错信息
+        /// </summary>
         public string GetStoreHouseCodeById<K> (string id) where K : StoreHouse
         {
             BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam

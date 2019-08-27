@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;TESTENV</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -322,6 +322,7 @@
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />
     <Compile Include="Model\Enum\SubViewEnum.cs" />
+    <Compile Include="Model\Locations.cs" />
     <Compile Include="Model\LoginStatus.cs" />
     <Compile Include="Model\ReplenishSubOrder.cs" />
     <Compile Include="Model\Enum\CollarType.cs" />
@@ -700,6 +701,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MyProject.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <Resource Include="Resources\Images\btn-ReturnAll.png" />
     <Resource Include="Resources\Images\btn-StockAdjust.png" />

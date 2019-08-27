@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Model;
+using CFLMedCab.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,6 +18,7 @@ namespace CFLMedCab.Infrastructure
         HouseName, //库房名字
         EquipId,   //设备id
         EquipName, //设备名字
+        Location,  //货柜
         MCabName,  //主柜编码(名字)
         MCabId,    //主柜id
         SCabName,  //副柜编码(名字)
@@ -525,9 +527,17 @@ namespace CFLMedCab.Infrastructure
             else
                 return GetValue<string>((int)ApplicationKey.MCabId);
         }
-#endregion
 
+        public static void SetLocations(List<Locations> locations)
+        {
+            SetValue((int)ApplicationKey.Location, locations);
+        }
 
+        public static List<Locations> GetLocations()
+        {
+            return GetValue<List<Locations>>((int)ApplicationKey.Location);
+        }
+        #endregion
 
         public static string GetCabNameByCode(string code, Hashtable ht)
         {

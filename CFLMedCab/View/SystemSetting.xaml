@@ -12,71 +12,159 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
-            <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="1">
+            <Border x:Name="equipView" Style="{StaticResource CenterRadiusBorder}" >
                 <Grid >
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
-                    <Label Content="请输入库房编号"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
-                    <Label x:Name="lbHouseName" Content="请输入设备编号"  Grid.Column="1"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
-                    <TextBox x:Name="tbHouseName" Grid.Row="1"  Height="48" Width="500" TextWrapping="Wrap" FontSize="20" 
-                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  />
-                    <TextBox x:Name="tbEquipName" Grid.Row="1"  Grid.Column="1" Height="48"  Width="500" TextWrapping="Wrap" FontSize="20"
-                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
-                    <Label Grid.Row="2" Content="请输入主货柜编号"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
-                    <Label x:Name="lbSCabName" Grid.Row="2" Content="请输入副货柜编号"  Grid.Column="1"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}"/>
-                    <TextBox x:Name="tbMCabName" Grid.Row="3"  Height="48" Width="500" TextWrapping="Wrap" FontSize="20" 
-                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left"  />
-                    <TextBox x:Name="tbSCabName" Grid.Row="3"  Grid.Column="1" Height="48"  Width="500" TextWrapping="Wrap" FontSize="20"
-                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" />
+                    <Label Content="设备信息"  Style="{StaticResource lblTitle2}"/>
+                    <Button Content="编辑"  Grid.Column="3" HorizontalAlignment="Right" Style="{StaticResource CommonYesButton}" Click="onEditEquip"/>
+
+                    <Label Content="库房名称"   Grid.Row="1" Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
+                    <Label Content="库房编号"   Grid.Row="1" Grid.Column="1" Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
+                    <Label Content="设备编号" Grid.Row="1" Grid.Column="2"  Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
+                    <Label Content="指静脉设备串口" Grid.Row="1"  Grid.Column="3"    Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
+
+                    <Label x:Name="lbHouseName" Grid.Row="2" Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label x:Name="lbHouseCode"    Grid.Row="2" Grid.Column="1" Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label x:Name="lbEquipCode"  Grid.Row="2"  Grid.Column="2"  Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label x:Name="lbVeinCom"  Grid.Row="2"  Grid.Column="3"   Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
                 </Grid>
             </Border >
+            <Border x:Name="eidtEquipView" Style="{StaticResource CenterRadiusBorder}"   Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" >
+                        <Label Content="库房编号" Style="{StaticResource lblTitle3}" FontSize="25"/>
+                        <TextBox x:Name="tbHouseCode" Width="200" FontSize="25"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <Label Content="设备编号" Style="{StaticResource lblTitle3}" FontSize="25"/>
+                        <TextBox x:Name="tbEquipCode" Width="200" FontSize="25"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                        <Label Content="指静脉串口" Style="{StaticResource lblTitle3}" FontSize="25"/>
+                        <ComboBox x:Name="cbVein"   HorizontalAlignment="Left" Margin="5,5,0,0" Width="120" Loaded="comboBoxSizeType_Loaded"  FontSize="22"  />
+                    </StackPanel>
+                    <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="保存"  HorizontalAlignment="Right" Margin="0,15,50,0"  Style="{StaticResource CommonYesButton}" Click="onSaveEditEquip"/>
+                        <Button Content="返回"  Grid.Column="1" HorizontalAlignment="Left" Margin="50,15,0,0" Style="{StaticResource CommonYesButton}" Click="onCancelEditEquip"/>
+                    </Grid>
+                </Grid>
+            </Border>
+            <Border x:Name="eidtLocationView" Style="{StaticResource CenterRadiusBorder}"  Grid.Row="1" Visibility="Collapsed">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Horizontal" >
+                        <Label Content="货柜编号" Style="{StaticResource lblTitle3}" FontSize="25"/>
+                        <TextBox x:Name="tbLocationCode" FontSize="25" Width="200"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <Label Content="货柜锁串口" Style="{StaticResource lblTitle3}" FontSize="25"/>
+                        <ComboBox x:Name="cbLocker"   HorizontalAlignment="Left" Margin="5,5,0,0" Width="120" Loaded="comboBoxSizeType_Loaded"  FontSize="22"  />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Grid.Column="2">
+                        <Label Content="Rf扫描仪串口" Style="{StaticResource lblTitle3}"/>
+                        <ComboBox x:Name="cbRFid"   HorizontalAlignment="Left" Margin="5,5,0,0"  Width="120" Loaded="comboBoxSizeType_Loaded"  FontSize="22"  />
+                    </StackPanel>
+                    <Grid Grid.Row="1" Grid.ColumnSpan="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Button Content="保存"  HorizontalAlignment="Right" Margin="0,15,50,0"  Style="{StaticResource CommonYesButton}" Click="onSaveEditLocation"/>
+                        <Button Content="返回"  Grid.Column="1" HorizontalAlignment="Left" Margin="50,15,0,0" Style="{StaticResource CommonYesButton}" Click="onCancelEditLocation"/>
+                    </Grid>
+                </Grid>
+            </Border>
             <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="2" >
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="5*"/>
-                        <ColumnDefinition Width="3*"/>
-                        <ColumnDefinition Width="5*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Content="请为设备选择串口"   Margin="0,0,20,0"  Style="{StaticResource lblTitle1}" Grid.ColumnSpan="2"/>
-
-                    <TextBlock Text="主柜RFid扫描仪" Grid.Row="1" FontSize="22" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <ComboBox x:Name="MrfidCB"  Grid.Row="1"  Grid.Column="1" Height="45" Width="260"  HorizontalAlignment="Left" Margin="5,5,0,0" 
-                              SelectionChanged="onItemChanged"  Loaded="comboBoxSizeType_Loaded"  FontSize="22"  >
-                    </ComboBox>
-                    <TextBlock x:Name="tbSrfid"  Text="副柜RFid扫描仪"  Grid.Row="1"  Grid.Column="2" FontSize="22" VerticalAlignment="Center" Margin="0,5,0,0"/>
-                    <ComboBox x:Name="SrfidCB" Grid.Row="1"   Grid.Column="3"  Height="45" Width="260"  HorizontalAlignment="Left" Margin="5,5,0,0" 
-                              SelectionChanged="onItemChanged" Loaded="comboBoxSizeType_Loaded"  FontSize="22" />
-                    <TextBlock Text="主柜门锁" Grid.Row="2"  FontSize="22" VerticalAlignment="Center" Margin="0,10,0,0"/>
-                    <ComboBox x:Name="MLockerCB" Grid.Row="2"  Grid.Column="1" Height="50" Width="260"  HorizontalAlignment="Left" Margin="5,10,0,0" 
-                              SelectionChanged="onItemChanged" Loaded="comboBoxSizeType_Loaded"  FontSize="22"/>
-                    <TextBlock x:Name="tbSLocker" Text="副柜门锁" Grid.Row="2"  Grid.Column="2"  FontSize="22" VerticalAlignment="Center" Margin="0,10,0,0"/>
-                    <ComboBox x:Name="SLockerCB" Grid.Row="2"  Grid.Column="3"  Height="50" Width="260"  HorizontalAlignment="Left" Margin="5,10,0,0" 
-                              SelectionChanged="onItemChanged" Loaded="comboBoxSizeType_Loaded"  FontSize="22"/>
-                    <TextBlock Text="主柜指静脉扫描仪" Grid.Row="3" FontSize="22" VerticalAlignment="Center" Margin="0,10,0,0"/>
-                    <ComboBox x:Name="MVeinCB" Grid.Row="3"  Grid.Column="1"  Height="50" Width="260"  HorizontalAlignment="Left" Margin="5,10,0,0" 
-                              SelectionChanged="onItemChanged" Loaded="comboBoxSizeType_Loaded"  FontSize="22" />
+                    <Grid>
+                        <Grid Grid.Column="0" x:Name="column1"/>
+                        <Grid Grid.Column="1" x:Name="column2"/>
+                        <Grid Grid.Column="2" x:Name="column3"/>
+                        <Grid Grid.Column="3" x:Name="column4"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                    </Grid>
+                    <Label Content="货柜信息"  Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
+                    <Button x:Name="btnAddLoc" Content="添加货柜"  Grid.Column="4" HorizontalAlignment="Right" Style="{StaticResource CommonYesButton}" Click="onAddGoodsLoc"/>
+                    <ListView  Grid.Row="1" VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" Margin="0,20,0,0" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="货柜编号" Width="{Binding ElementName=column1,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Code}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="货柜锁串口" Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding LockerCom}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="RF扫描仪串口" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding RFCom}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="操作" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <Button Style="{StaticResource ListButton}" x:Name="BtnEidt" Content="编辑"  CommandParameter="{Binding Path=Code}" Click="onAddGoodsLoc"/>
+                                                <TextBlock Width="100"/>
+                                                <Button Style="{StaticResource ListButton}" x:Name="BtnConfirm" Content="删除"  CommandParameter="{Binding Path=Code}" Click="onDelGoodsLoc" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Grid>
-            </Border>
-            <Border  Style="{StaticResource BottomRadiusBorder}" Grid.Row="4">
-                <Button Style="{StaticResource CommonYesButton}" Content="保存"  Width="220" Click="onSave"/>
             </Border>
         </Grid>
     </Border>
