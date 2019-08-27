@@ -167,7 +167,7 @@ namespace CFLMedCab.Http.Bll
 		}
 
 		/// <summary>
-		/// 【手动盘点】 更新【盘点单管理理】的盘点状态为 ‘已确认’
+		/// 【手动盘点】 更新【盘点单管理理】的盘点状态为 ‘已完成’
 		/// InventoryOrder关键字段：
 		/// id 主键
 		/// Status 盘点状态
@@ -192,8 +192,12 @@ namespace CFLMedCab.Http.Bll
 				Status = InventoryOrderStatus.已完成.ToString(),
 				version = order.version
 			});
+            if (inventoryOrder.code != 0)
+            {
+                LogUtils.Error("PutInventoryOrders " + inventoryOrder.message);
+            }
 
-			return inventoryOrder;
+            return inventoryOrder;
 		}
 
 		/// <summary>
@@ -529,14 +533,9 @@ namespace CFLMedCab.Http.Bll
                         var temp = inventoryOrders.body.Where(it => it.id.Equals(id)).First();
                         //temp.Status = InventoryOrderStatus.已完成.ToString();
 
-                        var tempResult = UpdateInventoryOrderStatus(temp);
+                        //执行更新操作，异常状态记录日志，详情见方法体内部
+                        UpdateInventoryOrderStatus(temp);
 
-                        //执行更新操作，暂未对异常中断进行处理
-                        HttpHelper.GetInstance().ResultCheck(tempResult, out bool isSuccessw);
-                        if (!isSuccessw)
-                        {
-                            LogUtils.Error("PutInventoryOrders " + tempResult.message);
-                        }
                     });
 
 

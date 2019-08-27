@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -38,6 +39,56 @@ namespace CFLMedCab.Http.Model
         /// 单据状态（待上架，已完成，异常，进行中）
         /// </summary>
         public string Status;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int auto_id { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string created_at { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string created_by { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int is_deleted { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string owner { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Permission permission { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string record_type { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string system_mod_stamp { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string updated_at { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string updated_by { get; set; }
 
     }
     /// <summary>
