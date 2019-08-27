@@ -5,6 +5,7 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
+using CFLMedCab.Infrastructure.ToolHelper;
 using Quartz;
 using Quartz.Impl.Matchers;
 using System.Collections.Generic;
@@ -188,7 +189,7 @@ namespace CFLMedCab.Http.Bll
 			var inventoryOrder = HttpHelper.GetInstance().Put<InventoryOrder>(new InventoryOrder()
 			{
 				id = order.id,
-				Status = "已完成",
+				Status = InventoryOrderStatus.已完成.ToString(),
 				version = order.version
 			});
 
@@ -300,7 +301,7 @@ namespace CFLMedCab.Http.Bll
 			});
 		}
 		/// <summary>
-		/// 
+		/// 根据设备名称或Id查询设备信息
 		/// </summary>
 		/// <param name="equipmentNameOrId"></param>
 		/// <returns></returns> 
@@ -346,8 +347,8 @@ namespace CFLMedCab.Http.Bll
 			return equipment;
 		}
 		/// <summary>
-		/// ⾃自动盘点：
-		/// • 通过当前【设备编码/id】从表格 【设备管理】（Equipment）中查询获取设备的’⾃自动盘点计划’（InventoryPlanId）。
+		/// 自动盘点：
+		/// • 通过当前【设备编码/id】从表格 【设备管理】（Equipment）中查询获取设备的’自动盘点计划’（InventoryPlanId）。
 		/// • 通过当前【id】（InventoryPlan.id=Equipment.InventoryPlanId）从表格【盘点计划管理理】（InventoryPlan）中查询获取相关盘点信息。
 		/// </summary>
 		/// <param name="equipmentNameOrId"></param>
@@ -442,6 +443,7 @@ namespace CFLMedCab.Http.Bll
 				string now = GetDateTimeNow();
 				List<InventoryOrder> inventoryOrderList = new List<InventoryOrder>();
 
+                //分柜创建盘点任务
 				commodityCodes.Select(it => it.GoodsLocationId).Distinct().ToList().ForEach(goodsLocationId =>
 				{
 
@@ -449,7 +451,7 @@ namespace CFLMedCab.Http.Bll
 					{
 						ConfirmDate = now,
 						InventoryTaskId = inventoryTasks.body[0].id,
-						Status = DocumentStatus.已完成.ToString(),
+						Status = InventoryOrderStatus.待盘点.ToString(),//创建盘点单状态为[待盘点]
 						//TODO: 需要当前设备id，货位id和库房id
 						GoodsLocationId = goodsLocationId,
 						EquipmentId = ApplicationState.GetEquipId(),
@@ -507,13 +509,38 @@ namespace CFLMedCab.Http.Bll
 							CommodityCodeId = it.id
 						});
 					});
-
+                    //创建盘名单明细列表
 					return hh.PostByAdminToken(new PostParam<InventoryDetail>()
 					{
 						objects = inventoryDetailList
 					});
 
+                    //
+
 				}, inventoryOrders);
+
+                //更新盘点单状态
+                if (inventoryDetailRet != null)
+                {
+                    var orderIds = inventoryDetailRet.body.Select(it => it.InventoryOrderId).Distinct().ToList();
+
+                    orderIds.ForEach(id =>
+                    {
+                        var temp = inventoryOrders.body.Where(it => it.id.Equals(id)).First();
+                        //temp.Status = InventoryOrderStatus.已完成.ToString();
+
+                        var tempResult = UpdateInventoryOrderStatus(temp);
+
+                        //执行更新操作，暂未对异常中断进行处理
+                        HttpHelper.GetInstance().ResultCheck(tempResult, out bool isSuccessw);
+                        if (!isSuccessw)
+                        {
+                            LogUtils.Error("PutInventoryOrders " + tempResult.message);
+                        }
+                    });
+
+
+                }
 			}
 			else
 			{
