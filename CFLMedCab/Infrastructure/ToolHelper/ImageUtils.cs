@@ -12,7 +12,7 @@ using System.Windows.Media.Imaging;
 namespace CFLMedCab.Infrastructure.ToolHelper
 {
     public class ImageUtils
-    {
+    { 
         /// <summary>
         /// 异步方法：联网从服务端获取Json数据
         /// </summary>

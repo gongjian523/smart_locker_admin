@@ -59,7 +59,6 @@ namespace CFLMedCab.View
             lbVeinCom.Content = ApplicationState.GetMVeinCOM();
         }
 
-
         /// <summary>
         /// 点击设备信息中的编辑按钮
         /// </summary>
@@ -94,24 +93,9 @@ namespace CFLMedCab.View
                 ApplicationState.SetHouseId(bdHouse.body.objects[0]);
 
                 ApplicationState.SetMVeinCOM(cbVein.SelectedItem.ToString());
-			
-                //xml文件回写
-                XmlDocument xmlDoc = new XmlDocument();
-                string xmlPath = $"{ApplicationState.GetProjectRootPath()}/MyProject.xml";
-                xmlDoc.Load(xmlPath);
-                XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
-                XmlNode device = root.SelectSingleNode("device");//指向设备节点
 
-                device.SelectSingleNode("equip_name").InnerText = tbEquipCode.Text.ToString();
-                device.SelectSingleNode("equip_id").InnerText = bdEquip.body.objects[0];
-
-                device.SelectSingleNode("house_name").InnerText = tbHouseCode.Text.ToString();
-                device.SelectSingleNode("house_id").InnerText = bdHouse.body.objects[0];
-
-                device.SelectSingleNode("mcab_name").InnerText = cbVein.SelectedItem.ToString();
-
-                //节点修改值保存
-                xmlDoc.Save(xmlPath);
+                UpdateXMLEquip(tbEquipCode.Text.ToString(), bdEquip.body.objects[0], tbHouseCode.Text.ToString(),
+                    bdHouse.body.objects[0], cbVein.SelectedItem.ToString());
 
                 UpdateEquipment();
 
@@ -296,6 +280,27 @@ namespace CFLMedCab.View
             ApplicationState.SetLocations(locationList);
 
             listView.Items.Refresh();
+        }
+
+        private void UpdateXMLEquip(string equipName, string equipId, string houseName, string houseId, string veinCom)
+        {
+            //xml文件回写
+            XmlDocument xmlDoc = new XmlDocument();
+            string xmlPath = $"{ApplicationState.GetProjectRootPath()}/MyProject.xml";
+            xmlDoc.Load(xmlPath);
+            XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
+            XmlNode device = root.SelectSingleNode("device");//指向设备节点
+
+            device.SelectSingleNode("equip_name").InnerText = equipName;
+            device.SelectSingleNode("equip_id").InnerText = equipId;
+
+            device.SelectSingleNode("house_name").InnerText = houseName;
+            device.SelectSingleNode("house_id").InnerText = houseId;
+
+            device.SelectSingleNode("mvein_com").InnerText = veinCom;
+
+            //节点修改值保存
+            xmlDoc.Save(xmlPath);
         }
 
         private void DeleteXMLLoc(Locations locations)

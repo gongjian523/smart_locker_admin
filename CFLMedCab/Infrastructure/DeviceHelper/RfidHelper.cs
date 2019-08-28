@@ -52,13 +52,27 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			return clientConn;
 		}
 
-		/// <summary>
-		/// 消息发送和数据处理
-		/// </summary>
-		/// <param name="clientConn"></param>
-		/// <param name="com"></param>
-		/// <returns></returns>
-		private static HashSet<string> DealComData(GClient clientConn, string com, out bool isGetSuccess)
+
+        /// <summary>
+        /// 创建串口连接
+        /// </summary>
+        /// <param name="com">串口</param>
+        /// <param name="baudRate">波特率</param>
+        /// <returns></returns>
+        private static GClient CreateClientConn(string com, string baudRate)
+        {
+            GClient clientConn = new GClient();
+            bool isConnect = clientConn.OpenSerial(com + ":" + baudRate, 3000, out eConnectionAttemptEventStatusType status);
+            return isConnect ? clientConn : null;
+        }
+
+        /// <summary>
+        /// 消息发送和数据处理
+        /// </summary>
+        /// <param name="clientConn"></param>
+        /// <param name="com"></param>
+        /// <returns></returns>
+        private static HashSet<string> DealComData(GClient clientConn, string com, out bool isGetSuccess)
 		{
 			/// mutex互斥锁，用于人为阻塞当前线程
 			ManualResetEvent manualResetEvent = new ManualResetEvent(false);
@@ -308,12 +322,81 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return currentEpcDataHs;
 		}
 
-		/// <summary>
-		/// 新版epc数据获取，规则rf码扫描到的字段的后八位，前加RF。例：2019072800000001 =》 RF00000001
-		/// </summary>
-		/// <param name="isGetSuccess"></param>
-		/// <returns></returns>
-		public static Hashtable GetEpcDataNew(out bool isGetSuccess)
+        /// <summary>
+        /// 多柜模式的扫描函数，只扫描特定货柜的商品
+        /// 根据eps json获取eps对象数据
+        /// </summary>
+        /// <param name="isGetSuccess"></param>
+        /// <param name="listCom"></param>
+        /// <returns></returns>
+        public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess, List<string> listCom)
+        {
+            isGetSuccess = true;
+
+            List<GClient> listGClient = new List<GClient>();
+            List<bool> listIsConnect = new List<bool>();
+            List<HashSet<string>> listComHashSet = new List<HashSet<string>>();
+
+            HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
+            string log = "";
+
+            for (int i = 0; i < listCom.Count(); i++)
+            {
+                listComHashSet[i] = new HashSet<string>();
+
+                listGClient[i] = CreateClientConn(listCom[i], "115200");
+
+                if (listGClient[i] != null)
+                {
+                    listComHashSet[i] = DealComData(listGClient[i], listCom[i], out isGetSuccess);
+                }
+                else
+                {
+                    isGetSuccess = false;
+                }
+            }
+
+            WaitHandle.WaitAll(manualEvents.ToArray());
+            manualEvents.Clear();
+
+            for (int i = 0; i < listCom.Count(); i++)
+            {
+                //提取com1的标签epc，并组装
+                foreach (string rfid in listComHashSet[i])
+                {
+                    CommodityEps commodityEps = new CommodityEps
+                    {
+                        CommodityCodeName = $"RF{rfid.Substring(rfid.Length - 8)}",
+                        EquipmentId = ApplicationState.GetEquipId(),
+                        EquipmentName = ApplicationState.GetEquipName(),
+                        StoreHouseId = ApplicationState.GetHouseId(),
+                        StoreHouseName = ApplicationState.GetHouseName(),
+                        GoodsLocationName = ApplicationState.GetCabNameByRFidCom(listCom[i]),
+                        GoodsLocationId = ApplicationState.GetCabIdByRFidCom(listCom[i])
+                    };
+
+                    currentEpcDataHs.Add(commodityEps);
+                    LogUtils.Debug(commodityEps.CommodityCodeName + commodityEps.CommodityName);
+                    log += commodityEps.CommodityCodeName + " ";
+                }
+            }
+
+            Task.Factory.StartNew(a =>
+            {
+                LogUtils.Debug(log);
+            }, log);
+
+            LogUtils.Debug("RFID NUM:" + currentEpcDataHs.Count());
+            return currentEpcDataHs;
+        }
+
+
+        /// <summary>
+        /// 新版epc数据获取，规则rf码扫描到的字段的后八位，前加RF。例：2019072800000001 =》 RF00000001
+        /// </summary>
+        /// <param name="isGetSuccess"></param>
+        /// <returns></returns>
+        public static Hashtable GetEpcDataNew(out bool isGetSuccess)
 		{
 			isGetSuccess = true;
 

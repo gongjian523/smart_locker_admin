@@ -282,9 +282,9 @@ namespace CFLMedCab.Infrastructure
         }
 #endregion
 
-#region user info from mian system
+        #region user info from mian system
         /// <summary>
-        /// 保存当前货柜的商品信息
+        /// 保存所有货柜的打过去商品信息
         /// </summary>
         /// <param name="hs"></param>
         public static void SetGoodsInfo(HashSet<CommodityEps> hs)
@@ -294,14 +294,43 @@ namespace CFLMedCab.Infrastructure
         }
 
         /// <summary>
-        /// 获取当前货柜的商品信息
+        /// 保存某些货柜的当前商品信息
+        /// </summary>
+        /// <param name="hs"></param>
+        public static void SetGoodsInfoInSepcLoc(HashSet<CommodityEps> hs)
+        {
+            var locCodes = hs.Select(item => item.CommodityCodeName).Distinct().ToList();
+
+            HashSet<CommodityEps> all = GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
+            //删除指定货柜的原来的商品
+            all.RemoveWhere(item => locCodes.Contains(item.CommodityCodeName));
+            //增加相应货柜的现在的商品
+            all.UnionWith(hs);
+
+            SetValue((int)ApplicationKey.Goods, all);
+            return;
+        }
+
+        /// <summary>
+        /// 获取所有货柜的商品信息
         /// </summary>
         /// <returns></returns>
         public static HashSet<CommodityEps> GetGoodsInfo()
         {
             return GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
         }
-#endregion
+
+        /// <summary>
+        /// 获取指定货柜的商品
+        /// </summary>
+        /// <returns></returns>
+        public static HashSet<CommodityEps> GetGoodsInfo(List<string> locCodes)
+        {
+            HashSet<CommodityEps> all =  GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
+            return new HashSet<CommodityEps>(all.Where(item => locCodes.Contains(item.CommodityCodeName)));
+        }
+
+        #endregion
 
 #region equipment
         /// <summary>
