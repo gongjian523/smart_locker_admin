@@ -448,6 +448,7 @@ namespace CFLMedCab.Http.Bll
 			{
 				id = pickTask.id,
 				BillStatus = pickTask.BillStatus,
+                FinishDate = pickTask.BillStatus.Equals(PickTaskStatus.已完成.ToString())?GetDateTimeNow() : null,
 				version = pickTask.version
 			});
 

@@ -519,8 +519,6 @@ namespace CFLMedCab.Http.Bll
 						objects = inventoryDetailList
 					});
 
-                    //
-
 				}, inventoryOrders);
 
                 //更新盘点单状态

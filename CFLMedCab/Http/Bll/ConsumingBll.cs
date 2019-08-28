@@ -195,7 +195,7 @@ namespace CFLMedCab.Http.Bll
 
 		}
 		/// <summary>
-		/// 移动端 创建【领⽤用单】，且领⽤用状态为 ‘已完成’。
+		/// 创建【领用单】，且领用状态为 ‘待领用’。
 		/// </summary>
 		/// <param name="order"></param>
 		/// <returns></returns>
@@ -215,7 +215,7 @@ namespace CFLMedCab.Http.Bll
 			});
 		}
 		/// <summary>
-		/// 移动端 通过【领⽤用单编号】 查找更更新【领⽤用单】的领⽤用状态为 ‘已完成’
+		/// 通过【领用单编号】 查找更更新【领用单】的领用状态为 ‘已完成’
 		/// </summary>
 		/// <param name="order"></param>
 		/// <returns></returns>
@@ -230,19 +230,25 @@ namespace CFLMedCab.Http.Bll
 					message = ResultCode.Parameter_Exception.ToString()
 				};
 			}
-			return HttpHelper.GetInstance().Put<ConsumingOrder>(new ConsumingOrder()
-			{
-				id = order.id,//ID
-				Status = order.Status,//状态
-				version = order.version//版本
-			});
+            var consumingOrder = new ConsumingOrder()
+            {
+                id = order.id,//ID
+                Status = order.Status,//状态
+                //当主单完成状态为已完成时，携带完成时间（FinishDate）进行更新
+                FinishDate = order.Status.Equals(ConsumingOrderStatus.已完成.ToString()) ? GetDateTimeNow() : null,
+                version = order.version//版本
+            };
+
+            return HttpHelper.GetInstance().Put<ConsumingOrder>(consumingOrder);
 		}
-		/// <summary>
-		/// 无单领用提交接口
-		/// </summary>
-		/// <param name="baseDataCommodityCode"></param>
-		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrderType type, SourceBill  sourceBill = null)
+        /// <summary>
+        /// 无单领用提交接口
+        /// （2019-08-27 18:08）变更流程为：领用中->创建子表->变更主表状态[异常，已完成]
+        /// 当领用过程中放进商品则主单状态异常，领用物品主单状态正常
+        /// </summary>
+        /// <param name="baseDataCommodityCode"></param>
+        /// <returns></returns>
+        public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrderType type, SourceBill  sourceBill = null)
 		{
 
             var normalList = new List<CommodityCode>();//回退商品列表
@@ -259,8 +265,9 @@ namespace CFLMedCab.Http.Bll
             ConsumingOrder consumingOrder = new ConsumingOrder()
             {
                 FinishDate = GetDateTimeNow(),//完成时间
-                //当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
-                Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(), //
+                ////当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
+                //Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(), //
+                Status = ConsumingOrderStatus.领用中.ToString(),
                 StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
                 Type = type.ToString(),//领用类型
                 SourceBill = type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null // 需要填写医嘱处方SourceBill
@@ -281,7 +288,6 @@ namespace CFLMedCab.Http.Bll
 					message = ResultCode.Result_Exception.ToString()
 				};
 			}
-
             //当正常数量大于0说明向智能柜中存放商品，需要创建商品变更记录
             if (normalList.Count > 0)
             {
@@ -323,31 +329,37 @@ namespace CFLMedCab.Http.Bll
 
 			//校验数据是否正常
 			HttpHelper.GetInstance().ResultCheck(changes, out bool isSuccess2);
-            if(!isSuccess2)
-                LogUtils.Warn("CreateConsumingOrder 2:" + ResultCode.Result_Exception.ToString());     
-
+            if (!isSuccess2)
+            {
+                LogUtils.Warn("CreateConsumingOrder 2:" + ResultCode.Result_Exception.ToString());
+            }
+            ////当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
+            //Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(),
+            order.body[0].Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString();
+            //更新主表状态
+            var orderResult = UpdateConsumingOrderStatus(order.body[0]);
+            //校验数据是否正常，并记录日志
+            HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess3);
+            if (!isSuccess3)
+            {
+                LogUtils.Warn("CreateConsumingOrder 3:" + ResultCode.Result_Exception.ToString());
+            }
             return changes;
 		}
-		/// <summary>
-		/// 有单领用数据提交
-		/// </summary>
-		/// <param name="baseDataCommodityCode"></param>
-		/// <param name="order"></param>
-		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order)
+        /// <summary>
+        /// 有单领用数据提交
+        /// （2019-08-27 18:08）变更提交顺序：
+        /// 1）创建变更记录
+        /// 2）创建主单状态
+        /// 3）变更主单状态【已完成】，完成部分变更【进行中】，商品不在任务单内变更为【异常】
+        /// 注：主单没有传完成时间，需要把字段添加上（FinishDate）
+        /// </summary>
+        /// <param name="baseDataCommodityCode"></param>
+        /// <param name="order"></param>
+        /// <returns></returns>
+        public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order)
 		{
-			//更新领用单状态信息
-			var orderResult = UpdateConsumingOrderStatus(order);
-			//校验数据是否正常
-			HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess);
-			if (!isSuccess)
-			{
-				return new BasePostData<CommodityInventoryChange>()
-				{
-					code = orderResult.code,
-					message = orderResult.message
-				};
-			}
+
 			//领用类来源单据
 			var sourceBill = new SourceBill()
 			{
@@ -357,9 +369,25 @@ namespace CFLMedCab.Http.Bll
 
 			var tempChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(baseDataCommodityCode, sourceBill);
 			//校验数据是否正常
-			HttpHelper.GetInstance().ResultCheck(tempChange, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(tempChange, out bool isSuccess);
+            if (isSuccess)
+            {
+                //更新领用单状态信息
+                var orderResult = UpdateConsumingOrderStatus(order);
+                //校验数据是否正常
+                HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess2);
+                if (!isSuccess2)
+                {
+                    return new BasePostData<CommodityInventoryChange>()
+                    {
+                        code = orderResult.code,
+                        message = orderResult.message
+                    };
+                }
+            }
+           
 
-			return tempChange;
+            return tempChange;
 		}
 		/// <summary>
 		/// 检测并变更手术类【有单领用】领用状态，和商品变动状态明细

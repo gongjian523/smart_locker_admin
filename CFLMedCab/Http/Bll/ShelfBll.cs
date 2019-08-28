@@ -462,6 +462,8 @@ namespace CFLMedCab.Http.Bll
             {
                 id = shelfTask.id,
                 Status = shelfTask.Status,
+                //当任务单状态为已完成时，携带完成时间进行更新
+                FinishDate = shelfTask.Status.Equals(ShelfTaskStatus.已完成.ToString()) ? GetDateTimeNow() : null,
                 version = shelfTask.version
             };
 
