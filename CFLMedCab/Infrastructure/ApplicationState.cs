@@ -61,6 +61,7 @@ namespace CFLMedCab.Infrastructure
         /// 设置主柜门锁的串口
         /// </summary>
         /// <param name="com"></param>
+        [Obsolete]
         public static void SetMLockerCOM(string com)
         {
             SetValue((int)ApplicationKey.COM_MLocker, com);
@@ -71,6 +72,7 @@ namespace CFLMedCab.Infrastructure
         /// 获取主柜门锁的串口
         /// </summary>
         /// <param></param>
+        [Obsolete]
         public static string GetMLockerCOM()
         {
             return GetValue<string>((int)ApplicationKey.COM_MLocker);
@@ -80,6 +82,7 @@ namespace CFLMedCab.Infrastructure
         /// 设置副柜门锁的串口
         /// </summary>
         /// <param name="com"></param>
+        [Obsolete]
         public static void SetSLockerCOM(string com)
         {
             SetValue((int)ApplicationKey.COM_SLocker, com);
@@ -90,26 +93,10 @@ namespace CFLMedCab.Infrastructure
         /// 获取副柜门锁的串口
         /// </summary>
         /// <param></param>
+        [Obsolete]
         public static string GetSLockerCOM()
         {
             return GetValue<string>((int)ApplicationKey.COM_SLocker);
-        }
-
-        /// <summary>
-        /// 通过RFID的串口查询门锁的串口
-        /// </summary>
-        /// <param name="com"></param>
-        /// <returns></returns>
-        public static string GetLockerComByRfidCom(string com)
-        {
-            if (com == GetValue<string>((int)ApplicationKey.COM_MRFid))
-                return GetValue<string>((int)ApplicationKey.COM_MLocker);
-#if DUALCAB
-            else if (com == GetValue<string>((int)ApplicationKey.COM_SRFid))
-                return GetValue<string>((int)ApplicationKey.COM_SLocker);
-#endif
-            else
-                return GetValue<string>((int)ApplicationKey.COM_MLocker);
         }
 
         /// <summary>
@@ -117,16 +104,10 @@ namespace CFLMedCab.Infrastructure
         /// </summary>
         /// <param name="cabName"></param>
         /// <returns></returns>
-        public static string GetLockerComByCabName(string cabName)
+        public static string GetLockerComByLocCode(string locCode)
         {
-            if (cabName == GetValue<string>((int)ApplicationKey.MCabName))
-                return GetValue<string>((int)ApplicationKey.COM_MLocker);
-#if DUALCAB
-            else if (cabName == GetValue<string>((int)ApplicationKey.SCabName))
-                return GetValue<string>((int)ApplicationKey.COM_SLocker);
-#endif
-            else
-                return GetValue<string>((int)ApplicationKey.COM_MLocker);
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Where(item => item.Code == locCode).First().LockerCom;
         }
 
         /// <summary>
@@ -135,22 +116,12 @@ namespace CFLMedCab.Infrastructure
         /// <returns></returns>
         public static List<string> GetAllLockerCom()
         {
-            //return(new List<string> {
-            //    "COM2",
-            //    "COM5"
-            //});
-
-            List<string> list = new List<string>();
-
-            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.COM_MLocker));
-#if DUALCAB
-            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.COM_SLocker));
-#endif
-            return list;
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Select(item => item.LockerCom).Distinct().ToList();
         }
-#endregion
+        #endregion
 
-#region the serial name of the RFid
+        #region the serial name of the RFid
         //默认配置
         //COM1  主柜rfid串口
         //COM4  副柜rfid串口 
@@ -192,9 +163,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.COM_SRFid);
         }
-#endregion
+        #endregion
 
-#region the serial name of the Vein
+        #region the serial name of the Vein
         //默认配置
         //主柜指静脉串口"COM9"
         //副柜指静脉串口"COM8"
@@ -217,9 +188,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.COM_MVein);
         }
-#endregion
+        #endregion
 
-#region Token
+        #region Token
 
         /// <summary>
         ///设置发送请求的Token
@@ -259,9 +230,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.RefreshToken);
         }
-#endregion
+        #endregion
 
-#region user info from mian system
+        #region user info from mian system
         /// <summary>
         /// 保存主系统传来的用户信息
         /// </summary>
@@ -280,7 +251,7 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<User>((int)ApplicationKey.User);
         }
-#endregion
+        #endregion
 
         #region user info from mian system
         /// <summary>
@@ -372,7 +343,7 @@ namespace CFLMedCab.Infrastructure
         }
 #endregion
 
-#region house
+        #region house
         /// <summary>
         /// 保存库房ID
         /// </summary>
@@ -410,153 +381,9 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.HouseName);
         }
-#endregion
+        #endregion
 
-#region cab
-        /// <summary>
-        /// 获取主货柜ID
-        /// </summary>
-        /// <param name="cabId"></param>
-        public static void SetMCabId(string cabId)
-        {
-            SetValue((int)ApplicationKey.MCabId, cabId);
-            return;
-        }
-
-        /// <summary>
-        /// 保存主货柜ID
-        /// </summary>
-        /// <returns></returns>
-        public static string GetMCabId()
-        {
-            return GetValue<string>((int)ApplicationKey.MCabId);
-        }
-
-        /// <summary>
-        /// 保存主货柜名字
-        /// </summary>
-        /// <param name="cabName"></param>
-        public static void SetMCabName(string cabName)
-        {
-            SetValue((int)ApplicationKey.MCabName, cabName);
-            return;
-        }
-
-        /// <summary>
-        /// 获取主货柜名字
-        /// </summary>
-        /// <returns></returns>
-        public static string GetMCabName()
-        {
-            return GetValue<string>((int)ApplicationKey.MCabName);
-        }
-
-        /// <summary>
-        /// 保存副货柜ID
-        /// </summary>
-        /// <param name="cabId"></param>
-        public static void SetSCabId(string cabId)
-        {
-            SetValue((int)ApplicationKey.SCabId, cabId);
-            return;
-        }
-
-        /// <summary>
-        /// 获取副货柜ID
-        /// </summary>
-        /// <returns></returns>
-        public static string GetSCabId()
-        {
-            return GetValue<string>((int)ApplicationKey.SCabId);
-        }
-
-        /// <summary>
-        /// 获取所有货柜Id
-        /// </summary>
-        /// <returns></returns>
-        public static List<string> GetAllCabIds()
-        {
-            List<string> list = new List<string>();
-
-            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.MCabId));
-#if DUALCAB
-            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.SCabId);
-#endif
-            return list;
-        }
-
-
-        /// <summary>
-        /// 保存副货柜名字
-        /// </summary>
-        /// <param name="cabName"></param>
-        public static void SetSCabName(string cabName)
-        {
-            SetValue((int)ApplicationKey.SCabName, cabName);
-            return;
-        }
-
-        /// <summary>
-        /// 获取副货柜名字
-        /// </summary>
-        /// <returns></returns>
-        public static string GetSCabName()
-        {
-            return GetValue<string>((int)ApplicationKey.SCabName);
-        }
-
-        /// <summary>
-        /// 通过货柜id查询货柜名字
-        /// </summary>
-        /// <param name="com"></param>
-        /// <returns></returns>
-        public static string GetCabNameById(string id)
-        {
-            if (id == GetValue<string>((int)ApplicationKey.MCabId))
-                return GetValue<string>((int)ApplicationKey.MCabName);
-#if DUALCAB
-            else if (id == GetValue<string>((int)ApplicationKey.SCabId))
-                return GetValue<string>((int)ApplicationKey.SCabName);
-#endif
-            else
-                return GetValue<string>((int)ApplicationKey.MCabName);
-        }
-
-
-        /// <summary>
-        /// 通过Rfid串口查询货柜名字
-        /// </summary>
-        /// <param name="com"></param>
-        /// <returns></returns>
-        public static string GetCabNameByRFidCom(string com)
-        {
-            if (com == GetValue<string>((int)ApplicationKey.COM_MRFid))
-                return GetValue<string>((int)ApplicationKey.MCabName);
-#if DUALCAB
-            else if (com == GetValue<string>((int)ApplicationKey.COM_SRFid))
-                return GetValue<string>((int)ApplicationKey.SCabName);
-#endif
-            else
-                return GetValue<string>((int)ApplicationKey.MCabName);
-        }
-
-        /// <summary>
-        /// 通过Rfid串口查询货柜id
-        /// </summary>
-        /// <param name="com"></param>
-        /// <returns></returns>
-        public static string GetCabIdByRFidCom(string com)
-        {
-            if (com == GetValue<string>((int)ApplicationKey.COM_MRFid))
-                return GetValue<string>((int)ApplicationKey.MCabId);
-#if DUALCAB
-            else if (com == GetValue<string>((int)ApplicationKey.COM_SRFid))
-                return GetValue<string>((int)ApplicationKey.SCabId);
-#endif
-            else
-                return GetValue<string>((int)ApplicationKey.MCabId);
-        }
-
+        #region location
         public static void SetLocations(List<Locations> locations)
         {
             SetValue((int)ApplicationKey.Location, locations);
@@ -566,18 +393,53 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<List<Locations>>((int)ApplicationKey.Location);
         }
-        #endregion
 
-        public static string GetCabNameByCode(string code, Hashtable ht)
+        /// <summary>
+        /// 获取所有货柜Id
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllLocIds()
         {
-            foreach (string key in ht.Keys)
-            {
-                if (((HashSet<string>)ht[key]).Contains(code))
-                    return GetCabNameByRFidCom(key);
-            }
-
-            return "";
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Select(item => item.Id).Distinct().ToList(); 
         }
+
+
+        /// <summary>
+        /// 通过货柜id查询货柜编号
+        /// </summary>
+        /// <param name="com"></param>
+        /// <returns></returns>
+        public static string GetLocCodeById(string id)
+        {
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Where(item => item.Id == id).First().Code;
+        }
+
+
+        /// <summary>
+        /// 通过Rfid串口查询货柜名字
+        /// </summary>
+        /// <param name="com"></param>
+        /// <returns></returns>
+        public static string GetLocCodeByRFidCom(string com)
+        {
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Where(item => item.RFCom == com).First().Code;
+        }
+
+        /// <summary>
+        /// 通过Rfid串口查询货柜id
+        /// </summary>
+        /// <param name="com"></param>
+        /// <returns></returns>
+        public static string GetLocIdByRFidCom(string com)
+        {
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Where(item => item.RFCom == com).First().Id;
+        }
+
+        #endregion
 
 		/// <summary>
 		/// 获得项目的根路径

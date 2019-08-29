@@ -110,7 +110,7 @@ namespace CFLMedCab.Http.Bll
                 if (isSuccess)
                 {
                     //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
-                    string id = ApplicationState.GetAllCabIds().ToList().First();
+                    string id = ApplicationState.GetAllLocIds().ToList().First();
                     List<PickTask> taskList = new List<PickTask>();
 
                     var pickTasks = baseDataPickTask.body.objects;
@@ -121,7 +121,7 @@ namespace CFLMedCab.Http.Bll
                         //    it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id && sit.GoodsLocationId == id).GroupBy(sit => new { sit.PickTaskId, sit.GoodsLocationId }).Select(group => group.Sum(sit => (sit.Number - sit.PickNumber))).Single();
                         //    if (it.NeedPickTotalNumber != 0)
                         //    {
-                        //        it.GoodLocationName = ApplicationState.GetCabNameById(id);
+                        //        it.GoodLocationName = ApplicationState.GetLocCodeById(id);
                         //        taskList.Add(it);
                         //    }
                         //});
@@ -129,7 +129,7 @@ namespace CFLMedCab.Http.Bll
                         it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => (sit.Number-sit.PickNumber))).FirstOrDefault();
                         if(it.NeedPickTotalNumber != 0)
                         {
-                            it.GoodLocationName = ApplicationState.GetCabNameById(id);
+                            it.GoodLocationName = ApplicationState.GetLocCodeById(id);
                             taskList.Add(it);
                         }
                     });

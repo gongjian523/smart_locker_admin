@@ -197,8 +197,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
                     StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
                 },
                 new CommodityEps
                 {
@@ -207,8 +207,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
                     StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
                 },
                 new CommodityEps
                 {
@@ -217,8 +217,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
                     StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
                 }
             };
             return ret;
@@ -283,8 +283,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
                     StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
                 };
 
                 currentEpcDataHs.Add(commodityEps);
@@ -303,8 +303,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
                     StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetCabNameByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetCabIdByRFidCom(com1)
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
                 };
 
                 currentEpcDataHs.Add(commodityEps);
@@ -371,8 +371,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                         EquipmentName = ApplicationState.GetEquipName(),
                         StoreHouseId = ApplicationState.GetHouseId(),
                         StoreHouseName = ApplicationState.GetHouseName(),
-                        GoodsLocationName = ApplicationState.GetCabNameByRFidCom(listCom[i]),
-                        GoodsLocationId = ApplicationState.GetCabIdByRFidCom(listCom[i])
+                        GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(listCom[i]),
+                        GoodsLocationId = ApplicationState.GetLocIdByRFidCom(listCom[i])
                     };
 
                     currentEpcDataHs.Add(commodityEps);

@@ -1685,7 +1685,7 @@ namespace CFLMedCab
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onInventoryDoorCloseTest);
 #else
-            string lockerCom = ApplicationState.GetLockerComByCabName((string)e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode((string)e);
 
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onInventoryDoorClose);

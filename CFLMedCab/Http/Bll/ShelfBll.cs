@@ -118,7 +118,7 @@ namespace CFLMedCab.Http.Bll
 			if (isSuccess)
 			{
                 //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
-                string id = ApplicationState.GetAllCabIds().ToList().First();
+                string id = ApplicationState.GetAllLocIds().ToList().First();
 
                 List<ShelfTask> taskList = new List<ShelfTask>();
 
@@ -131,7 +131,7 @@ namespace CFLMedCab.Http.Bll
                 //                    //it.NeedShelfTotalNumber = 1;
                 //                    if (it.NeedShelfTotalNumber != 0)
                 //                    {
-                //                        it.GoodLocationName = ApplicationState.GetCabNameById(id);
+                //                        it.GoodLocationName = ApplicationState.GetLocCodeById(id);
                 //                        taskList.Add(it);
                 //                    }                      
                 //                });
@@ -143,7 +143,7 @@ namespace CFLMedCab.Http.Bll
                     it.NeedShelfTotalNumber = shelfTaskCommodityDetails.Where(sit => sit.ShelfTaskId == it.id).GroupBy(sit =>sit.ShelfTaskId).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).FirstOrDefault();
                     if (it.NeedShelfTotalNumber != 0)
                     {
-                        it.GoodLocationName = ApplicationState.GetCabNameById(id);
+                        it.GoodLocationName = ApplicationState.GetLocCodeById(id);
                         taskList.Add(it);
                     }
                 });

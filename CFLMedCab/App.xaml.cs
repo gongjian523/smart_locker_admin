@@ -64,18 +64,6 @@ namespace CFLMedCab
 			ApplicationState.SetHouseName(device.SelectSingleNode("house_name").InnerText);
 			ApplicationState.SetHouseId(device.SelectSingleNode("house_id").InnerText);
 
-			ApplicationState.SetMCabName(device.SelectSingleNode("mcab_name").InnerText);
-			ApplicationState.SetMCabId(device.SelectSingleNode("mcab_id").InnerText);
-#if DUALCAB
-            ApplicationState.SetSCabName(device.SelectSingleNode("scab_name").InnerText);
-            ApplicationState.SetSCabId(device.SelectSingleNode("scab_id").InnerText);
-#endif
-			ApplicationState.SetMLockerCOM(device.SelectSingleNode("mlocker_com").InnerText); //"COM2"
-			ApplicationState.SetSLockerCOM(device.SelectSingleNode("slocker_com").InnerText); //"COM5"
-
-			ApplicationState.SetMRfidCOM(device.SelectSingleNode("mrfid_com").InnerText); //"COM1"
-			ApplicationState.SetSRfidCOM(device.SelectSingleNode("srfid_com").InnerText); //"COM4"
-
 			ApplicationState.SetMVeinCOM(device.SelectSingleNode("mvein_com").InnerText); //"COM9"
 
             XmlNode goodsLocaiton = device.SelectSingleNode("goods_loction");//指向货柜节点

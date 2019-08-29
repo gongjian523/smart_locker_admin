@@ -158,6 +158,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// <summary>
 		/// 获取rfid的Locker数据，目前只有主柜(COM2)和副柜(COM5)信息
 		/// </summary>
+        [Obsolete]
 		public static Hashtable GetLockerData(out bool isGetSuccess)
 		{
 
