@@ -13,13 +13,13 @@
     <!-- 货柜信息 -->
     <goods_loction>
       <location>
-        <location_name>L00000036</location_name>
+        <location_name>L00000046</location_name>
         <location_id>AQACQqweBhEBAAAA8zE1DlDEuRVx</location_id>
         <locker_com>COM2</locker_com>
         <rfid_com>COM1</rfid_com>
       </location>
       <location>
-        <location_name>L00000038</location_name>
+        <location_name>L00000047</location_name>
         <location_id>AQACQqweDg8BAAAAeDhOhHvEuRXdyQcA</location_id>
         <locker_com>COM5</locker_com>
         <rfid_com>COM4</rfid_com>
@@ -47,7 +47,7 @@
     <srfid_com>COM4</srfid_com>
 
     <!-- 主柜指静脉串口信息 -->
-    <mvein_com>COM7</mvein_com>
+    <mvein_com>COM9</mvein_com>
     
   </device>
   <!-- quartz信息 -->

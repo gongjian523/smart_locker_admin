@@ -80,13 +80,6 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <!--<GridViewColumn Header="领用属性"  Width="{Binding ElementName=column2,Path=ActualWidth}">
-                                    <GridViewColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding fetch_type, Converter={StaticResource RequisitionAttributeConverter}}"/>
-                                        </DataTemplate>
-                                    </GridViewColumn.CellTemplate>
-                                </GridViewColumn>-->
                                 <GridViewColumn Header="待领用数量" Width="{Binding ElementName=column2,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

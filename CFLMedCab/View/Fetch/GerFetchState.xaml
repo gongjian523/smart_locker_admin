@@ -4,17 +4,28 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CFLMedCab.View.Fetch"
+             xmlns:view="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid  Background="{StaticResource ContentBkBrush}">
-        <StackPanel Orientation="Vertical">
-            <Image Width="387" Height="252" HorizontalAlignment="Center"  Margin="0,320,0,0"  >
-                <Image.Source>
-                    <BitmapImage x:Name="infoImage" UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png"/>
-                </Image.Source>
-            </Image>
-            <Label Content="柜门已开"  HorizontalAlignment="Center" Margin="0,18,0,0" FontSize="40" Foreground="#619CF8"/>
-            <Label x:Name="attention"  Content=""  HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="32" Foreground="#333333"/>
-        </StackPanel>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="4*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Border  Style="{StaticResource BottomRadiusBorder}" Margin="20">
+            <StackPanel Orientation="Vertical" >
+                <Image Width="387" Height="252" HorizontalAlignment="Center"  Margin="0,180,0,0"  >
+                    <Image.Source>
+                        <BitmapImage x:Name="infoImage" UriSource="/CFLMedCab;component/Resources/Images/OpenDoor.png"/>
+                    </Image.Source>
+                </Image>
+                <Label x:Name="info"  Content="柜门已开"  HorizontalAlignment="Center" Margin="0,18,0,0" FontSize="40" Foreground="#619CF8" Visibility="Hidden"/>
+                <Label x:Name="attention"  Content=""  HorizontalAlignment="Center" Margin="0,12,0,0" FontSize="32" Foreground="#333333"/>
+            </StackPanel>
+        </Border>
+        <Border x:Name="btnBorder" Style="{StaticResource BottomRadiusBorder}" Grid.Row="1" Margin="20,0,20,20">
+            <Grid x:Name="btnGrid" Grid.Row="1">
+            </Grid>
+        </Border>
     </Grid>
 </UserControl>

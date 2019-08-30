@@ -56,6 +56,10 @@ namespace CFLMedCab.View
             InitializeComponent();
             mt = mutex;
 
+#if TESTENV
+            tbInputName.Text = "18628293148";
+            tbInputPsw.Password = "cfy12345";
+#endif
             //timer = new Timer(1000 * 10 * 60);
             //timer.AutoReset = false;
             //timer.Enabled = true;

@@ -163,13 +163,33 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<string>((int)ApplicationKey.COM_SRFid);
         }
+
+        /// <summary>
+        /// 通过货柜编号获取RFID的串口
+        /// </summary>
+        /// <param></param>
+        public static string GetRfidComByLocCode(string locCode)
+        {
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Where(item => item.Code == locCode).First().RFCom;
+        }
+
+        /// <summary>
+        /// 获取当前的门锁串口
+        /// </summary>
+        /// <returns></returns>
+        public static List<string> GetAllRfidCom()
+        {
+            List<Locations> listLoc = GetLocations();
+            return listLoc.Select(item => item.RFCom).Distinct().ToList();
+        }
         #endregion
 
         #region the serial name of the Vein
         //默认配置
         //主柜指静脉串口"COM9"
         //副柜指静脉串口"COM8"
-        
+
         /// <summary>
         /// 设置主柜指静脉的串口
         /// </summary>
@@ -412,8 +432,16 @@ namespace CFLMedCab.Infrastructure
         /// <returns></returns>
         public static string GetLocCodeById(string id)
         {
-            List<Locations> listLoc = GetLocations();
-            return listLoc.Where(item => item.Id == id).First().Code;
+            List<Locations> listLoc = GetLocations().Where(item => item.Id == id).ToList();
+
+            if (listLoc.Count > 0)
+            {
+                return listLoc.First().Code;
+            }
+            else
+            {
+                return "";
+            }
         }
 
 
@@ -424,10 +452,18 @@ namespace CFLMedCab.Infrastructure
         /// <returns></returns>
         public static string GetLocCodeByRFidCom(string com)
         {
-            List<Locations> listLoc = GetLocations();
-            return listLoc.Where(item => item.RFCom == com).First().Code;
-        }
+            List<Locations> listLoc = GetLocations().Where(item => item.RFCom == com).ToList();
 
+            if(listLoc.Count > 0)
+            {
+                return listLoc.First().Code;
+            }
+            else
+            {
+                return "";
+            }
+        }
+               
         /// <summary>
         /// 通过Rfid串口查询货柜id
         /// </summary>
@@ -435,17 +471,43 @@ namespace CFLMedCab.Infrastructure
         /// <returns></returns>
         public static string GetLocIdByRFidCom(string com)
         {
-            List<Locations> listLoc = GetLocations();
-            return listLoc.Where(item => item.RFCom == com).First().Id;
+            List<Locations> listLoc = GetLocations().Where(item => item.RFCom == com).ToList();
+            if (listLoc.Count > 0)
+            {
+                return listLoc.First().Id;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
+        /// 通过锁串口查询货柜名字
+        /// </summary>
+        /// <param name="com"></param>
+        /// <returns></returns>
+        public static string GetLocCodeByLockerCom(string com)
+        {
+            List<Locations> listLoc = GetLocations().Where(item => item.LockerCom == com).ToList();
+
+            if (listLoc.Count > 0)
+            {
+                return listLoc.First().Code;
+            }
+            else
+            {
+                return "";
+            }
         }
 
         #endregion
 
-		/// <summary>
-		/// 获得项目的根路径
-		/// </summary>
-		/// <returns></returns>
-		public static string GetProjectRootPath()
+        /// <summary>
+        /// 获得项目的根路径
+        /// </summary>
+        /// <returns></returns>
+        public static string GetProjectRootPath()
 		{
 			string BaseDirectoryPath = Directory.GetCurrentDirectory(); 
 			return BaseDirectoryPath;

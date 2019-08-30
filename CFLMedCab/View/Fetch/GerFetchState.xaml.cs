@@ -1,4 +1,7 @@
-﻿using System;
+﻿using CFLMedCab.Infrastructure;
+using CFLMedCab.Model;
+using CFLMedCab.Model.Enum;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,18 +23,54 @@ namespace CFLMedCab.View.Fetch
     /// </summary>
     public partial class GerFetchState : UserControl
     {
-        public GerFetchState(int e)
+        public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
+
+        private OpenDoorViewType viewType;
+
+        public GerFetchState(OpenDoorViewType openDoorViewType)
         {
             InitializeComponent();
-            if (e == 1)
+
+            viewType = openDoorViewType;
+
+            //if (e == 1)
+            //    attention.Content = "请拿取您需要的耗材，拿取完毕请关闭柜门";
+            //else if (e == 2)
+            //    attention.Content = "请放入您需要回退的的耗材，放回完毕请关闭柜门";
+            //else if (e == 3)
+            //    attention.Content = "还有柜门未关，操作完毕请关门";
+            //else
+            //    attention.Content = "请您根据需要调整耗材，操作完毕请关闭柜门";
+
+            //只有一个柜门的时候，开门按钮不用显示，直接开门
+            if(ApplicationState.GetAllLocIds().Count() == 1)
+            {
+                btnBorder.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnBorder.Visibility = Visibility.Visible;
+                btnGrid.Children.Add(openDoorBtnBoard);
+                attention.Content = "请点击下列按钮，开启对应的货柜";
+            }
+        }
+
+        public void  onDoorClosed(string com)
+        {
+            attention.Content = "还有柜门未关，操作完毕请关门";
+            openDoorBtnBoard.SetButtonEnable(true, com);
+        }
+
+
+        public void onDoorOpen()
+        {
+            info.Visibility = Visibility.Visible;
+            if (viewType == OpenDoorViewType.Fetch)
                 attention.Content = "请拿取您需要的耗材，拿取完毕请关闭柜门";
-            else if (e == 2)
+            else if (viewType == OpenDoorViewType.FetchReturn)
                 attention.Content = "请放入您需要回退的的耗材，放回完毕请关闭柜门";
-            else if (e == 3)
-                attention.Content = "还有柜门未关，操作完毕请关门";
             else
                 attention.Content = "请您根据需要调整耗材，操作完毕请关闭柜门";
-            
         }
     }
 }

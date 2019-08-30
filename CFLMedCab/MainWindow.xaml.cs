@@ -79,6 +79,16 @@ namespace CFLMedCab
         private int cabClosedNum;
 #endif
         /// <summary>
+        /// 货柜开门的个数
+        /// </summary>
+        private int locOpenNum;
+
+        /// <summary>
+        /// 一次操作中开门的串口
+        /// </summary>
+        private List<string> listOpenLocCom = new List<string>();
+
+        /// <summary>
         /// 子页面的句柄
         /// </summary>
         private UserControl subViewHandler;
@@ -146,6 +156,8 @@ namespace CFLMedCab
 
             Task.Factory.StartNew(initCurrentGoodsInfo);
             Task.Factory.StartNew(startAutoInventory);
+            
+            Console.ReadKey();
 
             LogUtils.Debug("Task initial...");
 #if TESTENV
@@ -462,7 +474,7 @@ namespace CFLMedCab
 
         private void SetNavBtnVisiblity(string  role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -618,7 +630,7 @@ namespace CFLMedCab
 #if TESTENV
             HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
 #else
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
 #endif
             ApplicationState.SetGoodsInfo(hs);
         }
@@ -644,24 +656,70 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Hidden;
 
-            GerFetchState gerFetchState = new GerFetchState(1);
+            GerFetchState gerFetchState = new GerFetchState(OpenDoorViewType.Fetch);
+            gerFetchState.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onGerFectchOpenDoorEvent);
+
             FullFrame.Navigate(gerFetchState);
-            //进入一般领用开门页面，将句柄设置成null，类型设置成DoorOpen
-            SetSubViewInfo(null, SubViewType.DoorOpen);
+            //进入一般领用开门页面，类型设置成DoorOpen
+            SetSubViewInfo(gerFetchState, SubViewType.DoorOpen);
+
+            locOpenNum = 0;
+
+            //只有从主页进来，才能清空此列表；从关门页面进来，不用
+            if ((sender as Control).Name == "NavBtnEnterGerFetch")
+            {
+                listOpenLocCom.Clear();
+            }
 
             List<string> com = ApplicationState.GetAllLockerCom();
+            
+            //只有一个货位，直接开门
+            if(com.Count == 1)
+            {
+                onGerFectchOpenDoorEvent(this,com[0]);
+            }
+        }
 
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
+        /// <summary>
+        /// 一般领用开门事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onGerFectchOpenDoorEvent(object sender, string e)
+        {
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
+
+            if (rfidCom == "" || lockerCom == "")
+            {
+                return;
+            }
+
+            if(!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+#if TESTENV
+#else
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
-
-#if DUALCAB
-            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
-            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
-
-            cabClosedNum = 0;
+            delegateGetMsg.userData = e;
 #endif
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                if (subViewHandler != null)
+                {
+                    ((GerFetchState)subViewHandler).onDoorOpen();
+                }
+            }));
+
+            locOpenNum++;
+
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
         }
+
 
         /// <summary>
         /// 一般领用关门状态
@@ -674,23 +732,26 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
-#if DUALCAB
-            if (cabClosedNum == 0)
+
+            locOpenNum--;
+
+            if (locOpenNum > 0)
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    GerFetchState gerFetchState = new GerFetchState(3);
-                    FullFrame.Navigate(gerFetchState);
+                    if(subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((GerFetchState)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
                 }));
-
-                cabClosedNum++;
                 return;
             }
-#endif
+
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess,listOpenLocCom);
 
             //关闭盘点中弹窗
             ClosePop();
@@ -724,7 +785,7 @@ namespace CFLMedCab
         {
             NaviView.Visibility = Visibility.Hidden;
 
-            GerFetchState gerFetchState = new GerFetchState(1);
+            GerFetchState gerFetchState = new GerFetchState(OpenDoorViewType.Fetch);
             FullFrame.Navigate(gerFetchState);
             //进入一般手术无单领用开门页面，将句柄设置成null，类型设置成DoorOpen
             SetSubViewInfo(null, SubViewType.DoorOpen);
@@ -1002,7 +1063,7 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Hidden;
 
-            GerFetchState gerFetchState = new GerFetchState(2);
+            GerFetchState gerFetchState = new GerFetchState(OpenDoorViewType.FetchReturn);
             FullFrame.Navigate(gerFetchState);
             //进入领用退回开门页面
             SetSubViewInfo(null, SubViewType.DoorOpen);
@@ -1434,7 +1495,7 @@ namespace CFLMedCab
         {
             NaviView.Visibility = Visibility.Hidden;
 
-            GerFetchState gerFetchState = new GerFetchState(1);
+            GerFetchState gerFetchState = new GerFetchState(OpenDoorViewType.Fetch);
             FullFrame.Navigate(gerFetchState);
             //进入回收取货开门页面，将句柄设置成null，类型设置成DoorOpen
             SetSubViewInfo(null, SubViewType.DoorOpen);
@@ -1509,7 +1570,7 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Hidden;
 
-            GerFetchState gerFetchState = new GerFetchState(4);
+            GerFetchState gerFetchState = new GerFetchState(OpenDoorViewType.StockSwitch);
             FullFrame.Navigate(gerFetchState);
             //进入库存调整开门页面，将句柄设置成null，类型设置成DoorOpen
             SetSubViewInfo(null, SubViewType.DoorOpen);
@@ -1944,7 +2005,7 @@ namespace CFLMedCab
             e.Cancel = true;
         }
 
-        #region ProcessRing
+#region ProcessRing
         /// <summary>
         /// LoadingDataEvent的处理函数，显示或者隐藏精度环
         /// </summary>
@@ -1975,7 +2036,7 @@ namespace CFLMedCab
             onLoadingData(this, false);
             return;
         }
-        #endregion
+#endregion
 
     }
 

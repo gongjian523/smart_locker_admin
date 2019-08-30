@@ -314,6 +314,7 @@
     <Compile Include="Infrastructure\ToolHelper\ImageUtils.cs" />
     <Compile Include="Infrastructure\ToolHelper\LogUtils.cs" />
     <Compile Include="Model\Constant\Contant.cs" />
+    <Compile Include="Model\Enum\OpenDoorViewType.cs" />
     <Compile Include="Model\Enum\GoodsChageAttribute.cs" />
     <Compile Include="Model\Enum\GoodsCommonEnum.cs" />
     <Compile Include="Model\Enum\NavBtnEnum.cs" />
@@ -346,6 +347,9 @@
     </Compile>
     <Compile Include="View\KeyboardView.xaml.cs">
       <DependentUpon>KeyboardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OpenDoorBtnBoard.xaml.cs">
+      <DependentUpon>OpenDoorBtnBoard.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Return\ReturnQuery.xaml.cs">
       <DependentUpon>ReturnQuery.xaml</DependentUpon>
@@ -491,6 +495,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\KeyboardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\OpenDoorBtnBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

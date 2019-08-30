@@ -161,7 +161,7 @@ namespace CFLMedCab.View.Fetch
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
             }
 
-            ApplicationState.SetGoodsInfo(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after);
 
             //主动提交，需要发送退出事件
             if(bAutoSubmit)

@@ -342,9 +342,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
             for (int i = 0; i < listCom.Count(); i++)
             {
-                listComHashSet[i] = new HashSet<string>();
+                listComHashSet.Add(new HashSet<string>());
 
-                listGClient[i] = CreateClientConn(listCom[i], "115200");
+                GClient clientConn = CreateClientConn(listCom[i], "115200");
+                listGClient.Add(clientConn);
 
                 if (listGClient[i] != null)
                 {
@@ -361,7 +362,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
             for (int i = 0; i < listCom.Count(); i++)
             {
-                //提取com1的标签epc，并组装
+                //提取标签epc，并组装
                 foreach (string rfid in listComHashSet[i])
                 {
                     CommodityEps commodityEps = new CommodityEps
