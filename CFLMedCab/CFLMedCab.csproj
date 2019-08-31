@@ -178,6 +178,7 @@
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
     <Compile Include="Controls\TouchScreenKeyboard.cs" />
     <Compile Include="Http\Aop\LogAttribute.cs" />
+    <Compile Include="Http\Bll\AllotShelfBll.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
     <Compile Include="Http\Bll\CommodityCodeBll.cs" />
     <Compile Include="Http\Bll\CommodityInventoryChangeBll.cs" />
@@ -236,6 +237,8 @@
     <Compile Include="Http\Enum\DocumentStatus.cs" />
     <Compile Include="Http\Enum\ResultCode.cs" />
     <Compile Include="Http\Enum\ResultHandleType.cs" />
+    <Compile Include="Http\Model\AllotShelf.cs" />
+    <Compile Include="Http\Model\AllotShelfCommodity.cs" />
     <Compile Include="Http\Model\Base\BaseModel.cs" />
     <Compile Include="Http\Model\Base\BaseSinglePostData.cs" />
     <Compile Include="Http\Model\Base\BasePutData.cs" />

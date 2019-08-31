@@ -5,6 +5,7 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.QuartzHelper.scheduler;
+using CFLMedCab.Infrastructure.ToolHelper;
 using Quartz;
 using Quartz.Impl.Matchers;
 using System.Collections.Generic;
@@ -166,7 +167,7 @@ namespace CFLMedCab.Http.Bll
 		}
 
 		/// <summary>
-		/// 【手动盘点】 更新【盘点单管理理】的盘点状态为 ‘已确认’
+		/// 【手动盘点】 更新【盘点单管理理】的盘点状态为 ‘已完成’
 		/// InventoryOrder关键字段：
 		/// id 主键
 		/// Status 盘点状态
@@ -188,11 +189,15 @@ namespace CFLMedCab.Http.Bll
 			var inventoryOrder = HttpHelper.GetInstance().Put<InventoryOrder>(new InventoryOrder()
 			{
 				id = order.id,
-				Status = "已完成",
+				Status = InventoryOrderStatus.已完成.ToString(),
 				version = order.version
 			});
+            if (inventoryOrder.code != 0)
+            {
+                LogUtils.Error("PutInventoryOrders " + inventoryOrder.message);
+            }
 
-			return inventoryOrder;
+            return inventoryOrder;
 		}
 
 		/// <summary>
@@ -300,7 +305,7 @@ namespace CFLMedCab.Http.Bll
 			});
 		}
 		/// <summary>
-		/// 
+		/// 根据设备名称或Id查询设备信息
 		/// </summary>
 		/// <param name="equipmentNameOrId"></param>
 		/// <returns></returns> 
@@ -346,8 +351,8 @@ namespace CFLMedCab.Http.Bll
 			return equipment;
 		}
 		/// <summary>
-		/// ⾃自动盘点：
-		/// • 通过当前【设备编码/id】从表格 【设备管理】（Equipment）中查询获取设备的’⾃自动盘点计划’（InventoryPlanId）。
+		/// 自动盘点：
+		/// • 通过当前【设备编码/id】从表格 【设备管理】（Equipment）中查询获取设备的’自动盘点计划’（InventoryPlanId）。
 		/// • 通过当前【id】（InventoryPlan.id=Equipment.InventoryPlanId）从表格【盘点计划管理理】（InventoryPlan）中查询获取相关盘点信息。
 		/// </summary>
 		/// <param name="equipmentNameOrId"></param>
@@ -442,6 +447,7 @@ namespace CFLMedCab.Http.Bll
 				string now = GetDateTimeNow();
 				List<InventoryOrder> inventoryOrderList = new List<InventoryOrder>();
 
+                //分柜创建盘点任务
 				commodityCodes.Select(it => it.GoodsLocationId).Distinct().ToList().ForEach(goodsLocationId =>
 				{
 
@@ -449,7 +455,7 @@ namespace CFLMedCab.Http.Bll
 					{
 						ConfirmDate = now,
 						InventoryTaskId = inventoryTasks.body[0].id,
-						Status = DocumentStatus.已完成.ToString(),
+						Status = InventoryOrderStatus.待盘点.ToString(),//创建盘点单状态为[待盘点]
 						//TODO: 需要当前设备id，货位id和库房id
 						GoodsLocationId = goodsLocationId,
 						EquipmentId = ApplicationState.GetEquipId(),
@@ -507,13 +513,31 @@ namespace CFLMedCab.Http.Bll
 							CommodityCodeId = it.id
 						});
 					});
-
+                    //创建盘名单明细列表
 					return hh.PostByAdminToken(new PostParam<InventoryDetail>()
 					{
 						objects = inventoryDetailList
 					});
 
 				}, inventoryOrders);
+
+                //更新盘点单状态
+                if (inventoryDetailRet != null)
+                {
+                    var orderIds = inventoryDetailRet.body.Select(it => it.InventoryOrderId).Distinct().ToList();
+
+                    orderIds.ForEach(id =>
+                    {
+                        var temp = inventoryOrders.body.Where(it => it.id.Equals(id)).First();
+                        //temp.Status = InventoryOrderStatus.已完成.ToString();
+
+                        //执行更新操作，异常状态记录日志，详情见方法体内部
+                        UpdateInventoryOrderStatus(temp);
+
+                    });
+
+
+                }
 			}
 			else
 			{

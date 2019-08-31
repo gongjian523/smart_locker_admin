@@ -102,11 +102,13 @@ namespace CFLMedCab.Http.Bll
             }
             List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
             var count = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 0).Count();
+            //创建领用单实体用于后面更新操作
+            ConsumingOrder order = null;
             if(count > 0)//当出库数量大于0说明在领用需要创建领用单
             {
                 var consumingOrder = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
                 {
-                    Status = ConsumingOrderStatus.已完成.ToString(),
+                    Status = ConsumingOrderStatus.领用中.ToString(),
                     StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),
                     Type = ConsumingOrderType.一般领用.ToString()
 
@@ -131,6 +133,7 @@ namespace CFLMedCab.Http.Bll
                         };
                         changes.Add(temp);
                     });
+                    order = consumingOrder.body[0];
                 }
             }
             ////创建商品库存变更记录资料【入库::回退】
@@ -151,7 +154,23 @@ namespace CFLMedCab.Http.Bll
                 changes.Add(temp);
             });
 
-            return CreateCommodityInventoryChange(changes);
+            var result = CreateCommodityInventoryChange(changes);
+
+            //校验数据是否正常
+            HttpHelper.GetInstance().ResultCheck(result, out bool isSuccess2);
+
+            //添加变更记录成功时，且有出库记录（即创建过领用单）
+            if (isSuccess2 && count > 0)
+            {
+                order.Status = ConsumingOrderStatus.已完成.ToString();
+                var temp = ConsumingBll.GetInstance().UpdateConsumingOrderStatus(order);
+
+                if (temp.code != 0)
+                {
+                    LogUtils.Error("ConsummingOrder " + temp.message);
+                }
+            }
+            return result;
         }
 
 
