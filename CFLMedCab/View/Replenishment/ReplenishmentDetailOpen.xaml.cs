@@ -33,14 +33,27 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        ShelfTask shelfTask;
+        public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
+
+        private ShelfTask shelfTask;
 
         public ReplenishmentDetailOpen(ShelfTask model)
         {
             InitializeComponent();
-            operatorName.Content = ApplicationState.GetUserInfo().name;
-            orderNum.Content = model.name;
+            //operatorName.Content = ApplicationState.GetUserInfo().name;
+            //orderNum.Content = model.name;
             shelfTask = model;
+
+            //只有一个柜门的时候，开门按钮不用显示，直接开门
+            if (ApplicationState.GetAllLocIds().Count() == 1)
+            {
+                btnBorder.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnBorder.Visibility = Visibility.Visible;
+                btnGrid.Children.Add(openDoorBtnBoard);
+            }
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -68,6 +81,16 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
                 listView.DataContext = commodityDetail.body.objects;
             }));
+        }
+
+        public void onDoorClosed(string com)
+        {
+            openDoorBtnBoard.SetButtonEnable(true, com);
+        }
+
+        public ShelfTask GetShelfTask()
+        {
+            return shelfTask;
         }
     }
 }

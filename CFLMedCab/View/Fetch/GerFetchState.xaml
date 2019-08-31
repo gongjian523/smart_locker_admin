@@ -24,8 +24,7 @@
             </StackPanel>
         </Border>
         <Border x:Name="btnBorder" Style="{StaticResource BottomRadiusBorder}" Grid.Row="1" Margin="20,0,20,20">
-            <Grid x:Name="btnGrid" Grid.Row="1">
-            </Grid>
+            <Grid x:Name="btnGrid"/>
         </Border>
     </Grid>
 </UserControl>

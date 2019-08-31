@@ -33,17 +33,30 @@ namespace CFLMedCab.View.Return
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
+        public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
+
         private PickTask pickTask;
 
         public ReturnGoodsDetailOpen(PickTask task)
         {
             InitializeComponent();
-            //操作人
-            operatorName.Content = ApplicationState.GetUserInfo().name;
-            //工单号
-            orderNum.Content = task.name;
+            ////操作人
+            //operatorName.Content = ApplicationState.GetUserInfo().name;
+            ////工单号
+            //orderNum.Content = task.name;
 
             pickTask = task;
+
+            //只有一个柜门的时候，开门按钮不用显示，直接开门
+            if (ApplicationState.GetAllLocIds().Count() == 1)
+            {
+                btnBorder.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnBorder.Visibility = Visibility.Visible;
+                btnGrid.Children.Add(openDoorBtnBoard);
+            }
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -71,6 +84,16 @@ namespace CFLMedCab.View.Return
 
                 listView.DataContext = bdCommodityDetail.body.objects;
             }));
+        }
+
+        public void onDoorClosed(string com)
+        {
+            openDoorBtnBoard.SetButtonEnable(true, com);
+        }
+
+        public PickTask GetPickTask()
+        {
+            return pickTask;
         }
     }
 }

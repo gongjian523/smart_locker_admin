@@ -19,7 +19,6 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="auto"></RowDefinition>
             </Grid.RowDefinitions>
-
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0" >
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -123,9 +122,6 @@
                     </StackPanel>
                 </Grid>
             </Border>
-            <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-            </Grid>
         </Grid>
     </Border>
 </UserControl>

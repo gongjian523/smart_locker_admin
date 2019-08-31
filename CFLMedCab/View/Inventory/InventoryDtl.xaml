@@ -33,11 +33,12 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="4*"/>
+                <RowDefinition Height="*" />
                 <RowDefinition Height="auto" />
             </Grid.RowDefinitions>
 
-            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0" >
+            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0" Visibility="Collapsed">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
@@ -167,17 +168,18 @@
                     <Button Style="{StaticResource AddButton1}" x:Name="btnAddProduct" Grid.Column="4" Grid.Row="1" Content="添加商品"   Click="onAddProduct" HorizontalAlignment="Right"/>
                 </Grid>
             </Border>
-            <Border  Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
+            <Border  Style="{StaticResource BottomRadiusBorder}" Grid.Row="3">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
-                        <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Button Style="{StaticResource CommonYesButton}" x:Name="btnSubmit" Content="提交"  Grid.Column="1"  Grid.Row="2" HorizontalAlignment="Center"  VerticalAlignment="Center"  Click="onSubmit"/>
-                    <Button Style="{StaticResource CommonNoButton}" x:Name="btnCancel" Content="取消"   Grid.Column="2" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="onCancel" />
-                    <Button Style="{StaticResource CommonNoButton}" x:Name="btnOpenDoor" Content="开门"   Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center"  VerticalAlignment="Center" Click="onOpenDoor" />
+                    <Button Style="{StaticResource CommonYesButton}" x:Name="btnSubmit" Content="提交"  Grid.Column="0"  Grid.Row="2" HorizontalAlignment="Center"  VerticalAlignment="Center"  Click="onSubmit"/>
+                    <Button Style="{StaticResource CommonNoButton}" x:Name="btnCancel" Content="取消"   Grid.Column="1" Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" Click="onCancel" />
                 </Grid>
+            </Border>
+            <Border x:Name="btnBorder" Style="{StaticResource BottomRadiusBorder}" Grid.Row="2" >
+                <Grid x:Name="btnGrid"/>
             </Border>
         </Grid>
     </Border>

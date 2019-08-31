@@ -40,9 +40,6 @@ namespace CFLMedCab.View.Inventory
         public delegate void BackInventoryHandler(object sender, RoutedEventArgs e);
         public event BackInventoryHandler BackInventoryEvent;
 
-        public delegate void OpenDoorHandler(object sender, string e);
-        public event OpenDoorHandler OpenDoorEvent;
-
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
@@ -54,6 +51,8 @@ namespace CFLMedCab.View.Inventory
 
         private InventoryOrder inventoryOrder;
         private List<CommodityCode> list = new List<CommodityCode>();
+
+        public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
 
         public InventoryDtl(InventoryOrder order)
         {
@@ -67,6 +66,10 @@ namespace CFLMedCab.View.Inventory
             inventoryOrder = order;
 
             goodsDtllistConfirmView.DataContext = list;
+
+            //加载开门按钮
+            btnBorder.Visibility = Visibility.Visible;
+            btnGrid.Children.Add(openDoorBtnBoard);
 
             Timer timer = new Timer(100);
             timer.AutoReset = false;
@@ -253,24 +256,12 @@ namespace CFLMedCab.View.Inventory
             }));
         }
 
-        /// <summary>
-        /// 取消
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onOpenDoor(object sender, RoutedEventArgs e)
-        {
-            SetButtonVisibility(false);
-            OpenDoorEvent(this, inventoryOrder.GoodsLocationName);
-        }
-
         public void SetButtonVisibility(bool bVisible)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 btnSubmit.Visibility = bVisible ? Visibility.Visible : Visibility.Hidden;
                 btnCancel.Visibility = bVisible ? Visibility.Visible : Visibility.Hidden;
-                btnOpenDoor.Visibility = bVisible ? Visibility.Visible : Visibility.Hidden;
             }));
         }
 
@@ -285,6 +276,11 @@ namespace CFLMedCab.View.Inventory
             {
                 onAddProduct(this, null);
             }
+        }
+
+        public void onDoorClosed(string com)
+        {
+            openDoorBtnBoard.SetButtonEnable(true, com);
         }
     }
 }

@@ -67,15 +67,15 @@ namespace CFLMedCab.View.Fetch
             lbTypeContent.Content = type;
             after = afterEps;
 
-            Timer iniTimer = new Timer(100);
-            iniTimer.AutoReset = false;
-            iniTimer.Enabled = true;
-            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
-
             rfidComs.ForEach(com =>
             {
                 locCodes.Add(ApplicationState.GetLocCodeByRFidCom(com));
             });
+
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
         }
 
         /// <summary>

@@ -54,11 +54,13 @@ namespace CFLMedCab.View.ReplenishmentOrder
         BaseData<CommodityCode> bdCommodityCode;
         BaseData<ShelfTaskCommodityDetail> bdCommodityDetail;
 
+        private List<string> locCodes = new List<string>();
+
         bool bExit;
 
         private bool isSuccess;
 
-        public ReplenishmentClose(ShelfTask task, HashSet<CommodityEps> hs)
+        public ReplenishmentClose(ShelfTask task, HashSet<CommodityEps> hs, List<string> rfidComs)
         {
             InitializeComponent();
 
@@ -69,6 +71,11 @@ namespace CFLMedCab.View.ReplenishmentOrder
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             shelfTask = task;
             after = hs;
+
+            rfidComs.ForEach(com =>
+            {
+                locCodes.Add(ApplicationState.GetLocCodeByRFidCom(com));
+            });
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -83,7 +90,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
                 {
@@ -257,7 +264,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTask");
             }
 
-            ApplicationState.SetGoodsInfo(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after);
 
             if(bAutoSubmit)
             {

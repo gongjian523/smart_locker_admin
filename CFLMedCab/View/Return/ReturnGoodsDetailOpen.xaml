@@ -14,9 +14,10 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="4*"></RowDefinition>
                 <RowDefinition Height="*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
+            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0" Visibility="Collapsed">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition/>
@@ -111,6 +112,9 @@
                         </ListView.View>
                     </ListView>
                 </Grid>
+            </Border>
+            <Border x:Name="btnBorder" Style="{StaticResource BottomRadiusBorder}" Grid.Row="2" >
+                <Grid x:Name="btnGrid"/>
             </Border>
         </Grid>
     </Border>

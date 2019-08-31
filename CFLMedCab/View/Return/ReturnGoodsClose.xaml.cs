@@ -53,11 +53,13 @@ namespace CFLMedCab.View.Return
         BaseData<CommodityCode> bdCommodityCode;
         BaseData<PickCommodity> bdCommodityDetail;
 
+        private List<string> locCodes = new List<string>();
+
         private bool bExit;
 
         bool isSuccess;
 
-        public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs)
+        public ReturnGoodsClose(PickTask task, HashSet<CommodityEps> hs, List<string> rfidComs)
         {
             InitializeComponent();
 
@@ -68,6 +70,11 @@ namespace CFLMedCab.View.Return
             orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             after = hs;
+
+            rfidComs.ForEach(com =>
+            {
+                locCodes.Add(ApplicationState.GetLocCodeByRFidCom(com));
+            });
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -82,7 +89,7 @@ namespace CFLMedCab.View.Return
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
 
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
@@ -218,7 +225,7 @@ namespace CFLMedCab.View.Return
 
             }
 
-            ApplicationState.SetGoodsInfo(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after);
             if(bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);

@@ -84,7 +84,7 @@ namespace CFLMedCab
         private int locOpenNum;
 
         /// <summary>
-        /// 一次操作中开门的串口
+        /// 一次完整操作中，所有打开过货位的Rfid串口
         /// </summary>
         private List<string> listOpenLocCom = new List<string>();
 
@@ -502,6 +502,15 @@ namespace CFLMedCab
         }
 
         /// <summary>
+        /// 设置子页面类型，主要用于区分进入开门页面后，柜门是否开启的场景
+        /// </summary>
+        /// <param name="type"></param>
+        private void SetSubViewType(SubViewType type)
+        {
+            subViewType = type;
+        }
+
+        /// <summary>
         /// 空闲监听定时
         /// </summary>
         /// <param name="sender"></param>
@@ -660,8 +669,8 @@ namespace CFLMedCab
             gerFetchState.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onGerFectchOpenDoorEvent);
 
             FullFrame.Navigate(gerFetchState);
-            //进入一般领用开门页面，类型设置成DoorOpen
-            SetSubViewInfo(gerFetchState, SubViewType.DoorOpen);
+            //进入一般领用开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(gerFetchState, SubViewType.Others);
 
             locOpenNum = 0;
 
@@ -718,6 +727,9 @@ namespace CFLMedCab
             locOpenNum++;
 
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
         }
 
 
@@ -789,13 +801,13 @@ namespace CFLMedCab
             gerFetchState.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onSurgeryNoNumOpenDoorEvent);
 
             FullFrame.Navigate(gerFetchState);
-            //进入一般手术无单领用开门页面，类型设置成DoorOpen
-            SetSubViewInfo(gerFetchState, SubViewType.DoorOpen);
+            //进入一般领用开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(gerFetchState, SubViewType.Others);
 
             locOpenNum = 0;
 
             //只有从主页进来，才能清空此列表；从关门页面进来，不用
-            if ((sender as Control).Name == "NavBtnEnterSurgery" || (sender as Control).Name == "NavBtnEnterPrescription")
+            if ((sender as Control).Name != "CtrlSurgeryNoNumClose")
             {
                 listOpenLocCom.Clear();
             }
@@ -847,6 +859,9 @@ namespace CFLMedCab
             locOpenNum++;
 
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
         }
 
 
@@ -869,7 +884,11 @@ namespace CFLMedCab
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    ((GerFetchState)subViewHandler).onDoorOpen();
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((GerFetchState)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
                 }));
 
                 return;
@@ -924,7 +943,7 @@ namespace CFLMedCab
             btnBackHP.Visibility = Visibility.Visible;
 
             ConsumingOrderType type;
-            if (((System.Windows.Controls.Button)sender).Name == "NavBtnEnterSurgery")
+            if ((sender as Button).Name == "NavBtnEnterSurgery")
                 type = ConsumingOrderType.手术领用;
             else
                 type = ConsumingOrderType.医嘱处方领用;
@@ -975,72 +994,70 @@ namespace CFLMedCab
             NaviView.Visibility = Visibility.Hidden;
 
             SurgeryNumOpen surgeryNumOpen = new SurgeryNumOpen(fetchParam);
+            surgeryNumOpen.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onSurgeryOpenDoorEvent);
+
             FullFrame.Navigate(surgeryNumOpen);
-            //进入手术有单领用开门页面，将句柄设置成null，类型设置成DoorOpen
-            SetSubViewInfo(null, SubViewType.DoorOpen);
+            //进入手术有单领用开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(surgeryNumOpen, SubViewType.Others);
 
-            OpenCabinet openCabinet = new OpenCabinet();
-            openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
-            onShowPopFrame(openCabinet);
+            locOpenNum = 0;
 
-#if TESTENV
-            testTimer = new System.Timers.Timer(10000);
-            testTimer.AutoReset = false;
-            testTimer.Enabled = true;
-            testTimer.Elapsed += new ElapsedEventHandler(onEnterSurgeryNumLockerTestEvent);
-            testFetchPara = fetchParam;
-#else
-
-#if DUALCAB
-            List<string> listCom = ApplicationState.GetAllLockerCom();
-            if (listCom.Count == 0)
-                return;
-#else
-            List<string> listCom = ApplicationState.GetAllLockerCom();
-#endif
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-            delegateGetMsg.userData = fetchParam;
-
-#if DUALCAB
-            cabClosedNum = 1;
-
-            if (listCom.Count == 2)
+            //只有从手术列表或者详情页面发出的开门事件，才能清空此列表；
+            //从关门页面发出的开门事件，不能清除次列表
+            if ((sender as Control).Name != "CtrlSurgeryNumClose")
             {
-                LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
-                delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
-                delegateGetMsg2.userData = fetchParam;
-                cabClosedNum = 2;
+                listOpenLocCom.Clear();
             }
-#endif
-#endif
-            SpeakerHelper.Sperker("柜门已开，请按照领用单拿取耗材，拿取完毕请关闭柜门");
+
+            List<Locations> locs = ApplicationState.GetLocations();
+
+            //只有一个货位，直接开门
+            if (locs.Count == 1)
+            {
+                onSurgeryOpenDoorEvent(this, locs[0].Code);
+
+                OpenCabinet openCabinet = new OpenCabinet();
+                openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+                onShowPopFrame(openCabinet);
+            }
         }
 
-
-#if TESTENV
         /// <summary>
-        /// 进入上架单详情页-关门状态
+        /// 手术有单领用开门事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterSurgeryNumLockerTestEvent(object sender, EventArgs e)
+        private void onSurgeryOpenDoorEvent(object sender, string e)
         {
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
 
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
-
-            App.Current.Dispatcher.Invoke((Action)(() =>
+            if (rfidCom == "" || lockerCom == "")
             {
-                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(testFetchPara, hs);
-                surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
-                surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
-                surgeryNumClose.LoadingDataEvent += new SurgeryNumClose.LoadingDataHandler(onLoadingData);
-                FullFrame.Navigate(surgeryNumClose);
-                //进入手术有单领用关门页面，
-                SetSubViewInfo(surgeryNumClose, SubViewType.SurFetchWOrderClose);
-            }));
-        }
+                return;
+            }
+
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            if (!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+#if TESTENV
 #else
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
+            delegateGetMsg.userData = e;
+#endif
+
+            locOpenNum++;
+
+            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
+        }
+
         /// <summary>
         /// 手术有单领用关门状态
         /// </summary>
@@ -1052,23 +1069,26 @@ namespace CFLMedCab
                 return;
             LogUtils.Debug($"返回开锁状态{isClose}");
 
-#if DUALCAB
-            cabClosedNum--;
+            locOpenNum--;
 
-            if (cabClosedNum == 1)
+            if (locOpenNum > 0)
             {
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    GerFetchState gerFetchState = new GerFetchState(3);
-                    FullFrame.Navigate(gerFetchState);
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((SurgeryNumOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
                 }));
+
                 return;
             }
-#endif
+
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            HashSet<CommodityEps> ht = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+            HashSet<CommodityEps> ht = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
             //关闭盘点中弹窗
             ClosePop();
@@ -1076,12 +1096,11 @@ namespace CFLMedCab
             //模拟从键盘输入0，空闲时间重新开始计时
             SimulateKeybordInput0();
 
-            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-            FetchParam fetchParam = (FetchParam)delegateGetMsg.userData;
+            FetchParam fetchParam = ((SurgeryNumOpen)subViewHandler).GetFetchPara();
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(fetchParam, ht);
+                SurgeryNumClose surgeryNumClose = new SurgeryNumClose(fetchParam, ht, listOpenLocCom);
                 surgeryNumClose.EnterPopCloseEvent += new SurgeryNumClose.EnterPopCloseHandler(onEnterPopClose);
                 surgeryNumClose.EnterSurgeryNumOpenEvent += new SurgeryNumClose.EnterSurgeryNumOpenHandler(EnterSurgeryNumOpenEvent);
                 surgeryNumClose.LoadingDataEvent += new SurgeryNumClose.LoadingDataHandler(onLoadingData);
@@ -1090,7 +1109,6 @@ namespace CFLMedCab
                 SetSubViewInfo(surgeryNumClose, SubViewType.SurFetchWOrderClose);
             }));
         }
-#endif
 #endregion
 #endregion
 
@@ -1110,9 +1128,9 @@ namespace CFLMedCab
             gerFetchState.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onReturnFetchOpenDoorEvent);
 
             FullFrame.Navigate(gerFetchState);
-            
-            //进入领用退回开门页面
-            SetSubViewInfo(gerFetchState, SubViewType.DoorOpen);
+
+            //进入领用退回开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(gerFetchState, SubViewType.Others);
 
             locOpenNum = 0;
 
@@ -1169,6 +1187,9 @@ namespace CFLMedCab
             locOpenNum++;
 
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
         }
 
 
@@ -1272,85 +1293,70 @@ namespace CFLMedCab
 
             ReplenishmentDetailOpen replenishmentDetailOpen = new ReplenishmentDetailOpen(e);
             replenishmentDetailOpen.LoadingDataEvent += new ReplenishmentDetailOpen.LoadingDataHandler(onLoadingData);
+            replenishmentDetailOpen.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onReplenishmentOpenDoorEvent);
+
             FullFrame.Navigate(replenishmentDetailOpen);
-            //进入上架任务单详情开门页面，将句柄设置成null，类型设置成DoorOpen，避免错误调用
-            SetSubViewInfo(null, SubViewType.DoorOpen);
+            //进入上架任务单详情开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(replenishmentDetailOpen, SubViewType.Others);
 
-            OpenCabinet openCabinet = new OpenCabinet();
-            openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
-            onShowPopFrame(openCabinet);
+            locOpenNum = 0;
 
-            SpeakerHelper.Sperker("柜门已开，请您按照要求上架，上架完毕请关闭柜门");
-
-#if TESTENV
-            testTimer = new System.Timers.Timer(10000);
-            testTimer.AutoReset = false;
-            testTimer.Enabled = true;
-            testTimer.Elapsed += new ElapsedEventHandler(onEnterReplenishmentCloseTestEvent);
-            testROPara = e;
-#else
-
-#if DUALCAB
-            //TODO
-            List<string> listCom = ApplicationState.GetAllLockerCom();
-#else
-            List<string> listCom = ApplicationState.GetAllLockerCom();
-#endif
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
-            delegateGetMsg.userData = e;
-
-#if DUALCAB
-            cabClosedNum = 1;
-            if (listCom.Count == 2)
+            //只有从上架列表或者详情页面发出的开门事件，才能清空此列表；
+            //从关门页面发出的开门事件，不能清除此列表
+            if ((sender as Control).Name != "CtrlReplenishmentClose")
             {
-                LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
-                delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
-                delegateGetMsg2.userData = e;
-                cabClosedNum = 2;
+                listOpenLocCom.Clear();
             }
-#endif
-#endif
+
+            List<Locations> locs = ApplicationState.GetLocations();
+
+            //只有一个货位，直接开门
+            if (locs.Count == 1)
+            {
+                onReplenishmentOpenDoorEvent(this, locs[0].Code);
+
+                OpenCabinet openCabinet = new OpenCabinet();
+                openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+                onShowPopFrame(openCabinet);
+            }
         }
 
-#if TESTENV
         /// <summary>
-        /// 进入上架单详情页-关门状态
+        /// 上架开门事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReplenishmentCloseTestEvent(object sender, EventArgs e)
+        private void onReplenishmentOpenDoorEvent(object sender, string e)
         {
-            ApplicationState.SetGoodsInfo(new HashSet<CommodityEps>()
-                {
-                    new CommodityEps
-                    {
-                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
-                        CommodityCodeName = "QR00000038",
-                        CommodityName = "止血包",
-                        EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-                        EquipmentName = "E00000008",
-                        GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-                        GoodsLocationName = "L00000013"
-                    }
-                });
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
 
-            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out bool isGetSuccess);
-            HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
-            ShelfTask shelfTask = testROPara;
-            App.Current.Dispatcher.Invoke((Action)(() =>
+            if (rfidCom == "" || lockerCom == "")
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, hs);
-                replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
-                replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
-                replenishmentClose.LoadingDataEvent += new ReplenishmentClose.LoadingDataHandler(onLoadingData);
+                return;
+            }
 
-                FullFrame.Navigate(replenishmentClose);
-                //进入上架任务单关门页面
-                SetSubViewInfo(replenishmentClose, SubViewType.ReplenishmentClose);
-            }));
-        }
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            if (!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+#if TESTENV
 #else
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
+            delegateGetMsg.userData = e;
+#endif
+
+            locOpenNum++;
+
+            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
+        }
+
         /// <summary>
         /// 进入上架单详情页-关门状态
         /// </summary>
@@ -1358,22 +1364,31 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReplenishmentCloseEvent(object sender, bool isClose)
         {
-            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
             LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
 
-#if DUALCAB
-            cabClosedNum--;
-            if (cabClosedNum == 1)
+            locOpenNum--;
+
+            if (locOpenNum > 0)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((SurgeryNumOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
+                }));
+
                 return;
-#endif
+            }
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
             //关闭盘点中弹窗
             ClosePop();
@@ -1381,9 +1396,11 @@ namespace CFLMedCab
             //模拟从键盘输入0，空闲时间重新开始计时
             SimulateKeybordInput0();
 
+            ShelfTask shelfTask = ((ReplenishmentDetailOpen)subViewHandler).GetShelfTask();
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReplenishmentClose replenishmentClose = new ReplenishmentClose((ShelfTask)delegateGetMsg.userData, hs);
+                ReplenishmentClose replenishmentClose = new ReplenishmentClose(shelfTask, hs, listOpenLocCom);
                 replenishmentClose.EnterReplenishmentDetailOpenEvent += new ReplenishmentClose.EnterReplenishmentDetailOpenHandler(onEnterReplenishmentDetailOpen);
                 replenishmentClose.EnterPopCloseEvent += new ReplenishmentClose.EnterPopCloseHandler(onEnterPopClose);
                 replenishmentClose.LoadingDataEvent += new ReplenishmentClose.LoadingDataHandler(onLoadingData);
@@ -1393,7 +1410,6 @@ namespace CFLMedCab
                 SetSubViewInfo(replenishmentClose, SubViewType.ReplenishmentClose);
             }));
         }
-#endif
 
 #endregion
 
@@ -1435,7 +1451,6 @@ namespace CFLMedCab
             SetSubViewInfo(null, SubViewType.Others);
         }
 
-
         /// <summary>
         /// 进入拣货任务单详情页面-开门状态
         /// </summary>
@@ -1447,72 +1462,73 @@ namespace CFLMedCab
 
             ReturnGoodsDetailOpen returnGoodsDetailOpen = new ReturnGoodsDetailOpen(e);
             returnGoodsDetailOpen.LoadingDataEvent += new ReturnGoodsDetailOpen.LoadingDataHandler(onLoadingData);
+            returnGoodsDetailOpen.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onReturnGoodsOpenDoorEvent);
 
             FullFrame.Navigate(returnGoodsDetailOpen);
-            //进入拣货任务单详情页面，将句柄设置成null，类型设置成DoorOpen
-            SetSubViewInfo(null, SubViewType.DoorOpen);
+            //进入拣货任务单详情页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(returnGoodsDetailOpen, SubViewType.Others);
 
-            OpenCabinet openCabinet = new OpenCabinet();
-            openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
-            onShowPopFrame(openCabinet);
+            locOpenNum = 0;
 
-            SpeakerHelper.Sperker("柜门已开，请您按照要求拣货，拣货完毕请关闭柜门");
-
-#if TESTENV
-            testTimer = new System.Timers.Timer(10000);
-            testTimer.AutoReset = false;
-            testTimer.Enabled = true;
-            testTimer.Elapsed += new ElapsedEventHandler(onEnterReturnGoodsCloseTestEvent);
-            testPOPara = e;
-#else
-#if DUALCAB
-            List<string> listCom = ApplicationState.GetAllLockerCom();
-            if (listCom.Count == 0)
-                return;
-#else
-            List<string> listCom = ApplicationState.GetAllLockerCom();
-#endif
-
-            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(listCom[0], out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
-            delegateGetMsg.userData = e;
-
-#if DUALCAB
-            cabClosedNum = 1;
-            if (listCom.Count == 2)
+            //只有从拣货列表或者详情页面发出的开门事件，才能清空此列表；
+            //从关门页面发出的开门事件，不能清除此列表
+            if ((sender as Control).Name != "CtrlReturnGoodsClose")
             {
-                LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(listCom[1], out bool isGetSuccess2);
-                delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
-                delegateGetMsg2.userData = e;
-                cabClosedNum = 2;
+                listOpenLocCom.Clear();
             }
-#endif
-#endif
+
+            List<Locations> locs = ApplicationState.GetLocations();
+
+            //只有一个货位，直接开门
+            if (locs.Count == 1)
+            {
+                onReturnGoodsOpenDoorEvent(this, locs[0].Code);
+
+                OpenCabinet openCabinet = new OpenCabinet();
+                openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+                onShowPopFrame(openCabinet);
+            }
+
         }
 
-#if TESTENV
         /// <summary>
-        /// 进入拣货任务单详情页-关门状态
+        /// 拣货开门事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnGoodsCloseTestEvent(object sender, EventArgs e)
+        private void onReturnGoodsOpenDoorEvent(object sender, string e)
         {
-            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonReplenishment(out bool isGetSuccess);
-            HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
-            PickTask pickTask = testPOPara;
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
 
-            App.Current.Dispatcher.Invoke((Action)(() =>
+            if (rfidCom == "" || lockerCom == "")
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(pickTask, hs);
-                returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
-                returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
-                returnGoodsClose.LoadingDataEvent += new ReturnGoodsClose.LoadingDataHandler(onLoadingData);
+                return;
+            }
 
-                FullFrame.Navigate(returnGoodsClose);
-            }));
-        }
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            if (!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+#if TESTENV
 #else
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
+            delegateGetMsg.userData = e;
+#endif
+
+            locOpenNum++;
+
+            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
+        }
+
+
+
         /// <summary>
         /// 进入拣货任务单详情页-关门状态
         /// </summary>
@@ -1520,22 +1536,31 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterReturnGoodsCloseEvent(object sender, bool isClose)
         {
-            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
             LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
 
-#if DUALCAB
-            cabClosedNum--;
-            if (cabClosedNum == 1)
+            locOpenNum--;
+
+            if (locOpenNum > 0)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((SurgeryNumOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
+                }));
+
                 return;
-#endif
+            }
 
             //弹出盘点中弹窗
             EnterInvotoryOngoing();
 
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
             //关闭盘点中弹窗
             ClosePop();
@@ -1543,9 +1568,11 @@ namespace CFLMedCab
             //模拟从键盘输入0，空闲时间重新开始计时
             SimulateKeybordInput0();
 
+            PickTask pickTask = ((ReturnGoodsDetailOpen)subViewHandler).GetPickTask();
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose((PickTask)delegateGetMsg.userData, hs);
+                ReturnGoodsClose returnGoodsClose = new ReturnGoodsClose(pickTask, hs, listOpenLocCom);
                 returnGoodsClose.EnterReturnGoodsDetailOpenEvent += new ReturnGoodsClose.EnterReturnGoodsDetailOpenHandler(onEnterReturnGoodsDetailOpen);
                 returnGoodsClose.EnterPopCloseEvent += new ReturnGoodsClose.EnterPopCloseHandler(onEnterPopClose);
                 returnGoodsClose.LoadingDataEvent += new ReturnGoodsClose.LoadingDataHandler(onLoadingData);
@@ -1555,7 +1582,6 @@ namespace CFLMedCab
                 SetSubViewInfo(returnGoodsClose, SubViewType.ReturnGoodsClose);
             }));
         }
-#endif
 
         /// <summary>
         /// 进入回收取货页面
@@ -1589,11 +1615,12 @@ namespace CFLMedCab
             gerFetchState.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onReturnOpenDoorEvent);
 
             FullFrame.Navigate(gerFetchState);
-            //进入回收取货开门页面，将句柄设置成null，类型设置成DoorOpen
-            SetSubViewInfo(gerFetchState, SubViewType.DoorOpen);
+            //进入回收取货开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(gerFetchState, SubViewType.Others);
 
-            //只有从主页进来，才能清空此列表；从关门页面进来，不用
-            if ((sender as Control).Name == "NavBtnEnterReturnAll")
+            //只有从回收取货查询页面发出的开门事件，才能清空此列表；
+            //从关门页面发出的开门事件，不能清除此列表
+            if ((sender as Control).Name != "CtrlReturnClose")
             {
                 listOpenLocCom.Clear();
             }
@@ -1645,6 +1672,9 @@ namespace CFLMedCab
             locOpenNum++;
 
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
         }
 
         /// <summary>
@@ -1717,8 +1747,8 @@ namespace CFLMedCab
             gerFetchState.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onStockSwitchOpenDoorEvent);
 
             FullFrame.Navigate(gerFetchState);
-            //进入库存调整开门页面，将句柄设置成null，类型设置成DoorOpen
-            SetSubViewInfo(gerFetchState, SubViewType.DoorOpen);
+            //进入库存调整开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(gerFetchState, SubViewType.Others);
 
             locOpenNum = 0;
 
@@ -1775,6 +1805,9 @@ namespace CFLMedCab
             locOpenNum++;
 
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
         }
 
 
@@ -1886,8 +1919,8 @@ namespace CFLMedCab
 
             inventoryDetail.SetPopInventoryEvent += new InventoryDtl.SetPopInventoryHandler(onSetPopInventory);
             inventoryDetail.BackInventoryEvent += new InventoryDtl.BackInventoryHandler(onBackInventory);
-            inventoryDetail.OpenDoorEvent += new InventoryDtl.OpenDoorHandler(onInventoryDoorOpen);
             inventoryDetail.LoadingDataEvent += new InventoryDtl.LoadingDataHandler(onLoadingData);
+            inventoryDetail.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onInventoryDoorOpenEvent);
 
             FullFrame.Navigate(inventoryDetail);
             //进入盘点详情
@@ -1934,7 +1967,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onInventoryDoorOpen(object sender, string e)
+        private void onInventoryDoorOpenEvent(object sender, string e)
         {
 
 #if TESTENV
@@ -1943,13 +1976,35 @@ namespace CFLMedCab
             testTimer.Enabled = true;
             testTimer.Elapsed += new ElapsedEventHandler(onInventoryDoorCloseTest);
 #else
-            string lockerCom = ApplicationState.GetLockerComByLocCode((string)e);
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
 
+            if (rfidCom == "" || lockerCom == "")
+            {
+                return;
+            }
+
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            if (!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+#if TESTENV
+#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onInventoryDoorClose);
+            delegateGetMsg.userData = e;
+#endif
 
-            //盘点开门的时候，句柄还是设置成InventoryDtl使用的句柄，将状态设置成DoorOpen
-            SetSubViewInfo(subViewHandler, SubViewType.DoorOpen);
+            locOpenNum++;
+
+            SpeakerHelper.Sperker("柜门已开，请检查相关耗材，检查完毕请关闭柜门");
+
+            ((InventoryDtl)subViewHandler).SetButtonVisibility(false);
+
+            //盘点开门的时候，将状态设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
 #endif
         }
 
@@ -1964,6 +2019,8 @@ namespace CFLMedCab
         {
             if (subViewHandler == null || subViewType != SubViewType.InventoryDtl) 
                 return;
+
+
             ((InventoryDtl)subViewHandler).SetButtonVisibility(true);
         }
 #else
@@ -1974,14 +2031,25 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onInventoryDoorClose(object sender, bool isClose)
         {
-            LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
             LogUtils.Debug($"返回开锁状态{isClose}");
 
             if (!isClose)
                 return;
 
-            if (subViewHandler == null || subViewType != SubViewType.DoorOpen) 
+            locOpenNum--;
+
+            if (locOpenNum > 0)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((GerFetchState)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
+                }));
                 return;
+            }
 
             ((InventoryDtl)subViewHandler).SetButtonVisibility(true);
 
