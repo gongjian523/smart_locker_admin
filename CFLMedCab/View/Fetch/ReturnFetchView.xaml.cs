@@ -52,9 +52,11 @@ namespace CFLMedCab.View.Fetch
         private HashSet<CommodityEps> after;
         BaseData<CommodityCode> bdCommodityCode;
 
-		private bool isSuccess;
+        private List<string> locCodes = new List<string>();
 
-		public ReturnFetchView(HashSet<CommodityEps> hashtable)
+        private bool isSuccess;
+
+		public ReturnFetchView(HashSet<CommodityEps> hashtable, List<string> rfidComs)
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
@@ -65,6 +67,11 @@ namespace CFLMedCab.View.Fetch
             iniTimer.AutoReset = false;
             iniTimer.Enabled = true;
             iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+
+            rfidComs.ForEach(com =>
+            {
+                locCodes.Add(ApplicationState.GetLocCodeByRFidCom(com));
+            });
         }
 
         /// <summary>
@@ -76,7 +83,7 @@ namespace CFLMedCab.View.Fetch
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
 
                 LoadingDataEvent(this, true);
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
@@ -170,7 +177,7 @@ namespace CFLMedCab.View.Fetch
 				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingReturnOrder");
 			}
 
-            ApplicationState.SetGoodsInfo(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after);
 
             //主动提交，需要发送退出事件
             if (bAutoSubmit)

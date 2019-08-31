@@ -51,9 +51,11 @@ namespace CFLMedCab.View.Fetch
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
 
-		private bool isSuccess;
+        private List<string> locCodes = new List<string>();
 
-		public GerFetchView(HashSet<CommodityEps> afterEps)
+        private bool isSuccess;
+
+		public GerFetchView(HashSet<CommodityEps> afterEps, List<string> rfidComs)
         {
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
@@ -64,13 +66,18 @@ namespace CFLMedCab.View.Fetch
             iniTimer.AutoReset = false;
             iniTimer.Enabled = true;
             iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+
+            rfidComs.ForEach(com =>
+            {
+                locCodes.Add(ApplicationState.GetLocCodeByRFidCom(com));
+            });
         }
 
         private void onInitData(object sender, ElapsedEventArgs e)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
 
                 LoadingDataEvent(this, true);
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);

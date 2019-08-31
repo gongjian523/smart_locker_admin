@@ -320,10 +320,9 @@ namespace CFLMedCab.Infrastructure
             HashSet<CommodityEps> all =  GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
             return new HashSet<CommodityEps>(all.Where(item => locCodes.Contains(item.CommodityCodeName)));
         }
-
         #endregion
 
-#region equipment
+        #region equipment
         /// <summary>
         /// 保存设备ID
         /// </summary>

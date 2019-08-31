@@ -51,9 +51,11 @@ namespace CFLMedCab.View.Fetch
         private ConsumingOrder consumingOrder;
         private ConsumingOrderType consumingOrderType;
 
-		private bool isSuccess;
+        private List<string> locCodes = new List<string>();
 
-		public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, ConsumingOrderType type, ConsumingOrder order)
+        private bool isSuccess;
+
+		public SurgeryNoNumClose(HashSet<CommodityEps> afterEps, List<string> rfidComs, ConsumingOrderType type, ConsumingOrder order = null)
         {
             InitializeComponent();
 
@@ -69,6 +71,11 @@ namespace CFLMedCab.View.Fetch
             iniTimer.AutoReset = false;
             iniTimer.Enabled = true;
             iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
+
+            rfidComs.ForEach(com =>
+            {
+                locCodes.Add(ApplicationState.GetLocCodeByRFidCom(com));
+            });
         }
 
         /// <summary>
@@ -80,7 +87,7 @@ namespace CFLMedCab.View.Fetch
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
 
                 LoadingDataEvent(this, true);
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
@@ -191,7 +198,7 @@ namespace CFLMedCab.View.Fetch
                 }
             }
 
-            ApplicationState.SetGoodsInfo(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after);
 
             //主动提交，需要发送退出事件
             if (bAutoSubmit)

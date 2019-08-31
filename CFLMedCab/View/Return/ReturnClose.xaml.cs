@@ -55,9 +55,11 @@ namespace CFLMedCab.View.Return
 
         private HashSet<CommodityEps> after;
         private BaseData<CommodityCode> bdCommodityCode;
-        CommodityRecovery commodityRecovery;
+        private CommodityRecovery commodityRecovery;
 
-        public ReturnClose(HashSet<CommodityEps> afterEps, CommodityRecovery order)
+        private List<string> locCodes = new List<string>();
+
+        public ReturnClose(HashSet<CommodityEps> afterEps, List<string> rfidComs, CommodityRecovery order)
         {
             InitializeComponent();
 
@@ -67,6 +69,11 @@ namespace CFLMedCab.View.Return
 
             commodityRecovery = order;
             after = afterEps;
+
+            rfidComs.ForEach(com =>
+            {
+                locCodes.Add(ApplicationState.GetLocCodeByRFidCom(com));
+            });
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -81,7 +88,7 @@ namespace CFLMedCab.View.Return
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
 
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
@@ -124,7 +131,7 @@ namespace CFLMedCab.View.Return
                         abnormalBtmView.Visibility = Visibility.Collapsed;
                     }
                 }
-                //回收取货
+                //库存调整
                 else
                 {
                     normalBtmView.Visibility = Visibility.Visible;
@@ -210,7 +217,7 @@ namespace CFLMedCab.View.Return
                 }
             }
 
-            ApplicationState.SetGoodsInfo(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after);
 
             EnterPopCloseEvent(this, bExit);
         }
