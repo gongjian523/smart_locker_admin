@@ -35,7 +35,15 @@ namespace CFLMedCab.Http.Enum
 		/// 待上架
 		/// </summary>
 		[Description("待拣货")]
-		待拣货 = 4
+		待拣货 = 4,
 
-	}
+        /// <summary>
+        /// 进行中
+        /// </summary>
+        [Description("进行中")]
+        进行中 = 5
+
+
+
+    }
 }

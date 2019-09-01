@@ -402,37 +402,58 @@ namespace CFLMedCab.Http.Bll
                 if (isAllContains)
 				{
 					bool isAllNormal = true;
+                    bool isAllSame = true;
 
 					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
 					{
-                        //种类不相等
-						if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                        //数量超出
+						if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
 						{
-							shelfTask.Status = DocumentStatus.异常.ToString();
 							isAllNormal = false;
 							break;
 						}
-					}
+
+                        //数量不相等
+                        if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                        {
+                            isAllSame = false;
+                        }
+                    }
 
 					if (isAllNormal)
 					{
-                        //获取这个任务单中所有的商品详情
-                        BaseData<ShelfTaskCommodityDetail>  bdAllstcd =  GetShelfTaskAllCommodityDetail(shelfTask);
-
-                        HttpHelper.GetInstance().ResultCheck(bdAllstcd, out bool isSuccess2);
-
-                        if(isSuccess2)
+                        if(isAllSame)
                         {
-                            //只有所有商品都完成了上架，不管在那个货架上，才能将这个任务单的状态改为“已完成”
-                            if(bdAllstcd.body.objects.Where(it => it.NeedShelfNumber != it.AlreadyShelfNumber && it.GoodsLocationId != goodsLocationId).Count() == 0 )
+                            //获取这个任务单中所有的商品详情
+                            BaseData<ShelfTaskCommodityDetail> bdAllstcd = GetShelfTaskAllCommodityDetail(shelfTask);
+
+                            HttpHelper.GetInstance().ResultCheck(bdAllstcd, out bool isSuccess2);
+
+                            if (isSuccess2)
                             {
-                                shelfTask.Status = DocumentStatus.已完成.ToString();
+                                //只有所有商品都完成了上架，不管在那个货架上，才能将这个任务单的状态改为“已完成”
+                                if (bdAllstcd.body.objects.Where(it => it.NeedShelfNumber != it.AlreadyShelfNumber && it.GoodsLocationId != goodsLocationId).Count() == 0)
+                                {
+                                    shelfTask.Status = DocumentStatus.已完成.ToString();
+                                }
+                                else
+                                {
+                                    shelfTask.Status = DocumentStatus.进行中.ToString();
+                                }
+                            }
+                            else
+                            {
+                                LogUtils.Error("GetShelfTaskChange: GetShelfTaskAllCommodityDetail" + bdAllstcd.message);
                             }
                         }
                         else
                         {
-                            LogUtils.Error("GetShelfTaskChange: GetShelfTaskAllCommodityDetail" + bdAllstcd.message);
+                            shelfTask.Status = DocumentStatus.进行中.ToString();
                         }
+                    }
+                    else
+                    {
+                        shelfTask.Status = DocumentStatus.异常.ToString();
                     }
 				}
 				else

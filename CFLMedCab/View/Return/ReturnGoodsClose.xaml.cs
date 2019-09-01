@@ -183,39 +183,39 @@ namespace CFLMedCab.View.Return
         {
             if(isSuccess)
             {
-                if(!bAutoSubmit)
-                {
-                    pickTask.BillStatus = DocumentStatus.异常.ToString();
-                }
-
                 LoadingDataEvent(this, true);
-                BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
+                BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask, bAutoSubmit);
                 LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
+                HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
+
                 if (!isSuccess1)
                 {
                     if(bAutoSubmit)
                     {
-                        MessageBox.Show("更新取货任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("创建取货任务单库存明细失败！" + basePostData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
                 else
                 {
+                    if (!bAutoSubmit)
+                    {
+                        pickTask.BillStatus = DocumentStatus.异常.ToString();
+                    }
+
                     LoadingDataEvent(this, true);
-                    BasePostData<CommodityInventoryChange> basePostData = PickBll.GetInstance().CreatePickTaskCommodityInventoryChange(bdCommodityCode, pickTask, bAutoSubmit);
+                    BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
                     LoadingDataEvent(this, false);
 
-                    HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
+                    HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess2);
 
                     if (!isSuccess2 && bAutoSubmit)
                     {
-                        MessageBox.Show("创建取货任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("更新取货任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
 
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "PickTask");
-
             }
 
             ApplicationState.SetGoodsInfo(after);
