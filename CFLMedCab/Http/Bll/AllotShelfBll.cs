@@ -19,7 +19,7 @@ namespace CFLMedCab.Http.Bll
     /// <summary>
     /// 调拨上架任务管理
     /// </summary>
-    public class AllotShelfBll : BaseBll<AllotShelf>
+    public class AllotShelfBll : BaseBll<AllotShelfBll>
     {
         /// <summary>
         /// 通过【调拨上架任务单 and 操作人（Operator）】从表格 【调拨上架】中查询获取上架任务
@@ -75,6 +75,141 @@ namespace CFLMedCab.Http.Bll
             return allotShelf;
 
         }
+
+
+        /// <summary>
+        /// 根据上架单号获取任务单详情
+        /// </summary>
+        /// <param name="shelfTaskName"></param>
+        /// <returns></returns>
+        public BaseData<AllotShelf> GetAllotShelfTask()
+        {
+            //获取待完成上架工单
+            BaseData<AllotShelf> baseDataShelfTask = HttpHelper.GetInstance().Get<AllotShelf>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        //logical_relation = "1 AND 2",
+                        logical_relation = "1",
+                        expressions =
+                        {
+                            //new QueryParam.Expressions
+                            //{
+                            //    field = "Status",
+                            //    @operator = "==",
+                            //    operands = {$"'{ HttpUtility.UrlEncode(ShelfTaskStatus.待上架.ToString()) }'" }
+                            //},
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
+                            }
+
+                        }
+                    }
+                }
+            });
+
+            BaseData<AllotShelfCommodity> baseDataShelfTaskCommodityDetail = GetShelfTaskCommodityDetail(baseDataShelfTask);
+
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
+
+            if (isSuccess)
+            {
+                //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
+                string id = ApplicationState.GetAllCabIds().ToList().First();
+
+                List<AllotShelf> taskList = new List<AllotShelf>();
+
+                var shelfTasks = baseDataShelfTask.body.objects.Where(item=>item.Status != ShelfTaskStatus.已完成.ToString() && item.Status != ShelfTaskStatus.异常.ToString()).ToList();
+
+                var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects.Where(item => item.GoodsLocationId == id);
+                shelfTasks.ForEach(it =>
+                {
+                    it.ShelfNumber = shelfTaskCommodityDetails.Where(sit => sit.AllotShelfId == it.id).Count();
+                    if (it.ShelfNumber != 0)
+                    {
+                        it.GoodLocationName = ApplicationState.GetCabNameById(id);
+                        taskList.Add(it);
+                    }
+                });
+
+                baseDataShelfTask.body.objects = taskList;
+            }
+
+            return baseDataShelfTask;
+        }
+
+
+        /// <summary>
+        /// 根据上架单号获取商品详情
+        /// </summary>
+        /// <param name="shelfTaskName"></param>
+        /// <returns></returns>
+        public BaseData<AllotShelfCommodity> GetShelfTaskCommodityDetail(BaseData<AllotShelf> baseDataShelfTask)
+        {
+
+            //校验是否含有数据，如果含有数据，拼接具体字段
+            BaseData<AllotShelfCommodity> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
+
+                return hh.Get<AllotShelfCommodity>(new QueryParam
+                {
+                    //@in =
+                    //{
+                    //	field = "ShelfTaskId",
+                    //	in_list = BllHelper.ParamUrlEncode(shelfTaskIds)
+                    //}
+                    view_filter =
+                    {
+                        filter =
+                        {
+                            //logical_relation = "1 AND 2 AND 3",
+                            logical_relation = "1 AND 2",
+                            expressions =
+                            {
+                                //这种写法有问题，暂时把这个条件删除，在后面过滤
+                                //new QueryParam.Expressions
+                                //{
+                                //    field = "ShelfTaskId",
+                                //    @operator = "INRANGE",
+                                //    operands =  BllHelper.OperandsProcess(shelfTaskIds)
+                                //},
+                                new QueryParam.Expressions
+                                {
+                                    field = "StoreHouseId",
+                                    @operator = "==",
+                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId()) }'" }
+                                },
+                                new QueryParam.Expressions
+                                {
+                                    field = "EquipmentId",
+                                    @operator = "==",
+                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
+                                }
+                            }
+                        }
+                    }
+                });
+
+            }, baseDataShelfTask);
+
+            //baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
+
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess1);
+
+            if (isSuccess && isSuccess1)
+            {
+                var shelfTaskIds = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
+                baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => shelfTaskIds.Contains(it.AllotShelfId)).ToList();
+            }
+            return baseDataShelfTaskCommodityDetail;
+        }
+
 
         /// <summary>
         /// 通过【调拨上架任务】（AllotShelf.id=AllotShelfCommodity.AllotShelfId）从表格 【调拨上架商品明细】中查询获取调拨上架商品的列表信息
@@ -163,6 +298,38 @@ namespace CFLMedCab.Http.Bll
 
             return baseDataAllotShelfCommodity;
         }
+
+
+        /// <summary>
+        /// 根据挑拨上架单中所有货柜下的商品详情
+        /// </summary>
+        /// <param name="shelfTaskName"></param>
+        /// <returns></returns>
+        public BaseData<AllotShelfCommodity> GetShelfTaskAllCommodityDetail(AllotShelf allotShelf)
+        {
+            BaseData<AllotShelfCommodity> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().Get<AllotShelfCommodity>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "AllotShelfId",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(allotShelf.id) }'"}
+                            }
+                        }
+                    }
+                }
+
+            });
+
+            return baseDataShelfTaskCommodityDetail;
+        }
         /// <summary>
         /// 更新调拨上架任务单
         /// </summary>
@@ -170,13 +337,19 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BasePutData<AllotShelf> PutAllotShelf(AllotShelf allotShelf)
         {
-
-            BasePutData<AllotShelf> basePutData = HttpHelper.GetInstance().Put(new AllotShelf
+            AllotShelf task = new AllotShelf
             {
                 id = allotShelf.id,
                 Status = allotShelf.Status,
                 version = allotShelf.version
-            });
+            };
+
+            if(allotShelf.AbnormalCauses != null)
+            {
+                task.AbnormalCauses = allotShelf.AbnormalCauses;
+            }
+
+            BasePutData <AllotShelf> basePutData = HttpHelper.GetInstance().Put(task);
 
             if (basePutData.code != 0)
             {
@@ -268,10 +441,9 @@ namespace CFLMedCab.Http.Bll
         /// <param name="baseDataCommodityCode"></param>
         /// <param name="allotShelf"></param>
         /// <param name="baseAllotShelfCommodity"></param>
-        /// <param name="bAutoSubmit"></param>
         /// <returns></returns>
 
-        public BasePostData<CommodityInventoryChange> SubmitAllotShelfChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, AllotShelf allotShelf, BaseData<AllotShelfCommodity> baseAllotShelfCommodity,bool bAutoSubmit)
+        public BasePostData<CommodityInventoryChange> SubmitAllotShelfChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, AllotShelf allotShelf, BaseData<AllotShelfCommodity> baseAllotShelfCommodity)
         {
             BasePostData<CommodityInventoryChange> retBaseSinglePostDataCommodityInventoryChange = null;
 

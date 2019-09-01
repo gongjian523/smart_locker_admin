@@ -82,7 +82,7 @@
             </Grid>
             <Grid x:Name="HomePageView" Grid.Row="1" Background="{StaticResource ContentBkBrush}" Panel.ZIndex="1">
                 <Border Margin="40"  Background="#FFFFFF" CornerRadius="6,6,6,6" Padding="10">
-                    <Grid>
+                    <Grid x:Name="btnBoard">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
@@ -105,20 +105,21 @@
 
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="0"  Margin="10,10,10,10"   Background="#3D7CFF"  Content="上架"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Replenish.png" Click="onEnterReplenishment" x:Name="NavBtnEnterReplenishment"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="1"  Margin="10,10,10,10"   Background="#8351E7"  Content="拣货"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="1"  Margin="10,10,10,10"   Background="#8351E7"  Content="调拨上架"
+                                 Tag="/CFLMedCab;component/Resources/Images/btn-Replenish.png"  x:Name="NavBtnEnterAllotShlef"/>
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="2"  Margin="10,10,10,10"   Background="#00D3DD"  Content="拣货"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Picking.png" Click="onEnterReturnGoods" x:Name="NavBtnEnterReturnGoods"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="2"  Margin="10,10,10,10"   Background="#00D3DD"  Content="回收取货"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="3"  Margin="10,10,10,10"   Background="#4999FF"  Content="回收取货"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-ReturnAll.png" Click="onEnterReturnPick" x:Name="NavBtnEnterReturnAll"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="0" Grid.Column="3"  Margin="10,10,10,10"   Background="#4999FF"  Content="库存调整"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="0"  Margin="10,10,10,10"   Background="#FF8B50"  Content="库存调整"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-StockAdjust.png" Click="onEnterStockSwitch" x:Name="NavBtnEnterStockSwitch"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="0"  Margin="10,10,10,10"   Background="#FF8B50"  Content="盘点"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Margin="10,10,10,10"   Background="#14D59C"  Content="盘点"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="onEnterInvtory" x:Name="NavBtnEnterInvtory" />
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="1"  Margin="10,10,10,10"   Background="#14D59C"  Content="库存查询"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Margin="10,10,10,10"   Background="#8B8CFF"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterStock" x:Name="NavBtnEnterStock"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="2"  Margin="10,10,10,10"   Background="#8B8CFF"  Content="系统设置"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="4"  Margin="10,10,10,10"   Background="#3D7CFF"  Content="系统设置"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-SysSetting.png" Click="onEnterSysSetting" x:Name="NavBtnEnterSysSetting"/>
                     </Grid>
-
                 </Border>
             </Grid>
             <Grid Grid.Row="1"  x:Name="ContentView"  Panel.ZIndex="0"  >

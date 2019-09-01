@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="CFLMedCab.View.Allot.AllotShelfDetailOpen"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CFLMedCab.View.Return"
+             xmlns:cvt="clr-namespace:CFLMedCab.Converter"
+             mc:Ignorable="d" 
+             d:DesignHeight="500" d:DesignWidth="900">
+    <Control.Resources>
+        <cvt:RequisitionAttributeConverter x:Key="RequisitionAttributeConverter"/>
+    </Control.Resources>
+    <Border Style="{StaticResource CommonBlueBorder}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="0">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <Label Content="业务类型" Grid.Column="0" Grid.Row="0" Style="{StaticResource lblTitle1}" />
+                    <Label Content="拣货" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
+
+                    <Label Grid.Column="1" Grid.Row="0"  Content="操作人" Foreground="#666666" Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Column="1" Grid.Row="1"  Content="操作人" Name="operatorName" Style="{StaticResource lblTitle4_0}"/>
+
+                    <Label Grid.Column="2" Grid.Row="0"  Content="拣货工单号" Foreground="#666666" Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Column="2" Grid.Row="1"  Content="拣货工单号" Name="orderNum" Style="{StaticResource lblTitle4_1}"/>
+                    
+                </Grid>
+            </Border>
+            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="1" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"></RowDefinition>
+                        <RowDefinition Height="*"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0" x:Name="column1"/>
+                        <Grid Grid.Column="1" x:Name="column2"/>
+                        <Grid Grid.Column="2" x:Name="column3"/>
+                        <Grid Grid.Column="3" x:Name="column4"/>
+                        <Grid Grid.Column="4" x:Name="column5"/>
+                    </Grid>
+                    <Label Content="待上架商品" Grid.Row="0" Padding="0 10" Style="{StaticResource lblTitle5}"/>
+                    <ListView  Grid.Row="1" Grid.Column="1"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="商品名称" Width="{Binding ElementName=column1,Path=ActualWidth}" >
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CommodityName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="商品编码" Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CommodityCodeName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="库房" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding StoreHouseName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="设备" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding EquipmentName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="货位" Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding GoodsLocationName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</UserControl>

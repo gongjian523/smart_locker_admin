@@ -449,7 +449,7 @@ namespace CFLMedCab.Infrastructure
 
             list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.MCabId));
 #if DUALCAB
-            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.SCabId);
+            list.Add(ApplicationState.GetValue<string>((int)ApplicationKey.SCabId));
 #endif
             return list;
         }

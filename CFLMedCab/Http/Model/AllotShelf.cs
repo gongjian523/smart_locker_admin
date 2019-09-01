@@ -90,6 +90,18 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string updated_by { get; set; }
 
+        /// <summary>
+        /// 该任务单总数
+        /// </summary>
+        [JsonIgnore]
+        public int ShelfNumber { get; set; }
+
+        /// <summary>
+        /// 货柜号
+        /// </summary>
+        [JsonIgnore]
+        public string GoodLocationName { get; set; }
+
     }
     /// <summary>
     /// 调拨上架任务资料
