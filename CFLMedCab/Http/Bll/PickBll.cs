@@ -162,7 +162,6 @@ namespace CFLMedCab.Http.Bll
 
                 //var pickTaskIds = baseDataPickTask.body.objects.Select(it => it.id).ToList();
 
-
                 return hh.Get<PickCommodity>(new QueryParam
 				{
 					//@in =
@@ -388,44 +387,65 @@ namespace CFLMedCab.Http.Bll
 
 				if (isAllContains)
 				{
-
 					bool isAllNormal = true;
+                    bool isAllSame = true;
 
 					foreach (PickCommodity stcd in pickTaskCommodityDetails)
 					{
-						if ((stcd.Number - stcd.PickNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+						if ((stcd.Number - stcd.PickNumber) < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
 						{
+                            //有商品的上架数量超出规定数量
 							isAllNormal = false;
 							break;
 						}
-					}
+
+                        if ((stcd.Number - stcd.PickNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                        {
+                            //有商品的上架数量和规定数量不一致
+                            isAllSame = false;
+                        }
+                    }
 
 					if (isAllNormal)
 					{
-                        //获取这个任务单中所有的商品详情
-                        BaseData<PickCommodity> bdAllpc = GetPickTaskAllCommodityDetail(pickTask);
-
-                        HttpHelper.GetInstance().ResultCheck(bdAllpc, out bool isSuccess2);
-
-                        if (isSuccess2)
+                        if(isAllSame)
                         {
-                            //只有所有商品都完成了拣货，不管在那个货架上，才能将这个任务单的状态改为“已完成”
-                            if (bdAllpc.body.objects.Where(it => it.Number != it.PickNumber && it.GoodsLocationId != goodsLocationId).Count() == 0)
+                            //获取这个任务单中所有的商品详情
+                            BaseData<PickCommodity> bdAllpc = GetPickTaskAllCommodityDetail(pickTask);
+
+                            HttpHelper.GetInstance().ResultCheck(bdAllpc, out bool isSuccess2);
+
+                            if (isSuccess2)
                             {
-                                pickTask.BillStatus = DocumentStatus.已完成.ToString();
+                                //只有所有商品都完成了拣货，不管在那个货架上，才能将这个任务单的状态改为“已完成”
+                                if (bdAllpc.body.objects.Where(it => it.Number != it.PickNumber && it.GoodsLocationId != goodsLocationId).Count() == 0)
+                                {
+                                    pickTask.BillStatus = DocumentStatus.已完成.ToString();
+                                }
+                                else
+                                {
+                                    pickTask.BillStatus = DocumentStatus.进行中.ToString();
+                                }
+                            }
+                            else
+                            {
+                                LogUtils.Error("GetPickTaskChange: GetShelfTaskAllCommodityDetail" + bdAllpc.message);
                             }
                         }
                         else
                         {
-                            LogUtils.Error("GetPickTaskChange: GetShelfTaskAllCommodityDetail" + bdAllpc.message);
+                            pickTask.BillStatus = DocumentStatus.进行中.ToString();
                         }
 					}
+                    else
+                    {
+                        pickTask.BillStatus = DocumentStatus.异常.ToString();
+                    }
 				}
-				//else
-				//{
-				//	pickTask.BillStatus = DocumentStatus.异常.ToString();
-					
-				//}
+                else
+                {
+                    pickTask.BillStatus = DocumentStatus.异常.ToString();
+                }
 
                 foreach (PickCommodity stcd in pickTaskCommodityDetails)
                 {

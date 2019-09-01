@@ -348,6 +348,11 @@ namespace CFLMedCab.Http.Bll
             {
                 task.AbnormalCauses = allotShelf.AbnormalCauses;
             }
+            
+            if(allotShelf.Status == AllotShelfStatusEnum.已完成.ToString())
+            {
+                task.FinishDate = GetDateTimeNow();
+            }
 
             BasePutData <AllotShelf> basePutData = HttpHelper.GetInstance().Put(task);
 

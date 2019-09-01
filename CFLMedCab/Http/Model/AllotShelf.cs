@@ -33,7 +33,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 完成时间
         /// </summary>
-        public DateTime FinishDate;
+        public string FinishDate;
 
         /// <summary>
         /// 单据状态（待上架，已完成，异常，进行中）

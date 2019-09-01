@@ -132,7 +132,7 @@ namespace CFLMedCab.Http.Bll
                     {
                         filter =
                         {
-                            logical_relation = "1",
+                            logical_relation = "1 AND 2",
                             expressions =
                             {
                                 new QueryParam.Expressions
@@ -140,6 +140,12 @@ namespace CFLMedCab.Http.Bll
                                     field = "ConsumingOrderId",
                                     @operator = "==",
                                     operands =  {$"'{ HttpUtility.UrlEncode(baseDataConsumingOrder.body.objects[0].id) }'"}
+                                },
+                                new QueryParam.Expressions
+                                {
+                                    field = "EquipmentId",
+                                    @operator = "==",
+                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
                                 }
                             }
                         }
@@ -167,6 +173,49 @@ namespace CFLMedCab.Http.Bll
 			return baseOperationOrderGoodsDetail;
 
 		}
+
+
+        public BaseData<ConsumingGoodsDetail> GetAllOperationOrderGoodsDetail(ConsumingOrder consumingOrder)
+        {
+            //根据领用单ID获取领用上列表信息
+            BaseData<ConsumingGoodsDetail> baseOperationOrderGoodsDetail = HttpHelper.GetInstance().Get<ConsumingGoodsDetail>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "ConsumingOrderId",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(consumingOrder.id) }'"}
+                            }
+                        }
+                    }
+                }
+            });
+
+            //校验是否含有数据，如果含有数据，拼接具体字段
+            HttpHelper.GetInstance().ResultCheck(baseOperationOrderGoodsDetail, out bool isSuccess2);
+            if (isSuccess2)
+            {
+                baseOperationOrderGoodsDetail.body.objects.ForEach(it =>
+                {
+                    //拼接商品码名称
+                    if (!string.IsNullOrEmpty(it.CommodityId))
+                    {
+                        it.CommodityName = GetNameById<Commodity>(it.CommodityId);
+                    };
+
+                });
+            }
+            return baseOperationOrderGoodsDetail;
+        }
+
+
         /// <summary>
         /// 根据医嘱领用单名称，获取PrescriptionBill信息
         /// </summary>
@@ -418,7 +467,7 @@ namespace CFLMedCab.Http.Bll
 				//获取待领用商品CommodityId列表（去重后）
 				var detailCommodityIds = operationDetails.Select(it => it.CommodityId).Distinct().ToList();
                 //变更后的Id列表
-				var commodityCodes = baseDataCommodityCode.body.objects;
+				var commodityCodes = baseDataCommodityCode.body.objects;    
                 //是否主单异常
                 var IsException = false;
 
@@ -464,6 +513,7 @@ namespace CFLMedCab.Http.Bll
                     bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count == detailCommodityIds.Count;
 
                     bool isAllNormal = true;
+                    bool isAllSame = true; //
                     foreach (ConsumingGoodsDetail ccd in operationDetails)
                     {
                         //详情对应的Commodity领用数量
@@ -472,10 +522,15 @@ namespace CFLMedCab.Http.Bll
                         //任何一种商品的数量不一致
                         if(ccd.unusedAmount != null)
                         {
-                            if(Convert.ToInt32(ccd.unusedAmount) != tempCount)
+                            if(Convert.ToInt32(ccd.unusedAmount) < tempCount)
                             {
                                 isAllNormal = false;
                                 break;
+                            }
+
+                            if (Convert.ToInt32(ccd.unusedAmount) != tempCount)
+                            {
+                                isAllSame = false;
                             }
                         }
                     }
@@ -483,7 +538,32 @@ namespace CFLMedCab.Http.Bll
                     //只有种类和数量完全一致的情况下，才会修改领用单状态
                     if (isAllContains && isAllNormal)
                     {
-                         order.Status = ConsumingOrderStatus.已完成.ToString();
+                        if(isAllSame)
+                        {
+                            BaseData<ConsumingGoodsDetail> bdConsumingGoodsDetail =  GetAllOperationOrderGoodsDetail(order);
+
+                            HttpHelper.GetInstance().ResultCheck(bdConsumingGoodsDetail, out bool isSuccess2);
+
+                            if(isSuccess2)
+                            {
+                                if(bdConsumingGoodsDetail.body.objects.Where(item => Convert.ToInt32(item.unusedAmount) != 0 && item.EquipmentId != ApplicationState.GetEquipId()).Count() == 0)
+                                {
+                                    order.Status = ConsumingOrderStatus.已完成.ToString();
+                                }
+                                else
+                                {
+                                    order.Status = ConsumingOrderStatus.领用中.ToString();
+                                }
+                            }
+                            else
+                            {
+                                LogUtils.Error("GetOperationOrderChangeWithOrder: GetAllOperationOrderGoodsDetail" + bdConsumingGoodsDetail.message);
+                            }                     
+                        }
+                        else
+                        {
+                            order.Status = ConsumingOrderStatus.领用中.ToString();
+                        }
                     }
                     else
                     {

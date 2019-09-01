@@ -174,30 +174,27 @@ namespace CFLMedCab.View.Allot
                 if (!isSuccess1)
                 {
                     MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
-                    st = "异常";
+                    st = AllotShelfStatusEnum.异常.ToString();
                 }
                 else
                 {
                     int cnt = bdAllotShelfCommodity.body.objects.Where(item => item.Status == "未上架" && item.EquipmentId != ApplicationState.GetEquipId()).Count();
                     if(cnt > 0)
                     {
-                        st = "进行中";
+                        st = AllotShelfStatusEnum.进行中.ToString(); 
                     }
                     else
                     {
-                        st = "已完成";
+                        st = AllotShelfStatusEnum.已完成.ToString(); ;
                     }
                 }
-                
-
+               
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
                 EndOperation(bExit, st);
             }
         }
 
-        
-
-
+       
         /// <summary>
         /// 继续操作
         /// </summary>
@@ -229,53 +226,54 @@ namespace CFLMedCab.View.Allot
         {
             if(isSuccess)
             {
-                AbnormalCauses abnormalCauses;
-
-                if ((bool)bthShortHide.IsChecked)
-                    abnormalCauses = AbnormalCauses.商品缺失;
-                else if ((bool)bthLossHide.IsChecked)
-                    abnormalCauses = AbnormalCauses.商品遗失;
-                else if ((bool)bthBadHide.IsChecked)
-                    abnormalCauses = AbnormalCauses.商品损坏;
-                else if ((bool)bthOtherHide.IsChecked)
-                    abnormalCauses = AbnormalCauses.其他;
-                else
-                    abnormalCauses = AbnormalCauses.未选;
-
-
-                if (!bAutoSubmit)
-                {
-                    allotShelf.Status = DocumentStatus.异常.ToString();
-                }
-                else
-                {
-                    allotShelf.Status = status;
-                    allotShelf.AbnormalCauses = abnormalCauses.ToString();
-                }
-
                 LoadingDataEvent(this, true);
-                BasePutData<AllotShelf> putData = AllotShelfBll.GetInstance().PutAllotShelf(allotShelf);
+                BasePostData<CommodityInventoryChange> basePostData = AllotShelfBll.GetInstance().SubmitAllotShelfChangeWithOrder(bdCommodityCode, allotShelf, bdCommodityDetail);
                 LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
+                HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
+
                 if (!isSuccess1)
                 {
                     if(bAutoSubmit)
                     {
-                        MessageBox.Show("更新挑拨上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("创建调拨上架任务单库存明细失败！" + basePostData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
                 else
                 {
+                    AbnormalCauses abnormalCauses;
+
+                    if ((bool)bthShortHide.IsChecked)
+                        abnormalCauses = AbnormalCauses.商品缺失;
+                    else if ((bool)bthLossHide.IsChecked)
+                        abnormalCauses = AbnormalCauses.商品遗失;
+                    else if ((bool)bthBadHide.IsChecked)
+                        abnormalCauses = AbnormalCauses.商品损坏;
+                    else if ((bool)bthOtherHide.IsChecked)
+                        abnormalCauses = AbnormalCauses.其他;
+                    else
+                        abnormalCauses = AbnormalCauses.未选;
+
+
+                    if (!bAutoSubmit)
+                    {
+                        allotShelf.Status = DocumentStatus.异常.ToString();
+                    }
+                    else
+                    {
+                        allotShelf.Status = status;
+                        allotShelf.AbnormalCauses = abnormalCauses.ToString();
+                    }
+
                     LoadingDataEvent(this, true);
-                    BasePostData<CommodityInventoryChange> basePostData = AllotShelfBll.GetInstance().SubmitAllotShelfChangeWithOrder(bdCommodityCode, allotShelf, bdCommodityDetail);
+                    BasePutData<AllotShelf> putData = AllotShelfBll.GetInstance().PutAllotShelf(allotShelf);
                     LoadingDataEvent(this, false);
 
-                    HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
+                    HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess2);
 
                     if (!isSuccess2 && bAutoSubmit)
                     {
-                        MessageBox.Show("创建调拨上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("更新挑拨上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
 
