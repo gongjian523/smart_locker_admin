@@ -333,9 +333,16 @@ namespace CFLMedCab.Http.Bll
             {
                 LogUtils.Warn("CreateConsumingOrder 2:" + ResultCode.Result_Exception.ToString());
             }
-            ////当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
-            //Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(),
-            order.body[0].Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString();
+
+            ////当入库数量大于0说明在领用的时候进行了入库操作, 或者领用商品中有过期商品， 变更领用单状态为异常
+            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString()).Count() >0)
+            {
+                order.body[0].Status = ConsumingOrderStatus.异常.ToString();
+            }
+            else
+            {
+                order.body[0].Status = ConsumingOrderStatus.已完成.ToString();
+            }
             //更新主表状态
             var orderResult = UpdateConsumingOrderStatus(order.body[0]);
             //校验数据是否正常，并记录日志
@@ -346,6 +353,8 @@ namespace CFLMedCab.Http.Bll
             }
             return changes;
 		}
+
+
         /// <summary>
         /// 有单领用数据提交
         /// （2019-08-27 18:08）变更提交顺序：
@@ -424,8 +433,16 @@ namespace CFLMedCab.Http.Bll
 					{
 						if (detailCommodityIds.Contains(it.CommodityId))
 						{
-							it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
-						}
+                            if(it.QualityStatus == QualityStatusType.过期.ToString())
+                            {
+                                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                                IsException = true;
+                            }
+                            else
+                            {
+                                it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                            }
+                        }
 						else
 						{
 							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();

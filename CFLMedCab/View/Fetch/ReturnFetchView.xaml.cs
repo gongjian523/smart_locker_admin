@@ -99,11 +99,15 @@ namespace CFLMedCab.View.Fetch
 
                 LoadingDataEvent(this, true);
                 bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (isSuccess)
+                {
+                    bdCommodityCode = CommodityCodeBll.GetInstance().GetQualityStatus(bdCommodityCode, out isSuccess);
+                }
                 LoadingDataEvent(this, false);
 
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
-
                 if (!isSuccess)
                 {
                     MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
@@ -113,11 +117,26 @@ namespace CFLMedCab.View.Fetch
                 listView.DataContext = bdCommodityCode.body.objects;
                 returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
                 fetchNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+                int expiredCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count();
+
+                expiredNum.Content = expiredCnt;
 
                 bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().ForEach(it =>
                 {
                     it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                 });
+
+                //领用产品上包含过期商品不让用户主动提交
+                if (expiredCnt == 0)
+                {
+                    normalBtmView.Visibility = Visibility.Visible;
+                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
+                }
             }));
         }
 

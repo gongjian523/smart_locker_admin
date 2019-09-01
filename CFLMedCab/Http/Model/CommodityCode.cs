@@ -121,7 +121,7 @@ namespace CFLMedCab.Http.Model
 		public string CommodityInventoryId { get; set; }
 
 		/// <summary>
-		/// 是否损坏
+		/// 是否损坏，在手动盘点两种设置
 		/// </summary>
 		[JsonIgnore]
 		public string QStatus { get; set; } = "正常";
@@ -161,6 +161,12 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         [JsonIgnore]
         public string Specifications { get; set; }
+
+        /// <summary>
+        /// 质量状态，从CommodityInventoryDetail而来
+        /// </summary>
+        [JsonIgnore]
+        public string QualityStatus { get; set; }
 
     }
 }

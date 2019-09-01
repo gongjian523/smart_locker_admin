@@ -91,7 +91,13 @@ namespace CFLMedCab.View.Fetch
 
                 LoadingDataEvent(this, true);
                 bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (isSuccess)
+                {
+                    bdCommodityCode = CommodityCodeBll.GetInstance().GetQualityStatus(bdCommodityCode, out isSuccess);
+                }
                 LoadingDataEvent(this, false);
+                
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
                 if (!isSuccess)
@@ -101,13 +107,32 @@ namespace CFLMedCab.View.Fetch
                 }
 
                 listView.DataContext = bdCommodityCode.body.objects;
-                normalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-                abnormalNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+                outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+                int abnormalOut = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count();
+                int abnormalIn  = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
 
-                bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it =>
+                abnormalOutNum.Content = abnormalOut;
+                abnormalInNum.Content = abnormalIn;
+
+                bdCommodityCode.body.objects.ToList().ForEach(it =>
                 {
-                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                    if(it.operate_type == 1 || it.operate_type == 0 && it.QualityStatus == QualityStatusType.过期.ToString())
+                    {
+                        it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                    }
                 });
+
+                //领用产品上包含过期商品不让用户主动提交
+                if (abnormalOut == 0)
+                {
+                    normalBtmView.Visibility = Visibility.Visible;
+                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
+                }
             }));
         }
 
