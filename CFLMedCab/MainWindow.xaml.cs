@@ -42,6 +42,7 @@ using WindowsInput.Native;
 using WindowsInput;
 using System.Xml;
 using CFLMedCab.Model.Constant;
+using CFLMedCab.View.Allot;
 
 namespace CFLMedCab
 {
@@ -482,12 +483,28 @@ namespace CFLMedCab
             NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
 
             NavBtnEnterReplenishment.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterAllotShlef.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnAll.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStockSwitch.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = Visibility.Visible;
             NavBtnEnterStock.Visibility = Visibility.Visible;
             NavBtnEnterSysSetting.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+
+            if(isMedicalStuff)
+            {
+                NavBtnEnterInvtory.SetValue(Grid.RowProperty,1);
+                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty,0);
+                NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 1);
+            }
+            else
+            {
+                NavBtnEnterInvtory.SetValue(Grid.RowProperty, 1);
+                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 1);
+                NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 2);
+            }
         }
 
         /// <summary>
@@ -551,6 +568,9 @@ namespace CFLMedCab
                     break;
                 case SubViewType.ReplenishmentClose:
                     ((ReplenishmentClose)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.AllotShelfClose:
+                    ((AllotShelfClose)subViewHandler).onExitTimerExpired();
                     break;
                 case SubViewType.ReturnClose:
                     ((ReturnClose)subViewHandler).onExitTimerExpired();
@@ -1244,7 +1264,7 @@ namespace CFLMedCab
 #endregion
 #endregion
 
-#region Replenishment
+        #region Replenishment
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -1378,7 +1398,7 @@ namespace CFLMedCab
                     if (subViewHandler != null)
                     {
                         LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-                        ((SurgeryNumOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                        ((ReplenishmentDetailOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
                     }
                 }));
 
@@ -1411,9 +1431,176 @@ namespace CFLMedCab
             }));
         }
 
-#endregion
+        #endregion
 
-#region  ReturnGoods
+        #region AllotShelf
+        /// <summary>
+        /// 进入调拨上架单列表页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotShelfView(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
+
+            AllotShelfView allotShelfView = new AllotShelfView();
+            allotShelfView.EnterAllotShelfDetailEvent += new AllotShelfView.EnterAllotShelfDetailHandler(onEnterAllotShelfDetail);
+            allotShelfView.EnterAllotShelfDetailOpenEvent += new AllotShelfView.EnterAllotShelfDetailOpenHandler(onEnterAllotShelfDetailOpen);
+            allotShelfView.LoadingDataEvent += new AllotShelfView.LoadingDataHandler(onLoadingData);
+
+            ContentFrame.Navigate(allotShelfView);
+            //进入上架页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+        /// <summary>
+        /// 进入调拨上架单详情页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotShelfDetail(object sender, AllotShelf e)
+        {
+            AllotShelfDetail allotShelfDetail = new AllotShelfDetail(e);
+            allotShelfDetail.EnterAllotShelfDetailOpenEvent += new AllotShelfDetail.EnterAllotShelfDetailOpenHandler(onEnterAllotShelfDetailOpen);
+            allotShelfDetail.EnterAllotShelfViewEvent += new AllotShelfDetail.EnterAllotShelfViewHandler(onEnterAllotShelfView);
+            allotShelfDetail.LoadingDataEvent += new AllotShelfDetail.LoadingDataHandler(onLoadingData);
+
+            ContentFrame.Navigate(allotShelfDetail);
+            //进入上架任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+        /// <summary>
+        /// 进入上架单详情页-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotShelfDetailOpen(object sender, AllotShelf e)
+        {
+            NaviView.Visibility = Visibility.Hidden;
+
+            AllotShelfDetailOpen allotShelfDetailOpen = new AllotShelfDetailOpen(e);
+            allotShelfDetailOpen.LoadingDataEvent += new AllotShelfDetailOpen.LoadingDataHandler(onLoadingData);
+            allotShelfDetailOpen.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onAllotShelfOpenDoorEvent);
+
+            FullFrame.Navigate(allotShelfDetailOpen);
+            //进入调拨上架开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(allotShelfDetailOpen, SubViewType.Others);
+
+            locOpenNum = 0;
+
+            //只有从上架列表或者详情页面发出的开门事件，才能清空此列表；
+            //从关门页面发出的开门事件，不能清除此列表
+            if ((sender as Control).Name != "CtrlAllotShelfClose")
+            {
+                listOpenLocCom.Clear();
+            }
+
+            List<Locations> locs = ApplicationState.GetLocations();
+
+            //只有一个货位，直接开门
+            if (locs.Count == 1)
+            {
+                onAllotShelfOpenDoorEvent(this, locs[0].Code);
+
+                OpenCabinet openCabinet = new OpenCabinet();
+                openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+                onShowPopFrame(openCabinet);
+            }
+        }
+
+        /// <summary>
+        /// 调拨上架开门事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onAllotShelfOpenDoorEvent(object sender, string e)
+        {
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
+
+            if (rfidCom == "" || lockerCom == "")
+            {
+                return;
+            }
+
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            if (!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+#if TESTENV
+#else
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterAllotShelfCloseEvent);
+            delegateGetMsg.userData = e;
+#endif
+
+            locOpenNum++;
+
+            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
+        }
+
+        /// <summary>
+        /// 进入上架单详情页-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotShelfCloseEvent(object sender, bool isClose)
+        {
+            LogUtils.Debug($"返回开锁状态{isClose}");
+
+            if (!isClose)
+                return;
+
+            if (locOpenNum > 0)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((AllotShelfDetailOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
+                }));
+
+                return;
+            }
+
+            //弹出盘点中弹窗
+            EnterInvotoryOngoing();
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
+
+            //关闭盘点中弹窗
+            ClosePop();
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
+
+            AllotShelf allotShelf = ((AllotShelfDetailOpen)subViewHandler).GetShelfTask();
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                AllotShelfClose allotShelfClose = new AllotShelfClose(allotShelf, hs, listOpenLocCom);
+                allotShelfClose.EnterAllotShelfDetailOpenEvent += new AllotShelfClose.EnterAllotShelfDetailOpenHandler(onEnterAllotShelfDetailOpen);
+                allotShelfClose.EnterPopCloseEvent += new AllotShelfClose.EnterPopCloseHandler(onEnterPopClose);
+                allotShelfClose.LoadingDataEvent += new AllotShelfClose.LoadingDataHandler(onLoadingData);
+
+                FullFrame.Navigate(allotShelfClose);
+                //进入调拨上架关门页面
+                SetSubViewInfo(allotShelfClose, SubViewType.AllotShelfClose);
+            }));
+        }
+
+        #endregion
+
+        #region  ReturnGoods
         /// <summary>
         /// 进入拣货页面
         /// </summary>
@@ -1550,7 +1737,7 @@ namespace CFLMedCab
                     if (subViewHandler != null)
                     {
                         LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-                        ((SurgeryNumOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                        ((ReturnGoodsDetailOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
                     }
                 }));
 

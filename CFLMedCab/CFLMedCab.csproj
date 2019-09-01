@@ -345,6 +345,18 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\Allot\AllotShelfView.xaml.cs">
+      <DependentUpon>AllotShelfView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Allot\AllotShelfClose.xaml.cs">
+      <DependentUpon>AllotShelfClose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Allot\AllotShelfDetail.xaml.cs">
+      <DependentUpon>AllotShelfDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Allot\AllotShelfDetailOpen.xaml.cs">
+      <DependentUpon>AllotShelfDetailOpen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Inventory\InventoryDtlLocal.xaml.cs">
       <DependentUpon>InventoryDtlLocal.xaml</DependentUpon>
     </Compile>
@@ -493,6 +505,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Allot\AllotShelfView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Allot\AllotShelfClose.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Allot\AllotShelfDetail.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Allot\AllotShelfDetailOpen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Inventory\InventoryDtlLocal.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

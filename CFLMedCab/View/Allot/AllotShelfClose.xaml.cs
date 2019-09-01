@@ -1,7 +1,7 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DAL;
 using CFLMedCab.DTO.Goodss;
-using CFLMedCab.DTO.Replenish;
+using CFLMedCab.DTO.Picking;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Helper;
@@ -9,7 +9,6 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
-using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Constant;
 using System;
@@ -29,16 +28,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View.ReplenishmentOrder
+namespace CFLMedCab.View.Allot
 {
     /// <summary>
-    /// ReplenishmentClose.xaml 的交互逻辑
+    /// AllotShelfClose.xaml 的交互逻辑
     /// </summary>
-    public partial class ReplenishmentClose : UserControl
+    public partial class AllotShelfClose : UserControl
     {
-        //进入补货单详情开门状态页面
-        public delegate void EnterReplenishmentDetailOpenHandler(object sender, ShelfTask e);
-        public event EnterReplenishmentDetailOpenHandler EnterReplenishmentDetailOpenEvent;
+        //进入调拨上架详情开门状态页面
+        public delegate void EnterAllotShelfDetailOpenHandler(object sender, AllotShelf e);
+        public event EnterAllotShelfDetailOpenHandler EnterAllotShelfDetailOpenEvent;
 
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, bool e);
@@ -48,28 +47,28 @@ namespace CFLMedCab.View.ReplenishmentOrder
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        private ShelfTask shelfTask;
+        private AllotShelf allotShelf;
         private HashSet<CommodityEps> after;
 
         private BaseData<CommodityCode> bdCommodityCode;
-        private BaseData<ShelfTaskCommodityDetail> bdCommodityDetail;
+        private BaseData<AllotShelfCommodity> bdCommodityDetail;
 
         private List<string> locCodes = new List<string>();
 
-        bool bExit;
+        private bool bExit;
 
-        private bool isSuccess;
+        bool isSuccess;
 
-        public ReplenishmentClose(ShelfTask task, HashSet<CommodityEps> hs, List<string> rfidComs)
+        public AllotShelfClose(AllotShelf task, HashSet<CommodityEps> hs, List<string> rfidComs)
         {
             InitializeComponent();
 
+            allotShelf = task;
             //操作人
             operatorName.Content = ApplicationState.GetUserInfo().name;
-            //工单号
+            ////工单号
             orderNum.Content = task.name;
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
-            shelfTask = task;
             after = hs;
 
             rfidComs.ForEach(com =>
@@ -91,6 +90,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
+
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
                 {
@@ -102,37 +102,37 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 LoadingDataEvent(this, true);
                 bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
                 LoadingDataEvent(this, false);
+
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("获取商品比较信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("获取商品信息错误！" + bdCommodityCode.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+
+                bdCommodityDetail = AllotShelfBll.GetInstance().GetShelfTaskCommodityDetail(allotShelf);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 
                 LoadingDataEvent(this, true);
-                bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
+                AllotShelfBll.GetInstance().HandleAllotShelfChangeWithOrder(bdCommodityCode, allotShelf, bdCommodityDetail);
                 LoadingDataEvent(this, false);
-                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
-                if (!isSuccess)
-                {
-                    MessageBox.Show("获取上架任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
-                    return;
-                }
-
-                ShelfBll.GetInstance().GetShelfTaskChange(bdCommodityCode, shelfTask, bdCommodityDetail);
 
                 int inCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().Count;
+                int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 ).ToList().Count;
                 int abnormalInCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 1 && item.AbnormalDisplay == "异常").ToList().Count;
-                int abnormalOutCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
 
                 inNum.Content = inCnt;
                 abnormalInNum.Content = abnormalInCnt;
                 abnormalOutNum.Content = abnormalOutCnt;
-                int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => (item.CurShelfNumber > (item.NeedShelfNumber - item.AlreadyShelfNumber))).Count();
-
                 listView.DataContext = bdCommodityCode.body.objects;
 
-                if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
+                //没有异常商品才能进入提交页面
+                if (abnormalInCnt == 0 && abnormalOutCnt == 0)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;
@@ -152,37 +152,51 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            bool bGotoAbnormal = true;
+            //获取没有上架商品的信息
 
-            if (isSuccess)
-            {
-                if (bdCommodityCode.code != 0 || bdCommodityDetail.code != 0)
-                {
-                    bGotoAbnormal = false;
-                }
-                else
-                {
-                    if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() == 0)
-                    {
-                        bGotoAbnormal = false;
-                    }
-                }
-            }
+            List<string> codeIds = bdCommodityCode.body.objects.Select(item => item.id).ToList();
 
-            if (!bGotoAbnormal || !isSuccess)
+            List<AllotShelfCommodity> list = bdCommodityDetail.body.objects.Where(item => item.Status == "未上架" || !codeIds.Contains(item.CommodityCodeId)).ToList();
+
+            //还有未上架的商品,让用户选择原因
+            if(list.Count > 0)
             {
-                
-                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-                EndOperation(bExit);
+                normalView.Visibility = Visibility.Hidden;
+                abnormalView.Visibility = Visibility.Visible;
             }
             else
             {
-                normalView.Visibility = Visibility.Collapsed;
-                abnormalView.Visibility = Visibility.Visible;
+                BaseData<AllotShelfCommodity> bdAllotShelfCommodity = AllotShelfBll.GetInstance().GetShelfTaskAllCommodityDetail(allotShelf);
 
-                listView2.DataContext = bdCommodityDetail.body.objects;
+                string st;
+
+                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess1);
+                if (!isSuccess1)
+                {
+                    MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
+                    st = "异常";
+                }
+                else
+                {
+                    int cnt = bdAllotShelfCommodity.body.objects.Where(item => item.Status == "未上架" && item.EquipmentId != ApplicationState.GetEquipId()).Count();
+                    if(cnt > 0)
+                    {
+                        st = "进行中";
+                    }
+                    else
+                    {
+                        st = "已完成";
+                    }
+                }
+                
+
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                EndOperation(bExit, st);
             }
         }
+
+        
+
 
         /// <summary>
         /// 继续操作
@@ -191,8 +205,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            
-            EnterReplenishmentDetailOpenEvent(this, shelfTask);
+            EnterAllotShelfDetailOpenEvent(this, allotShelf);
             return;
         }
 
@@ -203,16 +216,16 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                EndOperation(true, false);
+                EndOperation(true, "异常",false);
             }));
         }
 
         /// <summary>
         /// 结束操作，包括主动提交和长时间未操作界面被动提交
         /// </summary>
-        /// <param name="bExit">退出登录还是回到首页</param>
+        /// <param name="bExit">退出登陆还是回到首页</param>
         /// <param name="bAutoSubmit">是否是主动提交</param>
-        private void EndOperation(bool bExit, bool bAutoSubmit = true)
+        private void EndOperation(bool bExit, string status, bool bAutoSubmit = true)
         {
             if(isSuccess)
             {
@@ -229,43 +242,48 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 else
                     abnormalCauses = AbnormalCauses.未选;
 
-                //长时间未操作，状态一律改成异常
-                if(!bAutoSubmit)
+
+                if (!bAutoSubmit)
                 {
-                    shelfTask.Status = DocumentStatus.异常.ToString();
+                    allotShelf.Status = DocumentStatus.异常.ToString();
+                }
+                else
+                {
+                    allotShelf.Status = status;
+                    allotShelf.AbnormalCauses = abnormalCauses.ToString();
                 }
 
                 LoadingDataEvent(this, true);
-                BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, abnormalCauses);
+                BasePutData<AllotShelf> putData = AllotShelfBll.GetInstance().PutAllotShelf(allotShelf);
                 LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
-				if (!isSuccess1)
-				{
+                if (!isSuccess1)
+                {
                     if(bAutoSubmit)
                     {
-                        MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("更新挑拨上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
                     }
-				}
-				else
-				{
+                }
+                else
+                {
                     LoadingDataEvent(this, true);
-                    BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask, bAutoSubmit);
+                    BasePostData<CommodityInventoryChange> basePostData = AllotShelfBll.GetInstance().SubmitAllotShelfChangeWithOrder(bdCommodityCode, allotShelf, bdCommodityDetail);
                     LoadingDataEvent(this, false);
 
                     HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess2);
 
-					if (!isSuccess2 && bAutoSubmit)
-					{
-						MessageBox.Show("创建上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-					}
-				}
+                    if (!isSuccess2 && bAutoSubmit)
+                    {
+                        MessageBox.Show("创建调拨上架任务单库存明细失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    }
+                }
 
-                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTask");
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "AllotShelf");
+
             }
 
             ApplicationState.SetGoodsInfoInSepcLoc(after);
-
             if(bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);
@@ -306,37 +324,23 @@ namespace CFLMedCab.View.ReplenishmentOrder
         }
 
         /// <summary>
-        /// 操作损耗按钮
+        /// 暂未完成按钮
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onShowBtnBad(object sender, RoutedEventArgs e)
+        private void onNotComplete(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
-            bthBadHide.Visibility = (btn.Name == "bthBadShow" ? Visibility.Visible : Visibility.Collapsed);
+            EndOperation(bExit,"进行中");
         }
 
         /// <summary>
-        /// 提交按钮
+        /// 异常提交
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onSubmit(object sender, RoutedEventArgs e)
+        private void onAbnormalSubmit(object sender, RoutedEventArgs e)
         {
-            
-            EndOperation(bExit);
-        }
-
-
-        /// <summary>
-        /// 返回按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onBackwords(object sender, RoutedEventArgs e)
-        {
-            normalView.Visibility = Visibility.Visible;
-            abnormalView.Visibility = Visibility.Collapsed;
+            EndOperation(bExit, "异常");
         }
     }
 }
