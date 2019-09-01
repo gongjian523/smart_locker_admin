@@ -310,9 +310,6 @@ namespace CFLMedCab.Http.Bll
 			return HttpHelper.GetInstance().ResultCheck(baseData);
 		}
 
-
-
-
 		/// <summary>
 		/// 根据商品码集合获取完整商品属性集合
 		/// </summary>
@@ -414,11 +411,11 @@ namespace CFLMedCab.Http.Bll
 
 		}
 
-		/// <summary>
-		/// 根据商品码获取完整商品属性集合
-		/// </summary>
-		/// <returns></returns>
-		public BaseData<CommodityCode> GetCommodityCode(string commodityCodeId)
+        /// <summary>
+        /// 根据商品码获取完整商品属性集合
+        /// </summary>
+        /// <returns></returns>
+        public BaseData<CommodityCode> GetCommodityCode(string commodityCodeId)
 		{
 			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
 			{
@@ -623,6 +620,50 @@ namespace CFLMedCab.Http.Bll
                 {
                     it.ManufactorName = hospitalGoods.body.objects.Where(hg => hg.id == it.HospitalGoodsId).First().ManufactorName;
                 }
+            });
+
+            isSuccess = true;
+            return bdCommodityCode;
+        }
+
+
+        public BaseData<CommodityCode> GetQualityStatus(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
+        {
+            isSuccess = false;
+
+            //检查参数是否正确
+            if (null == bdCommodityCode.body.objects || bdCommodityCode.body.objects.Count <= 0)
+            {
+
+                bdCommodityCode.code = (int)ResultCode.Parameter_Exception;
+                bdCommodityCode.message = ResultCode.Parameter_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            //通过【商品码】从表格【商品库存管理】中查询该条库存的id（CommodityInventoryDetailId）。
+            var commodityCodeIds = bdCommodityCode.body.objects.Select(it => it.id).Distinct().ToList();
+            var commodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventoryDetail>(new QueryParam
+            {
+                @in =
+                    {
+                        field = "CommodityCodeId",
+                        in_list = BllHelper.ParamUrlEncode(commodityCodeIds)
+                    }
+            });
+
+            HttpHelper.GetInstance().ResultCheck(commodityInventoryDetails, out bool isSuccess1);
+            if (!isSuccess1)
+            {
+                bdCommodityCode.code = (int)ResultCode.Result_Exception;
+                bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            bdCommodityCode.body.objects.ForEach(it =>
+            {
+                it.QualityStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().QualityStatus;
             });
 
             isSuccess = true;

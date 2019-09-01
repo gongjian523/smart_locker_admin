@@ -55,7 +55,9 @@
                             <Label Content=" " Name="returnNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品，领用了" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="fetchNum" Style="{StaticResource lblTitleRed}"/>
-                            <Label Content="个商品" Style="{StaticResource lblTitle1}"/>
+                            <Label Content="个商品, 其中" Style="{StaticResource lblTitle1}"/>
+                            <Label Content=" " Name="expiredNum" Style="{StaticResource lblTitleRed}"/>
+                            <Label Content="个商品过期" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>
                     <Grid Grid.Row="1">
@@ -65,11 +67,13 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
                             <Grid Grid.Column="2" x:Name="column3"/>
                             <Grid Grid.Column="3" x:Name="column4"/>
+                            <Grid Grid.Column="4" x:Name="column5"/>
                         </Grid>
                         <ListView Style="{StaticResource DefaultListView}"  ItemsSource="{Binding}" Name="listView">
                             <ListView.View>
@@ -95,7 +99,14 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn Header="质量状态" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=QualityStatus}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column5,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=AbnormalDisplay}"/>
@@ -110,16 +121,28 @@
             </Border>
             <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="2">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="2*"/>
-                    </Grid.ColumnDefinitions>
-                    <Label Style="{StaticResource lblTitle5}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    <StackPanel Orientation="Horizontal" Grid.Column="1">
-                        <Button Style="{StaticResource CommonYesButton}" x:Name="YesBtn" Content="是,并回到首页"  Width="220" Click="onEndOperation" />
-                        <Button Style="{StaticResource CommonYesButton}" x:Name="YesAndExitBtn" Content="是,并退出登录" Margin="60,0,0,0" Width="220"  Click="onEndOperation"/>
-                        <Button Style="{StaticResource CommonNoButton}" x:Name="NoBtn" Content="否,并开门" Margin="60,0,0,0"  Width="220"  Click="onNoEndOperation"/>
-                    </StackPanel>
+                    <Grid x:Name="normalBtmView">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Style="{StaticResource lblTitle5}" Content="是否结束本次操作？" Grid.Column="0"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1">
+                            <Button Style="{StaticResource CommonYesButton}" x:Name="YesBtn" Content="是,并回到首页"  Width="220" Click="onEndOperation" />
+                            <Button Style="{StaticResource CommonYesButton}" x:Name="YesAndExitBtn" Content="是,并退出登录" Margin="60,0,0,0" Width="220"  Click="onEndOperation"/>
+                            <Button Style="{StaticResource CommonNoButton}" x:Name="NoBtn" Content="否,并开门" Margin="60,0,0,0"  Width="220"  Click="onNoEndOperation"/>
+                        </StackPanel>
+                    </Grid>
+                    <Grid x:Name="abnormalBtmView" Visibility="Collapsed">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Style="{StaticResource lblTitle1}" Content="请将过期商品放回！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <StackPanel Orientation="Horizontal" Grid.Column="1">
+                            <Button Style="{StaticResource CommonNoButton}"  Content="开柜" Margin="60,0,0,0" Width="220"  Click="onNoEndOperation"/>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
             </Border>
             <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">

@@ -2,6 +2,7 @@
 using CFLMedCab.Http.Model.Common;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,10 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string ReceiveDate { get; set; }
+        /// <summary>
+        /// 质量状态
+        /// </summary>
+        public string QualityStatus { get; set; }
         /// <summary>
         /// 未领用
         /// </summary>
@@ -111,5 +116,30 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public object usedAmount { get; set; }
+    }
+
+
+    /// <summary>
+    /// 质量状态
+    /// </summary>
+    public enum QualityStatusType
+    {
+        /// <summary>
+        /// 正常
+        /// </summary>
+        [Description("正常")]
+        正常 = 0,
+
+        /// <summary>
+        /// 破损
+        /// </summary>
+        [Description("破损")]
+        破损 = 1,
+
+        /// <summary>
+        /// 过期
+        /// </summary>
+        [Description("过期")]
+        过期 = 2
     }
 }

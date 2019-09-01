@@ -97,6 +97,11 @@ namespace CFLMedCab.View.Fetch
 
                 LoadingDataEvent(this, true);
                 bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (isSuccess)
+                {
+                    bdCommodityCode = CommodityCodeBll.GetInstance().GetQualityStatus(bdCommodityCode, out isSuccess);
+                }
                 LoadingDataEvent(this, false);
 
                 //校验是否含有数据
@@ -114,6 +119,18 @@ namespace CFLMedCab.View.Fetch
                 outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();//领用数
                 abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();//异常入库
                 abnormalOutNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.AbnormalDisplay == "异常").Count();//异常出库
+
+                //领用产品上包含过期商品不让用户主动提交
+                if (bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count() == 0)
+                {
+                    normalBtmView.Visibility = Visibility.Visible;
+                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
+                }
             }));
         }
 
@@ -137,18 +154,6 @@ namespace CFLMedCab.View.Fetch
             bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
             EndOperation(bExit);
         }
-
-        ///// <summary>
-        ///// 结束定时器超时
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onEndTimerExpired(object sender, ElapsedEventArgs e)
-        //{
-        //    App.Current.Dispatcher.Invoke((Action)(() => {
-        //        EndOperation(true);
-        //    }));
-        //}
 
         /// <summary>
         /// 长时间未操作界面
@@ -193,11 +198,6 @@ namespace CFLMedCab.View.Fetch
             {
                 EnterPopCloseEvent(this, bExit);
             }
-        }
-
-        private void onConfirmed(object sender, RoutedEventArgs e)
-        {
-
         }
 
         /// <summary>
