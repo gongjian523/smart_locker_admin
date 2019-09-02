@@ -299,16 +299,15 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithoutOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrderType type, SourceBill  sourceBill = null)
 		{
-
             var normalList = new List<CommodityCode>();//回退商品列表
             var lossList = new List<CommodityCode>();//领用商品列表
-            var changeList = new List<CommodityInventoryChange>();//商品库存变更记录列表
+            var changeListOut = new List<CommodityInventoryChange>();//商品库存变更记录列表-出库
+            var changeListIn = new List<CommodityInventoryChange>();//商品库存变更记录列表-入库
 
             baseDataCommodityCode.body.objects.ForEach(commodityCode =>
             {
                 //为0标识为出库
                 if (commodityCode.operate_type == 0) { lossList.Add(commodityCode); } else { normalList.Add(commodityCode); };
-
             });
 
             ConsumingOrder consumingOrder = new ConsumingOrder()
@@ -321,7 +320,6 @@ namespace CFLMedCab.Http.Bll
                 Type = type.ToString(),//领用类型
                 SourceBill = type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null // 需要填写医嘱处方SourceBill
             };
-
 
             //创建领用单
             var order = CreateConsumingOrder(consumingOrder);
@@ -342,7 +340,7 @@ namespace CFLMedCab.Http.Bll
             {
                 normalList.ForEach(normal =>
                 {
-                    changeList.Add(new CommodityInventoryChange()
+                    changeListIn.Add(new CommodityInventoryChange()
                     {
                         CommodityCodeId = normal.id,
                         SourceBill = new SourceBill()
@@ -362,7 +360,7 @@ namespace CFLMedCab.Http.Bll
             {
                 lossList.ForEach(loss =>
                 {
-                    changeList.Add(new CommodityInventoryChange()
+                    changeListOut.Add(new CommodityInventoryChange()
                     {
                         CommodityCodeId = loss.id,
                         SourceBill = new SourceBill()
@@ -374,13 +372,25 @@ namespace CFLMedCab.Http.Bll
                     });
                 });
             }
-            var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeList);
 
+            //出库和入库的库存变更记录分开提交的原因是：商品改变了货柜的位置，会产生一进一出两条变更记录
+            //一起提交，有可能主系统会拒绝，在没有创建领用单的情况下，就有回退记录
+            var changesOut = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeListOut);
 			//校验数据是否正常
-			HttpHelper.GetInstance().ResultCheck(changes, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(changesOut, out bool isSuccess2);
             if (!isSuccess2)
             {
                 LogUtils.Warn("CreateConsumingOrder 2:" + ResultCode.Result_Exception.ToString());
+                return changesOut;
+            }
+
+            var changesIn = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeListIn);
+            //校验数据是否正常
+            HttpHelper.GetInstance().ResultCheck(changesOut, out bool isSuccess3);
+            if (!isSuccess3)
+            {
+                LogUtils.Warn("CreateConsumingOrder 3:" + ResultCode.Result_Exception.ToString());
+                return changesIn;
             }
 
             ////当入库数量大于0说明在领用的时候进行了入库操作, 或者领用商品中有过期商品， 变更领用单状态为异常
@@ -395,14 +405,15 @@ namespace CFLMedCab.Http.Bll
             //更新主表状态
             var orderResult = UpdateConsumingOrderStatus(order.body[0]);
             //校验数据是否正常，并记录日志
-            HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess3);
-            if (!isSuccess3)
+            HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess4);
+            if (!isSuccess4)
             {
-                LogUtils.Warn("CreateConsumingOrder 3:" + ResultCode.Result_Exception.ToString());
+                LogUtils.Warn("CreateConsumingOrder 4:" + ResultCode.Result_Exception.ToString());
             }
-            return changes;
-		}
 
+            changesIn.body.AddRange(changesOut.body);
+            return changesIn;
+		}
 
         /// <summary>
         /// 有单领用数据提交

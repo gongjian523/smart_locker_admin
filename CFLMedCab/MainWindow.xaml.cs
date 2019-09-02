@@ -2094,7 +2094,7 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterInventoryDetail(object sender, InventoryOrder e)
+        private void onEnterInventoryDetail(object sender, List<InventoryOrder> e)
         {
             HomePageView.Visibility = Visibility.Hidden;
             NaviView.Visibility = Visibility.Hidden;

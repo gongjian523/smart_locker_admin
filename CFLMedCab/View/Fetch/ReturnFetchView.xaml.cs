@@ -84,10 +84,10 @@ namespace CFLMedCab.View.Fetch
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
 
                 LoadingDataEvent(this, true);
-                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after, locCodes);
                 LoadingDataEvent(this, false);
 
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
@@ -197,7 +197,7 @@ namespace CFLMedCab.View.Fetch
 				ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingReturnOrder");
 			}
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
 
             //主动提交，需要发送退出事件
             if (bAutoSubmit)

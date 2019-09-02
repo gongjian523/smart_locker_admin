@@ -36,7 +36,7 @@ namespace CFLMedCab.View.Inventory
     /// </summary>
     public partial class Inventory : UserControl
     {
-        public delegate void EnterInventoryDetailHandler(object sender, InventoryOrder e);
+        public delegate void EnterInventoryDetailHandler(object sender, List<InventoryOrder> e);
         public event EnterInventoryDetailHandler EnterInventoryDetailEvent;
 
         public delegate void EnterInventoryDetailLcoalHandler(object sender, int e);
@@ -156,7 +156,6 @@ namespace CFLMedCab.View.Inventory
                 return false;
             }
 
-
             LoadingDataEvent(this, true);
             BaseData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().GetInventoryOrdersByInventoryTaskName(bdInventoryTask.body.objects[0].name);
             LoadingDataEvent(this, false);
@@ -172,7 +171,7 @@ namespace CFLMedCab.View.Inventory
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                EnterInventoryDetailEvent(this, bdInventoryOrder.body.objects[0]);
+                EnterInventoryDetailEvent(this, bdInventoryOrder.body.objects);
             }));
 
             return true;
@@ -199,7 +198,6 @@ namespace CFLMedCab.View.Inventory
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
                 HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
-
 #endif
                 LoadingDataEvent(this, false);
                 //SetPopInventoryEvent(this, false);
@@ -241,7 +239,6 @@ namespace CFLMedCab.View.Inventory
                                     goodItem.ExpirationDate = item.ExpirationDate;
                                 }
                             }
-
                             list.Add(goodItem);
                         }
 
@@ -251,8 +248,6 @@ namespace CFLMedCab.View.Inventory
                         EnterInventoryDetailLocalEvent(this, id);
                     }
                 }
-
-
             }
             else
             {

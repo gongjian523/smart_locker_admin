@@ -115,13 +115,32 @@ namespace CFLMedCab.Http.Bll
 			return GetCommodityCode(GetCompareSimpleCommodity(preCommodityEpsCollect, afterCommodityEpsCollect));
 		}
 
-		/// <summary>
-		/// 获取商品库存变化
-		/// </summary>
-		/// <param name="preCommodityEpsCollect">之前商品集合</param>
-		/// <param name="afterCommodityEpsCollect">之后商品集合</param>
-		/// <returns></returns>
-		public List<CommodityCode> GetCompareSimpleCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
+        /// <summary>
+        /// 获取商品库存变化
+        /// </summary>
+        /// <param name="preCommodityEpsCollect">之前商品集合</param>
+        /// <param name="afterCommodityEpsCollect">之后商品集合</param>
+        /// <returns></returns>
+        public List<CommodityCode> GetCompareSimpleCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect, List<string> locCodes)
+        {
+            var commodityCodes = new List<CommodityCode>();
+
+            foreach(var code in locCodes)
+            {
+                HashSet<CommodityEps> pre = new HashSet<CommodityEps>(preCommodityEpsCollect.Where(item => item.GoodsLocationName == code).ToList());
+                HashSet<CommodityEps> after = new HashSet<CommodityEps>(afterCommodityEpsCollect.Where(item => item.GoodsLocationName == code).ToList());
+                commodityCodes.AddRange(GetCompareSimpleCommodity(pre, after));
+            }
+            return commodityCodes;
+        }
+
+        /// <summary>
+        /// 获取商品库存变化
+        /// </summary>
+        /// <param name="preCommodityEpsCollect">之前商品集合</param>
+        /// <param name="afterCommodityEpsCollect">之后商品集合</param>
+        /// <returns></returns>
+        public List<CommodityCode> GetCompareSimpleCommodity(HashSet<CommodityEps> preCommodityEpsCollect, HashSet<CommodityEps> afterCommodityEpsCollect)
 		{
 			var commodityCodes = new List<CommodityCode>();
 

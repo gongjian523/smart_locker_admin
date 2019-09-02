@@ -100,7 +100,10 @@ namespace CFLMedCab.Http.Bll
                     message = ResultCode.Parameter_Exception.ToString()
                 };
             }
-            List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
+
+            List<CommodityInventoryChange> changesOut = new List<CommodityInventoryChange>();
+            List<CommodityInventoryChange> changesIn = new List<CommodityInventoryChange>();
+
             var count = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 0).Count();
             //创建领用单实体用于后面更新操作
             ConsumingOrder order = null;
@@ -131,7 +134,7 @@ namespace CFLMedCab.Http.Bll
                             },
                             ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
                         };
-                        changes.Add(temp);
+                        changesOut.Add(temp);
                     });
                     order = consumingOrder.body[0];
                 }
@@ -151,18 +154,29 @@ namespace CFLMedCab.Http.Bll
                     GoodsLocationId = commodityCode.GoodsLocationId,
                     StoreHouseId = commodityCode.StoreHouseId,
                 };
-                changes.Add(temp);
+                changesIn.Add(temp);
             });
 
-            var result = CreateCommodityInventoryChange(changes);
-
+            var resultOut = CreateCommodityInventoryChange(changesOut);
             //校验数据是否正常
-            HttpHelper.GetInstance().ResultCheck(result, out bool isSuccess2);
+            HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess2);
+            if(!isSuccess2)
+            {
+                return resultOut;
+            }
+
+            var resultIn = CreateCommodityInventoryChange(changesIn);
+            //校验数据是否正常
+            HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess3);
+            if (!isSuccess3)
+            {
+                return resultIn;
+            }
 
             //添加变更记录成功时，且有出库记录（即创建过领用单）
-            if (isSuccess2 && count > 0)
+            if (count > 0)
             {
-                if(baseDataCommodityCode.body.objects.Where(item => item.QualityStatus == QualityStatusType.正常.ToString() && item.operate_type == 0).Count() > 0)
+                if(baseDataCommodityCode.body.objects.Where(item => item.QualityStatus == QualityStatusType.过期.ToString() && item.operate_type == 0).Count() > 0)
                 {
                     order.Status = ConsumingOrderStatus.异常.ToString();
                 }
@@ -177,9 +191,10 @@ namespace CFLMedCab.Http.Bll
                     LogUtils.Error("ConsummingOrder " + temp.message);
                 }
             }
-            return result;
-        }
 
+            resultOut.body.AddRange(resultIn.body);
+            return resultOut;
+        }
 
         /// <summary>
         /// 创建库存调整中库存变更记录
@@ -196,7 +211,10 @@ namespace CFLMedCab.Http.Bll
                     message = ResultCode.Parameter_Exception.ToString()
                 };
             }
-            List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
+
+            List<CommodityInventoryChange> changesOut = new List<CommodityInventoryChange>();
+            List<CommodityInventoryChange> changesIn = new List<CommodityInventoryChange>();
+
             //创建商品库存变更记录资料【出库::下架】
             var outList = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 0).ToList();
             if (null != outList || outList.Count > 0)
@@ -211,7 +229,7 @@ namespace CFLMedCab.Http.Bll
                         ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString(),
                         AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString()
                     };
-                    changes.Add(temp);
+                    changesOut.Add(temp);
                 });
             }
 
@@ -230,15 +248,34 @@ namespace CFLMedCab.Http.Bll
                         GoodsLocationId = commodityCode.GoodsLocationId,
                         StoreHouseId = commodityCode.StoreHouseId
                     };
-                    changes.Add(temp);
+                    changesIn.Add(temp);
                 });
             }
-            return CreateCommodityInventoryChange(changes);
+
+            var resultOut = CreateCommodityInventoryChange(changesOut);
+            var resultIn = CreateCommodityInventoryChange(changesIn);
+
+            HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess1);
+            HttpHelper.GetInstance().ResultCheck(resultIn, out bool isSuccess2);
+
+            if(!isSuccess1)
+            {
+                return resultOut;
+            }
+            else if(!isSuccess2)
+            {
+                return resultIn;
+            }
+            else
+            {
+                resultIn.body.AddRange(resultIn.body);
+                return resultIn;
+            }
         }
 
 
         /// <summary>
-        /// 创建库存调整中库存变更记录
+        /// 创建回收取货中库存变更记录
         /// </summary>
         /// <param name="baseDataCommodityCode"></param>
         /// <returns></returns>
@@ -252,7 +289,10 @@ namespace CFLMedCab.Http.Bll
                     message = ResultCode.Parameter_Exception.ToString()
                 };
             }
-            List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
+
+            List<CommodityInventoryChange> changesOut = new List<CommodityInventoryChange>();
+            List<CommodityInventoryChange> changesIn = new List<CommodityInventoryChange>();
+
             //创建商品库存变更记录资料【出库::下架】
             var outList = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 0).ToList();
             if (null != outList || outList.Count > 0)
@@ -275,7 +315,7 @@ namespace CFLMedCab.Http.Bll
                     {
                         cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                     }
-                    changes.Add(cic);
+                    changesOut.Add(cic);
                 });
             }
 
@@ -301,12 +341,31 @@ namespace CFLMedCab.Http.Bll
                             GoodsLocationId = commodityCode.GoodsLocationId,
                             AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString()
                          };
-                        changes.Add(cic);
+                        changesIn.Add(cic);
                     });
                 }
             }
 
-            return CreateCommodityInventoryChange(changes);
+            var resultOut = CreateCommodityInventoryChange(changesOut);
+            var resultIn = CreateCommodityInventoryChange(changesIn);
+
+            HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess1);
+            HttpHelper.GetInstance().ResultCheck(resultIn, out bool isSuccess2);
+
+            if (!isSuccess1)
+            {
+                return resultOut;
+            }
+            else if (!isSuccess2)
+            {
+                return resultIn;
+            }
+            else
+            {
+                resultIn.body.AddRange(resultIn.body);
+                return resultIn;
+            }
+
         }
 
     }

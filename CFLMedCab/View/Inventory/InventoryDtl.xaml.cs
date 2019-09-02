@@ -8,6 +8,7 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
+using CFLMedCab.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -49,12 +50,14 @@ namespace CFLMedCab.View.Inventory
         public int Type { get; set; }
         public int Status { get; set; }
 
-        private InventoryOrder inventoryOrder;
+        private List<Locations> comboBoxList = new List<Locations>();
+
+        private List<InventoryOrder> inventoryOrders = new List<InventoryOrder>();
         private List<CommodityCode> list = new List<CommodityCode>();
 
         public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
 
-        public InventoryDtl(InventoryOrder order)
+        public InventoryDtl(List<InventoryOrder> orders)
         {
             InitializeComponent();
 
@@ -62,14 +65,17 @@ namespace CFLMedCab.View.Inventory
             CreateTime = DateTime.Now;
             Type = 1;
             Status = 0;
-            Code = order.name;
-            inventoryOrder = order;
+            Code = orders[0].name;
+            inventoryOrders = orders;
 
             goodsDtllistConfirmView.DataContext = list;
 
             //加载开门按钮
             btnBorder.Visibility = Visibility.Visible;
             btnGrid.Children.Add(openDoorBtnBoard);
+
+            comboBoxList = ApplicationState.GetLocations();
+            locCb.ItemsSource = comboBoxList.OrderByDescending(it => it.Code);
 
             Timer timer = new Timer(100);
             timer.AutoReset = false;
@@ -100,7 +106,19 @@ namespace CFLMedCab.View.Inventory
             {
                 list = new List<CommodityCode>();
             }
-            inventoryOrder.GoodsLocationName = CommodityCodeBll.GetInstance().GetNameById<GoodsLocation>(inventoryOrder.GoodsLocationId);
+
+            List<string> ids = inventoryOrders.Select(item => item.GoodsLocationId).Distinct().ToList();
+            BaseData<GoodsLocation> bdGoodsLocation = CommodityCodeBll.GetInstance().GetObjectByIds<GoodsLocation>(ids, out bool isSuccess);
+            if(isSuccess)
+            {
+                inventoryOrders.ForEach(item => {
+                    GoodsLocation goodsLocation = bdGoodsLocation.body.objects.Where(gl => gl.id == item.GoodsLocationId).First();
+                    if (goodsLocation != null)
+                    {
+                        item.GoodsLocationName = goodsLocation.name;
+                    }
+                });
+            }
 
             SetPopInventoryEvent(this, false);
 
@@ -145,21 +163,8 @@ namespace CFLMedCab.View.Inventory
             adds = CommodityCodeBll.GetInstance().GetCommodityCode(addHs).body.objects.ToList();
 #else
 
-            CommodityOrder commodityOrder;
-            string name;
-            try
-            {
-                commodityOrder = JsonConvert.DeserializeObject<CommodityOrder>(inputStr);
-                name = commodityOrder.CommodityCodeName;
-            }
-            catch(Exception ex)
-            {
-				LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
-				name = inputStr;
-            }
-
             LoadingDataEvent(this, true);
-            BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(name.ToUpper());
+            BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(inputStr.ToUpper());
             LoadingDataEvent(this, false);
 
             //校验是否含有数据
@@ -171,10 +176,10 @@ namespace CFLMedCab.View.Inventory
 				return;
 			}
 
-            bdCommodityCode.body.objects[0].EquipmentId = inventoryOrder.EquipmentId;
-            bdCommodityCode.body.objects[0].StoreHouseId = inventoryOrder.StoreHouseId;
-            bdCommodityCode.body.objects[0].GoodsLocationId = inventoryOrder.GoodsLocationId;
-            bdCommodityCode.body.objects[0].GoodsLocationName = inventoryOrder.GoodsLocationName;
+            bdCommodityCode.body.objects[0].EquipmentId = ApplicationState.GetEquipId();
+            bdCommodityCode.body.objects[0].StoreHouseId = ApplicationState.GetHouseId();
+            bdCommodityCode.body.objects[0].GoodsLocationId = ((Locations)locCb.SelectedItem).Id;
+            bdCommodityCode.body.objects[0].GoodsLocationName = ((Locations)locCb.SelectedItem).Code;
 
             adds.Add(bdCommodityCode.body.objects[0]);
 #endif
@@ -204,34 +209,42 @@ namespace CFLMedCab.View.Inventory
         private void onSubmit(object sender, RoutedEventArgs e)
         {
             LoadingDataEvent(this, true);
-            BasePutData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().UpdateInventoryOrderStatus(inventoryOrder);
+            BasePostData<InventoryDetail> bdInventoryDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrders);
             LoadingDataEvent(this, false);
-
-            //校验是否含有数据
-            HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccess);
-
-			if (!isSuccess)
-			{
-				MessageBox.Show("更新盘点任务单失败!" + bdInventoryOrder.message, "温馨提示", MessageBoxButton.OK);
-				return;
-			}
-
-            LoadingDataEvent(this, true);
-            BasePostData<InventoryDetail> bdInventoryDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrder.id);
-            LoadingDataEvent(this, false);
-
 
             //校验是否含有数据
             HttpHelper.GetInstance().ResultCheck(bdInventoryDetail, out bool isSuccess1);
 
-			if (isSuccess1)
-			{
-				MessageBox.Show("提交盘点任务单成功!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
-				BackInventoryEvent(this, null);
-			}
-			else
-				MessageBox.Show("创建盘点商品明细失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
+            if (isSuccess1)
+            {
+                MessageBox.Show("更新盘点任务单失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
+                return;
+            }
 
+            bool isSuccess = true;
+            LoadingDataEvent(this, true);
+            inventoryOrders.ForEach(item =>
+            {
+                BasePutData<InventoryOrder> bdInventoryOrder = InventoryTaskBll.GetInstance().UpdateInventoryOrderStatus(item);
+                HttpHelper.GetInstance().ResultCheck(bdInventoryOrder, out bool isSuccessTemp);
+                
+                if(!isSuccessTemp)
+                {
+                    isSuccess = false;
+                }
+            });
+            LoadingDataEvent(this, false);
+
+            //校验是否含有数据
+			if (!isSuccess)
+			{
+				MessageBox.Show("提交盘点任务单错误!", "温馨提示", MessageBoxButton.OK);
+			}
+            else
+            {
+                MessageBox.Show("提交盘点任务单成功!", "温馨提示", MessageBoxButton.OK);
+                BackInventoryEvent(this, null);
+            }
             return;
         }
 
@@ -274,7 +287,20 @@ namespace CFLMedCab.View.Inventory
         {
             if (e.Key == Key.Down)
             {
-                onAddProduct(this, null);
+                string inputStr = codeInputTb.Text;
+
+                CommodityOrder commodityOrder;
+                try
+                {
+                    commodityOrder = JsonConvert.DeserializeObject<CommodityOrder>(inputStr);
+                    codeInputTb.Text = commodityOrder.CommodityCodeName;
+                }
+                catch (Exception ex)
+                {
+                    LogUtils.Error($"数据解析失败！{inputStr} ; 异常报错为：{ex.Message}");
+                    codeInputTb.Text = inputStr;
+                }
+
             }
         }
 

@@ -189,7 +189,7 @@ namespace CFLMedCab.View.Allot
                     }
                 }
                
-                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                bExit = (((Button)sender).Name == " " ? true : false);
                 EndOperation(bExit, st);
             }
         }
@@ -278,10 +278,9 @@ namespace CFLMedCab.View.Allot
                 }
 
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "AllotShelf");
-
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after,locCodes);
             if(bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);

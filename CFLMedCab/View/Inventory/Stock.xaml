@@ -229,14 +229,15 @@
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="zcolumn1"/>
                         <Grid Grid.Column="1" x:Name="zcolumn2"/>
                         <Grid Grid.Column="2" x:Name="zcolumn3"/>
                         <Grid Grid.Column="3" x:Name="zcolumn4"/>
                         <Grid Grid.Column="4" x:Name="zcolumn5"/>
+                        <Grid Grid.Column="5" x:Name="zcolumn6"/>
                     </Grid>
-
                     <ListView  VerticalAlignment="Top" Grid.Row="1"  Name="listView2" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                Margin="0,10,0,0"
                               Style="{StaticResource DefaultListView}">
@@ -256,21 +257,28 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="操作类型" Width="{Binding ElementName=zcolumn3,Path=ActualWidth}">
+                                <GridViewColumn Header="货位"  Width="{Binding ElementName=zcolumn3,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding GoodsLocationName}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="操作类型" Width="{Binding ElementName=zcolumn4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding operate_type,Converter={StaticResource OperateTypeConverter}}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="操作人"  Width="{Binding ElementName=zcolumn4,Path=ActualWidth}">
+                                <GridViewColumn Header="操作人"  Width="{Binding ElementName=zcolumn5,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding operater}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="操作日期"  Width="{Binding ElementName=zcolumn5,Path=ActualWidth}">
+                                <GridViewColumn Header="操作日期"  Width="{Binding ElementName=zcolumn6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding create_time,StringFormat='{}{0:yyyy-MM-dd HH:mm}',ConverterCulture=zh-CN}"/>
@@ -280,10 +288,8 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-
                 </Grid>
             </Border>
-
         </Grid>
     </Border>
 </UserControl>

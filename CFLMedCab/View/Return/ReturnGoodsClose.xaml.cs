@@ -225,7 +225,7 @@ namespace CFLMedCab.View.Return
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "PickTask");
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
             if(bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);

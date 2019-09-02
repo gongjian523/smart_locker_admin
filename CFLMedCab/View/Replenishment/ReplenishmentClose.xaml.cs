@@ -266,7 +266,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTask");
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
 
             if(bAutoSubmit)
             {

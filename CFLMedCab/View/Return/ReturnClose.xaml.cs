@@ -31,7 +31,7 @@ using System.Windows.Shapes;
 namespace CFLMedCab.View.Return
 {
     /// <summary>
-    /// NoSurgeryNumClose.xaml 的交互逻辑
+    /// ReturnClose.xaml 的交互逻辑
     /// </summary>
     public partial class ReturnClose : UserControl
     {
@@ -88,9 +88,9 @@ namespace CFLMedCab.View.Return
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
 
-                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after, locCodes);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
                 {
                     MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
@@ -210,14 +210,14 @@ namespace CFLMedCab.View.Return
 
                     if (bdCommodityInventoryChange.code != 0)
                     {
-                        MessageBox.Show("创建库存调整商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("创建回收取货商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
                     }
 
                     ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "CommodityRecovery");
                 }
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after);
+            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
 
             EnterPopCloseEvent(this, bExit);
         }

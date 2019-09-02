@@ -184,7 +184,7 @@ namespace CFLMedCab.Infrastructure
         }
         #endregion
 
-        #region user info from mian system
+        #region goods info from mian system
         /// <summary>
         /// 保存所有货柜的打过去商品信息
         /// </summary>
@@ -196,12 +196,12 @@ namespace CFLMedCab.Infrastructure
         }
 
         /// <summary>
-        /// 保存某些货柜的当前商品信息
+        /// 更新特定货柜的商品
         /// </summary>
         /// <param name="hs"></param>
-        public static void SetGoodsInfoInSepcLoc(HashSet<CommodityEps> hs)
+        /// <param name="locCodes">如果没有整个参数，在一个货柜的商品都全部拿出的情况下，仅从hs中是无法判断这个货柜的商品已经全部取出还是这个货柜没有扫描</param> 
+        public static void SetGoodsInfoInSepcLoc(HashSet<CommodityEps> hs, List<string> locCodes)
         {
-            var locCodes = hs.Select(item => item.CommodityCodeName).Distinct().ToList();
 
             HashSet<CommodityEps> all = GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
             //删除指定货柜的原来的商品
@@ -334,7 +334,6 @@ namespace CFLMedCab.Infrastructure
             return listLoc.Select(item => item.Id).Distinct().ToList(); 
         }
 
-
         /// <summary>
         /// 通过货柜id查询货柜编号
         /// </summary>
@@ -353,7 +352,6 @@ namespace CFLMedCab.Infrastructure
                 return "";
             }
         }
-
 
         /// <summary>
         /// 通过Rfid串口查询货柜名字
@@ -410,7 +408,6 @@ namespace CFLMedCab.Infrastructure
                 return "";
             }
         }
-
         #endregion
 
         /// <summary>

@@ -93,6 +93,28 @@ namespace CFLMedCab.Http.Bll
             return baseData;
         }
 
+
+        /// <summary>
+        /// 通用业务，通过id查询对象,如果出错，返回出错信息
+        /// </summary>
+        public BaseData<K> GetObjectByIds<K>(List<string> ids, out bool isSuccess1) where K : BaseModel
+        {
+            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+            {
+                @in =
+                {
+                field = "id",
+                in_list =  ids
+                }
+            });
+
+            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+
+            isSuccess1 = isSuccess;
+
+            return baseData;
+        }
+
         /// <summary>
         /// 通用业务，通过id查询名称,如果出错，返回出错信息
         /// </summary>
@@ -269,13 +291,11 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public List<string> GetLocalCommodityName()
 		{
-		
 			//查询语句
 			var queryable = SqlSugarHelper.GetInstance().Db.Queryable<LocalCommodityCode>()
 				.Distinct()
                 .OrderBy((lcc) => lcc.create_time, OrderByType.Desc)
 				.Select(it=>it.CommodityName).ToList();
-
 
 			return queryable;
 		}

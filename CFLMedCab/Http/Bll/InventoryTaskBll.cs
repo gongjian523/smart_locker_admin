@@ -177,7 +177,6 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BasePutData<InventoryOrder> UpdateInventoryOrderStatus(InventoryOrder order)
 		{
-
 			if (null == order || null == order.id || null == order.Status || null == order.version)
 			{
 				return new BasePutData<InventoryOrder>()
@@ -238,7 +237,7 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="details"></param>
 		/// <returns></returns>
-		public BasePostData<InventoryDetail> CreateInventoryDetail(List<CommodityCode> commodityCodes, string inventoryOrderId)
+		public BasePostData<InventoryDetail> CreateInventoryDetail(List<CommodityCode> commodityCodes, List<InventoryOrder> inventoryOrders)
 		{
 			if (null == commodityCodes || commodityCodes.Count <= 0)
 			{
@@ -293,7 +292,7 @@ namespace CFLMedCab.Http.Bll
 				inventoryDetailList.Add(new InventoryDetail
 				{
 					CommodityInventoryId = it.CommodityInventoryId,
-					InventoryOrderId = inventoryOrderId,
+					InventoryOrderId = inventoryOrders.Where(item => item.GoodsLocationId == it.GoodsLocationId).First().id,
 					CommodityCodeId = it.id,
                     Status = it.QStatus
                 });
@@ -456,7 +455,6 @@ namespace CFLMedCab.Http.Bll
 						ConfirmDate = now,
 						InventoryTaskId = inventoryTasks.body[0].id,
 						Status = InventoryOrderStatus.待盘点.ToString(),//创建盘点单状态为[待盘点]
-						//TODO: 需要当前设备id，货位id和库房id
 						GoodsLocationId = goodsLocationId,
 						EquipmentId = ApplicationState.GetEquipId(),
 						StoreHouseId = ApplicationState.GetHouseId(),
