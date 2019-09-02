@@ -76,9 +76,6 @@ namespace CFLMedCab
 #endif
 #endif
 
-#if DUALCAB
-        private int cabClosedNum;
-#endif
         /// <summary>
         /// 货柜开门的个数
         /// </summary>
@@ -158,7 +155,7 @@ namespace CFLMedCab
             Task.Factory.StartNew(initCurrentGoodsInfo);
             Task.Factory.StartNew(startAutoInventory);
             
-            Console.ReadKey();
+            //Console.ReadKey();
 
             LogUtils.Debug("Task initial...");
 #if TESTENV

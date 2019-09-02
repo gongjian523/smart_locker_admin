@@ -18,18 +18,6 @@ namespace CFLMedCab.Test
         private PickingBll pickingBll = new PickingBll();
         private FetchOrderBll fetchOrderBll = new FetchOrderBll();
 
-        public Hashtable  GetCurrentRFid()
-        {
-            Hashtable ht = new Hashtable();
-            HashSet<string> hs1 = new HashSet<string> { "E20000176012027919504D98", "E20000176012025319504D67", "E20000176012025619504D70", "E20000176012028119504DA5", "E20000176012023919504D48" };
-            ht.Add("COM1", hs1);
-            HashSet<string> hs4 = new HashSet<string> { "E20000176012028219504DAD", "E20000176012026619504D8D", "E20000176012026319404F98", "E20000176012028019504DA0", "E20000176012026519504D85" };
-            ht.Add("COM4", hs4);
-            ApplicationState.SetValue((int)ApplicationKey.CurGoods, ht);
-            return ht;
-        }
-
-
         public void InitUsersInfo()
         {
             if (userBll.GetUserNum() > 0)

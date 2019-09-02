@@ -161,15 +161,18 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         [Obsolete]
 		public static Hashtable GetLockerData(out bool isGetSuccess)
 		{
-
 			isGetSuccess = true;
 
+            List<string> lockerComs = ApplicationState.GetAllLockerCom();
+
+            if(lockerComs.Count == 0)
+            {
+                isGetSuccess = false;
+                return new Hashtable(); 
+            }
+
             //string com2 = "COM2";
-            string com2 = ApplicationState.GetMLockerCOM();
-#if DUALCAB
-            //string com5 = "COM5";
-            string com5 = ApplicationState.GetSLockerCOM();
-#endif
+            string com2 = lockerComs[0];
 
             Hashtable currentLockerDataHt = new Hashtable();
 
@@ -183,22 +186,24 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
-#if DUALCAB
-            SerialPort com4ClientConn = CreateClientConn(com5, 115200, out bool isCom4Connect);
-			if (isCom4Connect)
-			{
-				currentLockerDataHt.Add(com5, DealComData(com4ClientConn, com5, out isGetSuccess));
-			}
-			else
-			{
-				isGetSuccess = false;
-			}
-#endif
+            if(lockerComs.Count >= 2)
+            {
+                //string com5 = "COM5";
+                string com5 = lockerComs[0];
+                SerialPort com4ClientConn = CreateClientConn(com5, 115200, out bool isCom4Connect);
+                if (isCom4Connect)
+                {
+                    currentLockerDataHt.Add(com5, DealComData(com4ClientConn, com5, out isGetSuccess));
+                }
+                else
+                {
+                    isGetSuccess = false;
+                }
+            }
 
             WaitHandle.WaitAll(manualEvents.ToArray());
 
 			return currentLockerDataHt;
-
 		}
 
 		/// <summary>

@@ -12,21 +12,12 @@ namespace CFLMedCab.Infrastructure
 {
     enum ApplicationKey{
         User,      //从主系统查询到的用户信息
-        CurGoods,  //本地数据库中的查询到商品信息
         Goods,     //从主系统中的查询到商品信息
         HouseId,   //库房id
         HouseName, //库房名字
         EquipId,   //设备id
         EquipName, //设备名字
         Location,  //货柜
-        MCabName,  //主柜编码(名字)
-        MCabId,    //主柜id
-        SCabName,  //副柜编码(名字)
-        SCabId,    //副柜id
-        COM_MLocker,
-        COM_SLocker,
-        COM_MRFid,
-        COM_SRFid,
         COM_MVein,
         AccessToken,
         RefreshToken,
@@ -58,48 +49,6 @@ namespace CFLMedCab.Infrastructure
         //副柜锁串口 COM5
 
         /// <summary>
-        /// 设置主柜门锁的串口
-        /// </summary>
-        /// <param name="com"></param>
-        [Obsolete]
-        public static void SetMLockerCOM(string com)
-        {
-            SetValue((int)ApplicationKey.COM_MLocker, com);
-            return;
-        }
-
-        /// <summary>
-        /// 获取主柜门锁的串口
-        /// </summary>
-        /// <param></param>
-        [Obsolete]
-        public static string GetMLockerCOM()
-        {
-            return GetValue<string>((int)ApplicationKey.COM_MLocker);
-        }
-
-        /// <summary>
-        /// 设置副柜门锁的串口
-        /// </summary>
-        /// <param name="com"></param>
-        [Obsolete]
-        public static void SetSLockerCOM(string com)
-        {
-            SetValue((int)ApplicationKey.COM_SLocker, com);
-            return;
-        }
-
-        /// <summary>
-        /// 获取副柜门锁的串口
-        /// </summary>
-        /// <param></param>
-        [Obsolete]
-        public static string GetSLockerCOM()
-        {
-            return GetValue<string>((int)ApplicationKey.COM_SLocker);
-        }
-
-        /// <summary>
         /// 通过货柜的名字查询门锁的串口
         /// </summary>
         /// <param name="cabName"></param>
@@ -125,44 +74,6 @@ namespace CFLMedCab.Infrastructure
         //默认配置
         //COM1  主柜rfid串口
         //COM4  副柜rfid串口 
-
-        /// <summary>
-        /// 设置主柜RF扫描仪的串口
-        /// </summary>
-        /// <param name="com"></param>
-        public static void SetMRfidCOM(string com)
-        {
-            SetValue((int)ApplicationKey.COM_MRFid, com);
-            return;
-        }
-
-        /// <summary>
-        /// 获取主柜RF扫描仪的串口
-        /// </summary>
-        /// <param></param>
-        public static string GetMRfidCOM()
-        {
-            return GetValue<string>((int)ApplicationKey.COM_MRFid);
-        }
-
-        /// <summary>
-        /// 设置副柜RF扫描仪的串口
-        /// </summary>
-        /// <param name="com"></param>
-        public static void SetSRfidCOM(string com)
-        {
-            SetValue((int)ApplicationKey.COM_SRFid, com);
-            return;
-        }
-
-        /// <summary>
-        /// 获取副柜RF扫描仪的串口
-        /// </summary>
-        /// <param></param>
-        public static string GetSRfidCOM()
-        {
-            return GetValue<string>((int)ApplicationKey.COM_SRFid);
-        }
 
         /// <summary>
         /// 通过货柜编号获取RFID的串口

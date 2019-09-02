@@ -187,7 +187,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         public static HashSet<CommodityEps> GetEpcDataJsonInventory(out bool isGetSuccess)
         {
             isGetSuccess = true;
-            string com1 = ApplicationState.GetMRfidCOM();
+            string com1 = ApplicationState.GetAllRfidCom().First();
             var ret = new HashSet<CommodityEps>()
             {
                 new CommodityEps
@@ -234,18 +234,20 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			isGetSuccess = true;
 
-			//string com1 = "COM1";
-            string com1 = ApplicationState.GetMRfidCOM();
-            HashSet<string> com1HashSet = new HashSet<string>();
-
+            List<string> rfidComs = ApplicationState.GetAllRfidCom();
             string log = "";
 
-#if DUALCAB
-            //string com4 = "COM4";
-            string com4 = ApplicationState.GetSRfidCOM();
-            HashSet<string> com4HashSet = new HashSet<string>();
-#endif
+            if (rfidComs.Count == 0)
+            {
+                isGetSuccess = false;
+                return new HashSet<CommodityEps>();
+            }
+
             HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
+
+            //string com1 = "COM1";
+            string com1 = rfidComs[0];
+            HashSet<string> com1HashSet = new HashSet<string>();
 
             //TODO:需要补充id
             GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
@@ -258,17 +260,24 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
-#if DUALCAB
-            GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
-			if (isCom4Connect)
-			{
-				com4HashSet = DealComData(com4ClientConn, com4, out isGetSuccess);
-			}
-			else
-			{
-				isGetSuccess = false;
-			}
-#endif
+            string com4 = "";
+            HashSet<string> com4HashSet = new HashSet<string>();
+
+            if (rfidComs.Count >= 2)
+            {
+                //string com4 = "COM4";
+                com4 = rfidComs[1];
+
+                GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
+                if (isCom4Connect)
+                {
+                    com4HashSet = DealComData(com4ClientConn, com4, out isGetSuccess);
+                }
+                else
+                {
+                    isGetSuccess = false;
+                }
+            }
 
             WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
@@ -292,26 +301,28 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 log += commodityEps.CommodityCodeName + " ";
             }
 
-#if DUALCAB
-            //提取com4的标签epc，并组装
-            foreach (string rfid in com4HashSet)
+            if (rfidComs.Count >= 2)
             {
-                CommodityEps commodityEps = new CommodityEps
+                //提取com4的标签epc，并组装
+                foreach (string rfid in com4HashSet)
                 {
-                    CommodityCodeName = $"RF{rfid.Substring(rfid.Length - 8)}",
-                    EquipmentId = ApplicationState.GetEquipId(),
-                    EquipmentName = ApplicationState.GetEquipName(),
-                    StoreHouseId = ApplicationState.GetHouseId(),
-                    StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
-                };
+                    CommodityEps commodityEps = new CommodityEps
+                    {
+                        CommodityCodeName = $"RF{rfid.Substring(rfid.Length - 8)}",
+                        EquipmentId = ApplicationState.GetEquipId(),
+                        EquipmentName = ApplicationState.GetEquipName(),
+                        StoreHouseId = ApplicationState.GetHouseId(),
+                        StoreHouseName = ApplicationState.GetHouseName(),
+                        GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                        GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
+                    };
 
-                currentEpcDataHs.Add(commodityEps);
-                LogUtils.Debug(commodityEps.CommodityCodeName + commodityEps.CommodityName);
-                log += commodityEps.CommodityCodeName + " ";
+                    currentEpcDataHs.Add(commodityEps);
+                    LogUtils.Debug(commodityEps.CommodityCodeName + commodityEps.CommodityName);
+                    log += commodityEps.CommodityCodeName + " ";
+                }
             }
-#endif
+
 
             Task.Factory.StartNew(a =>
             {
@@ -397,18 +408,17 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         /// </summary>
         /// <param name="isGetSuccess"></param>
         /// <returns></returns>
+        [Obsolete]
         public static Hashtable GetEpcDataNew(out bool isGetSuccess)
 		{
 			isGetSuccess = true;
 
-			//string com1 = "COM1";
-            string com1 = ApplicationState.GetMRfidCOM();
-#if DUALCAB
-            //string com4 = "COM4";
-            string com4 = ApplicationState.GetSRfidCOM();
-#endif
+            List<string> rfidComs = ApplicationState.GetAllRfidCom();
 
             Hashtable currentEpcDataHt = new Hashtable();
+
+            //string com1 = "COM1";
+            string com1 = rfidComs[0];
 
 			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
 			if (isCom1Connect)
@@ -420,17 +430,23 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				isGetSuccess = false;
 			}
 
-#if DUALCAB
-            GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
-			if (isCom4Connect)
-			{
-				currentEpcDataHt.Add(com4, DealComData(com4ClientConn, com4, out isGetSuccess));
-			}
-			else
-			{
-				isGetSuccess = false;
-			}
-#endif
+            string com4 = "";
+            if(rfidComs.Count >=2)
+            {
+                //string com4 = "COM4";
+                com4 = rfidComs[1];
+
+                GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
+                if (isCom4Connect)
+                {
+                    currentEpcDataHt.Add(com4, DealComData(com4ClientConn, com4, out isGetSuccess));
+                }
+                else
+                {
+                    isGetSuccess = false;
+                }
+            }
+
             WaitHandle.WaitAll(manualEvents.ToArray());
 			manualEvents.Clear();
 

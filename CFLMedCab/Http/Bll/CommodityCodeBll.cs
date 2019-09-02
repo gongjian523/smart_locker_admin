@@ -148,7 +148,6 @@ namespace CFLMedCab.Http.Bll
 			{
 				if (!afterCommodityEpsCollect.Contains(currentEps))
 				{
-
 					commodityCodes.Add(new CommodityCode
 					{
 						name = currentEps.CommodityCodeName,
