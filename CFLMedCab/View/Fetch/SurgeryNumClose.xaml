@@ -229,7 +229,7 @@
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Style="{StaticResource lblTitle1}" Content="请将过期和待回收商品放回！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Label Style="{StaticResource lblTitle1}" Content="请将过期和待回收商品取出！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Horizontal" Grid.Column="1">
                                 <Button Style="{StaticResource CommonNoButton}"  Content="开柜" Margin="60,0,0,0" Width="220"  Click="onNoEndOperation"/>
                             </StackPanel>
