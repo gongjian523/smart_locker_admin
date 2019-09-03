@@ -168,5 +168,11 @@ namespace CFLMedCab.Http.Model
         [JsonIgnore]
         public string QualityStatus { get; set; }
 
+        /// <summary>
+        /// 商品库存状态，从CommodityInventoryDetail而来
+        /// </summary>
+        [JsonIgnore]
+        public string InventoryStatus { get; set; }
+
     }
 }

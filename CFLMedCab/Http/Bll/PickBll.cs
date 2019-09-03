@@ -109,12 +109,10 @@ namespace CFLMedCab.Http.Bll
 
                 if (isSuccess)
                 {
-                    //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
-                    string id = ApplicationState.GetAllLocIds().ToList().First();
                     List<PickTask> taskList = new List<PickTask>();
 
                     var pickTasks = baseDataPickTask.body.objects;
-                    var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects.Where(item => item.GoodsLocationId == id);
+                    var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects.ToList();
                     pickTasks.ForEach(it =>
                     {
                         //ids.ForEach(id => {
@@ -129,7 +127,6 @@ namespace CFLMedCab.Http.Bll
                         it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => (sit.Number-sit.PickNumber))).FirstOrDefault();
                         if(it.NeedPickTotalNumber != 0)
                         {
-                            it.GoodLocationName = ApplicationState.GetLocCodeById(id);
                             taskList.Add(it);
                         }
                     });
@@ -336,120 +333,132 @@ namespace CFLMedCab.Http.Bll
 		{
 
 			HttpHelper.GetInstance().ResultCheck(baseDataPickTaskCommodityDetail, out bool isSuccess);
-
             HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
 
             if (isSuccess && isSuccess1)
 			{
-				var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects.Where(item => item.Number != item.PickNumber);
+                List<string> locIds = baseDataPickTaskCommodityDetail.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
+                List<string> status = new List<string>();
 
-				var sfdCommodityIds = pickTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
+                locIds.ForEach(id => {
+                    var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects.Where(item => item.Number != item.PickNumber && item.GoodsLocationId == id);
+                    var sfdCommodityIds = pickTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
+                    var commodityCodes = baseDatacommodityCode.body.objects.Where(item => item.GoodsLocationId == id).ToList();
 
-                //WARING 这种取法的的前提是pickTaskCommodityDetails中全是一个货柜的产品，前面获取数据的做法是错误的，没有将货位id加进去，
-                //在后续多柜中改正
-                var goodsLocationId = pickTaskCommodityDetails.First().GoodsLocationId;
-
-                var commodityCodes = new List<CommodityCode>();
-
-				commodityCodes = baseDatacommodityCode.body.objects;
-
-				commodityCodes.ForEach(it => {
-					if (it.operate_type == (int)OperateType.入库)
-					{
-						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-					}
-					else
-					{
-                        if (sfdCommodityIds.Contains(it.CommodityId))
-						{
-                            var pickTaskCommodityDetail = pickTaskCommodityDetails.Where(item => item.CommodityId == it.CommodityId).First();
-
-                            if ((pickTaskCommodityDetail.Number - pickTaskCommodityDetail.PickNumber) >= ++pickTaskCommodityDetail.CountPickNumber)
+                    commodityCodes.ForEach(it => {
+                        if (it.operate_type == (int)OperateType.入库)
+                        {
+                            it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                        }
+                        else
+                        {
+                            if (sfdCommodityIds.Contains(it.CommodityId))
                             {
-                                it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                                var pickTaskCommodityDetail = pickTaskCommodityDetails.Where(item => item.CommodityId == it.CommodityId).First();
+
+                                if ((pickTaskCommodityDetail.Number - pickTaskCommodityDetail.PickNumber) >= ++pickTaskCommodityDetail.CountPickNumber)
+                                {
+                                    it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                                }
+                                else
+                                {
+                                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                                }
                             }
                             else
                             {
                                 it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                             }
-						}
-						else
-						{
-							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-						}
-					}
-				});
-				
-				var cccIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
-
-				//是否名称全部一致
-				bool isAllContains = sfdCommodityIds.All(cccIds.Contains) && sfdCommodityIds.Count == cccIds.Count;
-
-				if (isAllContains)
-				{
-					bool isAllNormal = true;
-                    bool isAllSame = true;
-
-					foreach (PickCommodity stcd in pickTaskCommodityDetails)
-					{
-						if ((stcd.Number - stcd.PickNumber) < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
-						{
-                            //有商品的上架数量超出规定数量
-							isAllNormal = false;
-							break;
-						}
-
-                        if ((stcd.Number - stcd.PickNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
-                        {
-                            //有商品的上架数量和规定数量不一致
-                            isAllSame = false;
                         }
-                    }
+                    });
 
-					if (isAllNormal)
-					{
-                        if(isAllSame)
+                    var cccIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+
+                    //是否名称全部一致
+                    bool isAllContains = sfdCommodityIds.All(cccIds.Contains) && sfdCommodityIds.Count == cccIds.Count;
+
+                    if (isAllContains)
+                    {
+                        //不存在领用的商品数量超过了领用单规定的数量
+                        bool isNoOver = true;
+                        //所有商品的数量都和领用单规定的一样
+                        bool isAllSame = true;
+
+                        foreach (PickCommodity stcd in pickTaskCommodityDetails)
                         {
-                            //获取这个任务单中所有的商品详情
-                            BaseData<PickCommodity> bdAllpc = GetPickTaskAllCommodityDetail(pickTask);
-
-                            HttpHelper.GetInstance().ResultCheck(bdAllpc, out bool isSuccess2);
-
-                            if (isSuccess2)
+                            if ((stcd.Number - stcd.PickNumber) < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
                             {
-                                //只有所有商品都完成了拣货，不管在那个货架上，才能将这个任务单的状态改为“已完成”
-                                if (bdAllpc.body.objects.Where(it => it.Number != it.PickNumber && it.GoodsLocationId != goodsLocationId).Count() == 0)
-                                {
-                                    pickTask.BillStatus = DocumentStatus.已完成.ToString();
-                                }
-                                else
-                                {
-                                    pickTask.BillStatus = DocumentStatus.进行中.ToString();
-                                }
+                                //有商品的上架数量超出规定数量
+                                isNoOver = false;
+                                break;
+                            }
+
+                            if ((stcd.Number - stcd.PickNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                            {
+                                //有商品的上架数量和规定数量不一致
+                                isAllSame = false;
+                            }
+                        }
+
+                        if (isNoOver)
+                        {
+                            if (isAllSame)
+                            {
+
                             }
                             else
                             {
-                                LogUtils.Error("GetPickTaskChange: GetShelfTaskAllCommodityDetail" + bdAllpc.message);
+                                status.Add(DocumentStatus.进行中.ToString());
                             }
+                        }
+                        else
+                        {
+                            status.Add(DocumentStatus.异常.ToString());
+                        }
+                    }
+                    else
+                    {
+                        status.Add(DocumentStatus.异常.ToString());
+                    }
+                });
+
+
+                if(status.Contains(DocumentStatus.异常.ToString()))
+                {
+                    pickTask.BillStatus = DocumentStatus.异常.ToString();
+                }
+                else if(status.Contains(DocumentStatus.进行中.ToString()))
+                {
+                    pickTask.BillStatus = DocumentStatus.进行中.ToString();
+                }
+                else
+                {
+                    //获取这个任务单中所有的商品详情
+                    BaseData<PickCommodity> bdAllpc = GetPickTaskAllCommodityDetail(pickTask);
+
+                    HttpHelper.GetInstance().ResultCheck(bdAllpc, out bool isSuccess2);
+
+                    if (isSuccess2)
+                    {
+                        //只有所有商品都完成了拣货，不管在那个货架上，才能将这个任务单的状态改为“已完成”
+                        if (bdAllpc.body.objects.Where(it => it.Number != it.PickNumber && it.EquipmentId != ApplicationState.GetEquipId()).Count() == 0)
+                        {
+                            pickTask.BillStatus = DocumentStatus.已完成.ToString();
                         }
                         else
                         {
                             pickTask.BillStatus = DocumentStatus.进行中.ToString();
                         }
-					}
+                    }
                     else
                     {
-                        pickTask.BillStatus = DocumentStatus.异常.ToString();
+                        LogUtils.Error("GetPickTaskChange: GetShelfTaskAllCommodityDetail" + bdAllpc.message);
                     }
-				}
-                else
-                {
-                    pickTask.BillStatus = DocumentStatus.异常.ToString();
                 }
 
-                foreach (PickCommodity stcd in pickTaskCommodityDetails)
+                foreach (PickCommodity stcd in baseDataPickTaskCommodityDetail.body.objects)
                 {
-                    stcd.CurShelfNumber = commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
+                    stcd.CurShelfNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
                     stcd.PlanShelfNumber = stcd.Number - stcd.PickNumber;
                 }
             }
@@ -501,9 +510,10 @@ namespace CFLMedCab.Http.Bll
 
 				var CommodityCodes = baseDataCommodityCode.body.objects;
 
-				var CommodityInventoryChanges = new List<CommodityInventoryChange>(CommodityCodes.Count);
+				var CommodityInventoryChangesOut = new List<CommodityInventoryChange>();
+                var CommodityInventoryChangesIn = new List<CommodityInventoryChange>();
 
-				CommodityCodes.ForEach(it=> {
+                CommodityCodes.ForEach(it=> {
 
                     CommodityInventoryChange cic = new CommodityInventoryChange()
                     {
@@ -515,10 +525,16 @@ namespace CFLMedCab.Http.Bll
                         }
                     };
 
+                    if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
+                    {
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
+                    }
+
                     if (it.operate_type == (int)OperateType.出库)
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.拣货作业.ToString();
                         cic.StoreHouseId = it.StoreHouseId;
+                        CommodityInventoryChangesOut.Add(cic);
                     }
                     else
                     {
@@ -526,18 +542,25 @@ namespace CFLMedCab.Http.Bll
                         cic.EquipmentId = it.EquipmentId;
                         cic.StoreHouseId = it.StoreHouseId;
                         cic.GoodsLocationId = it.GoodsLocationId;
+                        CommodityInventoryChangesIn.Add(cic);
                     }
-
-                    if(!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
-                    {
-                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
-                    }
-
-                    CommodityInventoryChanges.Add(cic);
-
                 });
 
-				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
+                var resultOut = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesOut);
+                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess3);
+                var resultIn = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesIn);
+                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess4);
+
+                if (!isSuccess3)
+                {
+                    return resultOut;
+                }
+                if (!isSuccess4)
+                {
+                    return resultIn;
+                }
+                resultOut.body.AddRange(resultIn.body);
+                return resultOut;
 			}
 			else
 			{

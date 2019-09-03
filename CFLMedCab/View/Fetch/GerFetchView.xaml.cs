@@ -108,7 +108,7 @@ namespace CFLMedCab.View.Fetch
 
                 listView.DataContext = bdCommodityCode.body.objects;
                 outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-                int abnormalOut = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count();
+                int abnormalOut = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && (item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())).Count();
                 int abnormalIn  = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
 
                 abnormalOutNum.Content = abnormalOut;
@@ -116,7 +116,7 @@ namespace CFLMedCab.View.Fetch
 
                 bdCommodityCode.body.objects.ToList().ForEach(it =>
                 {
-                    if(it.operate_type == 1 || it.operate_type == 0 && it.QualityStatus == QualityStatusType.过期.ToString())
+                    if(it.operate_type == 1 || it.operate_type == 0 && (it.QualityStatus == QualityStatusType.过期.ToString() || it.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString()))
                     {
                         it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                     }

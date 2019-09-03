@@ -25,7 +25,7 @@
                             <Label Content="工单编号：" HorizontalAlignment="Left" Style="{StaticResource lblTitle7}"/>
                             <Label  Content="{Binding name}"  Style="{StaticResource lblTitle7}"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="20 0" >
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="20 0"  Visibility="Hidden">
                             <Label Content="货柜："  Style="{StaticResource lblTitle7}"/>
                             <Label Content="{Binding GoodLocationName}" Style="{StaticResource lblTitle7}" HorizontalContentAlignment="Left"/>
                         </StackPanel>

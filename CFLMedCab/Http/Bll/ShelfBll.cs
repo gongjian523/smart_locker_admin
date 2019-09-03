@@ -117,9 +117,6 @@ namespace CFLMedCab.Http.Bll
 
 			if (isSuccess)
 			{
-                //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
-                string id = ApplicationState.GetAllLocIds().ToList().First();
-
                 List<ShelfTask> taskList = new List<ShelfTask>();
 
 				var shelfTasks = baseDataShelfTask.body.objects;
@@ -137,13 +134,11 @@ namespace CFLMedCab.Http.Bll
                 //                });
                 //});
 
-                var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects.Where(item=>item.GoodsLocationId== id);
                 shelfTasks.ForEach(it =>
                 {
-                    it.NeedShelfTotalNumber = shelfTaskCommodityDetails.Where(sit => sit.ShelfTaskId == it.id).GroupBy(sit =>sit.ShelfTaskId).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).FirstOrDefault();
+                    it.NeedShelfTotalNumber = baseDataShelfTaskCommodityDetail.body.objects.Where(sit => sit.ShelfTaskId == it.id).GroupBy(sit =>sit.ShelfTaskId).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).FirstOrDefault();
                     if (it.NeedShelfTotalNumber != 0)
                     {
-                        it.GoodLocationName = ApplicationState.GetLocCodeById(id);
                         taskList.Add(it);
                     }
                 });
@@ -348,103 +343,122 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public void GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, ShelfTask shelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
 		{
-
 			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
-
             HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
 
             if (isSuccess && isSuccess1)
 			{
-                //上架任务单商品详情列表
-				var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects.Where(item => item.NeedShelfNumber != item.AlreadyShelfNumber);
-                //上架任务单商品码
-				var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
+                List<string> locIds = baseDataShelfTaskCommodityDetail.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
+                List<string> status = new List<string>();
 
-                //WARING 这种取法的的前提是shelfTaskCommodityDetails中全是一个货柜的产品，前面获取数据的做法是错误的，没有将货位id加进去，
-                //在后续多柜中改正
-                var goodsLocationId = shelfTaskCommodityDetails.First().GoodsLocationId;
+                locIds.ForEach(id => {
+                    //上架任务单商品详情列表
+                    var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects.Where(item => item.NeedShelfNumber != item.AlreadyShelfNumber && item.GoodsLocationId == id);
+                    //上架任务单商品码
+                    var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
 
-                var commodityCodes = baseDatacommodityCode.body.objects;
+                    var commodityCodes = baseDatacommodityCode.body.objects.Where(item => item.GoodsLocationId == id).ToList();
 
-                //商品异常状态回显
-                commodityCodes.ForEach(it=> {
-					if (it.operate_type == (int)OperateType.出库)
-					{
-						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-					}
-					else
-					{
-						if (sfdCommodityIds.Contains(it.CommodityId))
-						{
-							var shelfTaskCommodityDetail = shelfTaskCommodityDetails.Where(item => item.CommodityId == it.CommodityId).First();
-
-							if ((shelfTaskCommodityDetail.NeedShelfNumber - shelfTaskCommodityDetail.AlreadyShelfNumber) >= ++ shelfTaskCommodityDetail.CountShelfNumber)
-							{
-								it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
-							}
-							else
-							{
-								it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-							}						
-						}
-						else
-						{
-							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-						}
-					}
-				});
-
-				var cccIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
-
-				//是否名称全部一致
-				bool isAllContains = sfdCommodityIds.All(cccIds.Contains) && sfdCommodityIds.Count == cccIds.Count;
-
-                if (isAllContains)
-				{
-					bool isAllNormal = true;
-                    bool isAllSame = true;
-
-					foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
-					{
-                        //数量超出
-						if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
-						{
-							isAllNormal = false;
-							break;
-						}
-
-                        //数量不相等
-                        if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                    //商品异常状态回显
+                    commodityCodes.ForEach(it => {
+                        if (it.operate_type == (int)OperateType.出库)
                         {
-                            isAllSame = false;
+                            it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                         }
-                    }
-
-					if (isAllNormal)
-					{
-                        if(isAllSame)
+                        else
                         {
-                            //获取这个任务单中所有的商品详情
-                            BaseData<ShelfTaskCommodityDetail> bdAllstcd = GetShelfTaskAllCommodityDetail(shelfTask);
-
-                            HttpHelper.GetInstance().ResultCheck(bdAllstcd, out bool isSuccess2);
-
-                            if (isSuccess2)
+                            if (sfdCommodityIds.Contains(it.CommodityId))
                             {
-                                //只有所有商品都完成了上架，不管在那个货架上，才能将这个任务单的状态改为“已完成”
-                                if (bdAllstcd.body.objects.Where(it => it.NeedShelfNumber != it.AlreadyShelfNumber && it.GoodsLocationId != goodsLocationId).Count() == 0)
+                                var shelfTaskCommodityDetail = shelfTaskCommodityDetails.Where(item => item.CommodityId == it.CommodityId).First();
+
+                                if ((shelfTaskCommodityDetail.NeedShelfNumber - shelfTaskCommodityDetail.AlreadyShelfNumber) >= ++shelfTaskCommodityDetail.CountShelfNumber)
                                 {
-                                    shelfTask.Status = DocumentStatus.已完成.ToString();
+                                    it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
                                 }
                                 else
                                 {
-                                    shelfTask.Status = DocumentStatus.进行中.ToString();
+                                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                                 }
                             }
                             else
                             {
-                                LogUtils.Error("GetShelfTaskChange: GetShelfTaskAllCommodityDetail" + bdAllstcd.message);
+                                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                             }
+                        }
+                    });
+
+                    var cccIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+
+                    //是否名称全部一致
+                    bool isAllContains = sfdCommodityIds.All(cccIds.Contains) && sfdCommodityIds.Count == cccIds.Count;
+
+                    if (isAllContains)
+                    {
+                        //不存在领用的商品数量超过了领用单规定的数量
+                        bool isNoOver = true;
+                        //所有商品的数量都和领用单规定的一样
+                        bool isAllSame = true;
+
+                        foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
+                        {
+                            //数量超出
+                            if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                            {
+                                isNoOver = false;
+                                break;
+                            }
+
+                            //数量不相等
+                            if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                            {
+                                isAllSame = false;
+                            }
+                        }
+
+                        if (isNoOver)
+                        {
+                            if (isAllSame)
+                            {
+                                status.Add(DocumentStatus.已完成.ToString());
+                            }
+                            else
+                            {
+                                status.Add(DocumentStatus.进行中.ToString());
+                            }
+                        }
+                        else
+                        {
+                            status.Add(DocumentStatus.异常.ToString());
+                        }
+                    }
+                    else
+                    {
+                        status.Add(DocumentStatus.异常.ToString());
+                    }
+
+                });
+
+                if(status.Contains(DocumentStatus.异常.ToString()))
+                {
+                    shelfTask.Status = DocumentStatus.异常.ToString();
+                }
+                else if (status.Contains(DocumentStatus.进行中.ToString()))
+                {
+                    shelfTask.Status = DocumentStatus.进行中.ToString();
+                }
+                else
+                {
+                    //获取这个任务单中所有的商品详情
+                    BaseData<ShelfTaskCommodityDetail> bdAllstcd = GetShelfTaskAllCommodityDetail(shelfTask);
+
+                    HttpHelper.GetInstance().ResultCheck(bdAllstcd, out bool isSuccess2);
+
+                    if (isSuccess2)
+                    {
+                        //只有所有商品都完成了上架，不管在那个货架上，才能将这个任务单的状态改为“已完成”
+                        if (bdAllstcd.body.objects.Where(it => it.NeedShelfNumber != it.AlreadyShelfNumber && it.EquipmentId != ApplicationState.GetEquipId()).Count() == 0)
+                        {
+                            shelfTask.Status = DocumentStatus.已完成.ToString();
                         }
                         else
                         {
@@ -453,17 +467,13 @@ namespace CFLMedCab.Http.Bll
                     }
                     else
                     {
-                        shelfTask.Status = DocumentStatus.异常.ToString();
+                        LogUtils.Error("GetShelfTaskChange: GetShelfTaskAllCommodityDetail" + bdAllstcd.message);
                     }
-				}
-				else
-				{
-					shelfTask.Status = DocumentStatus.异常.ToString();
-				}
+                }
 
-                foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
+                foreach (ShelfTaskCommodityDetail stcd in baseDataShelfTaskCommodityDetail.body.objects)
                 {
-                    stcd.CurShelfNumber = commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
+                    stcd.CurShelfNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
                     stcd.PlanShelfNumber = stcd.NeedShelfNumber - stcd.AlreadyShelfNumber;
                 }
             }
@@ -520,7 +530,8 @@ namespace CFLMedCab.Http.Bll
 			if (isSuccess)
 			{
 				var CommodityCodes = baseDataCommodityCode.body.objects;
-				var CommodityInventoryChanges = new List<CommodityInventoryChange>(CommodityCodes.Count);
+				var CommodityInventoryChangesOut = new List<CommodityInventoryChange>();
+                var CommodityInventoryChangesIn = new List<CommodityInventoryChange>();
 
                 CommodityCodes.ForEach(it =>
                 {
@@ -537,10 +548,17 @@ namespace CFLMedCab.Http.Bll
                         //GoodsLocationId = it.GoodsLocationId
                     };
 
+                    if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
+                    {
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
+                    }
+
                     if (it.operate_type == (int)OperateType.出库)
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
                         cic.StoreHouseId = ApplicationState.GetHouseId();
+
+                        CommodityInventoryChangesOut.Add(cic);
                     }
                     else
                     {
@@ -548,17 +566,25 @@ namespace CFLMedCab.Http.Bll
                         cic.EquipmentId = it.EquipmentId;
                         cic.StoreHouseId = it.StoreHouseId;
                         cic.GoodsLocationId = it.GoodsLocationId;
+                        CommodityInventoryChangesIn.Add(cic);
                     }
-
-                    if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
-                    {
-                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
-                    }
-
-                    CommodityInventoryChanges.Add(cic);
                 });
 
-				retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
+                var resultOut = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesOut);
+                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess3);
+                var resultIn = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesIn);
+                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess4);
+
+                if (!isSuccess3)
+                {
+                    return resultOut;
+                }
+                if (!isSuccess4)
+                {
+                    return resultIn;
+                }
+                resultOut.body.AddRange(resultIn.body);
+                return resultOut;
 			}
 			else
 			{

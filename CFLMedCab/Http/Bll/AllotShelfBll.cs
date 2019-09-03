@@ -120,20 +120,15 @@ namespace CFLMedCab.Http.Bll
 
             if (isSuccess)
             {
-                //WARING 这种做法只在单柜下才是完全正确，在多柜中需要修改
-                string id = ApplicationState.GetAllLocIds().ToList().First();
-
                 List<AllotShelf> taskList = new List<AllotShelf>();
 
                 var shelfTasks = baseDataShelfTask.body.objects.Where(item=>item.Status != ShelfTaskStatus.已完成.ToString() && item.Status != ShelfTaskStatus.异常.ToString()).ToList();
 
-                var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects.Where(item => item.GoodsLocationId == id);
                 shelfTasks.ForEach(it =>
                 {
-                    it.ShelfNumber = shelfTaskCommodityDetails.Where(sit => sit.AllotShelfId == it.id).Count();
+                    it.ShelfNumber = baseDataShelfTaskCommodityDetail.body.objects.Where(sit => sit.AllotShelfId == it.id).Count();
                     if (it.ShelfNumber != 0)
                     {
-                        it.GoodLocationName = ApplicationState.GetLocCodeById(id);
                         taskList.Add(it);
                     }
                 });
@@ -196,8 +191,6 @@ namespace CFLMedCab.Http.Bll
                 });
 
             }, baseDataShelfTask);
-
-            //baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
 
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess1);
@@ -378,65 +371,83 @@ namespace CFLMedCab.Http.Bll
 
             if (isSuccess && isSuccess1)
             {
-                //调拨上架商品明细
-                var allotShelfCommodities = baseAllotShelfCommodity.body.objects;
-                //获取待上架商品CommodityId列表（去重后）
-                var detailCommodityIds = allotShelfCommodities.Select(it => it.CommodityId).Distinct().ToList();
+                List<string> locIds = baseAllotShelfCommodity.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
+                List<string> status = new List<string>();
 
-                var commodityCodes = baseDataCommodityCode.body.objects;
-                //记录任务单异常状态
-                var IsException = false;
+                locIds.ForEach(id => {
+                    //调拨上架商品明细
+                    var allotShelfCommodities = baseAllotShelfCommodity.body.objects;
+                    //获取待上架商品CommodityId列表（去重后）
+                    var detailCommodityIds = allotShelfCommodities.Select(it => it.CommodityId).Distinct().ToList();
 
-                var number = 0;
-                //遍历变化后的商品码列表
-                commodityCodes.ForEach(it =>
-                {
-                    //向智能柜里面放东西
-                    if (it.operate_type == (int)OperateType.入库)
+                    var commodityCodes = baseDataCommodityCode.body.objects;
+                    //记录任务单异常状态
+                    var IsException = false;
+
+                    var number = 0;
+                    //遍历变化后的商品码列表
+                    commodityCodes.ForEach(it =>
                     {
-                        //商品在任务单中
-                        if (detailCommodityIds.Contains(it.CommodityId))
+                        //向智能柜里面放东西
+                        if (it.operate_type == (int)OperateType.入库)
                         {
-                            it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
-                            number++;
+                            //商品在任务单中
+                            if (detailCommodityIds.Contains(it.CommodityId))
+                            {
+                                it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                                number++;
+
+                            }
+                            //商品不在任务单中【待确认】
+                            else
+                            {
+                                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                                IsException = true;
+                            }
 
                         }
-                        //商品不在任务单中【待确认】
+                        //从智能柜中取东西
                         else
                         {
                             it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                             IsException = true;
                         }
+                    });
+
+                    //当商品出现出库或放入异常商品时以及正常数量和预定数量不相等时判定主单状态为异常
+
+                    if (!IsException)
+                    {
+                        //当正常数量小于待上架商品。主单状态为进行中
+                        if (number < detailCommodityIds.Count)
+                        {
+                            status.Add(AllotShelfStatusEnum.进行中.ToString());
+                        }
+                        //当正常数量等于待上架商品，主单状态为已完成
+                        else
+                        {
+                            status.Add(AllotShelfStatusEnum.已完成.ToString());
+                        }
+                        //由于CommodityId唯一，所以不存在第三种情况
 
                     }
-                    //从智能柜中取东西
                     else
                     {
-                        it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                        IsException = true;
+                        status.Add(AllotShelfStatusEnum.异常.ToString());
                     }
                 });
 
-                //当商品出现出库或放入异常商品时以及正常数量和预定数量不相等时判定主单状态为异常
-
-                if (!IsException)
+                if(status.Contains(AllotShelfStatusEnum.异常.ToString()))
                 {
-                    //当正常数量小于待上架商品。主单状态为进行中
-                    if (number < detailCommodityIds.Count)
-                    {
-                        order.Status = AllotShelfStatusEnum.进行中.ToString();
-                    }
-                    //当正常数量等于待上架商品，主单状态为已完成
-                    else
-                    {
-                        order.Status = AllotShelfStatusEnum.已完成.ToString();
-                    }
-                    //由于CommodityId唯一，所以不存在第三种情况
-
+                    order.Status = AllotShelfStatusEnum.异常.ToString();
+                }
+                else if(status.Contains(AllotShelfStatusEnum.进行中.ToString()))
+                {
+                    order.Status = AllotShelfStatusEnum.进行中.ToString();
                 }
                 else
                 {
-                    order.Status = AllotShelfStatusEnum.异常.ToString();
+                    order.Status = AllotShelfStatusEnum.已完成.ToString();
                 }
             }
         }
@@ -459,7 +470,8 @@ namespace CFLMedCab.Http.Bll
             if (isSuccess && isSuccess2)
             {
                 var CommodityCodes = baseDataCommodityCode.body.objects;
-                var CommodityInventoryChanges = new List<CommodityInventoryChange>(CommodityCodes.Count);
+                var CommodityInventoryChangesOut = new List<CommodityInventoryChange>();
+                var CommodityInventoryChangesIn = new List<CommodityInventoryChange>();
 
                 //调拨上架商品明细
                 var allotShelfCommodities = baseAllotShelfCommodity.body.objects;
@@ -487,6 +499,8 @@ namespace CFLMedCab.Http.Bll
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
                         cic.StoreHouseId = ApplicationState.GetHouseId();
                         cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
+
+                        CommodityInventoryChangesOut.Add(cic);
                     }
                     //入库
                     else
@@ -500,12 +514,25 @@ namespace CFLMedCab.Http.Bll
                         {
                             cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                         }
+                        CommodityInventoryChangesIn.Add(cic);
                     }
-
-                    CommodityInventoryChanges.Add(cic);
                 });
 
-                retBaseSinglePostDataCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChanges);
+                var resultOut = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesOut);
+                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess3);
+                var resultIn = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesIn);
+                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess4);
+
+                if (!isSuccess3)
+                {
+                    return resultOut;
+                }
+                if (!isSuccess4)
+                {
+                    return resultIn;
+                }
+                resultOut.body.AddRange(resultIn.body);
+                return resultOut;
             }
             else
             {

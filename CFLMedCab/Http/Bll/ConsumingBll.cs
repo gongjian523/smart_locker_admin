@@ -125,7 +125,6 @@ namespace CFLMedCab.Http.Bll
 			//根据领用单ID获取领用上列表信息
 			BaseData<ConsumingGoodsDetail> baseOperationOrderGoodsDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
 			{
-
 				return hh.Get<ConsumingGoodsDetail>(new QueryParam
 				{
                     view_filter =
@@ -169,11 +168,8 @@ namespace CFLMedCab.Http.Bll
 
 				});
 			}
-
 			return baseOperationOrderGoodsDetail;
-
 		}
-
 
         public BaseData<ConsumingGoodsDetail> GetAllOperationOrderGoodsDetail(ConsumingOrder consumingOrder)
         {
@@ -394,7 +390,7 @@ namespace CFLMedCab.Http.Bll
             }
 
             ////当入库数量大于0说明在领用的时候进行了入库操作, 或者领用商品中有过期商品， 变更领用单状态为异常
-            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString()).Count() >0)
+            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString()).Count() >0)
             {
                 order.body[0].Status = ConsumingOrderStatus.异常.ToString();
             }
@@ -473,103 +469,128 @@ namespace CFLMedCab.Http.Bll
 
 			if (isSuccess && isSuccess1)
 			{
-				//手术待领用商品明细
-				var operationDetails = consumingGoodsDetail.body.objects.Where(item=> Convert.ToInt32(item.unusedAmount) != 0);
-				//获取待领用商品CommodityId列表（去重后）
-				var detailCommodityIds = operationDetails.Select(it => it.CommodityId).Distinct().ToList();
-                //变更后的Id列表
-				var commodityCodes = baseDataCommodityCode.body.objects;    
-                //是否主单异常
-                var IsException = false;
+                //获取这个领用单在这个设备下的所有货柜id
+                List<string> locIds = consumingGoodsDetail.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
 
-				commodityCodes.ForEach(it =>
-				{
-					if (it.operate_type == (int)OperateType.入库)
-					{
-						it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                        IsException = true;
-					}
-					else
-					{
-						if (detailCommodityIds.Contains(it.CommodityId))
-						{
-                            if(it.QualityStatus == QualityStatusType.过期.ToString())
+                List<string> status = new List<string>();
+
+                //按照货柜来处理
+                locIds.ForEach(id =>
+                {
+                    //手术待领用商品明细
+                    var operationDetails = consumingGoodsDetail.body.objects.Where(item => Convert.ToInt32(item.unusedAmount) != 0 && item.GoodsLocationId == id);
+                    //获取待领用商品CommodityId列表（去重后）
+                    var detailCommodityIds = operationDetails.Select(it => it.CommodityId).Distinct().ToList();
+                    //变更后的Id列表
+                    var commodityCodes = baseDataCommodityCode.body.objects.Where(item=> item.GoodsLocationId == id).ToList();
+                    //是否主单异常
+                    var IsException = false;
+
+                    commodityCodes.ForEach(it =>
+                    {
+                        if (it.operate_type == (int)OperateType.入库)
+                        {
+                            it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                            IsException = true;
+                        }
+                        else
+                        {
+                            if (detailCommodityIds.Contains(it.CommodityId))
+                            {
+                                if (it.QualityStatus == QualityStatusType.过期.ToString() || it.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())
+                                {
+                                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                                    IsException = true;
+                                }
+                                else
+                                {
+                                    it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                                }
+                            }
+                            else
                             {
                                 it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                                 IsException = true;
                             }
-                            else
+                        }
+                    });
+
+                    //含有异常操作
+                    if (IsException)
+                    {
+                        status.Add(ConsumingOrderStatus.异常.ToString());
+                    }
+                    else
+                    {
+                        //变动商品明细CommodityId列表（去重后）
+                        var baseDataCommodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+
+                        //是否名称全部一致
+                        bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count == detailCommodityIds.Count;
+                        //不存在领用的商品数量超过了领用单规定的数量
+                        bool isNoOver = true;
+                        //所有商品的数量都和领用单规定的一样
+                        bool isAllSame = true; 
+
+                        foreach (ConsumingGoodsDetail ccd in operationDetails)
+                        {
+                            //详情对应的Commodity领用数量
+                            var tempCount = commodityCodes.Where(cit => cit.CommodityId == ccd.CommodityId).Count();
+
+                            //任何一种商品的数量不一致
+                            if (ccd.unusedAmount != null)
                             {
-                                it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                                if (Convert.ToInt32(ccd.unusedAmount) < tempCount)
+                                {
+                                    isNoOver = false;
+                                    break;
+                                }
+
+                                if (Convert.ToInt32(ccd.unusedAmount) != tempCount)
+                                {
+                                    isAllSame = false;
+                                }
                             }
                         }
-						else
-						{
-							it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                            IsException = true;
-						}
-					}
-				});
 
-                if (IsException)
+                        //只有种类和数量完全一致的情况下，才会修改领用单状态
+                        if (isAllContains && isNoOver)
+                        {
+                            if (isAllSame)
+                            {
+                                status.Add(ConsumingOrderStatus.已完成.ToString());
+                            }
+                            else
+                            {
+                                status.Add(ConsumingOrderStatus.领用中.ToString());
+                            }
+                        }
+                        else
+                        {
+                            status.Add(ConsumingOrderStatus.异常.ToString());
+                        }
+                    }
+                });
+
+                if(status.Contains(ConsumingOrderStatus.异常.ToString()))
                 {
                     order.Status = ConsumingOrderStatus.异常.ToString();
                 }
+                else if (status.Contains(ConsumingOrderStatus.领用中.ToString()))
+                {
+                    order.Status = ConsumingOrderStatus.领用中.ToString();
+                }
                 else
                 {
-                    //变动商品明细CommodityId列表（去重后）
-                    var baseDataCommodityIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
+                    BaseData<ConsumingGoodsDetail> bdConsumingGoodsDetail = GetAllOperationOrderGoodsDetail(order);
 
-                    //是否名称全部一致
-                    bool isAllContains = detailCommodityIds.All(baseDataCommodityIds.Contains) && baseDataCommodityIds.Count == detailCommodityIds.Count;
+                    HttpHelper.GetInstance().ResultCheck(bdConsumingGoodsDetail, out bool isSuccess2);
 
-                    bool isAllNormal = true;
-                    bool isAllSame = true; //
-                    foreach (ConsumingGoodsDetail ccd in operationDetails)
+                    if (isSuccess2)
                     {
-                        //详情对应的Commodity领用数量
-                        var tempCount = commodityCodes.Where(cit => cit.CommodityId == ccd.CommodityId).Count();
-         
-                        //任何一种商品的数量不一致
-                        if(ccd.unusedAmount != null)
+                        if (bdConsumingGoodsDetail.body.objects.Where(item => Convert.ToInt32(item.unusedAmount) != 0 && item.EquipmentId != ApplicationState.GetEquipId()).Count() == 0)
                         {
-                            if(Convert.ToInt32(ccd.unusedAmount) < tempCount)
-                            {
-                                isAllNormal = false;
-                                break;
-                            }
-
-                            if (Convert.ToInt32(ccd.unusedAmount) != tempCount)
-                            {
-                                isAllSame = false;
-                            }
-                        }
-                    }
-
-                    //只有种类和数量完全一致的情况下，才会修改领用单状态
-                    if (isAllContains && isAllNormal)
-                    {
-                        if(isAllSame)
-                        {
-                            BaseData<ConsumingGoodsDetail> bdConsumingGoodsDetail =  GetAllOperationOrderGoodsDetail(order);
-
-                            HttpHelper.GetInstance().ResultCheck(bdConsumingGoodsDetail, out bool isSuccess2);
-
-                            if(isSuccess2)
-                            {
-                                if(bdConsumingGoodsDetail.body.objects.Where(item => Convert.ToInt32(item.unusedAmount) != 0 && item.EquipmentId != ApplicationState.GetEquipId()).Count() == 0)
-                                {
-                                    order.Status = ConsumingOrderStatus.已完成.ToString();
-                                }
-                                else
-                                {
-                                    order.Status = ConsumingOrderStatus.领用中.ToString();
-                                }
-                            }
-                            else
-                            {
-                                LogUtils.Error("GetOperationOrderChangeWithOrder: GetAllOperationOrderGoodsDetail" + bdConsumingGoodsDetail.message);
-                            }                     
+                            order.Status = ConsumingOrderStatus.已完成.ToString();
                         }
                         else
                         {
@@ -578,10 +599,10 @@ namespace CFLMedCab.Http.Bll
                     }
                     else
                     {
-                        order.Status = ConsumingOrderStatus.异常.ToString();
+                        LogUtils.Error("GetOperationOrderChangeWithOrder: GetAllOperationOrderGoodsDetail" + bdConsumingGoodsDetail.message);
                     }
                 }
-			}
+            }
 		}
         /// <summary>
         /// 检测并变更手术类【无单领用】领用状态，和商品变动状态明细

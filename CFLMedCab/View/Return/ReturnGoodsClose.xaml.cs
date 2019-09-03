@@ -89,9 +89,9 @@ namespace CFLMedCab.View.Return
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
 
-                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after, locCodes);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
                 {
                     MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);

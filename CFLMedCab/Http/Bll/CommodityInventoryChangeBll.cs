@@ -56,7 +56,10 @@ namespace CFLMedCab.Http.Bll
                     message = ResultCode.Parameter_Exception.ToString()
                 };
             }
-            List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
+
+            List<CommodityInventoryChange> changesOut = new List<CommodityInventoryChange>();
+            List<CommodityInventoryChange> changesIn = new List<CommodityInventoryChange>();
+
             baseDataCommodityCode.body.objects.ForEach(commodityCode =>
             {
                 var temp = new CommodityInventoryChange()
@@ -69,6 +72,7 @@ namespace CFLMedCab.Http.Bll
                         //出库变更更后库房、变更更后设备、变更更后货位 value 值都为null。
                         temp.SourceBill = sourceBill;
                         temp.ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString();
+                        changesOut.Add(temp);
                         break;
                     case 1:
                         temp.SourceBill = new SourceBill()
@@ -79,12 +83,30 @@ namespace CFLMedCab.Http.Bll
                         temp.EquipmentId = commodityCode.EquipmentId;
                         temp.GoodsLocationId = commodityCode.GoodsLocationId;
                         temp.StoreHouseId = commodityCode.StoreHouseId;
+                        changesIn.Add(temp);
                         break;
                 }
-                changes.Add(temp);
+                
             });
-            return CreateCommodityInventoryChange(changes);
+
+            var resultOut = CreateCommodityInventoryChange(changesOut);
+            HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess);
+            var resultIn = CreateCommodityInventoryChange(changesIn);
+            HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess2);
+
+            if (!isSuccess)
+            {
+                return resultOut;
+            }
+            if (!isSuccess2)
+            {
+                return resultIn;
+            }
+            resultOut.body.AddRange(resultIn.body);
+            return resultOut;
         }   
+
+
         /// <summary>
         /// 根据商品码变更列表和来源单据创建库存变更记录资料（回退）
         /// </summary>
@@ -176,7 +198,7 @@ namespace CFLMedCab.Http.Bll
             //添加变更记录成功时，且有出库记录（即创建过领用单）
             if (count > 0)
             {
-                if(baseDataCommodityCode.body.objects.Where(item => item.QualityStatus == QualityStatusType.过期.ToString() && item.operate_type == 0).Count() > 0)
+                if(baseDataCommodityCode.body.objects.Where(item => (item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())&& item.operate_type == 0).Count() > 0)
                 {
                     order.Status = ConsumingOrderStatus.异常.ToString();
                 }
