@@ -109,7 +109,7 @@ namespace CFLMedCab.View.Fetch
                 listView.DataContext = bdCommodityCode.body.objects;
                 returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
                 fetchNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-                int expiredCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count();
+                int expiredCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && (item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())).Count();
 
                 expiredNum.Content = expiredCnt;
 

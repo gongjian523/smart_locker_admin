@@ -664,6 +664,7 @@ namespace CFLMedCab.Http.Bll
             bdCommodityCode.body.objects.ForEach(it =>
             {
                 it.QualityStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().QualityStatus;
+                it.InventoryStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().Status;
             });
 
             isSuccess = true;

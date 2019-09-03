@@ -75,12 +75,14 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
                             <Grid Grid.Column="2" x:Name="column3"/>
                             <Grid Grid.Column="3" x:Name="column4"/>
                             <Grid Grid.Column="4" x:Name="column5"/>
+                            <Grid Grid.Column="5" x:Name="column6"/>
                         </Grid>
                         <ListView Style="{StaticResource DefaultListView}" Grid.Row="1"  ItemsSource="{Binding}" Name="listView">
                             <ListView.View>
@@ -113,7 +115,14 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column5,Path=ActualWidth}" >
+                                    <GridViewColumn Header="库存状态" Width="{Binding ElementName=column5,Path=ActualWidth}" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=InventoryStatus}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column6,Path=ActualWidth}" >
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=AbnormalDisplay}"/>
@@ -145,7 +154,7 @@
                             <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Style="{StaticResource lblTitle1}" Content="请将过期商品放回！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Style="{StaticResource lblTitle1}" Content="请将过期和待回收商品取出！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1">
                             <Button Style="{StaticResource CommonNoButton}"  Content="开柜" Margin="60,0,0,0" Width="220"  Click="onNoEndOperation"/>
                         </StackPanel>

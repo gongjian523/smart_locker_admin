@@ -384,7 +384,7 @@ namespace CFLMedCab.Http.Bll
             }
 
             ////当入库数量大于0说明在领用的时候进行了入库操作, 或者领用商品中有过期商品， 变更领用单状态为异常
-            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString()).Count() >0)
+            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString()).Count() >0)
             {
                 order.body[0].Status = ConsumingOrderStatus.异常.ToString();
             }
@@ -482,7 +482,7 @@ namespace CFLMedCab.Http.Bll
 					{
 						if (detailCommodityIds.Contains(it.CommodityId))
 						{
-                            if(it.QualityStatus == QualityStatusType.过期.ToString())
+                            if(it.QualityStatus == QualityStatusType.过期.ToString() || it.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())
                             {
                                 it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                                 IsException = true;

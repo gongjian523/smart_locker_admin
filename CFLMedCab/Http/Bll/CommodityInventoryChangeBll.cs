@@ -162,7 +162,7 @@ namespace CFLMedCab.Http.Bll
             //添加变更记录成功时，且有出库记录（即创建过领用单）
             if (isSuccess2 && count > 0)
             {
-                if(baseDataCommodityCode.body.objects.Where(item => item.QualityStatus == QualityStatusType.正常.ToString() && item.operate_type == 0).Count() > 0)
+                if(baseDataCommodityCode.body.objects.Where(item => (item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString()) && item.operate_type == 0).Count() > 0)
                 {
                     order.Status = ConsumingOrderStatus.异常.ToString();
                 }

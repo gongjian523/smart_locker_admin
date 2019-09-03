@@ -121,7 +121,7 @@ namespace CFLMedCab.View.Fetch
                 abnormalOutNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.AbnormalDisplay == "异常").Count();//异常出库
 
                 //领用产品上包含过期商品不让用户主动提交
-                if (bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count() == 0)
+                if (bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && (item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())).Count() == 0)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;
