@@ -360,7 +360,7 @@
     <Compile Include="View\Inventory\InventoryDtlLocal.xaml.cs">
       <DependentUpon>InventoryDtlLocal.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\KeyboardView.xaml.cs">
+    <Compile Include="View\Common\KeyboardView.xaml.cs">
       <DependentUpon>KeyboardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\OpenDoorBtnBoard.xaml.cs">
@@ -372,13 +372,13 @@
     <Compile Include="View\Return\ReturnClose.xaml.cs">
       <DependentUpon>ReturnClose.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\SystemSetting.xaml.cs">
+    <Compile Include="View\Common\SystemSetting.xaml.cs">
       <DependentUpon>SystemSetting.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\BindingVein.xaml.cs">
+    <Compile Include="View\Common\BindingVein.xaml.cs">
       <DependentUpon>BindingVein.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\CloseCabinet.xaml.cs">
+    <Compile Include="View\Common\CloseCabinet.xaml.cs">
       <DependentUpon>CloseCabinet.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Fetch\GerFetchState.xaml.cs">
@@ -411,10 +411,10 @@
     <Compile Include="View\Inventory\StockDetailed.xaml.cs">
       <DependentUpon>StockDetailed.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Login\LoginInfo.xaml.cs">
+    <Compile Include="View\Common\LoginInfo.xaml.cs">
       <DependentUpon>LoginInfo.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OpenCabinet.xaml.cs">
+    <Compile Include="View\Common\OpenCabinet.xaml.cs">
       <DependentUpon>OpenCabinet.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Return\ReturnGoodsDetailOpen.xaml.cs">
@@ -525,7 +525,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\KeyboardView.xaml">
+    <Page Include="View\Common\KeyboardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -541,15 +541,15 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\SystemSetting.xaml">
+    <Page Include="View\Common\SystemSetting.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\BindingVein.xaml">
+    <Page Include="View\Common\BindingVein.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\CloseCabinet.xaml">
+    <Page Include="View\Common\CloseCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -589,11 +589,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Login\LoginInfo.xaml">
+    <Page Include="View\Common\LoginInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OpenCabinet.xaml">
+    <Page Include="View\Common\OpenCabinet.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

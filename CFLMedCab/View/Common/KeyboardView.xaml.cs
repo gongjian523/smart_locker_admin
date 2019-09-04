@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.Common
 {
     /// <summary>
     /// KeyboardView.xaml 的交互逻辑

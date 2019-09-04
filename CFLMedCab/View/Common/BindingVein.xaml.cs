@@ -25,7 +25,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.Common
 {
     /// <summary>
     /// CloseCabinet.xaml 的交互逻辑
