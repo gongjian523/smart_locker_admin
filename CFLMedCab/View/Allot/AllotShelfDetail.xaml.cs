@@ -72,7 +72,6 @@ namespace CFLMedCab.View.Allot
                 BaseData<AllotShelfCommodity> bdAllotShelf = AllotShelfBll.GetInstance().GetShelfTaskCommodityDetail(allotShelf);
                 LoadingDataEvent(this, false);
 
-
                 HttpHelper.GetInstance().ResultCheck(bdAllotShelf, out bool isSuccess);
                 if (!isSuccess)
                 {

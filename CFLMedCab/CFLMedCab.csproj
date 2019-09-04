@@ -358,6 +358,9 @@
     <Compile Include="View\Allot\AllotShelfDetailOpen.xaml.cs">
       <DependentUpon>AllotShelfDetailOpen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\Common\AbnOptBoard.xaml.cs">
+      <DependentUpon>AbnOptBoard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Inventory\InventoryDtlLocal.xaml.cs">
       <DependentUpon>InventoryDtlLocal.xaml</DependentUpon>
     </Compile>
@@ -518,6 +521,10 @@
     <Page Include="View\Allot\AllotShelfDetailOpen.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Common\AbnOptBoard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Inventory\InventoryDtlLocal.xaml">
       <Generator>MSBuild:Compile</Generator>

@@ -145,35 +145,22 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            bool bGotoAbnormal = true;
-
             if (isSuccess)
             {
-                if (bdCommodityCode.code != 0 || bdCommodityDetail.code != 0)
+                //任务单里的商品上架全部完成
+                if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() == 0)
                 {
-                    bGotoAbnormal = false;
+                    //shelftask的状态在数据初始化的时候赋值
+                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                    EndOperation(bExit);
                 }
                 else
                 {
-                    if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() == 0)
-                    {
-                        bGotoAbnormal = false;
-                    }
+                    normalView.Visibility = Visibility.Collapsed;
+                    abnormalView.Visibility = Visibility.Visible;
+
+                    listView2.DataContext = bdCommodityDetail.body.objects;
                 }
-            }
-
-            if (!bGotoAbnormal || !isSuccess)
-            {
-                
-                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-                EndOperation(bExit);
-            }
-            else
-            {
-                normalView.Visibility = Visibility.Collapsed;
-                abnormalView.Visibility = Visibility.Visible;
-
-                listView2.DataContext = bdCommodityDetail.body.objects;
             }
         }
 
@@ -184,7 +171,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            
             EnterReplenishmentDetailOpenEvent(this, shelfTask);
             return;
         }
@@ -196,6 +182,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                shelfTask.Status = DocumentStatus.异常.ToString();
                 EndOperation(true, false);
             }));
         }
@@ -207,7 +194,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="bAutoSubmit">是否是主动提交</param>
         private void EndOperation(bool bExit, bool bAutoSubmit = true)
         {
-            if(isSuccess)
+            if (isSuccess)
             {
 
                 LoadingDataEvent(this, true);
@@ -216,49 +203,32 @@ namespace CFLMedCab.View.ReplenishmentOrder
 
                 HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
 
-				if (!isSuccess1)
-				{
-                    if(bAutoSubmit)
+                if (!isSuccess1)
+                {
+                    if (bAutoSubmit)
                     {
                         MessageBox.Show("创建上架任务单库存明细失败！" + basePostData.message, "温馨提示", MessageBoxButton.OK);
                     }
-				}
-				else
-				{
-                    AbnormalCauses abnormalCauses;
-
-                    if ((bool)bthShortHide.IsChecked)
-                        abnormalCauses = AbnormalCauses.商品缺失;
-                    else if ((bool)bthLossHide.IsChecked)
-                        abnormalCauses = AbnormalCauses.商品遗失;
-                    else if ((bool)bthBadHide.IsChecked)
-                        abnormalCauses = AbnormalCauses.商品损坏;
-                    else if ((bool)bthOtherHide.IsChecked)
-                        abnormalCauses = AbnormalCauses.其他;
-                    else
-                        abnormalCauses = AbnormalCauses.未选;
-
-                    //长时间未操作，状态一律改成异常
-                    if (!bAutoSubmit)
-                    {
-                        shelfTask.Status = DocumentStatus.异常.ToString();
-                    }
+                }
+                else
+                {
+                    shelfTask.Status = abnormalOptions.GetAbnormal();
 
                     LoadingDataEvent(this, true);
-                    BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask, abnormalCauses);
+                    BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask);
                     LoadingDataEvent(this, false);
 
                     HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess2);
 
                     if (!isSuccess2 && bAutoSubmit)
-					{
-						MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
-					}
-				}
+                    {
+                        MessageBox.Show("更新上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    }
+                }
 
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTask");
             }
-
+            
             ApplicationState.SetGoodsInfo(after);
 
             if(bAutoSubmit)
@@ -266,62 +236,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 EnterPopCloseEvent(this, bExit);
             }
         }
-
-        /// <summary>
-        /// 操作缺货按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onShowBtnShort(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            bthShortHide.Visibility = (btn.Name == "bthShortShow" ? Visibility.Visible : Visibility.Collapsed);
-        }
-
-        /// <summary>
-        /// 操作损耗按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onShowBtnLoss(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            bthLossHide.Visibility = (btn.Name == "bthLossShow" ? Visibility.Visible : Visibility.Collapsed);
-        }
-
-        /// <summary>
-        /// 操作其他按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onShowBtnOther(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            bthOtherHide.Visibility = (btn.Name == "bthOtherShow" ? Visibility.Visible : Visibility.Collapsed);
-        }
-
-        /// <summary>
-        /// 操作损耗按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onShowBtnBad(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            bthBadHide.Visibility = (btn.Name == "bthBadShow" ? Visibility.Visible : Visibility.Collapsed);
-        }
-
-        /// <summary>
-        /// 提交按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onSubmit(object sender, RoutedEventArgs e)
-        {
-            
-            EndOperation(bExit);
-        }
-
 
         /// <summary>
         /// 返回按钮
@@ -332,6 +246,33 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             normalView.Visibility = Visibility.Visible;
             abnormalView.Visibility = Visibility.Collapsed;
+        }
+
+        private void AbnOptBoard_Loaded(object sender, RoutedEventArgs e)
+        {
+            
+        }
+
+        /// <summary>
+        /// 暂未完成按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onNotComplete(object sender, RoutedEventArgs e)
+        {
+            shelfTask.Status = DocumentStatus.进行中.ToString();
+            EndOperation(bExit);
+        }
+
+        /// <summary>
+        /// 异常提交
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onAbnormalSubmit(object sender, RoutedEventArgs e)
+        {
+            shelfTask.Status = DocumentStatus.异常.ToString();
+            EndOperation(bExit);
         }
     }
 }

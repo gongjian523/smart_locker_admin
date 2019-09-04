@@ -476,21 +476,25 @@ namespace CFLMedCab.Http.Bll
         /// <param name="abnormalCauses"></param>
         /// <param name="bAutoSubmit">是否是主动提交</param>
         /// <returns></returns>
-        public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask, AbnormalCauses abnormalCauses)
+        public BasePutData<ShelfTask> PutShelfTask(ShelfTask shelfTask)
         {
 
             ShelfTask task = new ShelfTask
             {
                 id = shelfTask.id,
                 Status = shelfTask.Status,
-                //当任务单状态为已完成时，携带完成时间进行更新
-                FinishDate = shelfTask.Status.Equals(ShelfTaskStatus.已完成.ToString()) ? GetDateTimeNow() : null,
                 version = shelfTask.version
             };
 
-            if (shelfTask.Status == DocumentStatus.异常.ToString() && abnormalCauses != AbnormalCauses.未选)
+            if (shelfTask.Status == DocumentStatus.异常.ToString() && shelfTask.AbnormalCauses != "")
             {
-                task.AbnormalCauses = abnormalCauses.ToString();
+                task.AbnormalCauses = shelfTask.AbnormalCauses;
+            }
+
+            //当任务单状态为已完成时，携带完成时间进行更新
+            if (shelfTask.Status == DocumentStatus.已完成.ToString())
+            {
+                task.FinishDate = GetDateTimeNow();
             }
 
             BasePutData<ShelfTask> basePutData = HttpHelper.GetInstance().Put(task);

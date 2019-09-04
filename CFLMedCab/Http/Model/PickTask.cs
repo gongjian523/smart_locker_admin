@@ -20,10 +20,19 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string BillStatus { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string FinishDate { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string AbnormalCauses { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string AbnormalDescribe { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string FinishDate { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
