@@ -113,14 +113,14 @@ namespace CFLMedCab.Http.Model
         /// 计划拣货数
         /// </summary>
         [JsonIgnore]
-        public int PlanShelfNumber { get; set; }
+        public int PlanPickNumber { get; set; }
 
 
         /// <summary>
         /// 当前拣货数
         /// </summary>
         [JsonIgnore]
-        public int CurShelfNumber { get; set; }
+        public int CurPickNumber { get; set; }
 
         /// <summary>
         /// 拣货计数器

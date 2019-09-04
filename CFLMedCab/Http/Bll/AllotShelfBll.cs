@@ -337,7 +337,7 @@ namespace CFLMedCab.Http.Bll
                 version = allotShelf.version
             };
 
-            if(allotShelf.AbnormalCauses != null)
+            if(allotShelf.Status == AllotShelfStatusEnum.异常.ToString() && allotShelf.AbnormalCauses != "")
             {
                 task.AbnormalCauses = allotShelf.AbnormalCauses;
             }

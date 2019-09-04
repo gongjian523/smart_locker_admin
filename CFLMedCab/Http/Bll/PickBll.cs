@@ -458,8 +458,8 @@ namespace CFLMedCab.Http.Bll
 
                 foreach (PickCommodity stcd in baseDataPickTaskCommodityDetail.body.objects)
                 {
-                    stcd.CurShelfNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
-                    stcd.PlanShelfNumber = stcd.Number - stcd.PickNumber;
+                    stcd.CurPickNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
+                    stcd.PlanPickNumber = stcd.Number - stcd.PickNumber;
                 }
             }
 		}
@@ -471,17 +471,27 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BasePutData<PickTask> PutPickTask(PickTask pickTask)
 		{
+            PickTask task = new PickTask
+            {
+                id = pickTask.id,
+                BillStatus = pickTask.BillStatus,
+                version = pickTask.version
+            };
 
-            //put修改拣货工单
-            BasePutData<PickTask> basePutData =  HttpHelper.GetInstance().Put(new PickTask
-			{
-				id = pickTask.id,
-				BillStatus = pickTask.BillStatus,
-                FinishDate = pickTask.BillStatus.Equals(PickTaskStatus.已完成.ToString())?GetDateTimeNow() : null,
-				version = pickTask.version
-			});
+            if (pickTask.BillStatus == DocumentStatus.异常.ToString() && pickTask.AbnormalCauses != "")
+            {
+                task.AbnormalCauses = pickTask.AbnormalCauses;
+            }
 
-            if(basePutData.code != 0)
+            //当任务单状态为已完成时，携带完成时间进行更新
+            if (pickTask.BillStatus == DocumentStatus.已完成.ToString())
+            {
+                task.FinishDate = GetDateTimeNow();
+            }
+
+            BasePutData<PickTask> basePutData = HttpHelper.GetInstance().Put(task);
+
+            if (basePutData.code != 0)
             {
                 LogUtils.Error("PutPickTask " + basePutData.message);
             }

@@ -131,7 +131,7 @@ namespace CFLMedCab.View.Return
                 abnormalOutNum.Content = abnormalOutCnt;
                 listView.DataContext = bdCommodityCode.body.objects;
 
-                int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurShelfNumber > (item.Number - item.PickNumber)).Count();
+                int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurPickNumber > (item.Number - item.PickNumber)).Count();
 
                 if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
                 {
@@ -153,9 +153,23 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
-            
-            bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-            EndOperation(bExit);  
+            if (isSuccess)
+            {
+                //任务单里的商品拣货架全部完成
+                if (bdCommodityDetail.body.objects.Where(item => (item.Number - item.PickNumber != item.CurPickNumber)).Count() == 0)
+                {
+                    //shelftask的状态在数据初始化的时候赋值
+                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                    EndOperation(bExit);
+                }
+                else
+                {
+                    normalView.Visibility = Visibility.Collapsed;
+                    abnormalView.Visibility = Visibility.Visible;
+
+                    listView2.DataContext = bdCommodityDetail.body.objects;
+                }
+            } 
         }
 
         /// <summary>
@@ -164,8 +178,7 @@ namespace CFLMedCab.View.Return
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
-        {
-            
+        {         
             EnterReturnGoodsDetailOpenEvent(this, pickTask);
             return;
         }
@@ -177,6 +190,7 @@ namespace CFLMedCab.View.Return
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                pickTask.BillStatus = DocumentStatus.异常.ToString();
                 EndOperation(true, false);
             }));
         }
@@ -205,10 +219,7 @@ namespace CFLMedCab.View.Return
                 }
                 else
                 {
-                    if (!bAutoSubmit)
-                    {
-                        pickTask.BillStatus = DocumentStatus.异常.ToString();
-                    }
+                    pickTask.BillStatus = abnormalOptions.GetAbnormal();
 
                     LoadingDataEvent(this, true);
                     BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);
@@ -232,50 +243,42 @@ namespace CFLMedCab.View.Return
             }
         }
 
-
         /// <summary>
-        /// 操作缺货按钮
+        /// 返回按钮
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onShowBtnShort(object sender, RoutedEventArgs e)
+        private void onBackwords(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
-            bthShortHide.Visibility = (btn.Name == "bthShortShow" ? Visibility.Visible : Visibility.Collapsed);
+            normalView.Visibility = Visibility.Visible;
+            abnormalView.Visibility = Visibility.Collapsed;
+        }
+
+        private void AbnOptBoard_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
 
         /// <summary>
-        /// 操作损耗按钮
+        /// 暂未完成按钮
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onShowBtnLoss(object sender, RoutedEventArgs e)
+        private void onNotComplete(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
-            bthLossHide.Visibility = (btn.Name == "bthLossShow" ? Visibility.Visible : Visibility.Collapsed);
-        }
-
-        /// <summary>
-        /// 操作其他按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onShowBtnOther(object sender, RoutedEventArgs e)
-        {
-            Button btn = (Button)sender;
-            bthOtherHide.Visibility = (btn.Name == "bthOtherShow" ? Visibility.Visible : Visibility.Collapsed);
-        }
-
-        /// <summary>
-        /// 提交按钮
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onSubmit(object sender, RoutedEventArgs e)
-        {
-            
+            pickTask.BillStatus = DocumentStatus.进行中.ToString();
             EndOperation(bExit);
         }
 
+        /// <summary>
+        /// 异常提交
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onAbnormalSubmit(object sender, RoutedEventArgs e)
+        {
+            pickTask.BillStatus = DocumentStatus.异常.ToString();
+            EndOperation(bExit);
+        }
     }
 }

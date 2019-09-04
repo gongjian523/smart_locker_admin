@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              xmlns:cvt="clr-namespace:CFLMedCab.Converter"
              x:Name="CtrlAllotShelfClose"
+             xmlns:common="clr-namespace:CFLMedCab.View.Common"
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="900">
     <Control.Resources>
@@ -162,15 +163,20 @@
                 </Border>
             </Grid>
         </Border>
-        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView" Visibility="Visible">
+        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView" Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                 </Grid.RowDefinitions>
-
-                <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="0">
+                <Button Style="{StaticResource ReturnButton}" Content="返回>"  Grid.Row="0" Click="onBackwords" />
+                <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="1">
+                    <Label Content="异常反馈"  Style="{StaticResource lblTitle2}" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="2">
                     <Grid >
                         <Grid.RowDefinitions>
                             <RowDefinition Height="auto"/>
@@ -191,14 +197,14 @@
                                ScrollViewer.HorizontalScrollBarVisibility="Disabled" >
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Header="商品名称" Width="{Binding ElementName=column1,Path=ActualWidth}">
+                                    <GridViewColumn Header="商品名称" Width="{Binding ElementName=column11,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=CommodityName}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="商品编号"  Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                    <GridViewColumn Header="商品编号"  Width="{Binding ElementName=column12,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=name}"/>
@@ -210,33 +216,17 @@
                         </ListView>
                     </Grid>
                 </Border >
-                <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="1" >
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                            <RowDefinition Height="auto"/>
-                        </Grid.RowDefinitions>
-                        <Label  Grid.Row="0" Content="原因" Style="{StaticResource lblTitle1}"/>
-                        <Border Grid.Row="1" Background="{StaticResource ContentBkBrush}" Padding="5,10,5,10" CornerRadius="5,5,5,5" MinHeight="60">
-                            <StackPanel Orientation="Horizontal">
-                                <RadioButton Content="商品缺失"  Name="bthShortHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  IsChecked="True" FontWeight="Bold" />
-                                <RadioButton Content="商品遗失" Name="bthLossHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold"/>
-                                <RadioButton Content="商品损坏" Name="bthBadHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold" />
-                                <RadioButton Content="其他" Name="bthOtherHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold" />
-                            </StackPanel>
-                        </Border>
-                    </Grid>
+                <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="3" >
+                    <common:AbnOptBoard x:Name="abnormalOptions"/>
                 </Border>
-                <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="2">
+                <Border Style="{StaticResource TopRadiusBorder}" Grid.Row="4">
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <Button Style="{StaticResource CommonYesButton}" x:Name="NotCompleteBtn" Content="暂未完成"  Width="220"   Click="onNotComplete"/>
-                        <Button Style="{StaticResource CommonYesButton}" x:Name="AbnormalSubmitBtn" Content="异常提交"  Width="220" Grid.Column="1" Click="onAbnormalSubmit"/>
+                        <Button Style="{StaticResource CommonNoButton}" x:Name="AbnormalSubmitBtn" Content="异常提交"  Width="220" Grid.Column="1" Click="onAbnormalSubmit"/>
                     </Grid>
                 </Border>
             </Grid>
