@@ -14,7 +14,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Xml;
 
-namespace CFLMedCab.View
+namespace CFLMedCab.View.Common
 {
     /// <summary>
     /// CloseCabinet.xaml 的交互逻辑

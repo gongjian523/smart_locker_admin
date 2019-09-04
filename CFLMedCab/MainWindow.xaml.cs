@@ -10,7 +10,6 @@ using CFLMedCab.Infrastructure.DeviceHelper;
 using System.IO.Ports;
 using System.Timers;
 using System.Media;
-using CFLMedCab.View.Login;
 using CFLMedCab.Model;
 using CFLMedCab.View.ReplenishmentOrder;
 using CFLMedCab.View.Return;
@@ -43,6 +42,7 @@ using WindowsInput;
 using System.Xml;
 using CFLMedCab.Model.Constant;
 using CFLMedCab.View.Allot;
+using CFLMedCab.View.Common;
 
 namespace CFLMedCab
 {
