@@ -9,6 +9,7 @@ using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
+using CFLMedCab.View.Common;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

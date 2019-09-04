@@ -2,6 +2,7 @@
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Enum;
+using CFLMedCab.View.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

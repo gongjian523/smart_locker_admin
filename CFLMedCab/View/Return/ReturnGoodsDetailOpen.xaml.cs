@@ -6,6 +6,7 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
+using CFLMedCab.View.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

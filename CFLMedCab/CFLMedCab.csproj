@@ -366,7 +366,7 @@
     <Compile Include="View\Common\KeyboardView.xaml.cs">
       <DependentUpon>KeyboardView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\OpenDoorBtnBoard.xaml.cs">
+    <Compile Include="View\Common\OpenDoorBtnBoard.xaml.cs">
       <DependentUpon>OpenDoorBtnBoard.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Return\ReturnQuery.xaml.cs">
@@ -536,7 +536,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\OpenDoorBtnBoard.xaml">
+    <Page Include="View\Common\OpenDoorBtnBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
