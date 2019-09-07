@@ -238,7 +238,7 @@ namespace CFLMedCab.Http.Bll
 
 
         /// <summary>
-        /// 创建库存调整中库存变更记录
+        /// 创建回收取货中库存变更记录
         /// </summary>
         /// <param name="baseDataCommodityCode"></param>
         /// <returns></returns>
