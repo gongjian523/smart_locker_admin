@@ -127,6 +127,7 @@ namespace CFLMedCab.Http.Bll
                         CommodityCodeId = loss.id,//商品码
                         SourceBill = sourceBill,//来源单据
                         ChangeStatus = CommodityInventoryChangeStatus.待回收.ToString(),//变更后状态
+                        operate_type = loss.operate_type,
                         StoreHouseId = recovery.StoreHouse,//变更库房
                         EquipmentId = null,//变更后设备
                         GoodsLocationId = null//变更后货位
@@ -134,21 +135,7 @@ namespace CFLMedCab.Http.Bll
                 });
             }
 
-            var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeList);
-
-            //校验数据是否正常
-            HttpHelper.GetInstance().ResultCheck(changes, out bool isSuccess2);
-            if (isSuccess2)
-            {
-                return new BasePostData<CommodityInventoryChange>()
-                {
-                    code = changes.code,
-                    message = changes.message
-                };
-            }
-            return changes;
-
-
+            return  CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeSeparately(changeList);
         }
     }
 }

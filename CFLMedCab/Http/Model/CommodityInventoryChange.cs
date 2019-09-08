@@ -49,6 +49,12 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string AdjustStatus { get; set; }
 
+        /// <summary>
+        /// 操作类型 0 出库 1 入库
+        /// </summary>
+        [JsonIgnore]
+        public int operate_type { get; set; }
+
     }
     /// <summary>
     /// 调整状态:[是，否]

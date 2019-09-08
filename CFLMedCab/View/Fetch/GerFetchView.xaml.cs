@@ -90,7 +90,7 @@ namespace CFLMedCab.View.Fetch
                 }
 
                 LoadingDataEvent(this, true);
-                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeStock(commodityCodeList);
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
                 if (isSuccess)
                 {
@@ -175,20 +175,20 @@ namespace CFLMedCab.View.Fetch
         /// <param name="bAutoSubmit">是否是主动提交</param>
         private void EndOperation(bool bExit, bool bAutoSubmit = true)
         {
-			if (isSuccess)
-			{
+            if (isSuccess)
+            {
                 LoadingDataEvent(this, true);
                 BasePostData<CommodityInventoryChange> bdBasePostData =
-						ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.一般领用);
+                        ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCode, ConsumingOrderType.一般领用);
                 LoadingDataEvent(this, false);
 
                 //校验是否含有数据
                 HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
-				if (!isSuccess1 && bAutoSubmit)
-				{
-					MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
+                if (!isSuccess1 && bAutoSubmit)
+                {
+                    MessageBox.Show("提交结果失败！" + bdBasePostData.message, "温馨提示", MessageBoxButton.OK);
 
-				}
+                }
 
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
             }

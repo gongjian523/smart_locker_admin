@@ -1190,7 +1190,7 @@ namespace CFLMedCab
 #if TESTENV
 #else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
             delegateGetMsg.userData = e;
 #endif
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -1554,6 +1554,8 @@ namespace CFLMedCab
 
             if (!isClose)
                 return;
+
+            locOpenNum--;
 
             if (locOpenNum > 0)
             {

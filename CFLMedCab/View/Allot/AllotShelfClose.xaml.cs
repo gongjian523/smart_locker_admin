@@ -100,7 +100,7 @@ namespace CFLMedCab.View.Allot
                 }
 
                 LoadingDataEvent(this, true);
-                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeStock(commodityCodeList);
                 LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
@@ -192,11 +192,10 @@ namespace CFLMedCab.View.Allot
                             }
                         }
                     }
-
-                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-                    EndOperation(bExit);
                 }
             }
+            bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+            EndOperation(bExit);
         }
        
         /// <summary>

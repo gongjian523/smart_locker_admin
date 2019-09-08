@@ -534,8 +534,7 @@ namespace CFLMedCab.Http.Bll
 			if (isSuccess)
 			{
 				var CommodityCodes = baseDataCommodityCode.body.objects;
-				var CommodityInventoryChangesOut = new List<CommodityInventoryChange>();
-                var CommodityInventoryChangesIn = new List<CommodityInventoryChange>();
+				var CommodityInventoryChanges = new List<CommodityInventoryChange>();
 
                 CommodityCodes.ForEach(it =>
                 {
@@ -547,6 +546,7 @@ namespace CFLMedCab.Http.Bll
                             object_name = typeof(ShelfTask).Name,
                             object_id = shelfTask.id
                         },
+                        operate_type = it.operate_type
                         //EquipmentId = ApplicationState.GetEquipId(),
                         //StoreHouseId = ApplicationState.GetHouseId(),
                         //GoodsLocationId = it.GoodsLocationId
@@ -561,8 +561,6 @@ namespace CFLMedCab.Http.Bll
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
                         cic.StoreHouseId = ApplicationState.GetHouseId();
-
-                        CommodityInventoryChangesOut.Add(cic);
                     }
                     else
                     {
@@ -570,25 +568,11 @@ namespace CFLMedCab.Http.Bll
                         cic.EquipmentId = it.EquipmentId;
                         cic.StoreHouseId = it.StoreHouseId;
                         cic.GoodsLocationId = it.GoodsLocationId;
-                        CommodityInventoryChangesIn.Add(cic);
                     }
+                    CommodityInventoryChanges.Add(cic);
                 });
 
-                var resultOut = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesOut);
-                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess3);
-                var resultIn = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesIn);
-                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess4);
-
-                if (!isSuccess3)
-                {
-                    return resultOut;
-                }
-                if (!isSuccess4)
-                {
-                    return resultIn;
-                }
-                resultOut.body.AddRange(resultIn.body);
-                return resultOut;
+                return CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeSeparately(CommodityInventoryChanges);
 			}
 			else
 			{

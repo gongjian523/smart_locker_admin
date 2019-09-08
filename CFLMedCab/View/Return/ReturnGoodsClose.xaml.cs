@@ -100,7 +100,7 @@ namespace CFLMedCab.View.Return
                 }
 
                 LoadingDataEvent(this, true);
-                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+                bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeStock(commodityCodeList);
                 LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);

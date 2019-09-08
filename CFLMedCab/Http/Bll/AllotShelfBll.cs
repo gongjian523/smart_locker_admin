@@ -113,6 +113,8 @@ namespace CFLMedCab.Http.Bll
                 }
             });
 
+            //BaseData<AllotShelf> baseDataShelfTask = HttpHelper.GetInstance().Get<AllotShelf>();
+
             BaseData<AllotShelfCommodity> baseDataShelfTaskCommodityDetail = GetShelfTaskCommodityDetail(baseDataShelfTask);
 
             //校验是否含有数据
@@ -245,6 +247,8 @@ namespace CFLMedCab.Http.Bll
                 }
 
             });
+
+            //BaseData<AllotShelfCommodity> baseDataAllotShelfCommodity = HttpHelper.GetInstance().Get<AllotShelfCommodity>();
 
             //校验是否含有数据，如果含有数据，拼接具体字段
             HttpHelper.GetInstance().ResultCheck(baseDataAllotShelfCommodity, out bool isSuccess);
@@ -470,8 +474,7 @@ namespace CFLMedCab.Http.Bll
             if (isSuccess && isSuccess2)
             {
                 var CommodityCodes = baseDataCommodityCode.body.objects;
-                var CommodityInventoryChangesOut = new List<CommodityInventoryChange>();
-                var CommodityInventoryChangesIn = new List<CommodityInventoryChange>();
+                var CommodityInventoryChanges = new List<CommodityInventoryChange>();
 
                 //调拨上架商品明细
                 var allotShelfCommodities = baseAllotShelfCommodity.body.objects;
@@ -488,6 +491,7 @@ namespace CFLMedCab.Http.Bll
                             object_name = typeof(AllotShelf).Name,
                             object_id = allotShelf.id
                         },
+                        operate_type = it.operate_type
                         //EquipmentId = ApplicationState.GetEquipId(),
                         //StoreHouseId = ApplicationState.GetHouseId(),
                         //GoodsLocationId = it.GoodsLocationId
@@ -499,8 +503,6 @@ namespace CFLMedCab.Http.Bll
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
                         cic.StoreHouseId = ApplicationState.GetHouseId();
                         cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
-
-                        CommodityInventoryChangesOut.Add(cic);
                     }
                     //入库
                     else
@@ -514,25 +516,12 @@ namespace CFLMedCab.Http.Bll
                         {
                             cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                         }
-                        CommodityInventoryChangesIn.Add(cic);
                     }
+                    CommodityInventoryChanges.Add(cic);
+
                 });
 
-                var resultOut = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesOut);
-                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess3);
-                var resultIn = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(CommodityInventoryChangesIn);
-                HttpHelper.GetInstance().ResultCheck(resultOut, out bool isSuccess4);
-
-                if (!isSuccess3)
-                {
-                    return resultOut;
-                }
-                if (!isSuccess4)
-                {
-                    return resultIn;
-                }
-                resultOut.body.AddRange(resultIn.body);
-                return resultOut;
+                return CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeSeparately(CommodityInventoryChanges);
             }
             else
             {

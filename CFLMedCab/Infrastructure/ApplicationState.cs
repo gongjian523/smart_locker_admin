@@ -205,7 +205,7 @@ namespace CFLMedCab.Infrastructure
 
             HashSet<CommodityEps> all = GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
             //删除指定货柜的原来的商品
-            all.RemoveWhere(item => locCodes.Contains(item.CommodityCodeName));
+            all.RemoveWhere(item => locCodes.Contains(item.GoodsLocationName));
             //增加相应货柜的现在的商品
             all.UnionWith(hs);
 
@@ -229,7 +229,7 @@ namespace CFLMedCab.Infrastructure
         public static HashSet<CommodityEps> GetGoodsInfo(List<string> locCodes)
         {
             HashSet<CommodityEps> all =  GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
-            return new HashSet<CommodityEps>(all.Where(item => locCodes.Contains(item.CommodityCodeName)));
+            return new HashSet<CommodityEps>(all.Where(item => locCodes.Contains(item.GoodsLocationName)));
         }
         #endregion
 

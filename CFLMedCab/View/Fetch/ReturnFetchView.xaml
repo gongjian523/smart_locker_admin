@@ -32,7 +32,7 @@
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
                     <Label Content="业务类型" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle1}" />
-                    <Label Content="领用退回" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"  />
+                    <Label Content="回退" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"  />
 
                     <Label Grid.Row="0" Grid.Column="1" Content="操作人" Style="{StaticResource lblTitle3}" />
                     <Label Grid.Row="1" Grid.Column="1" Content="Label" Name="operatorName" Style="{StaticResource lblTitle4_0}"  />
@@ -163,9 +163,6 @@
                     </Grid>
                 </Grid>
             </Border>
-            <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0"/>
-            </Grid>
         </Grid>
     </Border>
 </UserControl>

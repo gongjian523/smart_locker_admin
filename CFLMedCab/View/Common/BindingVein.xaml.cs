@@ -84,7 +84,8 @@ namespace CFLMedCab.View.Common
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 Taskbar.HideTask(false);
-                System.Environment.Exit(0);
+                Application.Current.Shutdown();
+                //System.Environment.Exit(0);
             }));
         }
 

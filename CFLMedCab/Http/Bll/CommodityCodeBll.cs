@@ -290,6 +290,7 @@ namespace CFLMedCab.Http.Bll
 		/// 根据商品码集合获取完整商品属性集合
 		/// </summary>
 		/// <returns></returns>
+        [Obsolete]
 		public BaseData<CommodityCode> GetCommodityCode(List<CommodityEps> commodityEpss)
 		{
 
@@ -334,7 +335,6 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BaseData<CommodityCode> GetCommodityCode(List<CommodityCode> commodityCodes)
 		{
-
 			List<string> commodityCodeNames = new List<string>(commodityCodes.Count);
 			List<string> commodityCodeCommodityIds = new List<string>(commodityCodes.Count);
 
@@ -402,6 +402,7 @@ namespace CFLMedCab.Http.Bll
                             it.CommodityName = "未知商品";
                         }
 
+
 						CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.name == it.name).First();
 						it.operate_type = simpleCommodityCode.operate_type;
 						it.EquipmentId = simpleCommodityCode.EquipmentId;
@@ -410,7 +411,6 @@ namespace CFLMedCab.Http.Bll
 						it.GoodsLocationName = simpleCommodityCode.GoodsLocationName;
 						it.StoreHouseId = simpleCommodityCode.StoreHouseId;
 						it.StoreHouseName = simpleCommodityCode.StoreHouseName;
-						it.operate_type = simpleCommodityCode.operate_type;
 					});
 				}
 			}
@@ -422,12 +422,126 @@ namespace CFLMedCab.Http.Bll
 					message = ResultCode.Parameter_Exception.ToString()
 				};
 			}
-
-
-
 			return baseDataCommodityCode;
-
 		}
+
+
+
+        /// <summary>
+        /// 根据库存变化记录中商品码集合获取完整商品属性集合
+        /// commodityCodes允许name有重复的情况，对应的是同一个商品在一个设备下改变货柜的场景
+        /// </summary>
+        /// <returns></returns>
+        public BaseData<CommodityCode> GetCommodityCodeStock(List<CommodityCode> commodityCodes)
+        {
+            List<string> commodityCodeNames = new List<string>(commodityCodes.Count);
+            List<string> commodityCodeCommodityIds = new List<string>(commodityCodes.Count);
+
+            commodityCodes.ForEach(it =>
+            {
+
+                commodityCodeNames.Add(HttpUtility.UrlEncode(it.name));
+            });
+
+            BaseData<CommodityCode> baseDataCommodityCode;
+
+            if (commodityCodes.Count > 0)
+            {
+                baseDataCommodityCode = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
+                {
+                    @in =
+                    {
+                        field = "name",
+                        in_list =  commodityCodeNames
+                    }
+                });
+
+                HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
+
+                if (isSuccess)
+                {
+
+                    baseDataCommodityCode.body.objects.ForEach(it =>
+                    {
+                        commodityCodeCommodityIds.Add(HttpUtility.UrlEncode(it.CommodityId));
+                    });
+
+                    var baseDataCommodity = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
+                    {
+                        return hh.Get<Commodity>(new QueryParam
+                        {
+                            @in =
+                            {
+                                field = "id",
+                                in_list =  commodityCodeCommodityIds
+                            }
+                        });
+
+                    }, baseDataCommodityCode, out bool isSuccess1);
+
+                    HttpHelper.GetInstance().ResultCheck(baseDataCommodity, out bool isSuccess2);
+
+                    commodityCodes.ForEach(it =>
+                    {
+                        //从主系统获取的完整信息保存在列表
+                        CommodityCode fullCommodityCode = baseDataCommodityCode.body.objects.Where(cit => cit.name == it.name).First();
+
+                        it.CommodityId = fullCommodityCode.CommodityId;
+                        it.ExpirationDate = fullCommodityCode.ExpirationDate;
+                        it.QStatus = fullCommodityCode.QStatus;
+                        it.Status = fullCommodityCode.Status;
+                        it.Type = fullCommodityCode.Type;
+                        it.created_at = fullCommodityCode.created_at;
+                        it.created_by = fullCommodityCode.created_by;
+                        it.id = fullCommodityCode.id;
+                        it.owner = fullCommodityCode.owner;
+                        it.permission = fullCommodityCode.permission;
+                        it.record_type = fullCommodityCode.record_type;
+                        it.system_mod_stamp = fullCommodityCode.system_mod_stamp;
+                        it.updated_at = fullCommodityCode.updated_at;
+                        it.updated_by = fullCommodityCode.updated_by;
+                        it.version = fullCommodityCode.version;
+                       
+                        if (isSuccess1 && isSuccess2)
+                        {
+                            if (baseDataCommodity.body.objects.Where(cit => cit.id == fullCommodityCode.CommodityId).Count() == 0)
+                            {
+                                it.CommodityName = "未知商品";
+                            }
+                            else
+                            {
+                                var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == fullCommodityCode.CommodityId).First();
+                                it.CommodityName = commodity.name;
+                                it.Specifications = commodity.Specifications;
+                            }
+                        }
+                        else
+                        {
+                            fullCommodityCode.CommodityName = "未知商品";
+                        }
+                    });
+                    baseDataCommodityCode.body.objects = commodityCodes;
+                }
+                else
+                {
+                    baseDataCommodityCode = new BaseData<CommodityCode>()
+                    {
+                        code = (int)ResultCode.Business_Exception,
+                        message = ResultCode.Business_Exception.ToString()
+                    };
+                }
+            }
+            else
+            {
+                baseDataCommodityCode = new BaseData<CommodityCode>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
+            return baseDataCommodityCode;
+        }
+
 
         /// <summary>
         /// 根据商品码获取完整商品属性集合

@@ -8,7 +8,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <DataTemplate x:Key="pickingOrderView">
+        <DataTemplate x:Key="allotShelfView">
             <Grid Margin="20 0">
                 <Border Style="{StaticResource CenterRadiusBorder}">
                     <Grid  Name="data">
@@ -34,7 +34,7 @@
                             <TextBlock Text="{Binding created_at}" Style="{StaticResource tbTitle7}"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="20 0" >
-                            <Label Content="拣货数量：" Style="{StaticResource lblTitle7}" />
+                            <Label Content="上架数量：" Style="{StaticResource lblTitle7}" />
                             <Label Content="{Binding ShelfNumber}"  Style="{StaticResource lblTitle7}" HorizontalContentAlignment="Left"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Right" Margin="0 10 0 0">
@@ -63,7 +63,7 @@
                             Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
             <Label Content="待完成调拨上架工单"  Grid.Row="2" HorizontalAlignment="Left"   Margin="20,10,0,0" VerticalAlignment="Center" Style="{StaticResource lblTitle1}" />
             <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20">
-                <ItemsControl ItemTemplate="{StaticResource pickingOrderView}" ItemsSource="{Binding PickingOrderList, UpdateSourceTrigger=PropertyChanged}"/>
+                <ItemsControl ItemTemplate="{StaticResource allotShelfView}" ItemsSource="{Binding AllotShelfList, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
         </Grid>
     </Border>

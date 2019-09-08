@@ -12,9 +12,11 @@ namespace CFLMedCab.Http.Model.param
 	public class TokenQueryParam
 	{
         /// <summary>
-        /// 为固定字段 【AQACQqweMIgBAAAAF8jlWJSoBWPpxUA】，在正式上线时会变化
+        /// 为固定字段 【AQACQqweMIgBAAAAF8jlWJSoBWPpxUA】，在正式上线时会变化 遵义测试环境使用
+        /// 【AQACQqweDg8BAAAAYqCQtRIJuxU4iQgA】 测试环境
         /// </summary>
-        public string tenant_id { get; set; } = "AQACQqweMIgBAAAAF8-jlWJSoBWPpxUA";
+        //public string tenant_id { get; set; } = "AQACQqweMIgBAAAAF8-jlWJSoBWPpxUA";
+        public string tenant_id { get; set; } = "AQACQqweDg8BAAAAYqCQtRIJuxU4iQgA";
 
         /// <summary>
         /// 用户id

@@ -297,8 +297,7 @@ namespace CFLMedCab.Http.Bll
 		{
             var normalList = new List<CommodityCode>();//回退商品列表
             var lossList = new List<CommodityCode>();//领用商品列表
-            var changeListOut = new List<CommodityInventoryChange>();//商品库存变更记录列表-出库
-            var changeListIn = new List<CommodityInventoryChange>();//商品库存变更记录列表-入库
+            var changeList = new List<CommodityInventoryChange>();//商品库存变更记录列表
 
             baseDataCommodityCode.body.objects.ForEach(commodityCode =>
             {
@@ -336,7 +335,7 @@ namespace CFLMedCab.Http.Bll
             {
                 normalList.ForEach(normal =>
                 {
-                    changeListIn.Add(new CommodityInventoryChange()
+                    changeList.Add(new CommodityInventoryChange()
                     {
                         CommodityCodeId = normal.id,
                         SourceBill = new SourceBill()
@@ -344,6 +343,7 @@ namespace CFLMedCab.Http.Bll
                             object_name = "ConsumingReturnOrder"
                         },
                         ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                        operate_type = normal.operate_type,
                         EquipmentId = normal.EquipmentId,
                         StoreHouseId = normal.StoreHouseId,
                         GoodsLocationId = normal.GoodsLocationId
@@ -356,7 +356,7 @@ namespace CFLMedCab.Http.Bll
             {
                 lossList.ForEach(loss =>
                 {
-                    changeListOut.Add(new CommodityInventoryChange()
+                    changeList.Add(new CommodityInventoryChange()
                     {
                         CommodityCodeId = loss.id,
                         SourceBill = new SourceBill()
@@ -364,32 +364,21 @@ namespace CFLMedCab.Http.Bll
                             object_name = "ConsumingOrder",
                             object_id = order.body[0].id
                         },
-                        ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString()
+                        ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString(),
+                        operate_type = loss.operate_type
                     });
                 });
             }
 
-            //出库和入库的库存变更记录分开提交的原因是：商品改变了货柜的位置，会产生一进一出两条变更记录
-            //一起提交，有可能主系统会拒绝，在没有创建领用单的情况下，就有回退记录
-            var changesOut = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeListOut);
+            var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeSeparately(changeList);
 			//校验数据是否正常
-			HttpHelper.GetInstance().ResultCheck(changesOut, out bool isSuccess2);
+			HttpHelper.GetInstance().ResultCheck(changes, out bool isSuccess2);
             if (!isSuccess2)
             {
                 LogUtils.Warn("CreateConsumingOrder 2:" + ResultCode.Result_Exception.ToString());
-                return changesOut;
+                return changes;
             }
 
-            var changesIn = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changeListIn);
-            //校验数据是否正常
-            HttpHelper.GetInstance().ResultCheck(changesOut, out bool isSuccess3);
-            if (!isSuccess3)
-            {
-                LogUtils.Warn("CreateConsumingOrder 3:" + ResultCode.Result_Exception.ToString());
-                return changesIn;
-            }
-
-            ////当入库数量大于0说明在领用的时候进行了入库操作, 或者领用商品中有过期商品， 变更领用单状态为异常
             if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString()).Count() >0)
             {
                 order.body[0].Status = ConsumingOrderStatus.异常.ToString();
@@ -407,8 +396,7 @@ namespace CFLMedCab.Http.Bll
                 LogUtils.Warn("CreateConsumingOrder 4:" + ResultCode.Result_Exception.ToString());
             }
 
-            changesIn.body.AddRange(changesOut.body);
-            return changesIn;
+            return changes;
 		}
 
         /// <summary>
