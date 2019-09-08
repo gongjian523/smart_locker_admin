@@ -181,11 +181,10 @@ namespace CFLMedCab.View.Allot
                             allotShelf.Status = AllotShelfStatusEnum.已完成.ToString();
                         }
                     }
-
-                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-                    EndOperation(bExit);
                 }
             }
+            bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+            EndOperation(bExit);
         }
        
         /// <summary>
