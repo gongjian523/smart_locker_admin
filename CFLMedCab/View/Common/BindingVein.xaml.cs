@@ -107,11 +107,11 @@ namespace CFLMedCab.View.Common
             {
                 Dispatcher.BeginInvoke(new Action(() => {
 
-                    lbInputAuth.Visibility = Visibility.Visible;
-                    tbInputAuth.Visibility = Visibility.Visible;
                     WarnInfo.Content = warningString;
                     if (bi != null)
                     {
+                        lbInputAuth.Visibility = Visibility.Visible;
+                        tbInputAuth.Visibility = Visibility.Visible;
                         imageAuth.Visibility = Visibility.Visible;
                         imageAuth.Source = bi;
                     }
@@ -160,11 +160,11 @@ namespace CFLMedCab.View.Common
             {
                 Dispatcher.BeginInvoke(new Action(() => {
 
-                    lbInputAuth.Visibility = Visibility.Visible;
-                    tbInputAuth.Visibility = Visibility.Visible;
                     WarnInfo.Content = warningString;
                     if (bi != null)
                     {
+                        lbInputAuth.Visibility = Visibility.Visible;
+                        tbInputAuth.Visibility = Visibility.Visible;
                         imageAuth.Visibility = Visibility.Visible;
                         imageAuth.Source = bi;
                     }
