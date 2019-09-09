@@ -169,7 +169,12 @@ namespace CFLMedCab.View.Return
 
                     listView2.DataContext = bdCommodityDetail.body.objects;
                 }
-            } 
+            }
+            else
+            {
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                EndOperation(bExit);
+            }
         }
 
         /// <summary>

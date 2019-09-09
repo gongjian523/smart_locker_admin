@@ -207,7 +207,7 @@
                                     <GridViewColumn Header="商品编号"  Width="{Binding ElementName=column12,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=name}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=CommodityCodeName}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

@@ -20,71 +20,71 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 商品编码
         /// </summary>
-        public string CommodityCode;
+        public string CommodityCode { get; set; }
 
         /// <summary>
         /// 商品码
         /// </summary>
-        public string CommodityCodeId;
+        public string CommodityCodeId { get; set; }
 
         /// <summary>
         /// 商品码名称
         /// </summary>
         [JsonIgnore]
-        public string CommodityCodeName;
+        public string CommodityCodeName { get; set; }
 
         /// <summary>
         /// 商品编号
         /// </summary>
-        public string CommodityId;
+        public string CommodityId { get; set; }
 
         /// <summary>
         /// 商品名称
         /// </summary>
         [JsonIgnore]
-        public string CommodityName;
+        public string CommodityName { get; set; }
 
         /// <summary>
         /// 设备编号
         /// </summary>
-        public string EquipmentId;
+        public string EquipmentId { get; set; }
 
         /// <summary>
         /// 设备名称
         /// </summary>
         [JsonIgnore]
-        public string EquipmentName;
+        public string EquipmentName { get; set; }
         /// <summary>
         /// 上架货位编号
         /// </summary>
-        public string GoodsLocationId;
+        public string GoodsLocationId { get; set; }
 
         /// <summary>
         /// 上架货位名称
         /// </summary>
         [JsonIgnore]
-        public string GoodsLocationName;
+        public string GoodsLocationName { get; set; }
 
         /// <summary>
         /// 商品状态（未上架，已上架）
         /// </summary>
-        public string Status;
+        public string Status { get; set; }
 
         /// <summary>
         /// 上架库房编号
         /// </summary>
-        public string StoreHouseId;
+        public string StoreHouseId { get; set; }
 
         /// <summary>
         /// 上架库房名称
         /// </summary>
         [JsonIgnore]
-        public string StoreHouseName;
+        public string StoreHouseName { get; set; }
 
         /// <summary>
         /// 商品类型（定数包，单品）
         /// </summary>
-        public string Type;
+        public string Type { get; set; }
 
         /// <summary>
         /// 调拨上架任务编号

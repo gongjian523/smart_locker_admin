@@ -79,6 +79,7 @@ namespace CFLMedCab.View
 
                 stockSnapshotQuery.Visibility = Visibility.Visible;
                 validityQuery.Visibility = Visibility.Hidden;
+
                 stockQuery.Visibility = Visibility.Hidden;
 
                 Content0.Visibility = Visibility.Visible;
@@ -276,7 +277,7 @@ namespace CFLMedCab.View
 #if TESTENV
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess);
+             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
 #endif
             ApplicationState.SetGoodsInfo(hs);
 

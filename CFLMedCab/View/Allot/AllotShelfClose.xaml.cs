@@ -89,9 +89,9 @@ namespace CFLMedCab.View.Allot
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo(locCodes);
+                HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
 
-                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after);
+                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after, locCodes);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
                 {
                     MessageBox.Show("没有检测到商品变化！", "温馨提示", MessageBoxButton.OK);
@@ -154,50 +154,28 @@ namespace CFLMedCab.View.Allot
         {
             if (isSuccess)
             {
-                //获取没有上架商品的信息
-
-                List<string> codeIds = bdCommodityCode.body.objects.Select(item => item.id).ToList();
-
-                List<AllotShelfCommodity> list = bdCommodityDetail.body.objects.Where(item => item.Status == "未上架" || !codeIds.Contains(item.CommodityCodeId)).ToList();
-
                 //还有未上架的商品,让用户选择原因
-                if (list.Count > 0)
+                if (allotShelf.Status == AllotShelfStatusEnum.进行中.ToString())
                 {
                     normalView.Visibility = Visibility.Hidden;
                     abnormalView.Visibility = Visibility.Visible;
+
+                    List<string> codes = bdCommodityCode.body.objects.Select(item => item.name).ToList();
+
+                    list2View.DataContext = bdCommodityDetail.body.objects.Where(item => !codes.Contains(item.CommodityCodeName)).ToList();
                 }
                 else
                 {
-                    //只有本设备所有的任务单都完成的时候，开考虑其他任务单
-                    if(allotShelf.Status == AllotShelfStatusEnum.已完成.ToString())
-                    {
-                        BaseData<AllotShelfCommodity> bdAllotShelfCommodity = AllotShelfBll.GetInstance().GetShelfTaskAllCommodityDetail(allotShelf);
-
-                        HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess1);
-                        if (!isSuccess1)
-                        {
-                            MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
-                            allotShelf.Status = AllotShelfStatusEnum.异常.ToString();
-                        }
-                        else
-                        {
-                            int cnt = bdAllotShelfCommodity.body.objects.Where(item => item.Status == "未上架" && item.EquipmentId != ApplicationState.GetEquipId()).Count();
-                            if (cnt > 0)
-                            {
-                                allotShelf.Status = AllotShelfStatusEnum.进行中.ToString();
-                            }
-                            else
-                            {
-                                allotShelf.Status = AllotShelfStatusEnum.已完成.ToString();
-                            }
-                        }
-                    }
+                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                    EndOperation(bExit);
                 }
             }
-            bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
-            EndOperation(bExit);
+            else
+            {
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                EndOperation(bExit);
+            } 
         }
-       
         /// <summary>
         /// 继续操作
         /// </summary>

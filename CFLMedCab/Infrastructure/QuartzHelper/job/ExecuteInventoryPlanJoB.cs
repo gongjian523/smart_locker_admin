@@ -24,9 +24,9 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 		{
 			LogUtils.Debug("ExecuteInventoryPlanJoB进入");
 
-			var epcs = RfidHelper.GetEpcDataJson(out bool isGetSucess);
+			var epcs = RfidHelper.GetEpcDataJson(out bool isGetSucess, ApplicationState.GetAllRfidCom());
 
-			if (isGetSucess)
+            if (isGetSucess)
 			{
 				var baseDataCommodityCodes = CommodityCodeBll.GetInstance().GetCommodityCode(epcs);
 

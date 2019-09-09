@@ -128,7 +128,7 @@ namespace CFLMedCab.Http.Bll
 
                 shelfTasks.ForEach(it =>
                 {
-                    it.ShelfNumber = baseDataShelfTaskCommodityDetail.body.objects.Where(sit => sit.AllotShelfId == it.id).Count();
+                    it.ShelfNumber = baseDataShelfTaskCommodityDetail.body.objects.Where(sit => sit.AllotShelfId == it.id && sit.Status == CommodityInventoryChangeStatus.未上架.ToString()).Count();
                     if (it.ShelfNumber != 0)
                     {
                         taskList.Add(it);
@@ -149,62 +149,24 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseData<AllotShelfCommodity> GetShelfTaskCommodityDetail(BaseData<AllotShelf> baseDataShelfTask)
         {
+            var allotShelfId = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
 
             //校验是否含有数据，如果含有数据，拼接具体字段
             BaseData<AllotShelfCommodity> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 
                 return hh.Get<AllotShelfCommodity>(new QueryParam
                 {
-                    //@in =
-                    //{
-                    //	field = "ShelfTaskId",
-                    //	in_list = BllHelper.ParamUrlEncode(shelfTaskIds)
-                    //}
-                    view_filter =
+                    @in =
                     {
-                        filter =
-                        {
-                            //logical_relation = "1 AND 2 AND 3",
-                            logical_relation = "1 AND 2",
-                            expressions =
-                            {
-                                //这种写法有问题，暂时把这个条件删除，在后面过滤
-                                //new QueryParam.Expressions
-                                //{
-                                //    field = "ShelfTaskId",
-                                //    @operator = "INRANGE",
-                                //    operands =  BllHelper.OperandsProcess(shelfTaskIds)
-                                //},
-                                new QueryParam.Expressions
-                                {
-                                    field = "StoreHouseId",
-                                    @operator = "==",
-                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId()) }'" }
-                                },
-                                new QueryParam.Expressions
-                                {
-                                    field = "EquipmentId",
-                                    @operator = "==",
-                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
-                                }
-                            }
-                        }
+                        field = "AllotShelfId",
+                        in_list = BllHelper.ParamUrlEncode(allotShelfId)
                     }
                 });
 
             }, baseDataShelfTask);
 
-            HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
-            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess1);
-
-            if (isSuccess && isSuccess1)
-            {
-                var shelfTaskIds = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
-                baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => shelfTaskIds.Contains(it.AllotShelfId)).ToList();
-            }
             return baseDataShelfTaskCommodityDetail;
         }
-
 
         /// <summary>
         /// 通过【调拨上架任务】（AllotShelf.id=AllotShelfCommodity.AllotShelfId）从表格 【调拨上架商品明细】中查询获取调拨上架商品的列表信息
@@ -220,7 +182,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2 AND 3",
+                        logical_relation = "1 AND 2",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -229,26 +191,18 @@ namespace CFLMedCab.Http.Bll
                                 @operator = "==",
                                 operands =  {$"'{ HttpUtility.UrlEncode(allotShelf.id) }'"}
                             },
-                            new QueryParam.Expressions
-                            {
-                                field = "StoreHouseId",
-                                @operator = "==",
-                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId()) }'" }
-                            },
-                            new QueryParam.Expressions
-                            {
-                                field = "EquipmentId",
-                                @operator = "==",
-                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
-                            }
 
+                            new QueryParam.Expressions
+                            {
+                                field = "Status",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(CommodityInventoryChangeStatus.未上架.ToString()) }'" }
+                            }
                         }
                     }
                 }
 
             });
-
-            //BaseData<AllotShelfCommodity> baseDataAllotShelfCommodity = HttpHelper.GetInstance().Get<AllotShelfCommodity>();
 
             //校验是否含有数据，如果含有数据，拼接具体字段
             HttpHelper.GetInstance().ResultCheck(baseDataAllotShelfCommodity, out bool isSuccess);
@@ -257,32 +211,11 @@ namespace CFLMedCab.Http.Bll
             {
                 baseDataAllotShelfCommodity.body.objects.ForEach(it =>
                 {
-                    ///按理说根据该条件查询出来的商品设备名称和库房名称已经固定
-                    ////拼接设备名字
-                    //if (!string.IsNullOrEmpty(it.EquipmentId))
-                    //{
-                    //    it.EquipmentName = GetNameById<Equipment>(it.EquipmentId);
-                    //}
-                    it.EquipmentName = HttpUtility.UrlEncode(ApplicationState.GetEquipName());
-
-
-                    ////拼接库房名字
-                    //if (!string.IsNullOrEmpty(it.StoreHouseId))
-                    //{
-                    //    it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
-                    //}
-                    it.StoreHouseName = HttpUtility.UrlEncode(ApplicationState.GetHouseName());
 
                     //拼接商品码名称
                     if (!string.IsNullOrEmpty(it.CommodityCodeId))
                     {
                         it.CommodityCodeName = GetNameById<CommodityCode>(it.CommodityCodeId);
-                    }
-
-                    //拼接货位名字
-                    if (!string.IsNullOrEmpty(it.GoodsLocationId))
-                    {
-                        it.GoodsLocationName = GetNameById<GoodsLocation>(it.GoodsLocationId);
                     }
 
                     //拼接商品名字
@@ -375,86 +308,70 @@ namespace CFLMedCab.Http.Bll
 
             if (isSuccess && isSuccess1)
             {
-                List<string> locIds = baseAllotShelfCommodity.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
-                List<string> status = new List<string>();
+                //调拨上架商品明细
+                var allotShelfCommodities = baseAllotShelfCommodity.body.objects;
+                //获取待上架商品CommodityCodeName列表（去重后）
+                var detailCommodityCodes = allotShelfCommodities.Select(it => it.CommodityCodeName).Distinct().ToList();
 
-                locIds.ForEach(id => {
-                    //调拨上架商品明细
-                    var allotShelfCommodities = baseAllotShelfCommodity.body.objects;
-                    //获取待上架商品CommodityId列表（去重后）
-                    var detailCommodityIds = allotShelfCommodities.Select(it => it.CommodityId).Distinct().ToList();
+                var commodityCodes = baseDataCommodityCode.body.objects;
+                //记录任务单异常状态
+                var IsException = false;
 
-                    var commodityCodes = baseDataCommodityCode.body.objects;
-                    //记录任务单异常状态
-                    var IsException = false;
-
-                    var number = 0;
-                    //遍历变化后的商品码列表
-                    commodityCodes.ForEach(it =>
+                var number = 0;
+                //遍历变化后的商品码列表
+                commodityCodes.ForEach(it =>
+                {
+                    //向智能柜里面放东西
+                    if (it.operate_type == (int)OperateType.入库)
                     {
-                        //向智能柜里面放东西
-                        if (it.operate_type == (int)OperateType.入库)
+                        //商品在任务单中
+                        if (detailCommodityCodes.Contains(it.name))
                         {
-                            //商品在任务单中
-                            if (detailCommodityIds.Contains(it.CommodityId))
-                            {
-                                it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
-                                number++;
-
-                            }
-                            //商品不在任务单中【待确认】
-                            else
-                            {
-                                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                                IsException = true;
-                            }
+                            it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                            number++;
 
                         }
-                        //从智能柜中取东西
+                        //商品不在任务单中【待确认】
                         else
                         {
                             it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                             IsException = true;
                         }
-                    });
-
-                    //当商品出现出库或放入异常商品时以及正常数量和预定数量不相等时判定主单状态为异常
-
-                    if (!IsException)
-                    {
-                        //当正常数量小于待上架商品。主单状态为进行中
-                        if (number < detailCommodityIds.Count)
-                        {
-                            status.Add(AllotShelfStatusEnum.进行中.ToString());
-                        }
-                        //当正常数量等于待上架商品，主单状态为已完成
-                        else
-                        {
-                            status.Add(AllotShelfStatusEnum.已完成.ToString());
-                        }
-                        //由于CommodityId唯一，所以不存在第三种情况
 
                     }
+                    //从智能柜中取东西
                     else
                     {
-                        status.Add(AllotShelfStatusEnum.异常.ToString());
+                        it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                        IsException = true;
                     }
                 });
 
-                if(status.Contains(AllotShelfStatusEnum.异常.ToString()))
+                //当商品出现出库或放入异常商品时以及正常数量和预定数量不相等时判定主单状态为异常
+
+                if (!IsException)
                 {
-                    order.Status = AllotShelfStatusEnum.异常.ToString();
-                }
-                else if(status.Contains(AllotShelfStatusEnum.进行中.ToString()))
-                {
-                    order.Status = AllotShelfStatusEnum.进行中.ToString();
+                    //当正常数量小于待上架商品。主单状态为进行中
+                    if (number < allotShelfCommodities.Count)
+                    {
+                        order.Status = AllotShelfStatusEnum.进行中.ToString();
+                    }
+                    //当正常数量等于待上架商品，主单状态为已完成
+                    else
+                    {
+                        order.Status = AllotShelfStatusEnum.已完成.ToString();
+                    }
+                    //由于CommodityId唯一，所以不存在第三种情况
+
                 }
                 else
                 {
-                    order.Status = AllotShelfStatusEnum.已完成.ToString();
+                    order.Status = AllotShelfStatusEnum.异常.ToString();
                 }
             }
         }
+
+
         /// <summary>
         /// 提交变更信息
         /// </summary>
