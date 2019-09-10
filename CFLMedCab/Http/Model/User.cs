@@ -24,5 +24,10 @@ namespace CFLMedCab.Http.Model
         /// 角色（医院SPD管理员，医院医护人员）
         /// </summary>
         public string Role { get; set; }
+
+        /// <summary>
+        /// 密码
+        /// </summary>
+        public string Password { get; set; }
     }
 }

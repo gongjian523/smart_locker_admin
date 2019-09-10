@@ -377,6 +377,19 @@ namespace CFLMedCab
                         ApplicationState.SetRefreshToken(data.body.refresh_token);
 
                         HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
+                        //SignInParam siParam = new SignInParam();
+                        //siParam.password = Convert.FromBase64String(user.Password).ToString();
+                        //siParam.phone = "+86 " + user.MobilePhone;
+                        //siParam.source = "app";
+
+                        //BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+
+                        //ApplicationState.SetAccessToken(data.body.accessToken);
+                        //ApplicationState.SetRefreshToken(data.body.refresh_token);
+
+                        //HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
                     }
                     else
                     {
