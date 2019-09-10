@@ -262,6 +262,7 @@
     <Compile Include="Http\Model\FetchParam.cs" />
     <Compile Include="Http\Model\GoodsLocation.cs" />
     <Compile Include="Http\Model\HospitalGoods.cs" />
+    <Compile Include="Http\Model\Local\LocalCommodityEps.cs" />
     <Compile Include="Http\Model\Local\LocalCommodityCode.cs" />
     <Compile Include="Http\Model\InventoryDetail.cs" />
     <Compile Include="Http\Model\InventoryOrder.cs" />
