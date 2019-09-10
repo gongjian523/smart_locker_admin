@@ -736,7 +736,7 @@ namespace CFLMedCab
 
 #region 无手术单领用和医嘱处方领用
         /// <summary>
-        /// 进入手术无单领用和医嘱处方领用-开门状态
+        /// 进入医嘱处方领用-开门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -766,12 +766,44 @@ namespace CFLMedCab
             SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
         }
 
-        /// <summary>
-        /// 手术无单领用和和医嘱处方领用-关门状态
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnterSurgeryNoNumLockerEvent(object sender, bool isClose)
+
+		/// <summary>
+		///进入手术无单领用-开门状态
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void onEnterSurgeryNoNumOpen(object sender, RoutedEventArgs e)
+		{
+			HomePageView.Visibility = Visibility.Hidden;
+			btnBackHP.Visibility = Visibility.Visible;
+			NaviView.Visibility = Visibility.Hidden;
+
+			GerFetchState gerFetchState = new GerFetchState(1);
+			FullFrame.Navigate(gerFetchState);
+			//进入一般领用开门页面，将句柄设置成null，类型设置成DoorOpen
+			SetSubViewInfo(null, SubViewType.DoorOpen);
+
+			List<string> com = ApplicationState.GetAllLockerCom();
+
+			LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(com[0], out bool isGetSuccess);
+			delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+
+#if DUALCAB
+            LockHelper.DelegateGetMsg delegateGetMsg2 = LockHelper.GetLockerData(com[1], out bool isGetSuccess2);
+            delegateGetMsg2.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
+
+            cabClosedNum = 0;
+#endif
+			SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+		}
+
+
+		/// <summary>
+		/// 手术无单领用和和医嘱处方领用-关门状态
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void onEnterSurgeryNoNumLockerEvent(object sender, bool isClose)
         {
             LogUtils.Debug($"返回开锁状态{isClose}");
 
