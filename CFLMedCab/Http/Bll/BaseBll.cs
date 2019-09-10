@@ -6,6 +6,7 @@ using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DbHelper;
 using CFLMedCab.Infrastructure.ToolHelper;
+using Newtonsoft.Json;
 using SqlSugar;
 using System;
 using System.Collections.Generic;
@@ -240,6 +241,79 @@ namespace CFLMedCab.Http.Bll
 				totalCount = data.Count();
 			}
 			return data;
+		}
+
+		/// <summary>
+		/// 插入扫描的所有商品信息
+		/// </summary>
+		/// <param name="currentCommodityEps">当前扫描出来的所有数据</param>
+		/// <returns></returns>
+		public bool InsertLocalCommodityEpsInfo(HashSet<CommodityEps> currentCommodityEps)
+		{
+
+			var result = false;
+
+			if (currentCommodityEps == null)
+			{
+				return result;
+			}
+
+			//组装最新的扫描结果，一组数据
+			var localCommodityEps = new LocalCommodityEps
+			{
+				commodityEpsList = JsonConvert.SerializeObject(new List<CommodityEps>(currentCommodityEps)),
+				create_time = DateTime.Now
+			};
+
+			//事务防止多插入产生脏数据
+			result = SqlSugarHelper.GetInstance().Db.Ado.UseTran(() =>
+			{
+				SqlSugarHelper.GetInstance().Db.Insertable(localCommodityEps).ExecuteCommand();
+
+			}).IsSuccess;
+
+	
+			if (!result)
+			{
+				LogUtils.Warn("InsertLocalCommodityEpsInfo 失败" + DateTime.Now);
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// 判断是否是初次使用本地库存上次，如果是则不上传
+		/// </summary>
+		/// <returns></returns>
+		public bool isInitLocalCommodityEpsInfo()
+		{
+			//查询语句
+			var localCommodityEpsCount = SqlSugarHelper.GetInstance().Db.Queryable<LocalCommodityEps>()
+				.Select<LocalCommodityEps>().Count();
+
+			return (localCommodityEpsCount <= 0);
+		}
+
+		/// <summary>
+		/// 获取上次扫描记录的商品信息
+		/// </summary>
+		/// <returns></returns>
+		public HashSet<CommodityEps> GetLastLocalCommodityEpsInfo()
+		{
+			var ret = new HashSet<CommodityEps>();
+
+			//查询语句
+			var localCommodityEps = SqlSugarHelper.GetInstance().Db.Queryable<LocalCommodityEps>()
+				.OrderBy((lcc) => lcc.create_time, OrderByType.Desc)
+				.Select<LocalCommodityEps>().First();
+
+			if (localCommodityEps.commodityEpsList != null)
+			{
+				ret = new HashSet<CommodityEps>(JsonConvert.DeserializeObject<List<CommodityEps>>(localCommodityEps.commodityEpsList));
+			}
+
+			return ret;
+
 		}
 
 		/// <summary>

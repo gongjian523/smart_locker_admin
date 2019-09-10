@@ -461,11 +461,13 @@ namespace CFLMedCab
 #endregion
 
 
-        private void SetNavBtnVisiblity(string  role)
+        private void SetNavBtnVisiblity(string role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            //bool isMedicalStuff = (role == "医院医护人员") ? true : false;
 
-            NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+			bool isMedicalStuff = true;
+
+			NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterPrescription.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
