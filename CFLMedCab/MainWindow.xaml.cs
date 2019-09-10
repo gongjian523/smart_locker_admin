@@ -470,11 +470,13 @@ namespace CFLMedCab
 #endregion
 
 
-        private void SetNavBtnVisiblity(string  role)
+        private void SetNavBtnVisiblity(string role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            //bool isMedicalStuff = (role == "医院医护人员") ? true : false;
 
-            NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+			bool isMedicalStuff = true;
+
+			NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterPrescription.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -806,7 +808,7 @@ namespace CFLMedCab
 
 #region 无手术单领用和医嘱处方领用
         /// <summary>
-        /// 进入手术无单领用和医嘱处方领用-开门状态
+        /// 进入医嘱处方领用-开门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -881,14 +883,47 @@ namespace CFLMedCab
             SetSubViewType(SubViewType.DoorOpen);
         }
 
+		/// <summary>
+		///进入手术无单领用-开门状态
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void onEnterSurgeryNoNumOpen(object sender, RoutedEventArgs e)
+		{
+			HomePageView.Visibility = Visibility.Hidden;
+			btnBackHP.Visibility = Visibility.Visible;
+			NaviView.Visibility = Visibility.Hidden;
+
+			GerFetchState gerFetchState = new GerFetchState(OpenDoorViewType.Fetch);
+
+			FullFrame.Navigate(gerFetchState);
+			//进入一般领用开门页面，类型设置成Others，表明柜门还没有开启
+			SetSubViewInfo(gerFetchState, SubViewType.Others);
+
+			locOpenNum = 0;
+
+			//只有从主页进来，才能清空此列表；从关门页面进来，不用
+			if ((sender as Control).Name != "CtrlSurgeryNoNumClose")
+			{
+				listOpenLocCom.Clear();
+			}
+
+			List<Locations> locs = ApplicationState.GetLocations();
+
+			//只有一个货位，直接开门
+			if (locs.Count == 1)
+			{
+				onSurgeryNoNumOpenDoorEvent(this, locs[0].Code);
+			}
+		}
 
 
-        /// <summary>
-        /// 手术无单领用和和医嘱处方领用-关门状态
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnterSurgeryNoNumLockerEvent(object sender, bool isClose)
+		/// <summary>
+		/// 手术无单领用和和医嘱处方领用-关门状态
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void onEnterSurgeryNoNumLockerEvent(object sender, bool isClose)
         {
             LogUtils.Debug($"返回开锁状态{isClose}");
 

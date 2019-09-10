@@ -1,5 +1,8 @@
+
 ﻿using CFLMedCab.Http.Model;
 using CFLMedCab.Model;
+﻿using CFLMedCab.Http.Bll;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -192,7 +195,9 @@ namespace CFLMedCab.Infrastructure
         public static void SetGoodsInfo(HashSet<CommodityEps> hs)
         {
             SetValue((int)ApplicationKey.Goods, hs);
-            return;
+			//插入数据库，每次开门时，即同步数据到
+			CommodityCodeBll.GetInstance().InsertLocalCommodityEpsInfo(hs);
+			return;
         }
 
         /// <summary>
@@ -210,14 +215,17 @@ namespace CFLMedCab.Infrastructure
             all.UnionWith(hs);
 
             SetValue((int)ApplicationKey.Goods, all);
-            return;
+			//插入数据库，每次开门时，即同步数据到
+			CommodityCodeBll.GetInstance().InsertLocalCommodityEpsInfo(all);
+			return;
         }
 
         /// <summary>
         /// 获取所有货柜的商品信息
         /// </summary>
         /// <returns></returns>
-        public static HashSet<CommodityEps> GetGoodsInfo()
+		public static HashSet<CommodityEps> GetGoodsInfo()
+
         {
             return GetValue<HashSet<CommodityEps>>((int)ApplicationKey.Goods);
         }

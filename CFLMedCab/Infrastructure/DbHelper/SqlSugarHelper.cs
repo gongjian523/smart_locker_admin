@@ -100,7 +100,10 @@ namespace CFLMedCab.Infrastructure.DbHelper
             //本地库存变化表
             Db.CodeFirst.InitTables<LocalCommodityCode>();
 
-        }
+			//本地库存eps表
+			Db.CodeFirst.InitTables<LocalCommodityEps>();
+
+		}
 
         public static string GetCurrentProjectPath
         {

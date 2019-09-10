@@ -141,6 +141,12 @@ namespace CFLMedCab.Http.Model
         /// 医嘱处方领用
         /// </summary>
         [Description("医嘱处方领用")]
-        医嘱处方领用 = 2
-    }
+        医嘱处方领用 = 2,
+
+		/// <summary>
+		/// 故障领用
+		/// </summary>
+		[Description("故障领用")]
+		故障领用 = 3
+	}
 }
