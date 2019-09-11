@@ -50,5 +50,26 @@ namespace CFLMedCab.Http.Helper
 		{
 			return Convert.ToBase64String(Encoding.ASCII.GetBytes(str));
 		}
+
+		/// <summary>
+		/// base64 解码
+		/// </summary>
+		/// <param name="str"></param>
+		/// <returns></returns>
+		public static string DecodeBase64Str(string str)
+		{
+			string decode = "";
+			byte[] bytes = Convert.FromBase64String(str);
+			try
+			{
+				decode = Encoding.ASCII.GetString(bytes);
+			}
+			catch
+			{
+				decode = str;
+			}
+			return decode;
+		}
+
 	}
 }

@@ -55,12 +55,17 @@ namespace CFLMedCab.DAL
             return Db.Queryable<CurrentUser>().Select<CurrentUser>().ToList().Count();
         }
 
-        public void InsertUser(List<CurrentUser> list)
+        public void InsertUsers(List<CurrentUser> list)
         {
             Db.Insertable<CurrentUser>(list).ExecuteCommand();
         }
 
-        public List<CurrentUser> GetUser()
+		public void InsertUser(CurrentUser user)
+		{
+			Db.Insertable<CurrentUser>(user).ExecuteCommand();
+		}
+
+		public List<CurrentUser> GetUser()
         {
             return Db.Queryable<CurrentUser>().Select<CurrentUser>().ToList();
         }
@@ -70,7 +75,16 @@ namespace CFLMedCab.DAL
             return Db.Queryable<CurrentUser>().Where(user => user.name.ToUpper() == name.ToUpper()).First();
         }
 
-        public void UpdateCurrentUser(CurrentUser item)
+		public CurrentUser GetUserByUsername(string username)
+		{
+			return Db.Queryable<CurrentUser>().Where(user => user.username.ToUpper() == username.ToUpper()). First();
+		}
+
+		public bool isExistsByUsername(string username) {
+			return Db.Queryable<CurrentUser>().Any(user => user.username.ToUpper() == username.ToUpper());
+		}
+
+		public void UpdateCurrentUser(CurrentUser item)
         {
             Db.Updateable<CurrentUser>(item).ExecuteCommand();
         }

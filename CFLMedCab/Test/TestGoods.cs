@@ -26,32 +26,32 @@ namespace CFLMedCab.Test
             List<CurrentUser> users = new List<CurrentUser> {
                 new CurrentUser{
                     name = "Alex",
-                    role = (int)UserIdType.SPD交收员,
+                    role = UserIdType.SPD交收员.ToString(),
                     vein_id = 58268,
                 },
                 new CurrentUser{
                     name = "郭颖Doc",
-                    role = (int)UserIdType.医生,
+                    role = UserIdType.医生.ToString(),
                     vein_id = 57688,
                 },
                 new CurrentUser{
                     name = "郭颖SPD",
-                    role = (int)UserIdType.SPD交收员,
+                    role = UserIdType.SPD交收员.ToString(),
                     vein_id = 61886,
                 },
                 new CurrentUser{
                     name = "Nathan",
-                    role = (int)UserIdType.医生,
+                    role = UserIdType.医生.ToString(),
                     vein_id = 58046,
                 },
                 new CurrentUser{
                     name = "Kate",
-                    role = (int)UserIdType.医生,
+                    role = UserIdType.医生.ToString(),
                     vein_id = 12630,
                 },
                 new CurrentUser{
                     name = "ZHIWEN",
-                    role = (int)UserIdType.医生,
+                    role = UserIdType.医生.ToString(),
                     vein_id = 62800,
                 },
             };
