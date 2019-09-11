@@ -224,7 +224,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 }
                 else
                 {
-                    shelfTask.Status = abnormalOptions.GetAbnormal();
+                    shelfTask.AbnormalCauses = abnormalOptions.GetAbnormal().ToString();
 
                     LoadingDataEvent(this, true);
                     BasePutData<ShelfTask> putData = ShelfBll.GetInstance().PutShelfTask(shelfTask);

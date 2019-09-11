@@ -224,7 +224,7 @@ namespace CFLMedCab.View.Return
                 }
                 else
                 {
-                    pickTask.BillStatus = abnormalOptions.GetAbnormal();
+                    pickTask.AbnormalCauses = abnormalOptions.GetAbnormal().ToString();
 
                     LoadingDataEvent(this, true);
                     BasePutData<PickTask> putData = PickBll.GetInstance().PutPickTask(pickTask);

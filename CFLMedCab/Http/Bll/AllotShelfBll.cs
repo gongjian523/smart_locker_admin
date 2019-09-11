@@ -124,7 +124,7 @@ namespace CFLMedCab.Http.Bll
             {
                 List<AllotShelf> taskList = new List<AllotShelf>();
 
-                var shelfTasks = baseDataShelfTask.body.objects.Where(item=>item.Status != ShelfTaskStatus.已完成.ToString() && item.Status != ShelfTaskStatus.异常.ToString()).ToList();
+                var shelfTasks = baseDataShelfTask.body.objects.Where(item=>item.Status != ShelfTaskStatus.已完成.ToString()).ToList();
 
                 shelfTasks.ForEach(it =>
                 {

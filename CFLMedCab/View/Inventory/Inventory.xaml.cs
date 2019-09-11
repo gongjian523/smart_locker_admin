@@ -18,6 +18,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
@@ -185,74 +186,80 @@ namespace CFLMedCab.View.Inventory
         private void onEnterInventoryDetailLocal(object sender, RoutedEventArgs e)
         {
 
+
             Button btnItem = sender as Button;
             int id;
 
             if (btnItem.Name == "LocalInventoryBtn")
             {
-                //SetPopInventoryEvent(this, true);
-
-                LoadingDataEvent(this, true);
-
-#if TESTENV
-                HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
-#else
-                HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
-#endif
-                LoadingDataEvent(this, false);
-                //SetPopInventoryEvent(this, false);
-                if (hs.Count == 0)
-                {
-                    MessageBox.Show("医疗柜中没有任何商品！", "温馨提示", MessageBoxButton.OK);
-                }
-                else
-                {
-                    BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
-                    HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
-                    CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
-
-                    if (!isSuccess)
-                    {
-                        MessageBox.Show("盘点时获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
-                    }
-                    else
-                    {
-                        List<GoodsDto> list = new List<GoodsDto>();
-                        foreach (var item in bdCommodityCode.body.objects)
-                        {
-                            GoodsDto goodItem = new GoodsDto
-                            {
-                                name = item.CommodityName,
-                                code = item.name,
-                                position = item.GoodsLocationName
-                            };
-
-                            if(isSuccess2)
-                            {
-                                goodItem.Specifications = item.Specifications;
-                                if(item.ManufactorName != null)
-                                {
-                                    goodItem.ManufactorName = item.ManufactorName;
-                                }
-                                if(item.ExpirationDate != null)
-                                {
-                                    goodItem.ExpirationDate = item.ExpirationDate;
-                                }
-                            }
-                            list.Add(goodItem);
-                        }
-
-                        id = inventoryBll.NewInventory(list, InventoryType.Manual);
-
-                        GetInventoryList();
-                        EnterInventoryDetailLocalEvent(this, id);
-                    }
-                }
+                Task.Factory.StartNew(localInventory);
             }
             else
             {
                 id = (int)btnItem.CommandParameter;
                 EnterInventoryDetailLocalEvent(this, id);
+            }
+        }
+
+        private void localInventory()
+        {
+            //SetPopInventoryEvent(this, true);
+
+            LoadingDataEvent(this, true);
+
+#if TESTENV
+                HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
+#else
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
+#endif
+            LoadingDataEvent(this, false);
+            //SetPopInventoryEvent(this, false);
+            if (hs.Count == 0)
+            {
+                MessageBox.Show("医疗柜中没有任何商品！", "温馨提示", MessageBoxButton.OK);
+            }
+            else
+            {
+                BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+
+                if (!isSuccess)
+                {
+                    MessageBox.Show("盘点时获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
+                }
+                else
+                {
+                    List<GoodsDto> list = new List<GoodsDto>();
+                    foreach (var item in bdCommodityCode.body.objects)
+                    {
+                        GoodsDto goodItem = new GoodsDto
+                        {
+                            name = item.CommodityName,
+                            code = item.name,
+                            position = item.GoodsLocationName
+                        };
+
+                        if (isSuccess2)
+                        {
+                            goodItem.Specifications = item.Specifications;
+                            if (item.ManufactorName != null)
+                            {
+                                goodItem.ManufactorName = item.ManufactorName;
+                            }
+                            if (item.ExpirationDate != null)
+                            {
+                                goodItem.ExpirationDate = item.ExpirationDate;
+                            }
+                        }
+                        list.Add(goodItem);
+                    }
+
+                    int id = inventoryBll.NewInventory(list, InventoryType.Manual);
+
+                    GetInventoryList();
+                    EnterInventoryDetailLocalEvent(this, id);
+                }
             }
         }
 

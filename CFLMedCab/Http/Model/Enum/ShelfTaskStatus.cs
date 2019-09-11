@@ -34,7 +34,13 @@ namespace CFLMedCab.Http.Model.Enum
         /// 已撤销
         /// </summary>
         [Description("已撤销")]
-        已撤销 = 3
+        已撤销 = 3,
+
+        /// <summary>
+        /// 进行中
+        /// </summary>
+        [Description("进行中")]
+        进行中 = 4
 
 
     }

@@ -89,22 +89,15 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-						logical_relation = "1 AND 2",
+						logical_relation = "1",
 						expressions =
 						{
-							new QueryParam.Expressions
-							{
-								field = "Status",
-								@operator = "==",
-								operands = {$"'{ HttpUtility.UrlEncode(ShelfTaskStatus.待上架.ToString()) }'" }
-							},
                             new QueryParam.Expressions
                             {
                                 field = "Operator",
                                 @operator = "==",
                                 operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
                             }
-
                         }
 					}
 				}
@@ -119,7 +112,7 @@ namespace CFLMedCab.Http.Bll
 			{
                 List<ShelfTask> taskList = new List<ShelfTask>();
 
-				var shelfTasks = baseDataShelfTask.body.objects;
+				var shelfTasks = baseDataShelfTask.body.objects.Where(item=>(item.Status  != ShelfTaskStatus.待上架.ToString() && item.Status != ShelfTaskStatus.已撤销.ToString())).ToList();
                 //var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
                 //shelfTasks.ForEach(it =>
                 //{
