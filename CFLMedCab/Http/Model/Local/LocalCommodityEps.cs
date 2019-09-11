@@ -16,7 +16,7 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 当前扫描的集合
 		/// </summary>
-		//[SugarColumn(IsNullable = true)]
+		[SugarColumn(IsNullable = true, Length = 65535)]
 		public string commodityEpsList { get; set; }
 
 		/// <summary>

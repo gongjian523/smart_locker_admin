@@ -416,13 +416,18 @@ namespace CFLMedCab.View.Common
             }
             mt.ReleaseMutex();
 
-            LoadingDataEvent(this, true);
-            BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
-            {
-                regfeature = Convert.ToBase64String(regfeature),
-                finger_name = "finger1"
-            });
-            LoadingDataEvent(this, false);
+
+
+#if LOCALSDK
+    
+			LoadingDataEvent(this, true);
+			BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
+			{
+				regfeature = Convert.ToBase64String(regfeature),
+				finger_name = "finger1"
+			});
+
+			LoadingDataEvent(this, false);
 
             if (data.code == 0)
             {
@@ -440,16 +445,62 @@ namespace CFLMedCab.View.Common
                     bindingExitBtn.Visibility = Visibility.Visible;
                 }));
             }                
-        }
+#else
 
-        /// <summary>
-        /// 单次采集和比对流程
-        /// </summary>
-        /// <param name="feature_getCnt"></param>
-        /// <param name="regfeature"></param>
-        /// <param name="subregfeature"></param>
-        /// <returns></returns>
-        private bool Sample(int feature_getCnt, byte[] regfeature, out byte[] subregfeature)
+			LoadingDataEvent(this, true);
+
+			//本地指静脉绑定流程（实际是入库）
+			bool isBindingSucess = false;
+
+			if(regfeature != null && regfeature.Length > 0) {
+				if (tbInputName.Text != null && tbInputName.Text != "")
+				{
+					BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
+					HttpHelper.GetInstance().ResultCheck(bdUser, out bool bdUserIsSucess);
+
+					if (bdUserIsSucess)
+					{
+						CurrentUser currentUser = new CurrentUser(bdUser.body.objects[0], regfeature);
+						new UserBll().InsetUserNotExist(currentUser);
+						isBindingSucess = true;
+					}
+
+				}
+				
+			}
+
+			LoadingDataEvent(this, false);
+
+			if (isBindingSucess)
+			{
+				this.Dispatcher.BeginInvoke(new Action(() => {
+					GuidInfo.Content = "指静脉绑定成功！";
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+			}
+			else
+			{
+				LogUtils.Error("本地绑定指静脉特征失败：" );
+				this.Dispatcher.BeginInvoke(new Action(() => {
+					GuidInfo.Content = "指静脉绑定失败";
+					rebindingBtn.Visibility = Visibility.Visible;
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+			}
+
+#endif
+
+
+		}
+
+		/// <summary>
+		/// 单次采集和比对流程
+		/// </summary>
+		/// <param name="feature_getCnt"></param>
+		/// <param name="regfeature"></param>
+		/// <param name="subregfeature"></param>
+		/// <returns></returns>
+		private bool Sample(int feature_getCnt, byte[] regfeature, out byte[] subregfeature)
         {
             //等待手指放置
             if (vein.WaitState(0x03, out string info) < 0)

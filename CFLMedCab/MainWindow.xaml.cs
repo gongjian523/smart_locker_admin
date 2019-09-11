@@ -169,43 +169,22 @@ namespace CFLMedCab
             LogUtils.Debug("onStart");
             vein.ChekVein();
 #else
-            vein = VeinUtils.GetInstance();
-            vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
-                        
-            int vienSt = vein.LoadingDevice();
 
-            if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
-            {
-                onFingerDetected(this, -1);
-            }
-            else
-            {
-				if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
-				{
-                    vienSt = vein.OpenDevice();
 
-                    if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
-					{                          
-						onFingerDetected(this, -1);
-					}
-					else
-					{
-                        //Console.ReadKey();
-                        if (RegisterVein())
-                        {
-                            LogUtils.Debug("detectFinger in initial...");
-                            ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
-                        }
-                        else
-                        {
-							onFingerDetected(this, -2);
-						}
-                    }
-				}
-            }
+#if LOCALSDK
+
+			//执行指静脉相关的逻辑处理
+			veinHandleNew();
+#else
+			//执行指静脉相关的逻辑处理
+			//veinHandle();
+			veinHandleNew();
+#endif
+
+
 #endif
 #endif
-            LogUtils.Debug("Vein initial...");
+			LogUtils.Debug("Vein initial...");
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
@@ -218,8 +197,84 @@ namespace CFLMedCab
             this.Topmost = true;
         }
 
-        //登录提示框消失后
-        private void onLoginInfoHidenEvent(object sender, LoginStatus e)
+		/// <summary>
+		/// 执行指静脉相关的逻辑处理(旧)
+		/// </summary>
+		private void veinHandle()
+		{
+			vein = VeinUtils.GetInstance();
+			vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
+
+			int vienSt = vein.LoadingDevice();
+
+			if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+			{
+				onFingerDetected(this, -1);
+			}
+			else
+			{
+				if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
+				{
+					vienSt = vein.OpenDevice();
+
+					if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+					{
+						onFingerDetected(this, -1);
+					}
+					else
+					{
+						//Console.ReadKey();
+						if (RegisterVein())
+						{
+							LogUtils.Debug("detectFinger in initial...");
+							ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
+						}
+						else
+						{
+							onFingerDetected(this, -2);
+						}
+					}
+				}
+			}
+
+		}
+
+		/// <summary>
+		/// 执行指静脉相关的逻辑处理(新，指静脉本地处理流程)
+		/// </summary>
+		private void veinHandleNew()
+		{
+			vein = VeinUtils.GetInstance();
+			vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
+
+			int vienSt = vein.LoadingDevice();
+
+			if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+			{
+				onFingerDetected(this, -1);
+			}
+			else
+			{
+				if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
+				{
+					vienSt = vein.OpenDevice();
+
+				
+					if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
+					{
+						onFingerDetected(this, -1);
+					}
+					else
+					{
+						ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
+					}
+				}
+			}
+
+		}
+
+		//登录提示框消失后
+		private void onLoginInfoHidenEvent(object sender, LoginStatus e)
         {
             ClosePop();
 
@@ -365,44 +420,154 @@ namespace CFLMedCab
 
 				if (isGrabFeature)
                 {
-                    BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
-                    {
-                        regfeature = Convert.ToBase64String(macthfeature)
-                    });
 
-                    if (data.code == 0)
-                    {
-                        user = data.body.user;
+					UserBll userBll = new UserBll();
 
-                        ApplicationState.SetAccessToken(data.body.accessToken);
-                        ApplicationState.SetRefreshToken(data.body.refresh_token);
+					List<CurrentUser> userList = userBll.GetAllUsers();
 
-                        HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+		
+					//用来接收找到的用户，如果有的话
+					CurrentUser currentUser = null;
 
-                        //SignInParam siParam = new SignInParam();
-                        //siParam.password = Convert.FromBase64String(user.Password).ToString();
-                        //siParam.phone = "+86 " + user.MobilePhone;
-                        //siParam.source = "app";
+					//循环找到是否存在匹配的
+					foreach (var itemUser in userList)
+					{
+						if (itemUser.reg_feature == null)
+							continue;
 
-                        //BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+						if (itemUser.ai_feature == null)
+							itemUser.ai_feature = itemUser.reg_feature;
 
-                        //ApplicationState.SetAccessToken(data.body.accessToken);
-                        //ApplicationState.SetRefreshToken(data.body.refresh_token);
+						byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT * VeinUtils.FV_FEATURE_SIZE];
+						regfeature = Convert.FromBase64String(itemUser.reg_feature);
 
-                        //HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+						byte[] aifeature = new byte[VeinUtils.FV_DYNAMIC_FEATURE_CNT * VeinUtils.FV_FEATURE_SIZE];
+						aifeature = Convert.FromBase64String(itemUser.ai_feature);
 
-                    }
-                    else
-                    {
-                        info = "没有找到和当前指静脉匹配的用户";
-                        info2 = "请先绑定指静脉或者再次尝试";
-                        LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
-                    }
+						uint diff = 0;
+						uint ailen = VeinUtils.FV_DYNAMIC_FEATURE_CNT * VeinUtils.FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
 
+						if (vein.Match(macthfeature, regfeature, VeinUtils.FEATURE_COLLECT_CNT, ref aifeature, ref diff, (int)VeinUtils.Match_Flg.M_1_1, ref ailen)
+							== VeinUtils.FV_ERRCODE_SUCCESS)
+						{
+							currentUser = itemUser;
+							if (ailen > 0)
+							{
+								//获取ai结果，用于后面的更加智能的匹配结果处理，并入库
+								itemUser.ai_feature = Convert.ToBase64String(aifeature);
+								userBll.UpdateCurrentUsers(itemUser);
+							}
+							break;
+						}
+					}
+
+					//指纹匹配上本地用户
+					if (currentUser != null)
+					{
+						BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(currentUser.username);
+						HttpHelper.GetInstance().ResultCheck(bdUser, out bool isBdUserSuccess);
+
+						//查询到对应线上用户
+						if (isBdUserSuccess)
+						{
+
+							var currentOnlineUser = bdUser.body.objects[0];
+
+							//签名参数	
+							SignInParam siParam = new SignInParam
+							{
+								//base64解码
+								password = BllHelper.DecodeBase64Str(currentOnlineUser.Password),
+								//带有+86
+								phone = currentOnlineUser.MobilePhone,
+								source = "app"
+							};
+
+
+							//获取用户Token
+							var bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+
+							HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isBdUserTokenSuccess);
+
+							if (isBdUserTokenSuccess)
+							{
+								//设置token
+								HttpHelper.GetInstance().SetHeaders(bdUserToken.body.access_token);
+								ApplicationState.SetAccessToken(bdUserToken.body.access_token);
+								ApplicationState.SetRefreshToken(bdUserToken.body.refresh_token);
+								//设置用户
+								user = bdUser.body.objects[0];
+							}
+							else
+							{
+								info = "没有找到和当前指静脉匹配的用户";
+								info2 = "请先绑定指静脉或者再次尝试";
+								LogUtils.Error("没有找到和当前指静脉匹配的用户token：本地线上匹配失败");
+							}
+
+						}
+						else
+						{
+
+							info = "没有找到和当前指静脉匹配的用户";
+							info2 = "请先绑定指静脉或者再次尝试";
+							LogUtils.Error("没有找到和当前指静脉匹配的用户：本地线上匹配失败");
+
+						}
+
+					}
+					else {
+
+						info = "没有找到和当前指静脉匹配的用户";
+						info2 = "请先绑定指静脉或者再次尝试";
+						LogUtils.Error("没有找到和当前指静脉匹配的用户：本地匹配失败");
+					}
+
+#if LOCALSDK
+				
+                   
+
+#else
+
+					//BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
+					//{
+					//	regfeature = Convert.ToBase64String(macthfeature)
+					//});
+
+					//if (data.code == 0)
+					//{
+					//	user = data.body.user;
+
+					//	ApplicationState.SetAccessToken(data.body.accessToken);
+					//	ApplicationState.SetRefreshToken(data.body.refresh_token);
+
+					//	HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
+					//	//SignInParam siParam = new SignInParam();
+					//	//siParam.password = Convert.FromBase64String(user.Password).ToString();
+					//	//siParam.phone = "+86 " + user.MobilePhone;
+					//	//siParam.source = "app";
+
+					//	//BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+
+					//	//ApplicationState.SetAccessToken(data.body.accessToken);
+					//	//ApplicationState.SetRefreshToken(data.body.refresh_token);
+
+					//	//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
+					//}
+					//else
+					//{
+					//	info = "没有找到和当前指静脉匹配的用户";
+					//	info2 = "请先绑定指静脉或者再次尝试";
+					//	LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
+					//}
+#endif
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
 					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
+
 				}
-            }
+			}
             onLoadingData(this, false);
 
             if (e < 0 || user ==null)
@@ -683,7 +848,9 @@ namespace CFLMedCab
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
 
-
+		/// <summary>
+		/// 增加的开机故障领用的逻辑，如果有的话
+		/// </summary>
         private void errorFetch()
         {
             #region 处理开机（即应用启动时）需要对比库存变化上传的逻辑

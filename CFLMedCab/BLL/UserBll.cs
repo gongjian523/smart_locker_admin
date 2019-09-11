@@ -29,10 +29,37 @@ namespace CFLMedCab.BLL
 
         public void InsetUsers(List<CurrentUser> list)
         {
-            userDal.InsertUser(list);
+            userDal.InsertUsers(list);
         }
 
-        public CurrentUser GetTestUser()
+		public void InsetUserOrUpdate(CurrentUser user)
+		{
+			CurrentUser currentUser = userDal.GetUserByUsername(user.username);
+			if (currentUser == null)
+			{
+				userDal.InsertUser(user);
+			}
+			else
+			{
+				user.id = currentUser.id;
+				userDal.UpdateCurrentUser(user);
+			}
+		}
+
+		/// <summary>
+		/// 不存在则插入
+		/// </summary>
+		/// <param name="user"></param>
+		public void InsetUserNotExist(CurrentUser user)
+		{
+			
+			if (!userDal.isExistsByUsername(user.username))
+			{
+				userDal.InsertUser(user);
+			}
+		}
+
+		public CurrentUser GetTestUser()
         {
             return userDal.GetUser().First();
         }

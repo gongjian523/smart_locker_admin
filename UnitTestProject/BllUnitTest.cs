@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
@@ -351,5 +352,15 @@ namespace UnitTestProject
             var pas64 = Convert.ToBase64String(Encoding.Default.GetBytes(password));
             LogUtils.Debug(pas64);
         }
+
+		[TestMethod]
+		public void TestBase64De()
+		{
+
+			var password = BllHelper.DecodeBase64Str("YXM4NDExOTQwMDM=");
+
+			LogUtils.Debug(password);
+		}
+
 	}
 }
