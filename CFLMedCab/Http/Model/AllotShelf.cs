@@ -40,10 +40,10 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string Status;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int auto_id { get; set; }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //public int auto_id { get; set; }
 
         /// <summary>
         /// 
@@ -55,10 +55,10 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string created_by { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int is_deleted { get; set; }
+        ///// <summary>
+        ///// 
+        ///// </summary>
+        //public int is_deleted { get; set; }
 
         /// <summary>
         /// 

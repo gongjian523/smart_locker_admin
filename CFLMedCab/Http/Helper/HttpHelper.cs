@@ -1037,12 +1037,12 @@ namespace CFLMedCab.Http.Helper
 
 			var handleEventWait = new HandleEventWait();
 			BasePutData<T> ret = null;
-			LogUtils.Debug($"put请求参数为{JsonConvert.SerializeObject(putParam)}");
 
-			JsonSerializerSettings jsetting = new JsonSerializerSettings
-			{
-				NullValueHandling = NullValueHandling.Ignore
-			};
+            JsonSerializerSettings jsetting = new JsonSerializerSettings
+            {
+                NullValueHandling = NullValueHandling.Ignore
+            };
+
             //id仅用作路径URL拼接
             var id = putParam.id;
             //去掉put参数中的id值
@@ -1050,6 +1050,8 @@ namespace CFLMedCab.Http.Helper
 
             string url = GetUpdateUrl(typeof(T).Name, id);
             string urlbody = JsonConvert.SerializeObject(putParam, Formatting.Indented, jsetting);
+
+            LogUtils.Debug($"put请求参数为{urlbody}");
 
             JumpKick.HttpLib.Http.Put(url).Headers(GetHeaders()).Body(urlbody).OnSuccess(result =>
 			{
