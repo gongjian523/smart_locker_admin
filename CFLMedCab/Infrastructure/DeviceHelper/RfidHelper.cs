@@ -24,7 +24,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// <summary>
 		/// 保持子线程阻塞主线程
 		/// </summary>
-		private static List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
+		//private static List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
 
 		/// <summary>
 		/// 创建串口连接
@@ -72,7 +72,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         /// <param name="clientConn"></param>
         /// <param name="com"></param>
         /// <returns></returns>
-        private static HashSet<string> DealComData(GClient clientConn, string com, out bool isGetSuccess)
+        private static HashSet<string> DealComData(List<ManualResetEvent> manualEvents, GClient clientConn, string com, out bool isGetSuccess)
 		{
 			/// mutex互斥锁，用于人为阻塞当前线程
 			ManualResetEvent manualResetEvent = new ManualResetEvent(false);
@@ -231,6 +231,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// <returns></returns>
 		public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess)
 		{
+			List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
 
 			isGetSuccess = true;
 
@@ -253,7 +254,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
 			if (isCom1Connect)
 			{
-				com1HashSet = DealComData(com1ClientConn, com1, out isGetSuccess);
+				com1HashSet = DealComData(manualEvents, com1ClientConn, com1, out isGetSuccess);
 			}
 			else
 			{
@@ -271,7 +272,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
                 if (isCom4Connect)
                 {
-                    com4HashSet = DealComData(com4ClientConn, com4, out isGetSuccess);
+                    com4HashSet = DealComData(manualEvents, com4ClientConn, com4, out isGetSuccess);
                 }
                 else
                 {
@@ -342,7 +343,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         /// <returns></returns>
         public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess, List<string> listCom)
         {
-            isGetSuccess = true;
+
+			List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
+
+			isGetSuccess = true;
 
             List<GClient> listGClient = new List<GClient>();
             List<bool> listIsConnect = new List<bool>();
@@ -360,7 +364,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
                 if (listGClient[i] != null)
                 {
-                    listComHashSet[i] = DealComData(listGClient[i], listCom[i], out isGetSuccess);
+                    listComHashSet[i] = DealComData(manualEvents, listGClient[i], listCom[i], out isGetSuccess);
                 }
                 else
                 {
@@ -411,6 +415,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         [Obsolete]
         public static Hashtable GetEpcDataNew(out bool isGetSuccess)
 		{
+			List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
+
 			isGetSuccess = true;
 
             List<string> rfidComs = ApplicationState.GetAllRfidCom();
@@ -423,7 +429,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			GClient com1ClientConn = CreateClientConn(com1, "115200", out bool isCom1Connect);
 			if (isCom1Connect)
 			{
-				currentEpcDataHt.Add(com1, DealComData(com1ClientConn, com1, out isGetSuccess));
+				currentEpcDataHt.Add(com1, DealComData(manualEvents, com1ClientConn, com1, out isGetSuccess));
 			}
 			else
 			{
@@ -439,7 +445,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 GClient com4ClientConn = CreateClientConn(com4, "115200", out bool isCom4Connect);
                 if (isCom4Connect)
                 {
-                    currentEpcDataHt.Add(com4, DealComData(com4ClientConn, com4, out isGetSuccess));
+                    currentEpcDataHt.Add(com4, DealComData(manualEvents, com4ClientConn, com4, out isGetSuccess));
                 }
                 else
                 {

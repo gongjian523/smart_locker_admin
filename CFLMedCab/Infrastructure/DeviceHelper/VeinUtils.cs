@@ -115,7 +115,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
         //指静脉模板比对
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_MatchFeature", CallingConvention = CallingConvention.Cdecl)]
-        public static extern int FV_MatchFeature(byte[] matchFeature, byte[] regFeature, byte regCnt, char flg, uint securityLevel, ref uint diff, ref byte[] aiFeatureBuf, ref uint aiDataLen);
+        public static extern int FV_MatchFeature(byte[] matchFeature, byte[] regFeature, byte regCnt, char flg, uint securityLevel, ref uint diff, byte[] aiFeatureBuf, ref uint aiDataLen);
 
         //读取设备的签名信息
         [DllImport("BioVein.Win32.dll", EntryPoint = "FV_GetDevSign", CallingConvention = CallingConvention.Cdecl)]
@@ -590,7 +590,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
         }
 
         //调用比对接口注意事项
-        public int Match(byte[] macthfeature, byte[] regfeature, int regfcnt, ref byte[] aifeature,
+        public int Match(byte[] macthfeature, byte[] regfeature, int regfcnt, byte[] aifeature,
             ref uint diff, int matchflg, ref uint ailen)
         {
             //说明：
@@ -615,7 +615,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             //uint ailen = FV_DYNAMIC_FEATURE_CNT * FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
 
             //4.调用比对接口
-            int ret = FV_MatchFeature(macthfeature, accept_match_feature, (byte)accept_match_feature_cnt, (char)0x03, (uint)securityLevel, ref diff, ref aifeature, ref ailen);
+            int ret = FV_MatchFeature(macthfeature, accept_match_feature, (byte)accept_match_feature_cnt, (char)0x03, (uint)securityLevel, ref diff, aifeature, ref ailen);
 
             //5.分析比对返回值
             if (ret != FV_ERRCODE_SUCCESS)

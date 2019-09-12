@@ -152,9 +152,8 @@ namespace CFLMedCab
             processRingTimer.Enabled = false;
             processRingTimer.Elapsed += new ElapsedEventHandler(onProcessRingTimerExpired);
 
-            Task.Factory.StartNew(initCurrentGoodsInfo);
             Task.Factory.StartNew(startAutoInventory);
-            Task.Factory.StartNew(errorFetch);
+            Task.Factory.StartNew(errorFetchAndInit);
 
             //Console.ReadKey();
 
@@ -177,8 +176,8 @@ namespace CFLMedCab
 			veinHandleNew();
 #else
 			//执行指静脉相关的逻辑处理
-			//veinHandle();
-			veinHandleNew();
+			veinHandle();
+
 #endif
 
 
@@ -421,7 +420,11 @@ namespace CFLMedCab
 				if (isGrabFeature)
                 {
 
-					UserBll userBll = new UserBll();
+
+
+#if LOCALSDK
+				
+                   UserBll userBll = new UserBll();
 
 					List<CurrentUser> userList = userBll.GetAllUsers();
 
@@ -447,7 +450,7 @@ namespace CFLMedCab
 						uint diff = 0;
 						uint ailen = VeinUtils.FV_DYNAMIC_FEATURE_CNT * VeinUtils.FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
 
-						if (vein.Match(macthfeature, regfeature, VeinUtils.FEATURE_COLLECT_CNT, ref aifeature, ref diff, (int)VeinUtils.Match_Flg.M_1_1, ref ailen)
+						if (vein.Match(macthfeature, regfeature, VeinUtils.FEATURE_COLLECT_CNT, aifeature, ref diff, (int)VeinUtils.Match_Flg.M_1_1, ref ailen)
 							== VeinUtils.FV_ERRCODE_SUCCESS)
 						{
 							currentUser = itemUser;
@@ -523,45 +526,41 @@ namespace CFLMedCab
 						LogUtils.Error("没有找到和当前指静脉匹配的用户：本地匹配失败");
 					}
 
-#if LOCALSDK
-				
-                   
-
 #else
 
-					//BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
-					//{
-					//	regfeature = Convert.ToBase64String(macthfeature)
-					//});
+					BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
+					{
+						regfeature = Convert.ToBase64String(macthfeature)
+					});
 
-					//if (data.code == 0)
-					//{
-					//	user = data.body.user;
+					if (data.code == 0)
+					{
+						user = data.body.user;
 
-					//	ApplicationState.SetAccessToken(data.body.accessToken);
-					//	ApplicationState.SetRefreshToken(data.body.refresh_token);
+						ApplicationState.SetAccessToken(data.body.accessToken);
+						ApplicationState.SetRefreshToken(data.body.refresh_token);
 
-					//	HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+						HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
 
-					//	//SignInParam siParam = new SignInParam();
-					//	//siParam.password = Convert.FromBase64String(user.Password).ToString();
-					//	//siParam.phone = "+86 " + user.MobilePhone;
-					//	//siParam.source = "app";
+						//SignInParam siParam = new SignInParam();
+						//siParam.password = Convert.FromBase64String(user.Password).ToString();
+						//siParam.phone = "+86 " + user.MobilePhone;
+						//siParam.source = "app";
 
-					//	//BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+						//BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
 
-					//	//ApplicationState.SetAccessToken(data.body.accessToken);
-					//	//ApplicationState.SetRefreshToken(data.body.refresh_token);
+						//ApplicationState.SetAccessToken(data.body.accessToken);
+						//ApplicationState.SetRefreshToken(data.body.refresh_token);
 
-					//	//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+						//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
 
-					//}
-					//else
-					//{
-					//	info = "没有找到和当前指静脉匹配的用户";
-					//	info2 = "请先绑定指静脉或者再次尝试";
-					//	LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
-					//}
+					}
+					else
+					{
+						info = "没有找到和当前指静脉匹配的用户";
+						info2 = "请先绑定指静脉或者再次尝试";
+						LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
+					}
 #endif
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
 					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
@@ -851,15 +850,15 @@ namespace CFLMedCab
 		/// <summary>
 		/// 增加的开机故障领用的逻辑，如果有的话
 		/// </summary>
-        private void errorFetch()
+        private void errorFetchAndInit()
         {
             #region 处理开机（即应用启动时）需要对比库存变化上传的逻辑
 
             //获取当前机柜所有商品数据
             HashSet<CommodityEps> currentCommodityEps = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
 
-            //判断是否是初次使用本地库存上次，如果是则不上传
-            bool isInitLocalCommodityEpsInfo = CommodityCodeBll.GetInstance().isInitLocalCommodityEpsInfo();
+			//判断是否是初次使用本地库存上次，如果是则不上传
+			bool isInitLocalCommodityEpsInfo = CommodityCodeBll.GetInstance().isInitLocalCommodityEpsInfo();
 
             if (isGetSuccess && !isInitLocalCommodityEpsInfo)
             {
@@ -902,8 +901,11 @@ namespace CFLMedCab
 
             }
 
-            #endregion
-        }
+
+			//初始化
+			ApplicationState.SetGoodsInfo(currentCommodityEps);
+			#endregion
+		}
 
 
         #region 领用

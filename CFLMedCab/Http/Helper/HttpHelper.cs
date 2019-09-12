@@ -715,7 +715,7 @@ namespace CFLMedCab.Http.Helper
 			BasePostData<T> ret = null;
 
 
-            LogUtils.Debug($"post请求参数为{JsonConvert.SerializeObject(postParam)}");
+           
 
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
@@ -724,7 +724,9 @@ namespace CFLMedCab.Http.Helper
 
             var JsonBody = JsonConvert.SerializeObject(postParam, Formatting.Indented, jsetting);
 
-            JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonBody).OnSuccess(result =>
+			LogUtils.Debug($"post请求参数为{JsonBody}");
+
+			JumpKick.HttpLib.Http.Post(GetCreateUrl(typeof(T).Name)).Headers(GetHeaders()).Body(JsonBody).OnSuccess(result =>
 			{
 				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
 

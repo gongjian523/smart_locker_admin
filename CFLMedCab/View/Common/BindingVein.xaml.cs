@@ -51,6 +51,9 @@ namespace CFLMedCab.View.Common
         //从主页面传来的互斥锁，用来防止在同时时间调用sdk;
         Mutex mt;
 
+		//用于全局保存输入用户名副本
+		private string currentUsername = "";
+
         public BindingVein(Mutex mutex)
         {
             InitializeComponent();
@@ -121,11 +124,15 @@ namespace CFLMedCab.View.Common
 
             SetTokens(bdUserToken.body.access_token, bdUserToken.body.refresh_token);
 
-            loginView.Visibility = Visibility.Collapsed;
+			currentUsername = tbInputName.Text.ToString();
+
+			loginView.Visibility = Visibility.Collapsed;
             bindingView.Visibility = Visibility.Visible;
             rebindingBtn.Visibility = Visibility.Hidden;
 
-            Task task =  Task.Factory.StartNew(a => {
+			 
+
+			Task task =  Task.Factory.StartNew(a => {
                 Binding();
             }, true);
         }
@@ -420,42 +427,16 @@ namespace CFLMedCab.View.Common
 
 #if LOCALSDK
     
-			LoadingDataEvent(this, true);
-			BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
-			{
-				regfeature = Convert.ToBase64String(regfeature),
-				finger_name = "finger1"
-			});
-
-			LoadingDataEvent(this, false);
-
-            if (data.code == 0)
-            {
-                this.Dispatcher.BeginInvoke(new Action(() => {
-                    GuidInfo.Content = "指静脉绑定成功！";
-                    bindingExitBtn.Visibility = Visibility.Visible;
-                }));
-            }  
-            else
-            {
-                LogUtils.Error("向主系统绑定指静脉特征失败：" + data.message);
-                this.Dispatcher.BeginInvoke(new Action(() => {
-                    GuidInfo.Content = "指静脉绑定失败";
-                    rebindingBtn.Visibility = Visibility.Visible;
-                    bindingExitBtn.Visibility = Visibility.Visible;
-                }));
-            }                
-#else
-
+          
 			LoadingDataEvent(this, true);
 
 			//本地指静脉绑定流程（实际是入库）
 			bool isBindingSucess = false;
 
 			if(regfeature != null && regfeature.Length > 0) {
-				if (tbInputName.Text != null && tbInputName.Text != "")
+				if (currentUsername != null && currentUsername != "")
 				{
-					BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
+					BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + currentUsername));
 					HttpHelper.GetInstance().ResultCheck(bdUser, out bool bdUserIsSucess);
 
 					if (bdUserIsSucess)
@@ -481,6 +462,33 @@ namespace CFLMedCab.View.Common
 			else
 			{
 				LogUtils.Error("本地绑定指静脉特征失败：" );
+				this.Dispatcher.BeginInvoke(new Action(() => {
+					GuidInfo.Content = "指静脉绑定失败";
+					rebindingBtn.Visibility = Visibility.Visible;
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+			}
+#else
+
+			LoadingDataEvent(this, true);
+			BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
+			{
+				regfeature = Convert.ToBase64String(regfeature),
+				finger_name = "finger1"
+			});
+
+			LoadingDataEvent(this, false);
+
+			if (data.code == 0)
+			{
+				this.Dispatcher.BeginInvoke(new Action(() => {
+					GuidInfo.Content = "指静脉绑定成功！";
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+			}
+			else
+			{
+				LogUtils.Error("向主系统绑定指静脉特征失败：" + data.message);
 				this.Dispatcher.BeginInvoke(new Action(() => {
 					GuidInfo.Content = "指静脉绑定失败";
 					rebindingBtn.Visibility = Visibility.Visible;
