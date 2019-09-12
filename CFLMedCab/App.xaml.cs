@@ -10,6 +10,7 @@ using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using System.Xml;
@@ -91,57 +92,11 @@ namespace CFLMedCab
             }
             ApplicationState.SetLocations(list);
 
-            LogUtils.Debug("App config initial...");
+			Task.Factory.StartNew(errorFetchAndInit);
 
-   //         #region 处理开机（即应用启动时）需要对比库存变化上传的逻辑
+			LogUtils.Debug("App config initial...");
 
-   //         //获取当前机柜所有商品数据
-   //         HashSet<CommodityEps> currentCommodityEps = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
 
-			////判断是否是初次使用本地库存上次，如果是则不上传
-			//bool isInitLocalCommodityEpsInfo = CommodityCodeBll.GetInstance().isInitLocalCommodityEpsInfo();
-
-			//if (isGetSuccess && !isInitLocalCommodityEpsInfo) {
-
-			//	//获取数据库记录的以前所有商品数据
-			//	HashSet<CommodityEps> lastCommodityEps = CommodityCodeBll.GetInstance().GetLastLocalCommodityEpsInfo();
-
-			//	//比对
-			//	List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(lastCommodityEps, currentCommodityEps);
-
-			//	//有不同的情况，则需要处理上传逻辑
-			//	if (commodityCodeList != null && commodityCodeList.Count > 0)
-			//	{
-			//		//根据商品码集合获取完整商品属性集合(已对比后结果)
-			//		var bdCommodityCodeList = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-
-			//		var checkbdCommodityCodeList = HttpHelper.GetInstance().ResultCheck(bdCommodityCodeList, out bool isSuccess);
-
-			//		if (isSuccess)
-			//		{
-			//			//按照类似无单一般领用的方式（故障领用）
-			//			var bdBasePostData = ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCodeList, ConsumingOrderType.故障领用);
-
-			//			//校验是否含有数据
-			//			HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
-			//			if (!isSuccess1)
-			//			{
-			//				LogUtils.Error("提交故障领用结果失败！" + bdBasePostData.message);
-			//			}
-			//			else
-			//			{
-			//				LogUtils.Info("提交故障领用结果成功！" + bdBasePostData.message);
-			//			}
-			//		}
-			//		else
-			//		{
-			//			LogUtils.Info("提交故障领用结果成功！");
-			//		}
-			//	}
-
-			//}
-
-			//#endregion
 
 		}
 
@@ -152,6 +107,66 @@ namespace CFLMedCab
 			LogUtils.Error(e.Exception.Message + "\r\n" + e.Exception.StackTrace);
 			e.Handled = true;
 			MessageBox.Show(e.Exception.Message + "\r\n" + e.Exception.StackTrace, "系统信息");
+		}
+
+		/// <summary>
+		/// 增加的开机故障领用的逻辑，如果有的话
+		/// </summary>
+		private void errorFetchAndInit()
+		{
+			#region 处理开机（即应用启动时）需要对比库存变化上传的逻辑
+
+			//获取当前机柜所有商品数据
+			HashSet<CommodityEps> currentCommodityEps = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
+
+			//判断是否是初次使用本地库存上次，如果是则不上传
+			bool isInitLocalCommodityEpsInfo = CommodityCodeBll.GetInstance().isInitLocalCommodityEpsInfo();
+
+			if (isGetSuccess && !isInitLocalCommodityEpsInfo)
+			{
+
+				//获取数据库记录的以前所有商品数据
+				HashSet<CommodityEps> lastCommodityEps = CommodityCodeBll.GetInstance().GetLastLocalCommodityEpsInfo();
+
+				//比对
+				List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(lastCommodityEps, currentCommodityEps);
+
+				//有不同的情况，则需要处理上传逻辑
+				if (commodityCodeList != null && commodityCodeList.Count > 0)
+				{
+					//根据商品码集合获取完整商品属性集合(已对比后结果)
+					var bdCommodityCodeList = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
+
+					var checkbdCommodityCodeList = HttpHelper.GetInstance().ResultCheck(bdCommodityCodeList, out bool isSuccess);
+
+					if (isSuccess)
+					{
+						//按照类似无单一般领用的方式（故障领用）
+						var bdBasePostData = ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCodeList, ConsumingOrderType.故障领用);
+
+						//校验是否含有数据
+						HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
+						if (!isSuccess1)
+						{
+							LogUtils.Error("提交故障领用结果失败！" + bdBasePostData.message);
+						}
+						else
+						{
+							LogUtils.Info("提交故障领用结果成功！" + bdBasePostData.message);
+						}
+					}
+					else
+					{
+						LogUtils.Info("提交故障领用结果成功！");
+					}
+				}
+
+			}
+
+
+			//初始化
+			ApplicationState.SetGoodsInfo(currentCommodityEps);
+			#endregion
 		}
 
 	}

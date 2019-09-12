@@ -280,7 +280,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 }
             }
 
-            WaitHandle.WaitAll(manualEvents.ToArray());
+			if (manualEvents.ToArray().Count() > 0)
+			{
+				WaitHandle.WaitAll(manualEvents.ToArray());
+			}
 			manualEvents.Clear();
 
             //提取com1的标签epc，并组装
@@ -372,7 +375,12 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 }
             }
 
-            WaitHandle.WaitAll(manualEvents.ToArray());
+
+			if (manualEvents.ToArray().Count() > 0)
+			{
+				WaitHandle.WaitAll(manualEvents.ToArray());
+			}
+
             manualEvents.Clear();
 
             for (int i = 0; i < listCom.Count(); i++)
@@ -453,7 +461,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 }
             }
 
-            WaitHandle.WaitAll(manualEvents.ToArray());
+			if (manualEvents.ToArray().Count() > 0)
+			{
+				WaitHandle.WaitAll(manualEvents.ToArray());
+			}
+
 			manualEvents.Clear();
 
 			return currentEpcDataHt;

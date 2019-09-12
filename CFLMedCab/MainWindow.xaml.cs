@@ -153,8 +153,7 @@ namespace CFLMedCab
             processRingTimer.Elapsed += new ElapsedEventHandler(onProcessRingTimerExpired);
 
             Task.Factory.StartNew(startAutoInventory);
-            Task.Factory.StartNew(errorFetchAndInit);
-
+            
             //Console.ReadKey();
 
             LogUtils.Debug("Task initial...");
@@ -174,8 +173,10 @@ namespace CFLMedCab
 
 			//执行指静脉相关的逻辑处理
 			veinHandleNew();
+			
 #else
 			//执行指静脉相关的逻辑处理
+
 			veinHandle();
 
 #endif
@@ -424,11 +425,11 @@ namespace CFLMedCab
 
 #if LOCALSDK
 				
-                   UserBll userBll = new UserBll();
+					UserBll userBll = new UserBll();
 
 					List<CurrentUser> userList = userBll.GetAllUsers();
 
-		
+
 					//用来接收找到的用户，如果有的话
 					CurrentUser currentUser = null;
 
@@ -438,7 +439,7 @@ namespace CFLMedCab
 						if (itemUser.reg_feature == null)
 							continue;
 
-						if (itemUser.ai_feature == null)
+						if (itemUser.ai_feature == null || "".Equals(itemUser.ai_feature))
 							itemUser.ai_feature = itemUser.reg_feature;
 
 						byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT * VeinUtils.FV_FEATURE_SIZE];
@@ -519,14 +520,17 @@ namespace CFLMedCab
 						}
 
 					}
-					else {
+					else
+					{
 
 						info = "没有找到和当前指静脉匹配的用户";
 						info2 = "请先绑定指静脉或者再次尝试";
 						LogUtils.Error("没有找到和当前指静脉匹配的用户：本地匹配失败");
 					}
 
+
 #else
+
 
 					BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
 					{
@@ -561,6 +565,10 @@ namespace CFLMedCab
 						info2 = "请先绑定指静脉或者再次尝试";
 						LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
 					}
+
+					
+
+				
 #endif
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
 					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
@@ -847,65 +855,7 @@ namespace CFLMedCab
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
 
-		/// <summary>
-		/// 增加的开机故障领用的逻辑，如果有的话
-		/// </summary>
-        private void errorFetchAndInit()
-        {
-            #region 处理开机（即应用启动时）需要对比库存变化上传的逻辑
-
-            //获取当前机柜所有商品数据
-            HashSet<CommodityEps> currentCommodityEps = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
-
-			//判断是否是初次使用本地库存上次，如果是则不上传
-			bool isInitLocalCommodityEpsInfo = CommodityCodeBll.GetInstance().isInitLocalCommodityEpsInfo();
-
-            if (isGetSuccess && !isInitLocalCommodityEpsInfo)
-            {
-
-                //获取数据库记录的以前所有商品数据
-                HashSet<CommodityEps> lastCommodityEps = CommodityCodeBll.GetInstance().GetLastLocalCommodityEpsInfo();
-
-                //比对
-                List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(lastCommodityEps, currentCommodityEps);
-
-                //有不同的情况，则需要处理上传逻辑
-                if (commodityCodeList != null && commodityCodeList.Count > 0)
-                {
-                    //根据商品码集合获取完整商品属性集合(已对比后结果)
-                    var bdCommodityCodeList = CommodityCodeBll.GetInstance().GetCommodityCode(commodityCodeList);
-
-                    var checkbdCommodityCodeList = HttpHelper.GetInstance().ResultCheck(bdCommodityCodeList, out bool isSuccess);
-
-                    if (isSuccess)
-                    {
-                        //按照类似无单一般领用的方式（故障领用）
-                        var bdBasePostData = ConsumingBll.GetInstance().SubmitConsumingChangeWithoutOrder(bdCommodityCodeList, ConsumingOrderType.故障领用);
-
-                        //校验是否含有数据
-                        HttpHelper.GetInstance().ResultCheck(bdBasePostData, out bool isSuccess1);
-                        if (!isSuccess1)
-                        {
-                            LogUtils.Error("提交故障领用结果失败！" + bdBasePostData.message);
-                        }
-                        else
-                        {
-                            LogUtils.Info("提交故障领用结果成功！" + bdBasePostData.message);
-                        }
-                    }
-                    else
-                    {
-                        LogUtils.Info("提交故障领用结果成功！");
-                    }
-                }
-
-            }
-
-
-			//初始化
-			ApplicationState.SetGoodsInfo(currentCommodityEps);
-			#endregion
-		}
+		
 
 
         #region 领用

@@ -307,13 +307,13 @@ namespace CFLMedCab.Http.Bll
 
             ConsumingOrder consumingOrder = new ConsumingOrder()
             {
-                FinishDate = GetDateTimeNow(),//完成时间
+                //FinishDate = GetDateTimeNow(),//完成时间
                 ////当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
                 //Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(), //
-                Status = ConsumingOrderStatus.领用中.ToString(),
+                //Status = (type == ConsumingOrderType.故障领用 ? null : ConsumingOrderStatus.领用中.ToString()), //故障领用不填领用中
                 StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
                 Type = type.ToString(),//领用类型
-                SourceBill = type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null // 需要填写医嘱处方SourceBill
+                //SourceBill = (type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null) // 需要填写医嘱处方SourceBill
             };
 
             //创建领用单
@@ -338,10 +338,10 @@ namespace CFLMedCab.Http.Bll
                     changeList.Add(new CommodityInventoryChange()
                     {
                         CommodityCodeId = normal.id,
-                        SourceBill = new SourceBill()
-                        {
-                            object_name = "ConsumingReturnOrder"
-                        },
+                        //SourceBill = new SourceBill()
+                        //{
+                          //  object_name = "ConsumingReturnOrder"
+                        //},
                         ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                         operate_type = normal.operate_type,
                         EquipmentId = normal.EquipmentId,

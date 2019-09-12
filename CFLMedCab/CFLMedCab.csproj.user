@@ -19,5 +19,6 @@
     <RemoteDebugMachine>192.168.233.187</RemoteDebugMachine>
     <StartArguments>
     </StartArguments>
+    <StartAction>Project</StartAction>
   </PropertyGroup>
 </Project>

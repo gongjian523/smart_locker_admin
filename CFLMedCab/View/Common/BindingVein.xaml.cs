@@ -426,14 +426,15 @@ namespace CFLMedCab.View.Common
 
 
 #if LOCALSDK
-    
-          
+
+			
 			LoadingDataEvent(this, true);
 
 			//本地指静脉绑定流程（实际是入库）
 			bool isBindingSucess = false;
 
-			if(regfeature != null && regfeature.Length > 0) {
+			if (regfeature != null && regfeature.Length > 0)
+			{
 				if (currentUsername != null && currentUsername != "")
 				{
 					BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + currentUsername));
@@ -447,7 +448,7 @@ namespace CFLMedCab.View.Common
 					}
 
 				}
-				
+
 			}
 
 			LoadingDataEvent(this, false);
@@ -461,13 +462,14 @@ namespace CFLMedCab.View.Common
 			}
 			else
 			{
-				LogUtils.Error("本地绑定指静脉特征失败：" );
+				LogUtils.Error("本地绑定指静脉特征失败：");
 				this.Dispatcher.BeginInvoke(new Action(() => {
 					GuidInfo.Content = "指静脉绑定失败";
 					rebindingBtn.Visibility = Visibility.Visible;
 					bindingExitBtn.Visibility = Visibility.Visible;
 				}));
 			}
+    	
 #else
 
 			LoadingDataEvent(this, true);
@@ -495,6 +497,8 @@ namespace CFLMedCab.View.Common
 					bindingExitBtn.Visibility = Visibility.Visible;
 				}));
 			}
+
+
 
 #endif
 
