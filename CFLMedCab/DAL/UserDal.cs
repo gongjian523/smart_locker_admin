@@ -84,6 +84,11 @@ namespace CFLMedCab.DAL
 			return Db.Queryable<CurrentUser>().Any(user => user.username.ToUpper() == username.ToUpper());
 		}
 
+		public bool isExistsByRegfeature(string regfeature)
+		{
+			return Db.Queryable<CurrentUser>().Any(user => user.reg_feature.ToUpper() == regfeature.ToUpper());
+		}
+
 		public void UpdateCurrentUser(CurrentUser item)
         {
             Db.Updateable<CurrentUser>(item).ExecuteCommand();

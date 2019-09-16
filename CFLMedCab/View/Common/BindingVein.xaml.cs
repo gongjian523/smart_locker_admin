@@ -425,9 +425,39 @@ namespace CFLMedCab.View.Common
 
 
 
-#if LOCALSDK
+#if NOTLOCALSDK
 
 			
+			LoadingDataEvent(this, true);
+			BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
+			{
+				regfeature = Convert.ToBase64String(regfeature),
+				finger_name = "finger1"
+			});
+
+			LoadingDataEvent(this, false);
+
+			if (data.code == 0)
+			{
+				this.Dispatcher.BeginInvoke(new Action(() =>
+				{
+					GuidInfo.Content = "指静脉绑定成功！";
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+			}
+			else
+			{
+				LogUtils.Error("向主系统绑定指静脉特征失败：" + data.message);
+				this.Dispatcher.BeginInvoke(new Action(() =>
+				{
+					GuidInfo.Content = "指静脉绑定失败";
+					rebindingBtn.Visibility = Visibility.Visible;
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+			}
+    	
+#else
+
 			LoadingDataEvent(this, true);
 
 			//本地指静脉绑定流程（实际是入库）
@@ -469,35 +499,6 @@ namespace CFLMedCab.View.Common
 					bindingExitBtn.Visibility = Visibility.Visible;
 				}));
 			}
-    	
-#else
-
-			LoadingDataEvent(this, true);
-			BasePostData<string> data = UserLoginBll.GetInstance().VeinmatchBinding(new VeinbindingPostParam
-			{
-				regfeature = Convert.ToBase64String(regfeature),
-				finger_name = "finger1"
-			});
-
-			LoadingDataEvent(this, false);
-
-			if (data.code == 0)
-			{
-				this.Dispatcher.BeginInvoke(new Action(() => {
-					GuidInfo.Content = "指静脉绑定成功！";
-					bindingExitBtn.Visibility = Visibility.Visible;
-				}));
-			}
-			else
-			{
-				LogUtils.Error("向主系统绑定指静脉特征失败：" + data.message);
-				this.Dispatcher.BeginInvoke(new Action(() => {
-					GuidInfo.Content = "指静脉绑定失败";
-					rebindingBtn.Visibility = Visibility.Visible;
-					bindingExitBtn.Visibility = Visibility.Visible;
-				}));
-			}
-
 
 
 #endif

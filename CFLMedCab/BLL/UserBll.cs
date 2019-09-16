@@ -53,7 +53,7 @@ namespace CFLMedCab.BLL
 		public void InsetUserNotExist(CurrentUser user)
 		{
 			
-			if (!userDal.isExistsByUsername(user.username))
+			if (!userDal.isExistsByRegfeature(user.username))
 			{
 				userDal.InsertUser(user);
 			}

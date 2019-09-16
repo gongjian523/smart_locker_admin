@@ -306,82 +306,61 @@ namespace CFLMedCab.Http.Bll
 
             //创建商品库存变更记录资料【入库::上架】
             var inList = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 1).ToList();
-            if (null != outList || outList.Count > 0)
+
+			
+
+
+			if (null != inList || inList.Count > 0)
             {
-                inList.ForEach(commodityCode =>
-                {
-                    var temp = new CommodityInventoryChange()
-                    {
-                        CommodityCodeId = commodityCode.id,
-                        ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
-                        AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString(),
-                        operate_type = commodityCode.operate_type,
-                        EquipmentId = commodityCode.EquipmentId,
-                        GoodsLocationId = commodityCode.GoodsLocationId,
-                        StoreHouseId = commodityCode.StoreHouseId
-                    };
-                    changes.Add(temp);
-                });
+
+				//已消耗走【入库::回退】
+				var consumedInList = inList.Where(it => it.InventoryStatus == CommodityInventoryChangeStatus.已消耗.ToString()).ToList();
+				if (null != consumedInList && consumedInList.Count > 0)
+				{
+					
+					consumedInList.Where(it => it.operate_type == 1).ToList().ForEach(commodityCode =>
+					{
+						var temp = new CommodityInventoryChange()
+						{
+							CommodityCodeId = commodityCode.id,
+							SourceBill = new SourceBill()
+							{
+								object_name = "ConsumingReturnOrder",
+							},
+							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+							operate_type = commodityCode.operate_type,
+							EquipmentId = commodityCode.EquipmentId,
+							GoodsLocationId = commodityCode.GoodsLocationId,
+							StoreHouseId = commodityCode.StoreHouseId,
+						};
+						changes.Add(temp);
+					});
+				}
+
+				//未消耗走原逻辑
+				var notConsumedInList = inList.Where(it => it.InventoryStatus != CommodityInventoryChangeStatus.已消耗.ToString()).ToList();
+
+				if (null != notConsumedInList && notConsumedInList.Count > 0)
+				{
+					notConsumedInList.ForEach(commodityCode =>
+					{
+						var temp = new CommodityInventoryChange()
+						{
+							CommodityCodeId = commodityCode.id,
+							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+							AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString(),
+							operate_type = commodityCode.operate_type,
+							EquipmentId = commodityCode.EquipmentId,
+							GoodsLocationId = commodityCode.GoodsLocationId,
+							StoreHouseId = commodityCode.StoreHouseId
+						};
+						changes.Add(temp);
+					});
+				}
             }
 
             return CreateCommodityInventoryChangeSeparately(changes);
         }
-
-		/// <summary>
-		/// 创建库存调整中库存变更记录（用于开机启动的对比流程）
-		/// </summary>
-		/// <param name="baseDataCommodityCode"></param>
-		/// <returns></returns>
-		public BasePostData<CommodityInventoryChange> CreateCommodityInventoryChangeInStockChangeByOpen(BaseData<CommodityCode> baseDataCommodityCode)
-		{
-			if (null == baseDataCommodityCode)
-			{
-				return new BasePostData<CommodityInventoryChange>()
-				{
-					code = (int)ResultCode.Parameter_Exception,
-					message = ResultCode.Parameter_Exception.ToString()
-				};
-			}
-			List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
-			//创建商品库存变更记录资料【出库::下架】
-			var outList = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 0).ToList();
-			if (null != outList || outList.Count > 0)
-			{
-				outList.ForEach(commodityCode =>
-				{
-					var temp = new CommodityInventoryChange()
-					{
-						CommodityCodeId = commodityCode.id,
-						//出库变更更后库房、变更更后设备、变更更后货位 value 值都为null。
-						StoreHouseId = commodityCode.StoreHouseId,
-						ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString(),
-						AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString()
-					};
-					changes.Add(temp);
-				});
-			}
-
-			//创建商品库存变更记录资料【入库::上架】
-			var inList = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 1).ToList();
-			if (null != outList || outList.Count > 0)
-			{
-				inList.ForEach(commodityCode =>
-				{
-					var temp = new CommodityInventoryChange()
-					{
-						CommodityCodeId = commodityCode.id,
-						ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
-						AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString(),
-						EquipmentId = commodityCode.EquipmentId,
-						GoodsLocationId = commodityCode.GoodsLocationId,
-						StoreHouseId = commodityCode.StoreHouseId
-					};
-					changes.Add(temp);
-				});
-			}
-			return CreateCommodityInventoryChange(changes);
-		}
-
 
 		/// <summary>
 		/// 创建回收取货中库存变更记录

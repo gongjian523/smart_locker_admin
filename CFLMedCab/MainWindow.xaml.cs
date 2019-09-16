@@ -169,15 +169,14 @@ namespace CFLMedCab
 #else
 
 
-#if LOCALSDK
+#if NOTLOCALSDK
 
 			//执行指静脉相关的逻辑处理
-			veinHandleNew();
+			veinHandle()
 			
 #else
 			//执行指静脉相关的逻辑处理
-
-			veinHandle();
+			veinHandleNew();
 
 #endif
 
@@ -423,24 +422,56 @@ namespace CFLMedCab
 
 
 
-#if LOCALSDK
-				
+#if NOTLOCALSDK
+
+					BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
+					{
+						regfeature = Convert.ToBase64String(macthfeature)
+					});
+
+					if (data.code == 0)
+					{
+						user = data.body.user;
+
+						ApplicationState.SetAccessToken(data.body.accessToken);
+						ApplicationState.SetRefreshToken(data.body.refresh_token);
+
+						HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
+						//SignInParam siParam = new SignInParam();
+						//siParam.password = Convert.FromBase64String(user.Password).ToString();
+						//siParam.phone = "+86 " + user.MobilePhone;
+						//siParam.source = "app";
+
+						//BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+
+						//ApplicationState.SetAccessToken(data.body.accessToken);
+						//ApplicationState.SetRefreshToken(data.body.refresh_token);
+
+						//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
+					}
+					else
+					{
+						info = "没有找到和当前指静脉匹配的用户";
+						info2 = "请先绑定指静脉或者再次尝试";
+						LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
+					}
+
+
+#else
 					UserBll userBll = new UserBll();
-
 					List<CurrentUser> userList = userBll.GetAllUsers();
-
-
 					//用来接收找到的用户，如果有的话
 					CurrentUser currentUser = null;
-
 					//循环找到是否存在匹配的
 					foreach (var itemUser in userList)
 					{
 						if (itemUser.reg_feature == null)
 							continue;
 
-						if (itemUser.ai_feature == null || "".Equals(itemUser.ai_feature))
-							itemUser.ai_feature = itemUser.reg_feature;
+						//if (itemUser.ai_feature == null || "".Equals(itemUser.ai_feature))
+						itemUser.ai_feature = itemUser.reg_feature;
 
 						byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT * VeinUtils.FV_FEATURE_SIZE];
 						regfeature = Convert.FromBase64String(itemUser.reg_feature);
@@ -529,46 +560,10 @@ namespace CFLMedCab
 					}
 
 
-#else
 
 
-					BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
-					{
-						regfeature = Convert.ToBase64String(macthfeature)
-					});
 
-					if (data.code == 0)
-					{
-						user = data.body.user;
 
-						ApplicationState.SetAccessToken(data.body.accessToken);
-						ApplicationState.SetRefreshToken(data.body.refresh_token);
-
-						HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
-
-						//SignInParam siParam = new SignInParam();
-						//siParam.password = Convert.FromBase64String(user.Password).ToString();
-						//siParam.phone = "+86 " + user.MobilePhone;
-						//siParam.source = "app";
-
-						//BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
-
-						//ApplicationState.SetAccessToken(data.body.accessToken);
-						//ApplicationState.SetRefreshToken(data.body.refresh_token);
-
-						//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
-
-					}
-					else
-					{
-						info = "没有找到和当前指静脉匹配的用户";
-						info2 = "请先绑定指静脉或者再次尝试";
-						LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
-					}
-
-					
-
-				
 #endif
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
 					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
