@@ -7,7 +7,7 @@
     <Grid Height="600" Width="920">
         <Border  CornerRadius="3,3,3,3" Background="{StaticResource LoginBkBrush}">
             <Grid>
-                <Grid x:Name="loginView" Margin="50,40,50,20" >
+                <Grid x:Name="loginView" Margin="50,40,50,20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="*"/>
@@ -47,7 +47,7 @@
                         <Button Style="{StaticResource CommonNoButtonT2}" Content="退出"   Grid.Column="2" Width="245" Height="80"  Click="onHidePopClose"/>
                     </Grid>
                 </Grid>
-                <Grid x:Name="bindingView"  Visibility="Collapsed">
+                <Grid x:Name="bindingView" Visibility="Collapsed">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="4*"/>
                         <RowDefinition Height="*"/>
@@ -57,7 +57,7 @@
                         <Label x:Name="WarnInfo2"  Margin="0,50,0,0"  Style="{StaticResource lblTitle1_2}"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Row="1">
-                        <Button x:Name="rebindingBtn" Style="{StaticResource CommonNoButtonT2}" Content="重新绑定" Width="300" Height="80"   Margin="80,0,0,0" HorizontalAlignment="Center" Click="onRebindingVein" Visibility="Hidden"/>
+                        <Button x:Name="rebindingBtn" Style="{StaticResource CommonNoButtonT2}" Content="继续绑定" Width="300" Height="80"   Margin="80,0,0,0" HorizontalAlignment="Center" Click="onRebindingVein" Visibility="Hidden"/>
                         <Button x:Name="bindingExitBtn"  Style="{StaticResource CommonNoButtonT2}" Content="退出" Width="300" Height="80"  Margin="160,0,0,0"  HorizontalAlignment="Center" Click="onHidePopClose"/>
                     </StackPanel>
                 </Grid>

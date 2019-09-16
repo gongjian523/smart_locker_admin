@@ -487,6 +487,7 @@ namespace CFLMedCab.View.Common
 			{
 				this.Dispatcher.BeginInvoke(new Action(() => {
 					GuidInfo.Content = "指静脉绑定成功！";
+					rebindingBtn.Visibility = Visibility.Visible;
 					bindingExitBtn.Visibility = Visibility.Visible;
 				}));
 			}
