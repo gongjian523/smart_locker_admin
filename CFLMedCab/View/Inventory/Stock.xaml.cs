@@ -281,17 +281,28 @@ namespace CFLMedCab.View
 #endif
             ApplicationState.SetGoodsInfo(hs);
 
+			
+
             listViewData.Clear();
             listViewData = LocalGoodsChangeBll.GetCommodity();
 
-            listView1Data.Clear();
-            listViewData.ForEach(item =>
-            {
-                if(item.codes.Count() > 0)
-                {
-                    listView1Data.AddRange(item.codes);
-                }
-            });
+			listView1Data.Clear();
+
+			if (listViewData != null)
+			{
+				listViewData.ForEach(item =>
+				{
+					if (item.codes.Count() > 0)
+					{
+
+						listView1Data.AddRange(item.codes);
+					}
+				});
+			}
+			else
+			{
+				listViewData = new List<Commodity>();
+			}
 
             SetPopInventoryEvent(this, false);
         }

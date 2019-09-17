@@ -508,37 +508,48 @@ namespace CFLMedCab
 
 							var currentOnlineUser = bdUser.body.objects[0];
 
-							//签名参数	
-							SignInParam siParam = new SignInParam
+							if (string.IsNullOrWhiteSpace(currentOnlineUser.Password))
 							{
-								//base64解码
-								password = BllHelper.DecodeBase64Str(currentOnlineUser.Password),
-								//带有+86
-								phone = currentOnlineUser.MobilePhone,
-								source = "app"
-							};
-
-
-							//获取用户Token
-							var bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
-
-							HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isBdUserTokenSuccess);
-
-							if (isBdUserTokenSuccess)
-							{
-								//设置token
-								HttpHelper.GetInstance().SetHeaders(bdUserToken.body.access_token);
-								ApplicationState.SetAccessToken(bdUserToken.body.access_token);
-								ApplicationState.SetRefreshToken(bdUserToken.body.refresh_token);
-								//设置用户
-								user = bdUser.body.objects[0];
+								info = "当前指静脉匹配的用户密码错误";
+								info2 = "请联系管理人员";
+								LogUtils.Error("没有找到和当前指静脉匹配的用户：本地线上密码匹配失败");
 							}
 							else
 							{
-								info = "没有找到和当前指静脉匹配的用户";
-								info2 = "请先绑定指静脉或者再次尝试";
-								LogUtils.Error("没有找到和当前指静脉匹配的用户token：本地线上匹配失败");
+								//签名参数	
+								SignInParam siParam = new SignInParam
+								{
+									//base64解码
+									password = BllHelper.DecodeBase64Str(currentOnlineUser.Password),
+									//带有+86
+									phone = currentOnlineUser.MobilePhone,
+									source = "app"
+								};
+
+
+								//获取用户Token
+								var bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+
+								HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isBdUserTokenSuccess);
+
+								if (isBdUserTokenSuccess)
+								{
+									//设置token
+									HttpHelper.GetInstance().SetHeaders(bdUserToken.body.access_token);
+									ApplicationState.SetAccessToken(bdUserToken.body.access_token);
+									ApplicationState.SetRefreshToken(bdUserToken.body.refresh_token);
+									//设置用户
+									user = bdUser.body.objects[0];
+								}
+								else
+								{
+									info = "没有找到和当前指静脉匹配的用户";
+									info2 = "请先绑定指静脉或者再次尝试";
+									LogUtils.Error("没有找到和当前指静脉匹配的用户token：本地线上匹配失败");
+								}
 							}
+
+
 
 						}
 						else
@@ -1762,7 +1773,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 进入上架单详情页-关门状态
+        /// 进入调拨上架单详情页-关门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1919,7 +1930,7 @@ namespace CFLMedCab
 #if TESTENV
 #else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
             delegateGetMsg.userData = e;
 #endif
 
@@ -2062,7 +2073,7 @@ namespace CFLMedCab
 #if TESTENV
 #else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnClose);
             delegateGetMsg.userData = e;
 #endif
             App.Current.Dispatcher.Invoke((Action)(() =>
@@ -2195,7 +2206,7 @@ namespace CFLMedCab
 #if TESTENV
 #else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterStockSwitchClose);
             delegateGetMsg.userData = e;
 #endif
             App.Current.Dispatcher.Invoke((Action)(() =>

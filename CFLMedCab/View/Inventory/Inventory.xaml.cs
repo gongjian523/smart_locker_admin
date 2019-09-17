@@ -257,8 +257,12 @@ namespace CFLMedCab.View.Inventory
 
                     int id = inventoryBll.NewInventory(list, InventoryType.Manual);
 
-                    GetInventoryList();
-                    EnterInventoryDetailLocalEvent(this, id);
+					App.Current.Dispatcher.Invoke((Action)(() =>
+					{
+						GetInventoryList();
+
+						EnterInventoryDetailLocalEvent(this, id);
+					}));
                 }
             }
         }
