@@ -77,7 +77,6 @@
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
@@ -85,7 +84,6 @@
                             <Grid Grid.Column="3" x:Name="column4"/>
                             <Grid Grid.Column="4" x:Name="column5"/>
                             <Grid Grid.Column="5" x:Name="column6"/>
-                            <Grid Grid.Column="6" x:Name="column7"/>
                         </Grid>
                         <ListView Style="{StaticResource DefaultListView}" Grid.Row="1"  ItemsSource="{Binding}" Name="listView">
                             <ListView.View>
@@ -125,14 +123,7 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="库存状态" Width="{Binding ElementName=column6,Path=ActualWidth}" >
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=InventoryStatus}"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column7,Path=ActualWidth}" >
+                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column6,Path=ActualWidth}" >
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=AbnormalDisplay}"/>

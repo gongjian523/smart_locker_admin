@@ -190,7 +190,7 @@ namespace CFLMedCab.Http.Bll
             {
                 var consumingOrder = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
                 {
-                    Status = ConsumingOrderStatus.领用中.ToString(),
+                    //Status = ConsumingOrderStatus.领用中.ToString(),
                     StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),
                     Type = ConsumingOrderType.一般领用.ToString()
                 });
@@ -243,25 +243,6 @@ namespace CFLMedCab.Http.Bll
             if(!isSuccess2)
             {
                 return result;
-            }
-
-            //添加变更记录成功时，且有出库记录（即创建过领用单）
-            if (count > 0)
-            {
-                if(baseDataCommodityCode.body.objects.Where(item => (item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())&& item.operate_type == 0).Count() > 0)
-                {
-                    order.Status = ConsumingOrderStatus.异常.ToString();
-                }
-                else
-                {
-                    order.Status = ConsumingOrderStatus.已完成.ToString();
-                }
-                var temp = ConsumingBll.GetInstance().UpdateConsumingOrderStatus(order);
-
-                if (temp.code != 0)
-                {
-                    LogUtils.Error("ConsummingOrder " + temp.message);
-                }
             }
 
             return result;

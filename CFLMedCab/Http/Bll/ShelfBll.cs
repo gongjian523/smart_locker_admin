@@ -112,7 +112,7 @@ namespace CFLMedCab.Http.Bll
 			{
                 List<ShelfTask> taskList = new List<ShelfTask>();
 
-				var shelfTasks = baseDataShelfTask.body.objects.Where(item=>(item.Status  != ShelfTaskStatus.待上架.ToString() && item.Status != ShelfTaskStatus.已撤销.ToString())).ToList();
+				var shelfTasks = baseDataShelfTask.body.objects.Where(item=>(item.Status  != ShelfTaskStatus.已完成.ToString() && item.Status != ShelfTaskStatus.已撤销.ToString())).ToList();
                 //var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
                 //shelfTasks.ForEach(it =>
                 //{

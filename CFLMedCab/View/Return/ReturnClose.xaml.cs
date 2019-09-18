@@ -100,6 +100,11 @@ namespace CFLMedCab.View.Return
 
                 LoadingDataEvent(this, true);
                 bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeStock(commodityCodeList);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+                if (isSuccess)
+                {
+                    bdCommodityCode = CommodityCodeBll.GetInstance().GetQualityStatus(bdCommodityCode, out isSuccess);
+                }
                 LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);

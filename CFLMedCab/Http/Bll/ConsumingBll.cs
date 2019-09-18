@@ -313,7 +313,7 @@ namespace CFLMedCab.Http.Bll
                 //Status = (type == ConsumingOrderType.故障领用 ? null : ConsumingOrderStatus.领用中.ToString()), //故障领用不填领用中
                 StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
                 Type = type.ToString(),//领用类型
-                //SourceBill = (type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null) // 需要填写医嘱处方SourceBill
+                SourceBill = (type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null) // 需要填写医嘱处方SourceBill
             };
 
             //创建领用单
@@ -379,7 +379,7 @@ namespace CFLMedCab.Http.Bll
                 return changes;
             }
 
-            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString() || item.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString()).Count() >0)
+            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString()).Count() >0)
             {
                 order.body[0].Status = ConsumingOrderStatus.异常.ToString();
             }
@@ -485,7 +485,7 @@ namespace CFLMedCab.Http.Bll
                         {
                             if (detailCommodityIds.Contains(it.CommodityId))
                             {
-                                if (it.QualityStatus == QualityStatusType.过期.ToString() || it.InventoryStatus == CommodityInventoryChangeStatus.待回收.ToString())
+                                if (it.QualityStatus == QualityStatusType.过期.ToString())
                                 {
                                     it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                                     IsException = true;

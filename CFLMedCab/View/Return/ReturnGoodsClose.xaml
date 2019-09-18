@@ -15,7 +15,7 @@
         <cvt:ExceptionFlagStrConverter x:Key="ExceptionFlagStrConverter"/>
     </Control.Resources>
     <Grid>
-        <Border Style="{StaticResource CommonBlueBorder}" x:Name="normalView" Visibility="Collapsed">
+        <Border Style="{StaticResource CommonBlueBorder}" x:Name="normalView" >
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"></RowDefinition>
@@ -163,7 +163,7 @@
                 </Border>
             </Grid>
         </Border>
-        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView" Visibility="Visible">
+        <Border Style="{StaticResource CommonBlueBorder}" x:Name="abnormalView" Visibility="Collapsed">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>

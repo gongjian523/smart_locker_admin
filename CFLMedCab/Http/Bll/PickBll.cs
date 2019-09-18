@@ -77,15 +77,9 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-						logical_relation = "1 AND 2",
+						logical_relation = "1",
 						expressions =
 						{
-							new QueryParam.Expressions
-							{
-								field = "BillStatus",
-								@operator = "==",
-								operands = {$"'{ HttpUtility.UrlEncode(PickTaskStatus.待拣货.ToString()) }'" }
-							},
 							new QueryParam.Expressions
 							{
 								field = "Operator",
@@ -111,8 +105,9 @@ namespace CFLMedCab.Http.Bll
                 {
                     List<PickTask> taskList = new List<PickTask>();
 
-                    var pickTasks = baseDataPickTask.body.objects;
+                    var pickTasks = baseDataPickTask.body.objects.Where(item => (item.BillStatus != PickTaskStatus.已完成.ToString() && item.BillStatus != PickTaskStatus.已撤销.ToString())).ToList(); ;
                     var pickTaskCommodityDetails = baseDataPickTaskCommodityDetail.body.objects.ToList();
+
                     pickTasks.ForEach(it =>
                     {
                         //ids.ForEach(id => {

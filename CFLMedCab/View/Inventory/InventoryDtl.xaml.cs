@@ -216,9 +216,9 @@ namespace CFLMedCab.View.Inventory
             //校验是否含有数据
             HttpHelper.GetInstance().ResultCheck(bdInventoryDetail, out bool isSuccess1);
 
-            if (isSuccess1)
+            if (!isSuccess1)
             {
-                MessageBox.Show("更新盘点任务单失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("创建盘点任务明细失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
@@ -239,11 +239,11 @@ namespace CFLMedCab.View.Inventory
             //校验是否含有数据
 			if (!isSuccess)
 			{
-				MessageBox.Show("提交盘点任务单错误!", "温馨提示", MessageBoxButton.OK);
+				MessageBox.Show("更新盘点任务单错误!", "温馨提示", MessageBoxButton.OK);
 			}
             else
             {
-                MessageBox.Show("提交盘点任务单成功!", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("更新盘点任务单成功!", "温馨提示", MessageBoxButton.OK);
                 BackInventoryEvent(this, null);
             }
             return;
