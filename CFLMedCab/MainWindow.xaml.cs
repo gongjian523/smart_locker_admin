@@ -62,6 +62,7 @@ namespace CFLMedCab
         private InputSimulator inputSimulator = new InputSimulator();
 
         private System.Timers.Timer processRingTimer;
+        private System.Timers.Timer invingTimer;
 
 #if TESTENV
         private System.Timers.Timer testTimer;
@@ -151,6 +152,11 @@ namespace CFLMedCab
             processRingTimer.AutoReset = false;
             processRingTimer.Enabled = false;
             processRingTimer.Elapsed += new ElapsedEventHandler(onProcessRingTimerExpired);
+
+            invingTimer = new System.Timers.Timer(1000 * 60 * 1);
+            invingTimer.AutoReset = false;
+            invingTimer.Enabled = false;
+            invingTimer.Elapsed += new ElapsedEventHandler(onInvTimerExpired);
 
             Task.Factory.StartNew(startAutoInventory);
             
@@ -973,7 +979,7 @@ namespace CFLMedCab
             }
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess,listOpenLocCom);
 
@@ -1142,7 +1148,7 @@ namespace CFLMedCab
 
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -1332,7 +1338,7 @@ namespace CFLMedCab
             }
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> ht = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -1466,7 +1472,7 @@ namespace CFLMedCab
             }
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -1632,7 +1638,7 @@ namespace CFLMedCab
             }
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -1801,7 +1807,7 @@ namespace CFLMedCab
             }
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -1973,7 +1979,7 @@ namespace CFLMedCab
             }
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -2121,7 +2127,7 @@ namespace CFLMedCab
 
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -2254,7 +2260,7 @@ namespace CFLMedCab
             }
 
             //弹出盘点中弹窗
-            EnterInvotoryOngoing();
+            onSetPopInventory(this, true);
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
@@ -2363,8 +2369,9 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onSetPopInventory(object sender, bool e)
         {
-            if(e)
+            if (e)
             {
+                invingTimer.Start();
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
                     InventoryOngoing inventoryOngoing = new InventoryOngoing();
@@ -2373,8 +2380,15 @@ namespace CFLMedCab
             }
             else
             {
+                invingTimer.Stop();
                 ClosePop();
             }
+        }
+
+        private void onInvTimerExpired(object sender, EventArgs e)
+        {
+            onSetPopInventory(this, false);
+            return;
         }
 
         /// <summary>
@@ -2609,20 +2623,6 @@ namespace CFLMedCab
         private void onHidePopOpen(object sender, RoutedEventArgs e)
         {
             ClosePop();
-        }
-
-        /// <summary>
-        /// 弹出盘存中提示框操作
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void EnterInvotoryOngoing()
-        {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                InventoryOngoing inventoryOngoing = new InventoryOngoing();
-                onShowPopFrame(inventoryOngoing);
-            }));
         }
 
         /// <summary>
