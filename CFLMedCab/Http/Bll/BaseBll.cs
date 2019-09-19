@@ -375,10 +375,10 @@ namespace CFLMedCab.Http.Bll
 		}
 
 
-
 		public string GetDateTimeNow()
         {
-            return DateTime.Now.ToString("s") + "Z";
+            //return DateTime.Now.ToString("s") + "Z";
+            return DateTime.UtcNow.ToString("s") + "Z";
         }
 	}
 
