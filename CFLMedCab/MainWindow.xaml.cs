@@ -178,11 +178,11 @@ namespace CFLMedCab
 #if NOTLOCALSDK
 
 			//执行指静脉相关的逻辑处理
-			veinHandle()
+			veinHandleNew(); 
 			
 #else
 			//执行指静脉相关的逻辑处理
-			veinHandleNew();
+			veinHandle();
 
 #endif
 
@@ -430,43 +430,9 @@ namespace CFLMedCab
 
 #if NOTLOCALSDK
 
-					BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
-					{
-						regfeature = Convert.ToBase64String(macthfeature)
-					});
-
-					if (data.code == 0)
-					{
-						user = data.body.user;
-
-						ApplicationState.SetAccessToken(data.body.accessToken);
-						ApplicationState.SetRefreshToken(data.body.refresh_token);
-
-						HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
-
-						//SignInParam siParam = new SignInParam();
-						//siParam.password = Convert.FromBase64String(user.Password).ToString();
-						//siParam.phone = "+86 " + user.MobilePhone;
-						//siParam.source = "app";
-
-						//BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
-
-						//ApplicationState.SetAccessToken(data.body.accessToken);
-						//ApplicationState.SetRefreshToken(data.body.refresh_token);
-
-						//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
-
-					}
-					else
-					{
-						info = "没有找到和当前指静脉匹配的用户";
-						info2 = "请先绑定指静脉或者再次尝试";
-						LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
-					}
 
 
-#else
-					UserBll userBll = new UserBll();
+						UserBll userBll = new UserBll();
 					List<CurrentUser> userList = userBll.GetAllUsers();
 					//用来接收找到的用户，如果有的话
 					CurrentUser currentUser = null;
@@ -578,6 +544,41 @@ namespace CFLMedCab
 
 
 
+#else
+
+					BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
+					{
+						regfeature = Convert.ToBase64String(macthfeature)
+					});
+
+					if (data.code == 0)
+					{
+						user = data.body.user;
+
+						ApplicationState.SetAccessToken(data.body.accessToken);
+						ApplicationState.SetRefreshToken(data.body.refresh_token);
+
+						HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
+						//SignInParam siParam = new SignInParam();
+						//siParam.password = Convert.FromBase64String(user.Password).ToString();
+						//siParam.phone = "+86 " + user.MobilePhone;
+						//siParam.source = "app";
+
+						//BaseSinglePostData<UserToken>  bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+
+						//ApplicationState.SetAccessToken(data.body.accessToken);
+						//ApplicationState.SetRefreshToken(data.body.refresh_token);
+
+						//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
+
+					}
+					else
+					{
+						info = "没有找到和当前指静脉匹配的用户";
+						info2 = "请先绑定指静脉或者再次尝试";
+						LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
+					}
 
 
 
