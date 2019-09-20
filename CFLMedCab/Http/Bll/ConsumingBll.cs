@@ -305,31 +305,51 @@ namespace CFLMedCab.Http.Bll
                 if (commodityCode.operate_type == 0) { lossList.Add(commodityCode); } else { normalList.Add(commodityCode); };
             });
 
-            ConsumingOrder consumingOrder = new ConsumingOrder()
+            //当消耗数量大于0说明向智能柜中取出商品，需要创建领用单和商品变更记录
+            if (lossList.Count > 0)
             {
-                //FinishDate = GetDateTimeNow(),//完成时间
-                ////当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
-                //Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(), //
-                //Status = (type == ConsumingOrderType.故障领用 ? null : ConsumingOrderStatus.领用中.ToString()), //故障领用不填领用中
-                StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
-                Type = type.ToString(),//领用类型
-                SourceBill = (type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null) // 需要填写医嘱处方SourceBill
-            };
+                ConsumingOrder consumingOrder = new ConsumingOrder()
+                {
+                    //FinishDate = GetDateTimeNow(),//完成时间
+                    ////当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
+                    //Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(), //
+                    //Status = (type == ConsumingOrderType.故障领用 ? null : ConsumingOrderStatus.领用中.ToString()), //故障领用不填领用中
+                    StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
+                    Type = type.ToString(),//领用类型
+                    SourceBill = (type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null) // 需要填写医嘱处方SourceBill
+                };
 
-            //创建领用单
-            var order = CreateConsumingOrder(consumingOrder);
-			//校验数据是否正常
-			HttpHelper.GetInstance().ResultCheck(order, out bool isSuccess);
+                //创建领用单
+                var order = CreateConsumingOrder(consumingOrder);
+                //校验数据是否正常
+                HttpHelper.GetInstance().ResultCheck(order, out bool isSuccess);
 
-			if (!isSuccess)
-			{
-                LogUtils.Warn("CreateConsumingOrder 1:" + ResultCode.Result_Exception.ToString());
-                return new BasePostData<CommodityInventoryChange>()
-				{
-					code = (int)ResultCode.Result_Exception,
-					message = ResultCode.Result_Exception.ToString()
-				};
-			}
+                if (!isSuccess)
+                {
+                    LogUtils.Warn("CreateConsumingOrder 1:" + ResultCode.Result_Exception.ToString());
+                    return new BasePostData<CommodityInventoryChange>()
+                    {
+                        code = (int)ResultCode.Result_Exception,
+                        message = ResultCode.Result_Exception.ToString()
+                    };
+                }
+               
+                lossList.ForEach(loss =>
+                {
+                    changeList.Add(new CommodityInventoryChange()
+                    {
+                        CommodityCodeId = loss.id,
+                        SourceBill = new SourceBill()
+                        {
+                            object_name = "ConsumingOrder",
+                            object_id = order.body[0].id
+                        },
+                        ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString(),
+                        operate_type = loss.operate_type
+                    });
+                });
+            }
+
             //当正常数量大于0说明向智能柜中存放商品，需要创建商品变更记录
             if (normalList.Count > 0)
             {
@@ -350,26 +370,7 @@ namespace CFLMedCab.Http.Bll
                     });
                 });
             }
-
-            //当消耗数量大于0说明向智能柜中取出商品，需要创建商品变更记录
-            if (lossList.Count > 0)
-            {
-                lossList.ForEach(loss =>
-                {
-                    changeList.Add(new CommodityInventoryChange()
-                    {
-                        CommodityCodeId = loss.id,
-                        SourceBill = new SourceBill()
-                        {
-                            object_name = "ConsumingOrder",
-                            object_id = order.body[0].id
-                        },
-                        ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString(),
-                        operate_type = loss.operate_type
-                    });
-                });
-            }
-
+           
             var changes = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeSeparately(changeList);
 			//校验数据是否正常
 			HttpHelper.GetInstance().ResultCheck(changes, out bool isSuccess2);
@@ -377,23 +378,6 @@ namespace CFLMedCab.Http.Bll
             {
                 LogUtils.Warn("CreateConsumingOrder 2:" + ResultCode.Result_Exception.ToString());
                 return changes;
-            }
-
-            if (normalList.Count > 0 || lossList.Where(item => item.QualityStatus == QualityStatusType.过期.ToString()).Count() >0)
-            {
-                order.body[0].Status = ConsumingOrderStatus.异常.ToString();
-            }
-            else
-            {
-                order.body[0].Status = ConsumingOrderStatus.已完成.ToString();
-            }
-            //更新主表状态
-            var orderResult = UpdateConsumingOrderStatus(order.body[0]);
-            //校验数据是否正常，并记录日志
-            HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess4);
-            if (!isSuccess4)
-            {
-                LogUtils.Warn("CreateConsumingOrder 4:" + ResultCode.Result_Exception.ToString());
             }
 
             return changes;
@@ -412,7 +396,6 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BasePostData<CommodityInventoryChange> SubmitConsumingChangeWithOrder(BaseData<CommodityCode> baseDataCommodityCode, ConsumingOrder order)
 		{
-
 			//领用类来源单据
 			var sourceBill = new SourceBill()
 			{
@@ -425,17 +408,21 @@ namespace CFLMedCab.Http.Bll
 			HttpHelper.GetInstance().ResultCheck(tempChange, out bool isSuccess);
             if (isSuccess)
             {
-                //更新领用单状态信息
-                var orderResult = UpdateConsumingOrderStatus(order);
-                //校验数据是否正常
-                HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess2);
-                if (!isSuccess2)
+                //只有存在出库的商品才会更新领用单
+                if(baseDataCommodityCode.body.objects.Where(item=>item.operate_type == 0).Count() > 0)
                 {
-                    return new BasePostData<CommodityInventoryChange>()
+                    //更新领用单状态信息
+                    var orderResult = UpdateConsumingOrderStatus(order);
+                    //校验数据是否正常
+                    HttpHelper.GetInstance().ResultCheck(orderResult, out bool isSuccess2);
+                    if (!isSuccess2)
                     {
-                        code = orderResult.code,
-                        message = orderResult.message
-                    };
+                        return new BasePostData<CommodityInventoryChange>()
+                        {
+                            code = orderResult.code,
+                            message = orderResult.message
+                        };
+                    }
                 }
             }
            
