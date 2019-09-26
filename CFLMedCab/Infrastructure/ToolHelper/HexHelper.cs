@@ -83,6 +83,24 @@ namespace CFLMedCab.Infrastructure.ToolHelper
 		}
 
 		/// <summary>
+		/// 字节数组转16进制字符串
+		/// </summary>
+		/// <param name="bytes"></param>
+		/// <returns></returns>
+		public static string ByteToHexStr(string spe, byte[] bytes)
+		{
+			string returnStr = "";
+			if (bytes != null)
+			{
+				for (int i = 0; i < bytes.Length; i++)
+				{
+					returnStr += bytes[i].ToString("X2")+spe;
+				}
+			}
+			return returnStr.Remove(returnStr.Length - 1, 1);
+		}
+
+		/// <summary>
 		/// 从汉字转换到16进制
 		/// </summary>
 		/// <param name="s"></param>

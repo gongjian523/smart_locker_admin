@@ -362,5 +362,18 @@ namespace UnitTestProject
 			LogUtils.Debug(password);
 		}
 
+		[TestMethod]
+		public void TestByte()
+		{
+
+			ushort us = ushort.MaxValue;
+
+			var usBytes = BitConverter.GetBytes(us);
+
+			ushort aus =  BitConverter.ToUInt16(usBytes, 0);
+
+
+		}
+
 	}
 }

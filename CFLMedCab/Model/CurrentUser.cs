@@ -31,6 +31,16 @@ namespace CFLMedCab.Model
 			username = user.MobilePhone;
 		}
 
+		public CurrentUser(User user, int fid)
+		{
+			username = user.MobilePhone;
+			this.fid = fid;
+		}
+
+		public CurrentUser(User user)
+		{
+			username = user.MobilePhone;
+		}
 
 		/// <summary>
 		/// 用户ID
@@ -80,5 +90,10 @@ namespace CFLMedCab.Model
 		[SugarColumn(IsNullable = true, Length = 2048)]
         public string ai_feature { get; set; }
 
-    }
+		/// <summary>
+		/// 指静脉数值图像(某根手指的动态特征)
+		/// </summary>
+		public int fid { get; set; }
+
+	}
 }

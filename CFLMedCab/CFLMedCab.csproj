@@ -7,7 +7,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{AC511DED-7D81-471D-BF0B-72172FD756BA}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CFLMedCab</RootNamespace>
     <AssemblyName>CFLMedCab</AssemblyName>
@@ -74,6 +74,12 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>cfyl.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=7.0.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -293,6 +299,10 @@
     <Compile Include="DAL\GoodsChageOrderDal.cs" />
     <Compile Include="DAL\GoodsDal.cs" />
     <Compile Include="DAL\UserDal.cs" />
+    <Compile Include="Infrastructure\DeviceHelper\VeinHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Infrastructure\DeviceHelper\VeinSerialHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\SpeakerHelper.cs" />
     <Compile Include="Infrastructure\DeviceHelper\VeinUtils.cs" />
     <Compile Include="Http\Constant\HttpConstant.cs" />

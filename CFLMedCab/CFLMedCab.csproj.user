@@ -20,5 +20,6 @@
     <StartArguments>
     </StartArguments>
     <StartAction>Project</StartAction>
+    <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
   </PropertyGroup>
 </Project>

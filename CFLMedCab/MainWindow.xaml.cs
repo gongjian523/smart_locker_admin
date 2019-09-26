@@ -182,7 +182,7 @@ namespace CFLMedCab
 			
 #else
 			//执行指静脉相关的逻辑处理
-			veinHandle();
+			veinHandleLocal();
 
 #endif
 
@@ -247,35 +247,9 @@ namespace CFLMedCab
 		/// <summary>
 		/// 执行指静脉相关的逻辑处理(新，指静脉本地处理流程)
 		/// </summary>
-		private void veinHandleNew()
+		private void veinHandleLocal()
 		{
-			vein = VeinUtils.GetInstance();
-			vein.FingerDetectedEvent += new VeinUtils.FingerDetectedHandler(onFingerDetected);
-
-			int vienSt = vein.LoadingDevice();
-
-			if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
-			{
-				onFingerDetected(this, -1);
-			}
-			else
-			{
-				if (vienSt == VeinUtils.FV_ERRCODE_SUCCESS)
-				{
-					vienSt = vein.OpenDevice();
-
-				
-					if (vienSt != VeinUtils.FV_ERRCODE_SUCCESS && vienSt != VeinUtils.FV_ERRCODE_EXISTING)
-					{
-						onFingerDetected(this, -1);
-					}
-					else
-					{
-						ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
-					}
-				}
-			}
-
+			ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
 		}
 
 		//登录提示框消失后
@@ -296,7 +270,7 @@ namespace CFLMedCab
                 //Task.Factory.StartNew(vein.DetectFinger);
                 //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
                 LogUtils.Debug("detectFinger in onLoginInfoHidenEvent...");
-                ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
+                ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
 #endif
 #endif
             }
@@ -326,6 +300,37 @@ namespace CFLMedCab
             bUsing = false;
         }
 
+	
+		/// <summary>
+		/// 本地应用指静脉逻辑
+		/// </summary>
+		/// <param name="obj"></param>
+		void detectFingerLocal(object obj)
+		{
+			if (bUsing)
+			{
+				LogUtils.Debug("detectFinger bUsing true return");
+				return;
+			}
+			else
+			{
+				LogUtils.Debug("detectFinger bUsing false turn true");
+				bUsing = true;
+			}
+
+			mutex.WaitOne();
+#if TESTENV
+#else
+			//检测手指
+			if (VeinSerialHelper.CMD_CHK_FINGER_TIMEOUT_F())
+			{
+				onFingerDetectedLocal(this, 0);
+			}
+#endif
+			mutex.ReleaseMutex();
+			LogUtils.Debug("detectFinger bUsing true turn false");
+			bUsing = false;
+		}
 
 #if VEINSERIAL
         private void onReceivedDataVein(object sender, SerialDataReceivedEventArgs e)
@@ -379,107 +384,54 @@ namespace CFLMedCab
 
         }
 #else
-        /// <summary>
-        /// 指静脉检测到手指
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onFingerDetected(object sender, int e)
-        {
+
+		/// <summary>
+		/// 指静脉检测到手指（新，本地检测功能）
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void onFingerDetectedLocal(object sender, int e)
+		{
 #if TESTENV
             return;
 #else
-            mutex.WaitOne();
-            bUsing = true;
-            LogUtils.Debug("detectFinger bUsing turn true 1");
+			mutex.WaitOne();
+			bUsing = true;
+			LogUtils.Debug("detectFinger bUsing turn true 1");
 
-            LoginStatus sta = new LoginStatus();
+			LoginStatus sta = new LoginStatus();
+			User user = null;
 
-            User user = null;
+			onLoadingData(this, true);
 
-            onLoadingData(this,true);
-            string info = "等待检测指静脉的时候发生错误";
-            string info2 = "请再次进行验证";
-            if(e == -2)
-            {
-                info = "设置指静脉设备本地签名时发生错误";
-                info2 = "请重启设备，如果仍然失败，请联系管理员！";
-            }
-            else if(e == -3)
-            {
-                info = "设置指静脉设备在使用过程中发生故障";
-                info2 = "请重启设备，如果仍然失败，请联系管理员！";
-            }
+			string info = "等待检测指静脉的时候发生错误";
+			string info2 = "请再次进行验证";
 
-            if (e == 0)
-            {
-				DateTime LoginStartTime = DateTime.Now;
-				
-				byte[] macthfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
+			if (e == -3)
+			{
+				info = "设置指静脉设备在使用过程中发生故障";
+				info2 = "请重启设备，如果仍然失败，请联系管理员！";
+			}
 
-				bool isGrabFeature = (vein.GrabFeature(macthfeature, out info) == VeinUtils.FV_ERRCODE_SUCCESS);
+			if (e == 0)
+			{
+				//1:N进行比较
+				if (VeinSerialHelper.CMD_ONE_VS_N_F(out ushort fid, out string errStr))
+				{
 
-				DateTime grabFeatureEndTime = DateTime.Now;
+					//根据本地手机号拿取线上用户名和用户密码进行登录操作
+					UserBll userBll = new UserBll();
+					var localUsername = userBll.GetUserNameByFid(fid);
 
-				LogUtils.Debug($"调用检测指纹Sdk耗时{grabFeatureEndTime.Subtract(LoginStartTime).TotalMilliseconds}");
-
-				if (isGrabFeature)
-                {
-
-
-
-#if NOTLOCALSDK
-
-
-
-						UserBll userBll = new UserBll();
-					List<CurrentUser> userList = userBll.GetAllUsers();
-					//用来接收找到的用户，如果有的话
-					CurrentUser currentUser = null;
-					//循环找到是否存在匹配的
-					foreach (var itemUser in userList)
+					if (!string.IsNullOrWhiteSpace(localUsername))
 					{
-						if (itemUser.reg_feature == null)
-							continue;
-
-						//if (itemUser.ai_feature == null || "".Equals(itemUser.ai_feature))
-						itemUser.ai_feature = itemUser.reg_feature;
-
-						byte[] regfeature = new byte[VeinUtils.FEATURE_COLLECT_CNT * VeinUtils.FV_FEATURE_SIZE];
-						regfeature = Convert.FromBase64String(itemUser.reg_feature);
-
-						byte[] aifeature = new byte[VeinUtils.FV_DYNAMIC_FEATURE_CNT * VeinUtils.FV_FEATURE_SIZE];
-						aifeature = Convert.FromBase64String(itemUser.ai_feature);
-
-						uint diff = 0;
-						uint ailen = VeinUtils.FV_DYNAMIC_FEATURE_CNT * VeinUtils.FV_FEATURE_SIZE;  //输入为动态特征缓冲区大小，输出为动态模板长度
-
-						if (vein.Match(macthfeature, regfeature, VeinUtils.FEATURE_COLLECT_CNT, aifeature, ref diff, (int)VeinUtils.Match_Flg.M_1_1, ref ailen)
-							== VeinUtils.FV_ERRCODE_SUCCESS)
-						{
-							currentUser = itemUser;
-							if (ailen > 0)
-							{
-								//获取ai结果，用于后面的更加智能的匹配结果处理，并入库
-								itemUser.ai_feature = Convert.ToBase64String(aifeature);
-								userBll.UpdateCurrentUsers(itemUser);
-							}
-							break;
-						}
-					}
-
-					//指纹匹配上本地用户
-					if (currentUser != null)
-					{
-						BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(currentUser.username);
+						BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(userBll.GetUserNameByFid(fid));
 						HttpHelper.GetInstance().ResultCheck(bdUser, out bool isBdUserSuccess);
 
 						//查询到对应线上用户
 						if (isBdUserSuccess)
 						{
-
 							var currentOnlineUser = bdUser.body.objects[0];
-
 							if (string.IsNullOrWhiteSpace(currentOnlineUser.Password))
 							{
 								info = "当前指静脉匹配的用户密码错误";
@@ -520,9 +472,6 @@ namespace CFLMedCab
 									LogUtils.Error("没有找到和当前指静脉匹配的用户token：本地线上匹配失败");
 								}
 							}
-
-
-
 						}
 						else
 						{
@@ -532,20 +481,103 @@ namespace CFLMedCab
 							LogUtils.Error("没有找到和当前指静脉匹配的用户：本地线上匹配失败");
 
 						}
-
 					}
 					else
 					{
-
-						info = "没有找到和当前指静脉匹配的用户";
+						info = "没有找到本地注册指静脉匹配的用户";
 						info2 = "请先绑定指静脉或者再次尝试";
-						LogUtils.Error("没有找到和当前指静脉匹配的用户：本地匹配失败");
+						LogUtils.Error("没有找到本地注册指静脉匹配的用户：本地线上匹配失败");
 					}
 
+				}
+				else
+				{
+					info = errStr;
+					info2 = "请再次尝试或者联系管理员";
+					LogUtils.Error("没有找到和当前指静脉匹配的用户：本地匹配失败");
+				}
+			}
 
+			onLoadingData(this, false);
 
+			if (e < 0 || user == null)
+			{
+				App.Current.Dispatcher.Invoke((Action)(() =>
+				{
+					LoginInfo loginInfo = new LoginInfo(new LoginStatus
+					{
+						LoginState = 0,
+						LoginString = info,
+						LoginString2 = info2
+					});
+
+					loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
+
+					onShowPopFrame(loginInfo);
+				}));
+			}
+			else
+			{
+				SimulateKeybordInput0();
+
+				// 进入首页
+				App.Current.Dispatcher.Invoke((Action)(() =>
+				{
+					onEnterHomePage(user);
+				}));
+			}
+			bUsing = false;
+			LogUtils.Debug("detectFinger bUsing turn false 1");
+			mutex.ReleaseMutex();
+#endif
+		}
+
+		/// <summary>
+		/// 指静脉检测到手指
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		private void onFingerDetected(object sender, int e)
+        {
+#if TESTENV
+            return;
 #else
+            mutex.WaitOne();
+            bUsing = true;
+            LogUtils.Debug("detectFinger bUsing turn true 1");
 
+            LoginStatus sta = new LoginStatus();
+
+            User user = null;
+
+            onLoadingData(this,true);
+            string info = "等待检测指静脉的时候发生错误";
+            string info2 = "请再次进行验证";
+            if(e == -2)
+            {
+                info = "设置指静脉设备本地签名时发生错误";
+                info2 = "请重启设备，如果仍然失败，请联系管理员！";
+            }
+            else if(e == -3)
+            {
+                info = "设置指静脉设备在使用过程中发生故障";
+                info2 = "请重启设备，如果仍然失败，请联系管理员！";
+            }
+
+            if (e == 0)
+            {
+				DateTime LoginStartTime = DateTime.Now;
+				
+				byte[] macthfeature = new byte[VeinUtils.FV_FEATURE_SIZE];
+
+				bool isGrabFeature = (vein.GrabFeature(macthfeature, out info) == VeinUtils.FV_ERRCODE_SUCCESS);
+
+				DateTime grabFeatureEndTime = DateTime.Now;
+
+				LogUtils.Debug($"调用检测指纹Sdk耗时{grabFeatureEndTime.Subtract(LoginStartTime).TotalMilliseconds}");
+
+				if (isGrabFeature)
+                {
 					BaseSinglePostData<VeinMatch> data = UserLoginBll.GetInstance().VeinmatchLogin(new VeinmatchPostParam
 					{
 						regfeature = Convert.ToBase64String(macthfeature)
@@ -621,7 +653,7 @@ namespace CFLMedCab
             mutex.ReleaseMutex();
 #endif
         }
-#endif
+
 
         /// <summary>
         /// 指静脉签名注册
@@ -817,7 +849,7 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.ChekVein();
 #else
-            ThreadPool.QueueUserWorkItem(new WaitCallback(detectFinger));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
 #endif
 #endif
         }
@@ -2532,11 +2564,13 @@ namespace CFLMedCab
 #if VEINSERIAL
             vein.Close();
 #else
-            vein.SetDetectFingerState(true);
+			//关闭正在检查的手指的线程
+			//vein.SetDetectFingerState(true);
+			VeinSerialHelper.isCloseCheckFinger = true;
 #endif
 #endif
 
-            BindingVein bindingVein = new BindingVein(mutex);
+			BindingVein bindingVein = new BindingVein(mutex);
             bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
             bindingVein.UserPwDLoginEvent += new BindingVein.UserPwDLoginHandler(onUserPwDLogin);
             bindingVein.LoadingDataEvent += new BindingVein.LoadingDataHandler(onLoadingData);

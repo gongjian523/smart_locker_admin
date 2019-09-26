@@ -133,7 +133,7 @@ namespace CFLMedCab.View.Common
 			 
 
 			Task task =  Task.Factory.StartNew(a => {
-                Binding();
+				BindingForLocal();
             }, true);
         }
 
@@ -145,7 +145,7 @@ namespace CFLMedCab.View.Common
         public void onRebindingVein(object sender, EventArgs e)
         {
             Task.Factory.StartNew(a => {
-                Binding();
+				BindingForLocal();
                 }, false);
         }
 
@@ -507,6 +507,267 @@ namespace CFLMedCab.View.Common
 #endif
 
 
+		}
+
+
+		/// <summary>
+		/// 绑定流程
+		/// </summary>
+		/// <param name="bInitial"></param>
+		private void BindingForLocal(bool bInitial = true)
+		{
+		
+			mt.WaitOne();
+
+			Dispatcher.BeginInvoke(new Action(() =>
+			{
+				WarnInfo2.Content = "";
+				rebindingBtn.Visibility = Visibility.Hidden;
+				bindingExitBtn.Visibility = Visibility.Hidden;
+			}));
+
+			if (bInitial)
+			{
+
+				var userBll = new UserBll();
+				//TODO 注册流程（如果上述步骤匹配成功，则新增的fid为检测出的fid，否则取数据库id最大值作为fid），目前整体流程仿造原流程，后续调试阶段优化
+				int errCnt = 0;
+				//新增fid应为最新插入id
+				int fid = userBll.getUserMaxId() + 1 ;
+				//判断是否大于最大fid存储量
+				if (fid >= ushort.MaxValue) {
+					Dispatcher.BeginInvoke(new Action(() =>
+					{
+						WarnInfo2.Content = "采集指静脉库已满，请联系管理人员!";
+						rebindingBtn.Visibility = Visibility.Visible;
+						bindingExitBtn.Visibility = Visibility.Visible;
+					}));
+					
+					mt.ReleaseMutex();
+					return;
+				}
+
+				//结果的fid初始化
+				ushort retFid = ushort.MaxValue;
+
+				bool isRegister = false;
+
+				for (int i = 0; i < VeinSerialHelper.FEATURE_COLLECT_CNT; i++)
+				{
+					Dispatcher.BeginInvoke(new Action(() =>
+					{
+						if (errCnt == 0)
+						{
+							GuidInfo.Content = "请将手指放在指静脉模块上，采集第" + (i + 1) + "个指静脉特征";
+						}
+						else
+						{
+							GuidInfo.Content = "请将手指放在指静脉模块上，重新采集第" + (i + 1) + "个指静脉特征";
+						}
+						WarnInfo2.Content = "";
+					}));
+
+
+					//TODO: 这里的注册用的fid是获取数据库最新用户id，当整个流程结束后，这retFid才真正入库
+
+					if (!FingerRegister((ushort)fid, out retFid,  out isRegister))
+					{
+						//失败一次,取消
+						FingerRegisterSingleEnd();
+						mt.ReleaseMutex();
+						return;
+					}
+				}
+
+				//未注册时结束，才发结束注册命令
+				if (!isRegister)
+				{
+					//三次注册流程结束，发送结束命令，并本地入库
+					if (!FingerRegisterEnd())
+					{
+						mt.ReleaseMutex();
+						return;
+					}
+				}
+
+			
+				LoadingDataEvent(this, true);
+
+				//本地指静脉绑定流程（实际是入库）
+				bool isBindingSucess = false;
+
+				if (!string.IsNullOrWhiteSpace(currentUsername))
+				{
+					BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo("+86 " + currentUsername);
+					HttpHelper.GetInstance().ResultCheck(bdUser, out bool bdUserIsSucess);
+
+					if (bdUserIsSucess)
+					{
+						CurrentUser currentUser = new CurrentUser(bdUser.body.objects[0], retFid);
+						userBll.InsertUser(currentUser);
+						isBindingSucess = true;
+					}
+
+				}
+
+				LoadingDataEvent(this, false);
+
+				if (isBindingSucess)
+				{
+					this.Dispatcher.BeginInvoke(new Action(() =>
+					{
+						GuidInfo.Content = "指静脉绑定成功！";
+						rebindingBtn.Visibility = Visibility.Visible;
+						bindingExitBtn.Visibility = Visibility.Visible;
+					}));
+				}
+				else
+				{
+					LogUtils.Error("本地绑定指静脉特征失败：");
+					this.Dispatcher.BeginInvoke(new Action(() =>
+					{
+						GuidInfo.Content = "指静脉绑定失败";
+						rebindingBtn.Visibility = Visibility.Visible;
+						bindingExitBtn.Visibility = Visibility.Visible;
+					}));
+				}
+			}
+
+			mt.ReleaseMutex();
+
+		}
+
+
+		/// <summary>
+		/// 指静脉注册
+		/// </summary>
+		/// <param name="fid">原fid</param>
+		/// <param name="retFid">结果fid</param>
+		/// <returns></returns>
+		private bool FingerRegister(ushort fid, out ushort retFid, out bool isRegister)
+		{
+			isRegister = false;
+			retFid = fid;
+
+			//等待手指放置
+			if (!VeinSerialHelper.CMD_CHK_FINGER_TIMEOUT_F(6000))
+			{
+				Dispatcher.BeginInvoke(new Action(() =>
+				{
+					WarnInfo2.Content = "等待指静脉放置时超时!";
+					rebindingBtn.Visibility = Visibility.Visible;
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+				return false;
+			}
+
+			//如果检测出来，即已经注册
+			isRegister = VeinSerialHelper.CMD_ONE_VS_N_F(out ushort chkFid, out string errStr);
+
+			if (isRegister)
+			{
+				//若检测出来
+				retFid = chkFid;
+				//防止重复注册同一指静脉
+				if (new UserBll().IsExistsByFid(chkFid))
+				{
+					Dispatcher.BeginInvoke(new Action(() =>
+					{
+						WarnInfo2.Content = "该指静脉已经被被注册，可以登录!";
+						rebindingBtn.Visibility = Visibility.Visible;
+						bindingExitBtn.Visibility = Visibility.Visible;
+					}));
+
+					return false;
+				}
+			}
+			else
+			{
+				if (!VeinSerialHelper.CMD_REGISTER_F(retFid, out string info))
+				{
+					Dispatcher.BeginInvoke(new Action(() =>
+					{
+						WarnInfo2.Content = info;
+						rebindingBtn.Visibility = Visibility.Visible;
+						bindingExitBtn.Visibility = Visibility.Visible;
+					}));
+
+					return false;
+				}
+			}
+
+			//暂无需提示移开
+			//Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "请将手指从指静脉模块上移开！"));
+			//等待两秒
+			//Thread.Sleep(2000);
+			return true;
+		}
+
+		/// <summary>
+		/// 指静脉注册
+		/// </summary>
+		/// <param name="fid">原fid</param>
+		/// <param name="retFid">结果fid</param>
+		/// <returns></returns>
+		private bool FingerRegister(ushort fid)
+		{
+			
+
+			//等待手指放置
+			if (!VeinSerialHelper.CMD_CHK_FINGER_TIMEOUT_F(6000))
+			{
+				Dispatcher.BeginInvoke(new Action(() =>
+				{
+					WarnInfo2.Content = "等待指静脉放置时超时!";
+					rebindingBtn.Visibility = Visibility.Visible;
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+				return false;
+			}
+
+
+			if (!VeinSerialHelper.CMD_REGISTER_F(fid, out string info))
+			{
+				Dispatcher.BeginInvoke(new Action(() =>
+				{
+					WarnInfo2.Content = info;
+					rebindingBtn.Visibility = Visibility.Visible;
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+
+				return false;
+			}
+			
+			Dispatcher.BeginInvoke(new Action(() => GuidInfo.Content = "请将手指从指静脉模块上移开！"));
+			return true;
+		}
+
+		/// <summary>
+		/// 注册结束流程，需配合三次或以上注册流程
+		/// </summary>
+		/// <returns></returns>
+		private bool FingerRegisterSingleEnd()
+		{
+			return VeinSerialHelper.CMD_REGISTER_END_F(out string info, 0x00);
+		}
+
+		/// <summary>
+		/// 注册结束流程，需配合三次或以上注册流程
+		/// </summary>
+		/// <returns></returns>
+		private bool FingerRegisterEnd()
+		{
+			if (!VeinSerialHelper.CMD_REGISTER_END_F(out string info))
+			{
+				Dispatcher.BeginInvoke(new Action(() =>
+				{
+					WarnInfo2.Content = info;
+					rebindingBtn.Visibility = Visibility.Visible;
+					bindingExitBtn.Visibility = Visibility.Visible;
+				}));
+				return false;
+			}
+			return true;
 		}
 
 		/// <summary>

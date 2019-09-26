@@ -45,7 +45,12 @@ namespace CFLMedCab.DAL
             Db = SqlSugarHelper.GetInstance().Db;
         }
 
-        public CurrentUser GetUserByVeinId(int veinId)
+		public int GetUserMaxId()
+		{
+			return Db.Queryable<CurrentUser>().Max(user => user.id);
+		}
+
+		public CurrentUser GetUserByVeinId(int veinId)
         {
             return Db.Queryable<CurrentUser>().Where(user => user.vein_id == veinId).First();
         }
@@ -70,7 +75,24 @@ namespace CFLMedCab.DAL
             return Db.Queryable<CurrentUser>().Select<CurrentUser>().ToList();
         }
 
-        public CurrentUser GetUserByName(string name)
+		public string GetUserNameByFid(int fid)
+		{
+
+			var currentUser = Db.Queryable<CurrentUser>().Where(user => user.fid == fid).OrderBy(user => user.id, OrderByType.Desc).First();
+			if (currentUser == null)
+			{
+				return null;
+			}
+			else
+			{
+				return currentUser.username;
+			}
+		}
+
+
+
+
+		public CurrentUser GetUserByName(string name)
         {
             return Db.Queryable<CurrentUser>().Where(user => user.name.ToUpper() == name.ToUpper()).First();
         }
@@ -87,6 +109,14 @@ namespace CFLMedCab.DAL
 		public bool isExistsByRegfeature(string regfeature)
 		{
 			return Db.Queryable<CurrentUser>().Any(user => user.reg_feature.ToUpper() == regfeature.ToUpper());
+		}
+
+
+		public bool isExistsByFid(int fid)
+		{
+			var currentUser = Db.Queryable<CurrentUser>().Where(user => user.fid == fid).OrderBy(user => user.id, OrderByType.Desc).First();
+			return currentUser != null;
+
 		}
 
 		public void UpdateCurrentUser(CurrentUser item)

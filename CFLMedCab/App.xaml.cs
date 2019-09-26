@@ -93,10 +93,12 @@ namespace CFLMedCab
             ApplicationState.SetLocations(list);
 
 			Task.Factory.StartNew(errorFetchAndInit);
+			//Task.Factory.StartNew(TEST_CMD_CHK_FINGER);
 
 			LogUtils.Debug("App config initial...");
 
 
+			Console.ReadKey();
 
 		}
 
@@ -168,6 +170,17 @@ namespace CFLMedCab
 			ApplicationState.SetGoodsInfo(currentCommodityEps);
 			#endregion
 		}
+
+
+		private void TEST_CMD_CHK_FINGER()
+		{
+			
+
+			var isCheckFinger = VeinSerialHelper.CMD_DELETE_ALL_F(out string str);
+
+				
+		}
+
 
 	}
 }

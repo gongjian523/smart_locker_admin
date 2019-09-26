@@ -46,6 +46,26 @@ namespace CFLMedCab.BLL
 			}
 		}
 
+
+		/// <summary>
+		/// 普通插入
+		/// </summary>
+		/// <param name="user"></param>
+		public void InsertUser(CurrentUser user)
+		{
+			userDal.InsertUser(user);
+		}
+
+
+		/// <summary>
+		/// 是否存在该fid
+		/// </summary>
+		/// <param name="user"></param>
+		public bool IsExistsByFid(int fid)
+		{
+			return userDal.isExistsByFid(fid);
+		}
+
 		/// <summary>
 		/// 不存在则插入
 		/// </summary>
@@ -64,8 +84,26 @@ namespace CFLMedCab.BLL
             return userDal.GetUser().First();
         }
 
+		/// <summary>
+		/// 获取最大id值
+		/// </summary>
+		/// <param name="user"></param>
+		public int getUserMaxId()
+		{
+			return userDal.GetUserMaxId();
+		}
 
-        public CurrentUser GetUserByName(string name)
+		/// <summary>
+		/// 根据fid获取用户名（目前只有手机号）
+		/// </summary>
+		/// <param name="fid"></param>
+		/// <returns></returns>
+		public string GetUserNameByFid(int fid)
+		{
+			return userDal.GetUserNameByFid(fid);
+		}
+
+		public CurrentUser GetUserByName(string name)
         {
             return userDal.GetUserByName(name);
         }
