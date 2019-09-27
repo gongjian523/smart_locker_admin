@@ -38,9 +38,8 @@ namespace CFLMedCab
 			base.OnStartup(e);
 
 			//控制台信息展示
-			ConsoleManager.Show();
-
-			Console.ReadKey();
+			//ConsoleManager.Show();
+			//Console.ReadKey();
             
 			// 注册Application_Error（全局捕捉异常）
 			DispatcherUnhandledException += new DispatcherUnhandledExceptionEventHandler(App_DispatcherUnhandledException);
@@ -96,9 +95,6 @@ namespace CFLMedCab
 			//Task.Factory.StartNew(TEST_CMD_CHK_FINGER);
 
 			LogUtils.Debug("App config initial...");
-
-
-			Console.ReadKey();
 
 		}
 

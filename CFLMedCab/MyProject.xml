@@ -26,25 +26,25 @@
       </location>
     </goods_loction>
 
-    <!-- 主柜货位信息 -->
+    <!-- 主柜货位信息 --><!--
     <mcab_name>L00000036</mcab_name>
     <mcab_id>AQACQqweBhEBAAAA8zE1DlDEuRVx-gUA</mcab_id>
 
-    <!-- 副柜货位信息 -->
+    --><!-- 副柜货位信息 --><!--
     <scab_name>L00000038</scab_name>
     <scab_id>AQACQqweDg8BAAAAeDhOhHvEuRXdyQcA</scab_id>
 
-    <!-- 主柜柜门串口信息 -->
+    --><!-- 主柜柜门串口信息 --><!--
     <mlocker_com>COM2</mlocker_com>
 
-    <!-- 副柜柜门串口信息 -->
+    --><!-- 副柜柜门串口信息 --><!--
     <slocker_com>COM5</slocker_com>
 
-    <!-- 主柜rfid串口信息 -->
+    --><!-- 主柜rfid串口信息 --><!--
     <mrfid_com>COM1</mrfid_com>
 
-    <!-- 副柜rfid串口信息 -->
-    <srfid_com>COM4</srfid_com>
+    --><!-- 副柜rfid串口信息 --><!--
+    <srfid_com>COM4</srfid_com>-->
 
     <!-- 主柜指静脉串口信息 -->
     <mvein_com>COM9</mvein_com>

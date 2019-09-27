@@ -149,7 +149,7 @@ namespace CFLMedCab.Http.Bll
             }, dataSignIn);
 
             return dataUserToken;
-        }
+        } 
         /// <summary>
         /// 获取图形验证码
         /// </summary>
