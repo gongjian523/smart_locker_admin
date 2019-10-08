@@ -154,6 +154,23 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// </summary>
 		public volatile static bool isCloseCheckFinger = true;
 
+		
+
+		/// <summary>
+		/// 持久连接，不关闭
+		/// </summary>
+		private static SerialPort preSerialPort;
+
+		/// <summary>
+		/// 持久连接，接收参数
+		/// </summary>
+		private static byte[] preReceivedData = new byte[8];
+
+		/// <summary>
+		/// 持久连接标识的uuid
+		/// </summary>
+		private static string preUUID;
+
 		#endregion
 		/// <summary>
 		/// 检测手指是否放置在手指检测传感器上，该命令最大返回时间<1ms（以上时间均不包括通信时间，仅为模块内 部程序的处理时间）。
@@ -179,12 +196,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 				if (isCheckFinger)
 				{
-					Console.WriteLine($"{DateTime.Now}:检测到指静脉");
 					isCloseCheckFinger = true;
-				}
-				else
-				{
-					Console.WriteLine($"{DateTime.Now}:未检测到指静脉");
 				}
 
 				if (timeout != long.MaxValue && ( DateTime.Now.Ticks/10000 - beforeTime >= timeout))
@@ -557,7 +569,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// <returns></returns>
 		private static byte[] CMD_COMMON_F(Func<byte[]> cmdFunc)
 		{
-			return CMD_COMMON_SLEEP_F(cmdFunc, 0);
+			return CMD_COMMON_PER_F(cmdFunc);
 		}
 
 		/// <summary>
@@ -565,7 +577,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// </summary>
 		/// <param name="cmdFunc">命令参数</param>
 		/// <returns></returns>
-		private static byte[] CMD_COMMON_SLEEP_F(Func<byte[]> cmdFunc, int sleeptime = 200)
+		private static byte[] CMD_COMMON_SLEEP_F(Func<byte[]> cmdFunc, int sleeptime = 100)
 		{
 			if(sleeptime != 0)
 				Thread.Sleep(sleeptime);
@@ -649,7 +661,134 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			return receivedData;
 		}
 
+		/// <summary>
+		/// 公共方法，利用Func对象做委托（持久连接）
+		/// </summary>
+		/// <param name="cmdFunc">命令参数</param>
+		/// <returns></returns>
+		private static byte[] CMD_COMMON_PER_F(Func<byte[]> cmdFunc)
+		{
 
+			var clientConn = InitClientConn(out bool isConnect);
+
+			
+
+			//返回串口连接错误
+			if (!isConnect)
+			{
+				preReceivedData[5] = ERR_CONNECTION;
+				return preReceivedData;
+			}
+
+			//加锁阻塞机制
+			var m = new ManualResetEvent(false);
+
+
+			//uuid作为消息互动标识
+			preUUID = Guid.NewGuid().ToString("N");
+
+
+
+			// 订阅串口收到
+			clientConn.DataReceived += new SerialDataReceivedEventHandler((object sender, SerialDataReceivedEventArgs e) => {
+
+
+				try
+				{
+
+					if (clientConn.IsOpen)
+					{
+
+						clientConn.Read(preReceivedData, 0, preReceivedData.Length);
+
+						LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】 串口数据已接收：{HexHelper.ByteToHexStr(",", preReceivedData)}");
+
+						bool isDataReceivedCheckSuccess = preReceivedData[0] == 0x40 && preReceivedData[7] == 0x0d || preReceivedData[6] == Check_Xor(preReceivedData, 6);
+						if (!isDataReceivedCheckSuccess)
+						{
+							preReceivedData[5] = ERR_CMD_DATA_ERR;
+						}
+					}
+
+				}
+				catch (Exception ex)
+				{
+
+					LogUtils.Error($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】串口接收时异常：{ex.Message}");
+
+				}
+				finally
+				{
+					//接收到返回信息，最后关闭串口
+					OnlyCloseClientConn(clientConn);
+
+					//解锁
+					m.Set();
+				}
+
+			});
+
+
+			//发送命令
+			var sendData = cmdFunc.Invoke();
+			clientConn.Write(sendData, 0, sendData.Length);
+			LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】 串口数据已发送：{HexHelper.ByteToHexStr(",", sendData)}");
+
+			//阻塞当前线程，最长5秒
+			var isTimeout = !m.WaitOne(new TimeSpan(0, 0, 5));
+			if (isTimeout)
+			{
+				//超时关闭当前串口
+				OnlyCloseClientConn(clientConn);
+				preReceivedData[5] = ERR_CMD_TIMEOUT;
+				LogUtils.Error($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】串口接收时超时");
+
+
+			}
+
+			//返回收集结果
+			return preReceivedData;
+		}
+
+		/// <summary>
+		/// 初始化持久的串口连接
+		/// </summary>
+		/// <param name="com">串口信息：如COM2</param>
+		/// <param name="isConnect">是否连接串口成功</param>
+		/// <returns></returns>
+		private static SerialPort InitClientConn(out bool isConnect)
+		{
+			isConnect = true;
+
+			if (preSerialPort == null)
+			{
+				preSerialPort = new SerialPort
+				{
+					BaudRate = 9600,
+					PortName = ApplicationState.GetMVeinCOM(), //静脉串口
+					DataBits = 8,
+					WriteBufferSize = 4096,
+					ReadBufferSize = 8192
+				};
+			}
+
+			try
+			{
+				if (!preSerialPort.IsOpen)
+				{
+					preSerialPort.Open();
+				}
+			}
+			catch (Exception ex)
+			{
+				LogUtils.Error("串口创建错误：" + ex.ToString());
+				isConnect = false;
+			}
+
+			isConnect = preSerialPort.IsOpen;
+
+			return preSerialPort;
+		}
 
 		/// <summary>
 		/// 创建串口连接
@@ -695,7 +834,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				BaudRate = baudRate,
 				PortName = com, //静脉串口
-				DataBits = 8
+				DataBits = 8,
 			};
 			try
 			{
@@ -734,6 +873,33 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			}
 			return isClose;
 		}
+
+
+		/// <summary>
+		/// 创建串口连接
+		/// </summary>
+		/// <param name="serialPort">串口对象</param>
+		/// <returns></returns>
+		private static bool OnlyCloseClientConn(SerialPort serialPort)
+		{
+
+			bool isClose = true;
+			if (serialPort != null && serialPort.IsOpen)
+			{
+				try
+				{
+					serialPort.Close();
+				}
+				catch (Exception ex)
+				{
+					LogUtils.Error("串口关闭错误：" + ex.ToString());
+					isClose = false;
+				}
+			}
+			return isClose;
+		}
+
+		
 
 
 

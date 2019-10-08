@@ -148,12 +148,12 @@ namespace CFLMedCab
 
             DataContext = this;
 
-            processRingTimer = new System.Timers.Timer(1000*60*1);
+            processRingTimer = new System.Timers.Timer(1000*20*1);
             processRingTimer.AutoReset = false;
             processRingTimer.Enabled = false;
             processRingTimer.Elapsed += new ElapsedEventHandler(onProcessRingTimerExpired);
 
-            invingTimer = new System.Timers.Timer(1000 * 60 * 1);
+            invingTimer = new System.Timers.Timer(1000 * 20 * 1);
             invingTimer.AutoReset = false;
             invingTimer.Enabled = false;
             invingTimer.Elapsed += new ElapsedEventHandler(onInvTimerExpired);

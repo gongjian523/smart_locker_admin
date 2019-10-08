@@ -185,8 +185,6 @@ namespace CFLMedCab.View.Inventory
         /// <param name="e"></param>
         private void onEnterInventoryDetailLocal(object sender, RoutedEventArgs e)
         {
-
-
             Button btnItem = sender as Button;
             int id;
 
@@ -216,7 +214,10 @@ namespace CFLMedCab.View.Inventory
             //SetPopInventoryEvent(this, false);
             if (hs.Count == 0)
             {
-                MessageBox.Show("医疗柜中没有任何商品！", "温馨提示", MessageBoxButton.OK);
+				App.Current.Dispatcher.Invoke((Action)(() =>
+				{
+					MessageBox.Show("医疗柜中没有任何商品！", "温馨提示", MessageBoxButton.OK);
+				}));
             }
             else
             {
@@ -226,8 +227,11 @@ namespace CFLMedCab.View.Inventory
 
                 if (!isSuccess)
                 {
-                    MessageBox.Show("盘点时获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
-                }
+					App.Current.Dispatcher.Invoke((Action)(() =>
+					{
+						MessageBox.Show("盘点时获取商品信息失败！", "温馨提示", MessageBoxButton.OK);
+					}));
+				}
                 else
                 {
                     List<GoodsDto> list = new List<GoodsDto>();
