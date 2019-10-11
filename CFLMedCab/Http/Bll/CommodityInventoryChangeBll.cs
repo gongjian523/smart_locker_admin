@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.ExceptionApi;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
@@ -49,6 +50,10 @@ namespace CFLMedCab.Http.Bll
             if (changesOut.Count > 0)
             {
                 resultOut = CreateCommodityInventoryChange(changesOut);
+
+
+				ExStepHandle.ExApiSendQueueGoodsChangesHandle(resultOut, changesOut);
+
                 HttpHelper.GetInstance().ResultCheck(resultOut, out isSuccess);
                 if(!isSuccess)
                 {
@@ -63,7 +68,10 @@ namespace CFLMedCab.Http.Bll
             if (changesIn.Count > 0)
             {
                 resultIn = CreateCommodityInventoryChange(changesIn);
-                HttpHelper.GetInstance().ResultCheck(resultIn, out isSuccess2);
+
+				ExStepHandle.ExApiSendQueueGoodsChangesHandle(resultIn, changesIn);
+
+				HttpHelper.GetInstance().ResultCheck(resultIn, out isSuccess2);
                 if (!isSuccess2)
                 {
                     LogUtils.Error("CreateCommodityInventoryChangeSeparately:In" + resultIn.message);
@@ -194,8 +202,10 @@ namespace CFLMedCab.Http.Bll
                     StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),
                     Type = ConsumingOrderType.一般领用.ToString()
                 });
-                //校验数据是否正常
-                HttpHelper.GetInstance().ResultCheck(consumingOrder, out bool isSuccess);
+
+				ExStepHandle.ExApiSendQueueReturnCreateOrderHandle(consumingOrder, baseDataCommodityCode);
+				//校验数据是否正常
+				HttpHelper.GetInstance().ResultCheck(consumingOrder, out bool isSuccess);
                 if (isSuccess)
                 {
                     //创建商品库存变更记录资料【出库::领用】

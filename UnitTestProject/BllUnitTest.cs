@@ -9,6 +9,7 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.param;
+using CFLMedCab.Http.Msmq;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.QuartzHelper;
 using CFLMedCab.Infrastructure.QuartzHelper.job;
@@ -374,6 +375,27 @@ namespace UnitTestProject
 
 
 		}
+
+		[TestMethod]
+		public void TestNetwork()
+		{
+
+			BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo("+86 13765810065");
+			HttpHelper.GetInstance().ResultCheck(bdUser, out bool bdUserIsSucess);
+
+		}
+
+
+		[TestMethod]
+		public void TestQueueSend()
+		{
+			MsmqFactory.GetInstance();
+
+			// Simulate doing other work on the current thread.
+			System.Threading.Thread.Sleep(TimeSpan.FromSeconds(60));
+
+		}
+
 
 	}
 }

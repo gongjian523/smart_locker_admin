@@ -703,7 +703,7 @@ namespace CFLMedCab
 
         private void SetNavBtnVisiblity(string role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
 
 			NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -814,10 +814,15 @@ namespace CFLMedCab
         /// 模拟从键盘向系统输入0
         /// </summary>
         protected void SimulateKeybordInput0()
-        {           
-            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
-            Thread.Sleep(100);
-            inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
+        {
+			try {
+				inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
+				Thread.Sleep(100);
+				inputSimulator.Keyboard.KeyDown(VirtualKeyCode.NUMPAD0);
+			} catch(Exception ex) {
+				LogUtils.Error($"模拟从键盘向系统输入0功能异常:{ex.ToString()}");
+			}
+           
         }
 
 

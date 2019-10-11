@@ -4,6 +4,7 @@ using CFLMedCab.DTO.Goodss;
 using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.ExceptionApi;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
@@ -91,11 +92,15 @@ namespace CFLMedCab.View.Fetch
 
                 LoadingDataEvent(this, true);
                 bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeStock(commodityCodeList);
-                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
+
+				ExStepHandle.ExApiSendQueueFetchGoodsInitDataHandle(bdCommodityCode, commodityCodeList);
+
+				HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
                 if (isSuccess)
                 {
                     bdCommodityCode = CommodityCodeBll.GetInstance().GetQualityStatus(bdCommodityCode, out isSuccess);
-                }
+					ExStepHandle.ExApiSendQueueFetchGoodsInitDataHandle(bdCommodityCode, commodityCodeList);
+				}
                 LoadingDataEvent(this, false);
                 
                 //校验是否含有数据

@@ -2,6 +2,7 @@
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
+using CFLMedCab.Http.Msmq;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.BootUpHelper;
 using CFLMedCab.Infrastructure.DeviceHelper;
@@ -54,7 +55,7 @@ namespace CFLMedCab
 			BootUpHelper.GetInstance().SetMeAutoStart();
 
 			//加载系统配置文件
-			//Console.ReadKey();
+			Console.ReadKey();
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load($"{ApplicationState.GetProjectRootPath()}/MyProject.xml");
 			XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
@@ -91,8 +92,8 @@ namespace CFLMedCab
             }
             ApplicationState.SetLocations(list);
 
-			Task.Factory.StartNew(errorFetchAndInit);
-			//Task.Factory.StartNew(TEST_CMD_CHK_FINGER);
+			Task.Factory.StartNew(ErrorFetchAndInit);
+			Task.Factory.StartNew(StartExApiQueue);
 
 			LogUtils.Debug("App config initial...");
 
@@ -110,7 +111,7 @@ namespace CFLMedCab
 		/// <summary>
 		/// 增加的开机故障领用的逻辑，如果有的话
 		/// </summary>
-		private void errorFetchAndInit()
+		private void ErrorFetchAndInit()
 		{
 			#region 处理开机（即应用启动时）需要对比库存变化上传的逻辑
 
@@ -167,6 +168,12 @@ namespace CFLMedCab
 			#endregion
 		}
 
+		/// <summary>
+		/// 开启队列，如果有遗留的队列消息，则会即时处理
+		/// </summary>
+		private void StartExApiQueue() {
+			MsmqFactory.GetInstance();
+		}
 
 		private void TEST_CMD_CHK_FINGER()
 		{

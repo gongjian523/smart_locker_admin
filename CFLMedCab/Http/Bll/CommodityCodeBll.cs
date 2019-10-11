@@ -524,11 +524,14 @@ namespace CFLMedCab.Http.Bll
                 }
                 else
                 {
-                    baseDataCommodityCode = new BaseData<CommodityCode>()
-                    {
-                        code = (int)ResultCode.Business_Exception,
-                        message = ResultCode.Business_Exception.ToString()
-                    };
+
+					if (baseDataCommodityCode.code != (int)ResultCode.Request_Exception) {
+						baseDataCommodityCode = new BaseData<CommodityCode>()
+						{
+							code = (int)ResultCode.Business_Exception,
+							message = ResultCode.Business_Exception.ToString()
+						};
+					}
                 }
             }
             else

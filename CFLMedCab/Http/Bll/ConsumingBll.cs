@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Enum;
+using CFLMedCab.Http.ExceptionApi;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
@@ -321,8 +322,11 @@ namespace CFLMedCab.Http.Bll
 
                 //创建领用单
                 var order = CreateConsumingOrder(consumingOrder);
-                //校验数据是否正常
-                HttpHelper.GetInstance().ResultCheck(order, out bool isSuccess);
+
+				ExStepHandle.ExApiSendQueueFetchCreateOrderHandle(order, consumingOrder, lossList);
+
+				//校验数据是否正常
+				HttpHelper.GetInstance().ResultCheck(order, out bool isSuccess);
 
                 if (!isSuccess)
                 {
