@@ -55,7 +55,7 @@ namespace CFLMedCab
 			BootUpHelper.GetInstance().SetMeAutoStart();
 
 			//加载系统配置文件
-			Console.ReadKey();
+			//Console.ReadKey();
 			XmlDocument xmlDoc = new XmlDocument();
 			xmlDoc.Load($"{ApplicationState.GetProjectRootPath()}/MyProject.xml");
 			XmlNode root = xmlDoc.SelectSingleNode("config");//指向根节点
