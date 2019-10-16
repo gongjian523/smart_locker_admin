@@ -486,7 +486,7 @@ namespace CFLMedCab
 					{
 						info = "没有找到本地注册指静脉匹配的用户";
 						info2 = "请先绑定指静脉或者再次尝试";
-						LogUtils.Error("没有找到本地注册指静脉匹配的用户：本地线上匹配失败");
+						LogUtils.Error($"没有找到本地注册指静脉匹配的用户：本地线上匹配失败,fid为：{fid}");
 					}
 
 				}

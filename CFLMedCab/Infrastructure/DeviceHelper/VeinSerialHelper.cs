@@ -569,7 +569,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// <returns></returns>
 		private static byte[] CMD_COMMON_F(Func<byte[]> cmdFunc)
 		{
-			return CMD_COMMON_PER_F(cmdFunc);
+			return CMD_COMMON_SLEEP_F(cmdFunc, 0);
 		}
 
 		/// <summary>
