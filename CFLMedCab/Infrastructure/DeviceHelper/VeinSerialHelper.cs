@@ -569,7 +569,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 		/// <returns></returns>
 		private static byte[] CMD_COMMON_F(Func<byte[]> cmdFunc)
 		{
-			return CMD_COMMON_SLEEP_F(cmdFunc, 0);
+			return CMD_COMMON_SLEEP_F(cmdFunc, 50);
 		}
 
 		/// <summary>
@@ -644,7 +644,15 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 			//发送命令
 			var sendData = cmdFunc.Invoke();
-			clientConn.Write(sendData, 0, sendData.Length);
+
+			try {
+				clientConn.Write(sendData, 0, sendData.Length);
+			} catch (Exception ex)
+			{
+				LogUtils.Error($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},写入异常：{ex.ToString()}");
+			}
+
+			
 			LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{cmdUUID}】 串口数据已发送：{HexHelper.ByteToHexStr(",", sendData)}");
 			
 			//阻塞当前线程，最长5秒
