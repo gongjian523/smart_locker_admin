@@ -192,7 +192,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             {
                 new CommodityEps
                 {
-                    CommodityCodeName = "RF00000327",
+                    CommodityCodeName = "RF00000415",
                     EquipmentId = ApplicationState.GetEquipId(),
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
@@ -202,23 +202,23 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 },
                 new CommodityEps
                 {
-                    CommodityCodeName = "RF00000333",
+                    CommodityCodeName = "RF00000414",
                     EquipmentId = ApplicationState.GetEquipId(),
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
                     StoreHouseName = ApplicationState.GetHouseName(),
                     GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
                     GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
-                },
-                new CommodityEps
-                {
-                    CommodityCodeName = "RF00000324",
-                    EquipmentId = ApplicationState.GetEquipId(),
-                    EquipmentName = ApplicationState.GetEquipName(),
-                    StoreHouseId = ApplicationState.GetHouseId(),
-                    StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
+                //},
+                //new CommodityEps
+                //{
+                //    CommodityCodeName = "RF00000345",
+                //    EquipmentId = ApplicationState.GetEquipId(),
+                //    EquipmentName = ApplicationState.GetEquipName(),
+                //    StoreHouseId = ApplicationState.GetHouseId(),
+                //    StoreHouseName = ApplicationState.GetHouseName(),
+                //    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                //    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
                 }
             };
             return ret;

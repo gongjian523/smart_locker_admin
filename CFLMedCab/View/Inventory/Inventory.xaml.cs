@@ -206,7 +206,7 @@ namespace CFLMedCab.View.Inventory
             LoadingDataEvent(this, true);
 
 #if TESTENV
-                HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
 #endif
@@ -224,6 +224,7 @@ namespace CFLMedCab.View.Inventory
                 BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
                 CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+                CommodityCodeBll.GetInstance().GetCatalogueName(bdCommodityCode, out bool isSuccess3);
 
                 if (!isSuccess)
                 {
@@ -241,7 +242,8 @@ namespace CFLMedCab.View.Inventory
                         {
                             name = item.CommodityName,
                             code = item.name,
-                            position = item.GoodsLocationName
+                            position = item.GoodsLocationName,
+                            CatalogueId = item.CatalogueId
                         };
 
                         if (isSuccess2)
@@ -254,6 +256,14 @@ namespace CFLMedCab.View.Inventory
                             if (item.ExpirationDate != null)
                             {
                                 goodItem.ExpirationDate = item.ExpirationDate;
+                            }
+                        }
+                        
+                        if(isSuccess3)
+                        {
+                            if(item.CatalogueName != null)
+                            {
+                                goodItem.CatalogueName = item.CatalogueName;
                             }
                         }
                         list.Add(goodItem);

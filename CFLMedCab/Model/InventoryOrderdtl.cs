@@ -1,4 +1,5 @@
-﻿using SqlSugar;
+﻿using CFLMedCab.Http.Model;
+using SqlSugar;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -126,5 +127,51 @@ namespace CFLMedCab.Model
         /// </summary>
         [SugarColumn(IsNullable = true)]
         public string Specifications { get; set; }
+
+
+        /// <summary>
+        /// 目录id
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string CatalogueId { get; set; }
+
+        /// <summary>
+        /// 目录名字
+        /// </summary>
+        [SugarColumn(IsNullable = true)]
+        public string CatalogueName { get; set; }
+    }
+
+
+    public class SpecCommodity
+    {
+        public string CatalogueName { get; set; }
+
+        public string Spec  { get; set; }
+
+        public int SpecNum { get; set; }
+    }
+
+
+    public class CatalogueCommodity
+    {
+        public string CatalogueId { get; set; }
+
+        public string CatalogueName { get; set; }
+
+        public int Num { get; set; }
+
+        public int SpecNum { get; set; }
+
+        public List<SpecCommodity> SpecList{ get; set; }
+    }
+
+    public class StockDetailParas
+    {
+        public string CatalogueName { get; set; }
+
+        public List<SpecCommodity> SpecList { get; set; }
+
+        public List<CommodityCode>  commodityList { get; set; }
     }
 }

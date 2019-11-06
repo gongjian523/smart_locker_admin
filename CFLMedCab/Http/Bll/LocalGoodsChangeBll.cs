@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CFLMedCab.Infrastructure.ToolHelper;
+using CFLMedCab.Model;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -17,37 +18,69 @@ namespace CFLMedCab.Http.Bll
         /// 获取本地商品快照列表（包含详情）
         /// </summary>
         /// <returns></returns>
-        public static List<Commodity> GetCommodity()
+        public static List<CommodityCode> GetCommodity()
         {
             var commodityEps = ApplicationState.GetGoodsInfo();
             var baseCommodityCodes = CommodityCodeBll.GetInstance().GetCommodityCode(commodityEps);
-
             baseCommodityCodes = HttpHelper.GetInstance().ResultCheck(baseCommodityCodes, out bool isSuccess);
-            List<Commodity> commodityLists = null;
+
             if (isSuccess)
             {
                 //获取有效期和生产商
                 CommodityCodeBll.GetInstance().GetExpirationAndManufactor(baseCommodityCodes, out bool isSuccess2);
-                var tempList = baseCommodityCodes.body.objects;
-                //商品列表集合
-                commodityLists = tempList
-                    .GroupBy(code => new { code.CommodityId, code.GoodsLocationId })
-                    .Select(g => (new Commodity()
-                    {
-                        id = g.Key.CommodityId,//CommodityId
-                        GoodsLocationId = g.Key.GoodsLocationId,
-                        GoodsLocationName = g.ElementAt(0).GoodsLocationName,
-                        name = g.ElementAt(0).CommodityName,//name
-                        Count = g.Count(),//商品数量
-                        codes = tempList.Where(it=>it.CommodityId == g.Key.CommodityId && it.GoodsLocationId == g.Key.GoodsLocationId).ToList()
-                    })).ToList();
+                CommodityCodeBll.GetInstance().GetCatalogueName(baseCommodityCodes, out bool isSuccess3);
+
+                return baseCommodityCodes.body.objects;
             }
             else
             {
-                LogUtils.Error($"LocalGoodsChangeBll:GetCommodity {baseCommodityCodes.message}");
+                return null;
             }
-            return commodityLists;
         }
+
+        /// 获取本地商品快照列表（包含详情）
+        /// </summary>
+        /// <returns></returns>
+        public static List<CatalogueCommodity> GetCatalogueCommodity(List<CommodityCode> commodolityList)
+        {
+            List<CatalogueCommodity> catalogueList = new List<CatalogueCommodity>();
+
+            foreach (var item in commodolityList)
+            {
+                //没有包含相同CatalogueId的数据
+                if (catalogueList.Where(ci => ci.CatalogueId == item.CatalogueId).Count() == 0)
+                {
+                    List<CommodityCode> listDtl = commodolityList.Where(di => di.CatalogueId == item.CatalogueId).ToList();
+
+                    List<SpecCommodity> listSpec = new List<SpecCommodity>();
+
+                    foreach (var spec in listDtl)
+                    {
+                        if (listSpec.Where(si => si.Spec == spec.Specifications).Count() == 0)
+                        {
+                            listSpec.Add(new SpecCommodity
+                            {
+                                CatalogueName = spec.CatalogueName,
+                                Spec = spec.Specifications,
+                                SpecNum = listDtl.Where(id => id.Specifications == spec.Specifications).Count()
+                            });
+                        }
+                    }
+
+                    catalogueList.Add(new CatalogueCommodity
+                    {
+                        CatalogueId = item.CatalogueId,
+                        CatalogueName = item.CatalogueName,
+                        Num = listDtl.Count,
+                        SpecNum = listSpec.Count,
+                        SpecList = listSpec
+                    });
+                }
+            }
+
+            return catalogueList;
+        }
+
         /// <summary>
         /// 根据commodityId和goodsLocationId查询CommodityCode列表
         /// </summary>

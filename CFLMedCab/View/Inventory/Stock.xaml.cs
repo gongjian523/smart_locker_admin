@@ -6,6 +6,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.DeviceHelper;
+using CFLMedCab.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -31,18 +32,18 @@ namespace CFLMedCab.View
     public partial class Stock : UserControl
     {
         //跳出详情页面
-        public delegate void EnterStockDetailedHandler(object sender, Commodity commodity);
+        public delegate void EnterStockDetailedHandler(object sender, StockDetailParas sdParas);
         public event EnterStockDetailedHandler EnterStockDetailedEvent;
 
         //提出或者隐藏盘点正在进行的页面
         public delegate void SetPopInventoryHandler(object sender, bool e);
         public event SetPopInventoryHandler SetPopInventoryEvent;
 
-        private List<Commodity> comboBoxList = new List<Commodity>();
+        private List<CatalogueCommodity> comboBoxList = new List<CatalogueCommodity>();
         private List<LocalCommodityCode> comboBoxList2 = new List<LocalCommodityCode>();
 
         //库存快照列表数据
-        private List<Commodity> listViewData = new List<Commodity>();
+        private List<CatalogueCommodity> listViewData = new List<CatalogueCommodity>();
         //有效期查询列表数据
         private List<CommodityCode> listView1Data = new List<CommodityCode>();
         //出入库查询列表数据
@@ -73,6 +74,9 @@ namespace CFLMedCab.View
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 queryFilter.Visibility = Visibility.Collapsed;
+
+                CatalogueNameSP.Visibility = Visibility.Visible;
+                goodsNameSP.Visibility = Visibility.Collapsed;
 
                 goodsCodeSP.Visibility = Visibility.Hidden;
                 operating_time.Visibility = Visibility.Hidden;
@@ -121,28 +125,28 @@ namespace CFLMedCab.View
         {
             if (this.stockSnapshot.IsChecked == true)//库存快照
             {
-                List<Commodity> list = listViewData;
+                List<CatalogueCommodity> list = listViewData;
 
-                if ((Commodity)goods_name.SelectedValue != null)
+                if ((CatalogueCommodity)catalogue_name.SelectedValue != null)
                 {
-                    if (((Commodity)goods_name.SelectedValue).name != "全部")
+                    if (((CatalogueCommodity)catalogue_name.SelectedValue).CatalogueName != "全部")
                     {
-                        list = listViewData.Where(item => item.name == ((Commodity)goods_name.SelectedValue).name).ToList();
+                        list = listViewData.Where(item => item.CatalogueName == ((CatalogueCommodity)catalogue_name.SelectedValue).CatalogueName).ToList();
                     }
                 }
 
                 listView.DataContext = list;
-                totalNum.Content = list.Sum(item => item.Count);
+                totalNum.Content = list.Sum(item => item.Num);
             }
             if (this.validity.IsChecked == true)//效期查询
             {
                 List<CommodityCode> list = listView1Data;
 
-                if ((Commodity)goods_name.SelectedValue != null)
+                if ((CatalogueCommodity)catalogue_name.SelectedValue != null)
                 {
-                    if (((Commodity)goods_name.SelectedValue).name != "全部")
+                    if (((CatalogueCommodity)catalogue_name.SelectedValue).CatalogueName != "全部")
                     {
-                        list = listView1Data.Where(item => item.CommodityName == ((Commodity)goods_name.SelectedValue).name).ToList();
+                        list = listView1Data.Where(item => item.CatalogueName == ((CatalogueCommodity)catalogue_name.SelectedValue).CatalogueName).ToList();
                     }
                 }
 
@@ -194,11 +198,11 @@ namespace CFLMedCab.View
         private void ResetGoodsNameComboxInSnapShot()
         {
             comboBoxList.Clear();
-            comboBoxList.Add(new Commodity { name = "全部" });
+            comboBoxList.Add(new CatalogueCommodity { CatalogueName = "全部" });
             listViewData.ForEach(item => comboBoxList.Add(item));
 
-            goods_name.ItemsSource = comboBoxList.OrderByDescending(it => it.name);
-            goods_name.SelectedItem = comboBoxList.Where(it => it.name == "全部").First();
+            catalogue_name.ItemsSource = comboBoxList.OrderByDescending(it => it.CatalogueName);
+            catalogue_name.SelectedItem = comboBoxList.Where(it => it.CatalogueName == "全部").First();
         }
 
         private void ResetGoodsNameComboxInStockQuery()
@@ -215,6 +219,9 @@ namespace CFLMedCab.View
         private void EffectivePeriod(object sender, RoutedEventArgs e)
         {
             queryFilter.Visibility = Visibility.Visible;
+
+            CatalogueNameSP.Visibility = Visibility.Visible;
+            goodsNameSP.Visibility = Visibility.Collapsed;
 
             goodsCodeSP.Visibility = Visibility.Visible;
             operating_time.Visibility = Visibility.Hidden;
@@ -242,6 +249,9 @@ namespace CFLMedCab.View
         {
             queryFilter.Visibility = Visibility.Visible;
 
+            CatalogueNameSP.Visibility = Visibility.Collapsed;
+            goodsNameSP.Visibility = Visibility.Visible;
+
             goodsCodeSP.Visibility = Visibility.Hidden;
             operating_time.Visibility = Visibility.Visible;
 
@@ -266,8 +276,15 @@ namespace CFLMedCab.View
         /// <param name="e"></param>
         private void onStockDetailed(object sender, RoutedEventArgs e)
         {
-            Commodity commodity = (Commodity)((Button)sender).Tag;
-            EnterStockDetailedEvent(this, commodity);
+            string name = (string)((Button)sender).CommandParameter;
+
+            StockDetailParas sdParas = new StockDetailParas {
+                CatalogueName = name,
+                SpecList = listViewData.Where(item=>item.CatalogueName == name).ToList().First().SpecList,
+                commodityList = listView1Data
+            };
+
+            EnterStockDetailedEvent(this, sdParas);
         }
 
         private void GetCurrentGoodsInfo()
@@ -277,31 +294,22 @@ namespace CFLMedCab.View
 #if TESTENV
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
-             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
 #endif
             ApplicationState.SetGoodsInfo(hs);
-
 			
-
             listViewData.Clear();
-            listViewData = LocalGoodsChangeBll.GetCommodity();
+            listView1Data.Clear();
 
-			listView1Data.Clear();
+            listView1Data = LocalGoodsChangeBll.GetCommodity();
 
-			if (listViewData != null)
+            if (listView1Data != null)
 			{
-				listViewData.ForEach(item =>
-				{
-					if (item.codes.Count() > 0)
-					{
-
-						listView1Data.AddRange(item.codes);
-					}
-				});
-			}
+                listViewData = LocalGoodsChangeBll.GetCatalogueCommodity(listView1Data);
+            }
 			else
 			{
-				listViewData = new List<Commodity>();
+				listViewData = new List<CatalogueCommodity>();
 			}
 
             SetPopInventoryEvent(this, false);

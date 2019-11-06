@@ -184,7 +184,6 @@
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
     <Compile Include="Controls\TouchScreenKeyboard.cs" />
-    <Compile Include="Http\Aop\LogAttribute.cs" />
     <Compile Include="Http\Bll\AllotShelfBll.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
     <Compile Include="Http\Bll\CommodityCodeBll.cs" />
@@ -252,10 +251,10 @@
     <Compile Include="Http\Model\Base\BaseSinglePostData.cs" />
     <Compile Include="Http\Model\Base\BasePutData.cs" />
     <Compile Include="Http\Model\BatchNumber.cs" />
+    <Compile Include="Http\Model\CommodityCatalogue.cs" />
     <Compile Include="Http\Model\CommodityInventoryDetail.cs" />
     <Compile Include="Http\Model\CommodityInventoryGoods.cs" />
     <Compile Include="Http\Model\CommodityRecovery.cs" />
-    <Compile Include="Http\Model\CommoditySnapshot.cs" />
     <Compile Include="Http\Model\Common\SourceBill.cs" />
     <Compile Include="Http\Model\Commodity.cs" />
     <Compile Include="Http\Model\CommodityCode.cs" />

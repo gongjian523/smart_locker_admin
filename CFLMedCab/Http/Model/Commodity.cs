@@ -40,10 +40,16 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string Specifications { get; set; }
-		/// <summary>
-		/// 常温;阴凉
-		/// </summary>
-		public string StorageAttribute { get; set; }
+
+        /// <summary>
+        /// 目录id
+        /// </summary>
+        public string CommodityCatalogueId { get; set; }
+
+        /// <summary>
+        /// 常温;阴凉
+        /// </summary>
+        public string StorageAttribute { get; set; }
 		/// <summary>
 		/// 定数包
 		/// </summary>

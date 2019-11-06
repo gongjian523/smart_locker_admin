@@ -1,6 +1,7 @@
 ﻿using CFLMedCab.BLL;
 using CFLMedCab.DTO.Goodss;
 using CFLMedCab.Http.Model;
+using CFLMedCab.Model;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +28,16 @@ namespace CFLMedCab.View.Inventory
         public delegate void EnterStockHandler(object sender, RoutedEventArgs e);
         public event EnterStockHandler EnterStockEvent;
 
-        public StockDetailed(Commodity commodity)
+        StockDetailParas paras = new StockDetailParas();
+
+        public StockDetailed(StockDetailParas sdParas)
         {
             InitializeComponent();
-            listView.DataContext= commodity.codes;
+
+            CatalogueNameLb.Content = sdParas.CatalogueName;
+
+            paras = sdParas;
+            listView.DataContext= sdParas.SpecList;
         }
 
         /// <summary>
@@ -41,6 +48,47 @@ namespace CFLMedCab.View.Inventory
         private void onStockEvent(object sender, RoutedEventArgs e)
         {
             EnterStockEvent(this, null);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterCommodityDetail(object sender, RoutedEventArgs e)
+        {
+            string spec = (string)((Button)sender).CommandParameter;
+
+            SpecTitleLb.Visibility = Visibility.Visible;
+
+            SpecLb.Visibility = Visibility.Visible;
+            SpecLb.Content = spec;
+
+            specView.Visibility = Visibility.Hidden;
+
+            commodityView.Visibility = Visibility.Visible;
+            listView2.DataContext = paras.commodityList.Where(item => item.CatalogueName == paras.CatalogueName && item.Specifications == spec).ToList();
+
+            specBtnView.Visibility = Visibility.Hidden;
+            commodityBtnView.Visibility = Visibility.Visible;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSpecDetail(object sender, RoutedEventArgs e)
+        {
+            SpecTitleLb.Visibility = Visibility.Hidden;
+            SpecLb.Visibility = Visibility.Hidden;
+
+            specView.Visibility = Visibility.Visible;
+            commodityView.Visibility = Visibility.Hidden;
+
+            specBtnView.Visibility = Visibility.Visible;
+            commodityBtnView.Visibility = Visibility.Hidden;
         }
     }
 }

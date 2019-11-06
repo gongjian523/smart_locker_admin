@@ -66,5 +66,15 @@ namespace CFLMedCab.DTO.Goodss
         /// 厂商
         /// </summary>
         public string ManufactorName { get; set; }
+
+        /// <summary>
+        /// 目录ID
+        /// </summary>
+        public string CatalogueId { get; set; }
+
+        /// <summary>
+        /// 目录名称
+        /// </summary>
+        public string CatalogueName { get; set; }
     }
 }

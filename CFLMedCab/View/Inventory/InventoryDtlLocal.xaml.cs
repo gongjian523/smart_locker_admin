@@ -28,34 +28,24 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// InventoryConfirm.xaml 的交互逻辑
     /// </summary>
-    public partial class InventoryDtlLocal : UserControl, INotifyPropertyChanged
+    public partial class InventoryDtlLocal : UserControl
     {
         public delegate void BackInventoryHandler(object sender, RoutedEventArgs e);
         public event BackInventoryHandler BackInventoryEvent;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        //public event PropertyChangedEventHandler PropertyChanged;
 
         InventoryBll inventoryBll = new InventoryBll();
 
         List<InventoryOrderdtl> dtlList = new List<InventoryOrderdtl>();
+        List<CatalogueCommodity> catalogueList = new List<CatalogueCommodity>();
         List<GoodsDto> list = new List<GoodsDto>();
+
+        string curCatalogueName;
 
         public string Code { get; set; }
         public DateTime CreateTime { get; set; }
         public int Type { get; set; }
-
-        private int _status;
-        public int Status
-        {
-            get { return _status; }
-            set
-            {
-                if (value == _status)
-                    return;
-                _status = value;
-                NotifyPropertyChanged("Status");
-            }
-        }
 
 
         public InventoryDtlLocal(int inventoryId)
@@ -65,16 +55,61 @@ namespace CFLMedCab.View.Inventory
             DataContext = this;
 
             InventoryOrderDto order = inventoryBll.GetInventoryOrdersByInventoryId(inventoryId)[0];
-            List<InventoryOrderdtl> dtlList = inventoryBll.GetInventoryDetailsByInventoryId(inventoryId);
+            dtlList = inventoryBll.GetInventoryDetailsByInventoryId(inventoryId);
+            catalogueList = inventoryBll.GetCatalogueInfo(dtlList);
 
             Code = order.code;
             CreateTime = order.create_time;
-            //Type = order.type;
-            //Status = order.status;
 
-            goodsDtllistCheckView.DataContext = dtlList;
+            gridView1.Visibility = Visibility.Visible;
+            gridView2.Visibility = Visibility.Hidden;
+            gridView3.Visibility = Visibility.Hidden;
+
+            setLableVisbility(true);
+
+            listView1.DataContext = catalogueList;
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterSpecDetail(object sender, RoutedEventArgs e)
+        {
+            curCatalogueName = (string)(sender as Button).CommandParameter;
+
+            gridView1.Visibility = Visibility.Hidden;
+            gridView2.Visibility = Visibility.Visible;
+
+            List<SpecCommodity> specList = catalogueList.Where(item => item.CatalogueName == curCatalogueName).ToList().First().SpecList;
+
+            listView2.DataContext = specList;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterCommodityDetail(object sender, RoutedEventArgs e)
+        {
+            string spec = (string)(sender as Button).CommandParameter;
+
+            gridView2.Visibility = Visibility.Hidden;
+            gridView3.Visibility = Visibility.Visible;
+
+            setLableVisbility(false);
+            commodityNameTb.Text = curCatalogueName;
+            commoditySpecTb.Text = spec;
+
+            List<InventoryOrderdtl> commodityList = dtlList.Where(item => item.CatalogueName == curCatalogueName && item.Specifications == spec).ToList();
+
+            listView3.DataContext = commodityList;
+        }
+
 
         /// <summary>
         /// 返回的盘点界面
@@ -86,58 +121,48 @@ namespace CFLMedCab.View.Inventory
             BackInventoryEvent(this, null);
         }
 
-
-        ///// <summary>
-        ///// 新增实际库存商品
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onAddProduct(object sender, RoutedEventArgs e)
-        //{
-        //    EnterAddProductEvent(this, order);
-        //}
-
-        ///// <summary>
-        ///// 盘点确认
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onConfirm(object sender, RoutedEventArgs e)
-        //{
-        //    inventoryBll.ConfirmInventory((InventoryOrder)order);
-        //    inventoryBll.UpdateInventoryDetails(dtlList);
-        //    hideButtons(false);
-
-        //    goodsDtllistConfirmView.Visibility = Visibility.Collapsed;
-        //    goodsDtllistCheckView.Visibility = Visibility.Visible;
-
-        //    Status = 1;
-        //    goodsDtllistCheckView.Items.Refresh();
-        //}
-
-        ///// <summary>
-        ///// 取消
-        ///// </summary>
-        ///// <param name="sender"></param>
-        ///// <param name="e"></param>
-        //private void onCancel(object sender, RoutedEventArgs e)
-        //{
-        //    EnterInventoryEvent(this, null);
-        //}
-
-        //private void hideButtons(bool visible)
-        //{
-        //    btnAddProduct.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
-        //    btnCancel.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
-        //    btnConfirm.Visibility = visible ? Visibility.Visible : Visibility.Hidden;
-        //}
-
-        // This method is called by the Set accessor of each property.  
-        // The CallerMemberName attribute that is applied to the optional propertyName  
-        // parameter causes the property name of the caller to be substituted as an argument.  
-        private void NotifyPropertyChanged([CallerMemberName]String propertyName = "")
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onBackwordSepcList(object sender, RoutedEventArgs e)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            gridView2.Visibility = Visibility.Hidden;
+            gridView1.Visibility = Visibility.Visible;
         }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onBackwordSepcDetial(object sender, RoutedEventArgs e)
+        {
+            setLableVisbility(true);
+
+            gridView3.Visibility = Visibility.Hidden;
+            gridView2.Visibility = Visibility.Visible;
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isSpecDetail"></param>
+        private void setLableVisbility(bool isSpecDetail)
+        {
+            invTimerLb.Visibility = isSpecDetail ? Visibility.Visible : Visibility.Hidden;
+            invTimerTb.Visibility = isSpecDetail ? Visibility.Visible : Visibility.Hidden;
+            invTypel.Visibility = isSpecDetail ? Visibility.Visible : Visibility.Hidden;
+            invTypel2.Visibility = isSpecDetail ? Visibility.Visible : Visibility.Hidden;
+
+            commodityNameLb.Visibility = !isSpecDetail ? Visibility.Visible : Visibility.Hidden;
+            commodityNameTb.Visibility = !isSpecDetail ? Visibility.Visible : Visibility.Hidden;
+            commoditySpecLb.Visibility = !isSpecDetail ? Visibility.Visible : Visibility.Hidden;
+            commoditySpecTb.Visibility = !isSpecDetail ? Visibility.Visible : Visibility.Hidden;           
+        }
+
     }
 }

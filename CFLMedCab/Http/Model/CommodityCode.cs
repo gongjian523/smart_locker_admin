@@ -163,6 +163,18 @@ namespace CFLMedCab.Http.Model
         public string Specifications { get; set; }
 
         /// <summary>
+        /// 目录id
+        /// </summary>
+        [JsonIgnore]
+        public string CatalogueId { get; set; }
+
+        /// <summary>
+        /// 目录名字
+        /// </summary>
+        [JsonIgnore]
+        public string CatalogueName { get; set; }
+
+        /// <summary>
         /// 质量状态，从CommodityInventoryDetail而来
         /// </summary>
         [JsonIgnore]

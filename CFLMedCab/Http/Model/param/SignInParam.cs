@@ -41,8 +41,8 @@ namespace CFLMedCab.Http.Model.param
         /// 租户id, 为固定字段 【AQACQqweMIgBAAAAF8jlWJSoBWPpxUA】，在正式上线时会变化
         ///【AQACQqweDg8BAAAAYqCQtRIJuxU4iQgA】 测试环境 
         /// </summary>
-        public string tenant_id { get; set; } =   "AQACQqweMIgBAAAAF8-jlWJSoBWPpxUA";
-        //public string tenant_id { get; set; } = "AQACQqweDg8BAAAAYqCQtRIJuxU4iQgA";
+        //public string tenant_id { get; set; } =   "AQACQqweMIgBAAAAF8-jlWJSoBWPpxUA";
+        public string tenant_id { get; set; } = "AQACQqweDg8BAAAAYqCQtRIJuxU4iQgA";
 
         /// <summary>
         /// 登录来源 web app

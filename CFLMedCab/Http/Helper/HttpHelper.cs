@@ -12,7 +12,7 @@ using CFLMedCab.Http.Enum;
 using System.Xml;
 using Formatting = Newtonsoft.Json.Formatting;
 using CFLMedCab.Infrastructure;
-using CFLMedCab.Http.Aop;
+//using CFLMedCab.Http.Aop;
 
 namespace CFLMedCab.Http.Helper
 {
@@ -558,7 +558,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		////[Log]
 		public BaseData<T> Get<T>() where T : class
 		{
 
@@ -586,7 +586,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url">已经拼接好的url</param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BaseData<T> Get<T>(string url) where T : class
         {
             var handleEventWait = new HandleEventWait();
@@ -613,7 +613,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url">已经拼接好的url</param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public string Get<T>(string urlPrefix, T queryParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
@@ -643,7 +643,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url">已经拼接好的url</param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> Get<T,K>(string urlPrefix, K queryParam) where T: class
         {
             var handleEventWait = new HandleEventWait();
@@ -673,7 +673,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> Post<T>(T postParam) where T : class
 		{
 
@@ -707,7 +707,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="postParam">通用post参数</param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> Post<T>(PostParam<T> postParam) where T : class
 		{
 
@@ -747,7 +747,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="postParam">通用post参数</param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> PostByAdminToken<T>(PostParam<T> postParam) where T : class
 		{
 
@@ -786,7 +786,7 @@ namespace CFLMedCab.Http.Helper
 		/// <param name="url"></param>
 		/// <param name="postParam">post参数</param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> Post<T, K>(K postParam, string url) where T : class
 		{
 
@@ -823,7 +823,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> Post<T>(string url) where T : class
         {
             var handleEventWait = new HandleEventWait();
@@ -849,7 +849,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BaseSinglePostData<T> Post<T>(string url, bool single) where T : class
         {
             var handleEventWait = new HandleEventWait();
@@ -875,7 +875,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BaseSinglePostData<T> Post<T, K>(string url, K postParam, bool isSingle) where T : class
 		{
 			var handleEventWait = new HandleEventWait();
@@ -907,7 +907,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BaseSinglePostData<T> PostByAdminToken<T, K>(string url, K postParam) where T : class
 		{
 			var handleEventWait = new HandleEventWait();
@@ -938,7 +938,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> Post<T,K>(string url, K postParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
@@ -969,7 +969,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePostData<T> Post<T, K>(string url, K postParam,  IDictionary<string, string> headerParam) where T : class
         {
             var handleEventWait = new HandleEventWait();
@@ -1002,7 +1002,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BaseSinglePostData<T> Post<T, K>(string url, K postParam, IDictionary<string, string> headerParam, bool isS) where T : class
 		{
 			var handleEventWait = new HandleEventWait();
@@ -1033,7 +1033,7 @@ namespace CFLMedCab.Http.Helper
 		/// </summary>
 		/// <param name="url"></param>
 		/// <returns></returns>
-		[Log]
+		//[Log]
 		public BasePutData<T> Put<T>(T putParam) where T : BaseModel
 		{
 

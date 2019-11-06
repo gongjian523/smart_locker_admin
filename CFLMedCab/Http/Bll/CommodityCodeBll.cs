@@ -395,6 +395,7 @@ namespace CFLMedCab.Http.Bll
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == it.CommodityId).First();
                                 it.CommodityName = commodity.name;
                                 it.Specifications = commodity.Specifications;
+                                it.CatalogueId = commodity.CommodityCatalogueId;
                             }
                         }
                         else
@@ -800,6 +801,50 @@ namespace CFLMedCab.Http.Bll
             {
                 it.QualityStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().QualityStatus;
                 it.InventoryStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().Status;
+            });
+
+            isSuccess = true;
+            return bdCommodityCode;
+        }
+
+
+        public BaseData<CommodityCode> GetCatalogueName(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
+        {
+            isSuccess = false;
+
+            //检查参数是否正确
+            if (null == bdCommodityCode.body.objects || bdCommodityCode.body.objects.Count <= 0)
+            {
+
+                bdCommodityCode.code = (int)ResultCode.Parameter_Exception;
+                bdCommodityCode.message = ResultCode.Parameter_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            //通过【目录id】从表格【商品目录】中查询该条库存的【目录名称】（name）。
+            var catalogueIds = bdCommodityCode.body.objects.Select(it => it.CatalogueId).Distinct().ToList();
+            var catalogueDetails = HttpHelper.GetInstance().Get<CommodityCatalogue>(new QueryParam
+            {
+                @in =
+                    {
+                        field = "id",
+                        in_list = BllHelper.ParamUrlEncode(catalogueIds)
+                    }
+            });
+
+            HttpHelper.GetInstance().ResultCheck(catalogueDetails, out bool isSuccess1);
+            if (!isSuccess1)
+            {
+                bdCommodityCode.code = (int)ResultCode.Result_Exception;
+                bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+
+                return bdCommodityCode;
+            }
+
+            bdCommodityCode.body.objects.ForEach(it =>
+            {
+                it.CatalogueName = catalogueDetails.body.objects.Where(cdi => cdi.id == it.CatalogueId).First().name;
             });
 
             isSuccess = true;

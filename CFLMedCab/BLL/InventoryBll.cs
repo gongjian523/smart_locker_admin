@@ -200,5 +200,45 @@ namespace CFLMedCab.BLL
         {
             return inventoryDal.GetInventoryPlan();
         }
+
+
+        public List<CatalogueCommodity> GetCatalogueInfo(List<InventoryOrderdtl> commodolityList)
+        {
+            List<CatalogueCommodity> catalogueList = new List<CatalogueCommodity>();
+
+            foreach(var item in commodolityList)
+            {
+                //没有包含相同CatalogueId的数据
+                if (catalogueList.Where(ci =>ci.CatalogueId == item.CatalogueId).Count() == 0)
+                {
+                    List<InventoryOrderdtl> listDtl = commodolityList.Where(di => di.CatalogueId == item.CatalogueId).ToList();
+
+                    List<SpecCommodity> listSpec = new List<SpecCommodity>();
+
+                    foreach (var spec in listDtl)
+                    {
+                        if (listSpec.Where(si => si.Spec == spec.Specifications).Count() == 0)
+                        {
+                            listSpec.Add(new SpecCommodity {
+                                CatalogueName = spec.CatalogueName,
+                                Spec = spec.Specifications,
+                                SpecNum = listDtl.Where(id => id.Specifications == spec.Specifications).Count()
+                            });
+                        }
+                    }
+
+                    catalogueList.Add(new CatalogueCommodity
+                    {
+                        CatalogueId = item.CatalogueId,
+                        CatalogueName = item.CatalogueName,
+                        Num = listDtl.Count,
+                        SpecNum = listSpec.Count,
+                        SpecList = listSpec
+                    });
+                }
+            }
+
+            return catalogueList;
+        }
     }
 }

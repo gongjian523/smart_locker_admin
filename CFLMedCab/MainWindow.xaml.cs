@@ -2543,9 +2543,9 @@ namespace CFLMedCab
             SetSubViewInfo(null, SubViewType.Others);
         }
 
-        private void onEnterStockDetailedEvent(object sender, Commodity commodity)
+        private void onEnterStockDetailedEvent(object sender, StockDetailParas sdParas)
         {
-            StockDetailed stockDetailed = new StockDetailed(commodity);
+            StockDetailed stockDetailed = new StockDetailed(sdParas);
             stockDetailed.EnterStockEvent += new StockDetailed.EnterStockHandler(colseStockDetailedEvent);
 
             App.Current.Dispatcher.Invoke((Action)(() =>
