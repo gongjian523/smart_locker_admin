@@ -669,7 +669,10 @@ namespace CFLMedCab.Http.Bll
 
             bdCommodityCode.body.objects.ForEach(it =>
             {
-                it.CommodityInventoryDetailId = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().id;
+                if(commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).Count() > 0)
+                {
+                    it.CommodityInventoryDetailId = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().id;
+                }
             });
 
             //通过【关联商品】（CommodityInventoryDetailId）从表格【商品库存货品明细】中获取相关货品列表。
@@ -844,7 +847,10 @@ namespace CFLMedCab.Http.Bll
 
             bdCommodityCode.body.objects.ForEach(it =>
             {
-                it.CatalogueName = catalogueDetails.body.objects.Where(cdi => cdi.id == it.CatalogueId).First().name;
+                if(it.CatalogueId != null)
+                {
+                    it.CatalogueName = catalogueDetails.body.objects.Where(cdi => cdi.id == it.CatalogueId).First().name;
+                }
             });
 
             isSuccess = true;

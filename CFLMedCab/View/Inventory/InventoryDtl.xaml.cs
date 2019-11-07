@@ -101,7 +101,17 @@ namespace CFLMedCab.View.Inventory
 #endif
             if (hs.Count > 0)
             {
-                list = CommodityCodeBll.GetInstance().GetCommodityCode(hs).body.objects.ToList();
+                BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess1);
+                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+                if(isSuccess1)
+                {
+                    list = bdCommodityCode.body.objects.ToList();
+                }
+                else
+                {
+                    list = new List<CommodityCode>();
+                }
             }
             else
             {
@@ -141,7 +151,7 @@ namespace CFLMedCab.View.Inventory
             string inputStr = codeInputTb.Text;
             if (string.IsNullOrWhiteSpace(inputStr))
             {
-                MessageBox.Show("盘点任务单号不可以为空！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("商品编号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
@@ -166,10 +176,13 @@ namespace CFLMedCab.View.Inventory
 
             LoadingDataEvent(this, true);
             BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(inputStr.ToUpper());
-            LoadingDataEvent(this, false);
-
             //校验是否含有数据
             HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
+            if(isSuccess)
+            {
+                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+            }
+            LoadingDataEvent(this, false);
 
 			if (!isSuccess)
 			{

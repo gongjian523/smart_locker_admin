@@ -57,9 +57,9 @@
                     <Label x:Name="invTypel2" Grid.Column="2" Grid.Row="1" Content="本地盘点" Style="{StaticResource lblTitle4_1}"/>
 
                     <Label x:Name="commodityNameLb"  Grid.Column="1" Grid.Row="0" Content="商品名称" Style="{StaticResource lblTitle3}" Visibility="Hidden"/>
-                    <TextBlock x:Name="commodityNameTb" Grid.Column="1" Grid.Row="1" Text="{Binding CommodityName}" Style="{StaticResource tbTitle4_0}" Visibility="Hidden"/>
+                    <TextBlock x:Name="commodityNameTb" Grid.Column="1" Grid.Row="1" Style="{StaticResource tbTitle4_0}" Visibility="Hidden"/>
                     <Label x:Name="commoditySpecLb" Grid.Column="2" Grid.Row="0" Content="盘点类型" Style="{StaticResource lblTitle3}" Visibility="Hidden"/>
-                    <TextBlock x:Name="commoditySpecTb" Grid.Column="2" Grid.Row="1" Text="{Binding CommoditySpec}" Style="{StaticResource tbTitle4_0}" Visibility="Hidden"/>
+                    <TextBlock x:Name="commoditySpecTb" Grid.Column="2" Grid.Row="1" Style="{StaticResource tbTitle4_0}" Visibility="Hidden"/>
 
                 </Grid>
             </Border>

@@ -209,16 +209,26 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                     StoreHouseName = ApplicationState.GetHouseName(),
                     GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
                     GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
-                //},
-                //new CommodityEps
-                //{
-                //    CommodityCodeName = "RF00000345",
-                //    EquipmentId = ApplicationState.GetEquipId(),
-                //    EquipmentName = ApplicationState.GetEquipName(),
-                //    StoreHouseId = ApplicationState.GetHouseId(),
-                //    StoreHouseName = ApplicationState.GetHouseName(),
-                //    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
-                //    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
+                },
+                new CommodityEps
+                {
+                    CommodityCodeName = "RF00000413",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
+                },
+                new CommodityEps
+                {
+                    CommodityCodeName = "RF00000412",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
                 }
             };
             return ret;

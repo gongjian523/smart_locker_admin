@@ -1,54 +1,60 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <config>
   <!-- 设备综合信息 -->
   <device>
     <!-- 具体设备信息 -->
-    <equip_name>E00000033</equip_name>
-    <equip_id>AQACQqweDg8BAAAABhFW0lBfuxXAxwgA</equip_id>
-
+    <equip_name>E00000003</equip_name>
+    <equip_id>AQACQqweDg8BAAAAHDEi363NvBXygQkA</equip_id>
     <!-- 设备的库房信息 -->
-    <house_name>SR00000024</house_name>
-    <house_id>AQACQqweDg8BAAAAdghCVk1fuxW_xwgA</house_id>
-
+    <house_name>SR00000002</house_name>
+    <house_id>AQACQqweDg8BAAAAIz2ln8bMvBUKgQkA</house_id>
     <!-- 货柜信息 -->
     <goods_loction>
       <location>
-        <location_name>L00000046</location_name>
-        <location_id>AQACQqweBhEBAAAA8zE1DlDEuRVx</location_id>
+        <location_name>L00000004</location_name>
+        <location_id>AQACQqweDg8BAAAAltn0-rvNvBUDggkA</location_id>
         <locker_com>COM2</locker_com>
         <rfid_com>COM1</rfid_com>
       </location>
       <location>
-        <location_name>L00000047</location_name>
-        <location_id>AQACQqweDg8BAAAAeDhOhHvEuRXdyQcA</location_id>
+        <location_name>L00000002</location_name>
+        <location_id>AQACQqweJ4wBAAAAfj8jUrDNvBVvZQgA</location_id>
         <locker_com>COM5</locker_com>
         <rfid_com>COM4</rfid_com>
       </location>
     </goods_loction>
-
-    <!-- 主柜货位信息 --><!--
+    <!-- 主柜货位信息 -->
+    <!--
     <mcab_name>L00000036</mcab_name>
     <mcab_id>AQACQqweBhEBAAAA8zE1DlDEuRVx-gUA</mcab_id>
 
-    --><!-- 副柜货位信息 --><!--
+    -->
+    <!-- 副柜货位信息 -->
+    <!--
     <scab_name>L00000038</scab_name>
     <scab_id>AQACQqweDg8BAAAAeDhOhHvEuRXdyQcA</scab_id>
 
-    --><!-- 主柜柜门串口信息 --><!--
+    -->
+    <!-- 主柜柜门串口信息 -->
+    <!--
     <mlocker_com>COM2</mlocker_com>
 
-    --><!-- 副柜柜门串口信息 --><!--
+    -->
+    <!-- 副柜柜门串口信息 -->
+    <!--
     <slocker_com>COM5</slocker_com>
 
-    --><!-- 主柜rfid串口信息 --><!--
+    -->
+    <!-- 主柜rfid串口信息 -->
+    <!--
     <mrfid_com>COM1</mrfid_com>
 
-    --><!-- 副柜rfid串口信息 --><!--
+    -->
+    <!-- 副柜rfid串口信息 -->
+    <!--
     <srfid_com>COM4</srfid_com>-->
-
     <!-- 主柜指静脉串口信息 -->
     <mvein_com>COM9</mvein_com>
-    
   </device>
   <!-- quartz信息 -->
   <quartz>
