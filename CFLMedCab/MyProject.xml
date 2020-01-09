@@ -16,12 +16,6 @@
         <locker_com>COM2</locker_com>
         <rfid_com>COM1</rfid_com>
       </location>
-      <location>
-        <location_name>L00000002</location_name>
-        <location_id>AQACQqweJ4wBAAAAfj8jUrDNvBVvZQgA</location_id>
-        <locker_com>COM5</locker_com>
-        <rfid_com>COM4</rfid_com>
-      </location>
     </goods_loction>
     <!-- 主柜货位信息 -->
     <!--
@@ -54,7 +48,7 @@
     <!--
     <srfid_com>COM4</srfid_com>-->
     <!-- 主柜指静脉串口信息 -->
-    <mvein_com>COM9</mvein_com>
+    <mvein_com>COM7</mvein_com>
   </device>
   <!-- quartz信息 -->
   <quartz>
@@ -67,6 +61,6 @@
   </admin_token>-->
   <!--测试 admin_token信息 -->
   <admin_token>
-    AWEPAMxheF0AAEFRQUNRcXdlSjR3QkFBQUFwalQ0dEJJSnV4VnNWUWNBQVFBQ1Fxd2VEZzhCQUFBQVlxQ1F0UklKdXhVNGlRZ0GDRL6K4fABscUg9FsiDsJrtfAlB9Aaa4BKkd2uq4Eovx-K__cGXM8PxhWM8obioiuTIVjz6J7Fzlb_kqtaShcX
+    AYwBAOnbFl4AAEFRQVdiOUhPbko0QkFBQUFscmR4RTYxWTJoVWQtQVFBQVFBV2I5SE9uSjRCQUFBQVh4MVRFNjFZMmhVYy1BUUEtEgRiidxAqk7y9g3DFJVWX_CefquFpWtZRSPizGt1NpQoAA1YAW5OdaL1lhqY4ZrS_fYVHcI4_lrJyfpDahcc
   </admin_token>
 </config>

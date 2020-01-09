@@ -21,12 +21,13 @@ namespace CFLMedCab.Http.Constant
 		/// <summary>
 		/// 通用接口域名
 		/// </summary>
-		public static readonly string Domain = "https://crm.chengfayun.com/";
+		//public static readonly string Domain = "https://crm.chengfayun.com/";
+        public static readonly string Domain = "http://10.0.1.16/";
 
-		/// <summary>
-		/// 通用接口版本号
-		/// </summary>
-		public static readonly string Version = "v1.0";
+        /// <summary>
+        /// 通用接口版本号
+        /// </summary>
+        public static readonly string Version = "v1.0";
 
 		/// <summary>
 		/// 通用url前缀

@@ -16,7 +16,7 @@ namespace CFLMedCab.Http.Model.param
         /// 【AQACQqweDg8BAAAAYqCQtRIJuxU4iQgA】 测试环境
         /// </summary>
         //public string tenant_id { get; set; } = "AQACQqweMIgBAAAAF8-jlWJSoBWPpxUA";
-        public string tenant_id { get; set; } = "AQACQqweDg8BAAAAYqCQtRIJuxU4iQgA";
+        public string tenant_id { get; set; } = "AQAWb9HOnJ4BAAAAXx1TE61Y2hUc-AQA";
 
         /// <summary>
         /// 用户id
