@@ -703,7 +703,7 @@ namespace CFLMedCab
 
         private void SetNavBtnVisiblity(string role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role != "医院医护人员") ? true : false;
 
 			NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -2247,6 +2247,25 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
+#if TESTNEW
+            SetSubViewType(SubViewType.DoorOpen);
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory2(out bool isGetSuccess);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ReturnClose returnClose = new ReturnClose(hs, listOpenLocCom,null);
+                returnClose.EnterReturnOpenEvent += new ReturnClose.EnterReturnOpenHandler(onEnterReturnOpen);
+                returnClose.EnterStockSwitchOpenEvent += new ReturnClose.EnterStockSwitchOpenHandler(onEnterStockSwitch);
+                returnClose.EnterPopCloseEvent += new ReturnClose.EnterPopCloseHandler(onEnterPopClose);
+                returnClose.LoadingDataEvent += new ReturnClose.LoadingDataHandler(onLoadingData);
+
+                FullFrame.Navigate(returnClose);
+                //进入库存调整关门页面
+                SetSubViewInfo(returnClose, SubViewType.ReturnClose);
+            }));
+
+#else
 #if TESTENV
 #else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
@@ -2267,6 +2286,7 @@ namespace CFLMedCab
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
+#endif
         }
 
 

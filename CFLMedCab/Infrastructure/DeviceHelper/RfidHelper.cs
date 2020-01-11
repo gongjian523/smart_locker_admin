@@ -192,7 +192,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             {
                 new CommodityEps
                 {
-                    CommodityCodeName = "RF00000415",
+                    //CommodityCodeName = "RF00000415",
+                    CommodityCodeName = "RF00000005",
                     EquipmentId = ApplicationState.GetEquipId(),
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
@@ -202,27 +203,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 },
                 new CommodityEps
                 {
-                    CommodityCodeName = "RF00000414",
-                    EquipmentId = ApplicationState.GetEquipId(),
-                    EquipmentName = ApplicationState.GetEquipName(),
-                    StoreHouseId = ApplicationState.GetHouseId(),
-                    StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
-                },
-                new CommodityEps
-                {
-                    CommodityCodeName = "RF00000413",
-                    EquipmentId = ApplicationState.GetEquipId(),
-                    EquipmentName = ApplicationState.GetEquipName(),
-                    StoreHouseId = ApplicationState.GetHouseId(),
-                    StoreHouseName = ApplicationState.GetHouseName(),
-                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
-                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
-                },
-                new CommodityEps
-                {
-                    CommodityCodeName = "RF00000412",
+                    CommodityCodeName = "RF00000006",
                     EquipmentId = ApplicationState.GetEquipId(),
                     EquipmentName = ApplicationState.GetEquipName(),
                     StoreHouseId = ApplicationState.GetHouseId(),
@@ -234,12 +215,33 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
             return ret;
         }
 
-		/// <summary>
-		/// 根据eps json获取eps对象数据
-		/// </summary>
-		/// <param name="isGetSuccess"></param>
-		/// <returns></returns>
-		public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess)
+        public static HashSet<CommodityEps> GetEpcDataJsonInventory2(out bool isGetSuccess)
+        {
+            isGetSuccess = true;
+            string com1 = ApplicationState.GetAllRfidCom().First();
+            var ret = new HashSet<CommodityEps>()
+            {
+                new CommodityEps
+                {
+                    CommodityCodeName = "RF00000006",
+                    EquipmentId = ApplicationState.GetEquipId(),
+                    EquipmentName = ApplicationState.GetEquipName(),
+                    StoreHouseId = ApplicationState.GetHouseId(),
+                    StoreHouseName = ApplicationState.GetHouseName(),
+                    GoodsLocationName = ApplicationState.GetLocCodeByRFidCom(com1),
+                    GoodsLocationId = ApplicationState.GetLocIdByRFidCom(com1)
+                }
+            };
+            return ret;
+        }
+
+
+        /// <summary>
+        /// 根据eps json获取eps对象数据
+        /// </summary>
+        /// <param name="isGetSuccess"></param>
+        /// <returns></returns>
+        public static HashSet<CommodityEps> GetEpcDataJson(out bool isGetSuccess)
 		{
 			List<ManualResetEvent> manualEvents = new List<ManualResetEvent>();
 

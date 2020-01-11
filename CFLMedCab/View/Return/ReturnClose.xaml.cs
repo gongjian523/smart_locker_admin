@@ -8,6 +8,7 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.DeviceHelper;
 using CFLMedCab.Model;
 using CFLMedCab.Model.Constant;
 using CFLMedCab.Model.Enum;
@@ -88,7 +89,11 @@ namespace CFLMedCab.View.Return
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+#if TESTNEW
+                HashSet<CommodityEps> before = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
+#else
                 HashSet<CommodityEps> before = ApplicationState.GetGoodsInfo();
+#endif
 
                 List<CommodityCode> commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(before, after, locCodes);
                 if (commodityCodeList == null || commodityCodeList.Count <= 0)
