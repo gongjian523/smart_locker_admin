@@ -54,7 +54,9 @@ namespace CFLMedCab.View
         public Stock()
         {
             InitializeComponent();
-            
+
+            listView1Data = new List<CommodityCode>();
+
             List<String> names = ConsumingBll.GetInstance().GetLocalCommodityName();
             comboBoxList2.Add(new LocalCommodityCode { name = "全部" });
             names.ForEach(item => {
@@ -294,7 +296,8 @@ namespace CFLMedCab.View
 #if TESTENV
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
+            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #endif
             ApplicationState.SetGoodsInfo(hs);
 			

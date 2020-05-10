@@ -208,7 +208,8 @@ namespace CFLMedCab.View.Inventory
 #if TESTENV
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
 #else
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
+            //HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
 #endif
             LoadingDataEvent(this, false);
             //SetPopInventoryEvent(this, false);

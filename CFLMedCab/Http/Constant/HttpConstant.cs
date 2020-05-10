@@ -24,7 +24,7 @@ namespace CFLMedCab.Http.Constant
         //public static readonly string Domain = "https://crm.chengfayun.com/";
         //public static readonly string Domain = "http://10.0.1.16/";
         //用于调试规格厂商无法显示的版本
-        public static readonly string Domain = "https://triones.chengfayun.com";
+        public static readonly string Domain = "https://triones.chengfayun.com/";
 
 
         /// <summary>
