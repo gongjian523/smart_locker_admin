@@ -41,7 +41,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;MOCK</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>true</Prefer32Bit>
@@ -187,6 +187,7 @@
     <Compile Include="Http\Bll\AllotShelfBll.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
     <Compile Include="Http\Bll\CommodityCodeBll.cs" />
+    <Compile Include="Http\Bll\CommodityCodeMockBll.cs" />
     <Compile Include="Http\Bll\CommodityInventoryChangeBll.cs" />
     <Compile Include="Http\Bll\CommodityRecoveryBll.cs" />
     <Compile Include="Http\Bll\ConsumingBll.cs" />

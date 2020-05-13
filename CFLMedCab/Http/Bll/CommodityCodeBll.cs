@@ -192,8 +192,10 @@ namespace CFLMedCab.Http.Bll
         public List<CommodityCode> GetSimpleCommodity(HashSet<CommodityEps> CommodityEpss)
 		{
 			var commodityCodes = new List<CommodityCode>(CommodityEpss.Count);
-
-			foreach (CommodityEps currentEps in CommodityEpss)
+#if MOCK
+            commodityCodes = CommodityCodeMockBll.GetSimpleCommodity();
+#else
+            foreach (CommodityEps currentEps in CommodityEpss)
 			{
 				commodityCodes.Add(new CommodityCode
 				{
@@ -207,8 +209,8 @@ namespace CFLMedCab.Http.Bll
 					operate_type = (int)OperateType.入库
 				});
 			}
-
-			return commodityCodes;
+#endif
+            return commodityCodes;
 		}
 
 		/// <summary>
@@ -283,6 +285,7 @@ namespace CFLMedCab.Http.Bll
 					message = ResultCode.Parameter_Exception.ToString()
 				};
 			}
+            
 			return GetCommodityCode(GetSimpleCommodity(commodityEpss));
 		}
 
@@ -340,7 +343,6 @@ namespace CFLMedCab.Http.Bll
 
 			commodityCodes.ForEach(it =>
 			{
-
 				commodityCodeNames.Add(HttpUtility.UrlEncode(it.name));
 			});
 
@@ -348,7 +350,10 @@ namespace CFLMedCab.Http.Bll
 
 			if (commodityCodes.Count > 0)
 			{
-				baseDataCommodityCode = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
+#if MOCK
+                baseDataCommodityCode = CommodityCodeMockBll.GetCommodityCode();
+#else
+                baseDataCommodityCode = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
 				{
 					@in =
 					{
@@ -356,8 +361,9 @@ namespace CFLMedCab.Http.Bll
 						in_list =  commodityCodeNames
 					}
 				});
+#endif
 
-				HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
+                HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
 
 				if (isSuccess)
 				{
@@ -367,9 +373,12 @@ namespace CFLMedCab.Http.Bll
 						commodityCodeCommodityIds.Add(HttpUtility.UrlEncode(it.CommodityId));
 					});
 
-					var baseDataCommodity = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
+                    var baseDataCommodity = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) =>
 					{
-						return hh.Get<Commodity>(new QueryParam
+#if MOCK
+                        return CommodityCodeMockBll.GetCommodity();
+#else
+                        return hh.Get<Commodity>(new QueryParam
 						{
 							@in =
 							{
@@ -377,8 +386,8 @@ namespace CFLMedCab.Http.Bll
 								in_list =  commodityCodeCommodityIds
 							}
 						});
-
-					}, baseDataCommodityCode, out bool isSuccess1);
+#endif
+                    }, baseDataCommodityCode, out bool isSuccess1);
 
                     HttpHelper.GetInstance().ResultCheck(baseDataCommodity,  out bool isSuccess2);
 
@@ -649,6 +658,9 @@ namespace CFLMedCab.Http.Bll
 
             //通过【商品码】从表格【商品库存管理】中查询该条库存的id（CommodityInventoryDetailId）。
             var commodityCodeIds = bdCommodityCode.body.objects.Select(it => it.id).Distinct().ToList();
+#if MOCK
+            var commodityInventoryDetails = CommodityCodeMockBll.GetCommodityInventoryDetail();
+#else
             var commodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventoryDetail>(new QueryParam
             {
                 @in =
@@ -657,6 +669,7 @@ namespace CFLMedCab.Http.Bll
                         in_list = BllHelper.ParamUrlEncode(commodityCodeIds)
                     }
             });
+#endif
 
             HttpHelper.GetInstance().ResultCheck(commodityInventoryDetails, out bool isSuccess1);
             if(!isSuccess1)
@@ -677,6 +690,9 @@ namespace CFLMedCab.Http.Bll
 
             //通过【关联商品】（CommodityInventoryDetailId）从表格【商品库存货品明细】中获取相关货品列表。
             var CommodityInventoryDetailIds = bdCommodityCode.body.objects.Select(it => it.CommodityInventoryDetailId).Distinct().ToList();
+#if MOCK
+            var commodityInventoryGoods = CommodityCodeMockBll.GetCommodityInventoryGoods();
+#else
             var commodityInventoryGoods = HttpHelper.GetInstance().Get<CommodityInventoryGoods>(new QueryParam
             {
                 @in =
@@ -685,6 +701,7 @@ namespace CFLMedCab.Http.Bll
                         in_list = BllHelper.ParamUrlEncode(CommodityInventoryDetailIds)
                     }
             });
+#endif
 
             HttpHelper.GetInstance().ResultCheck(commodityInventoryGoods, out bool isSuccess2);
             if (!isSuccess2)
@@ -707,6 +724,9 @@ namespace CFLMedCab.Http.Bll
 
             //通过【生产批号】（CommodityInventoryGoods.BatchNumberId）从表格【生产批号管理详情】中获得相关批号信息。
             var batchNumberIds = bdCommodityCode.body.objects.Select(it => it.BatchNumberId).Distinct().ToList();
+#if MOCK
+            var batchNumber = CommodityCodeMockBll.GetBatchNumber();
+#else
             var batchNumber = HttpHelper.GetInstance().Get<BatchNumber>(new QueryParam
             {
                 @in =
@@ -715,6 +735,7 @@ namespace CFLMedCab.Http.Bll
                         in_list = BllHelper.ParamUrlEncode(batchNumberIds)
                     }
             });
+#endif
 
             HttpHelper.GetInstance().ResultCheck(batchNumber, out bool isSuccess3);
             if (!isSuccess3)
@@ -729,12 +750,17 @@ namespace CFLMedCab.Http.Bll
             {
                 if(it.BatchNumberId != null)
                 {
-                    it.ExpirationDate = Convert.ToDateTime(batchNumber.body.objects.Where(bn => bn.id == it.BatchNumberId).First().ExpirationDate);
+                    string dateStr = batchNumber.body.objects.Where(bn => bn.id == it.BatchNumberId).First().ExpirationDate;
+                    it.ExpirationDate = Convert.ToDateTime(dateStr);
+                    //it.ExpirationDate = Convert.ToDateTime(batchNumber.body.objects.Where(bn => bn.id == it.BatchNumberId).First().ExpirationDate);
                 }
             });
 
             //通过【货品名称】（HospitalGoodsId）从表格【医院货品管理详情】中获得厂家名称。
             var hospitalGoodsIds = bdCommodityCode.body.objects.Select(it => it.HospitalGoodsId).Distinct().ToList();
+#if MOCK
+            var hospitalGoods = CommodityCodeMockBll.GetHospitalGoods();
+#else
             var hospitalGoods = HttpHelper.GetInstance().Get<HospitalGoods>(new QueryParam
             {
                 @in =
@@ -743,6 +769,7 @@ namespace CFLMedCab.Http.Bll
                         in_list = BllHelper.ParamUrlEncode(hospitalGoodsIds)
                     }
             });
+#endif
 
             HttpHelper.GetInstance().ResultCheck(hospitalGoods, out bool isSuccess4);
             if (!isSuccess4)
@@ -827,6 +854,9 @@ namespace CFLMedCab.Http.Bll
 
             //通过【目录id】从表格【商品目录】中查询该条库存的【目录名称】（name）。
             var catalogueIds = bdCommodityCode.body.objects.Select(it => it.CatalogueId).Distinct().ToList();
+#if MOCK
+            var catalogueDetails = CommodityCodeMockBll.GetCommodityCatalogue();
+#else
             var catalogueDetails = HttpHelper.GetInstance().Get<CommodityCatalogue>(new QueryParam
             {
                 @in =
@@ -835,6 +865,7 @@ namespace CFLMedCab.Http.Bll
                         in_list = BllHelper.ParamUrlEncode(catalogueIds)
                     }
             });
+#endif
 
             HttpHelper.GetInstance().ResultCheck(catalogueDetails, out bool isSuccess1);
             if (!isSuccess1)
