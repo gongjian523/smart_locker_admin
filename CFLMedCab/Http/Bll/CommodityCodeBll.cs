@@ -5,6 +5,7 @@ using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Enum;
 using CFLMedCab.Http.Model.param;
 using CFLMedCab.Infrastructure;
+using CFLMedCab.Infrastructure.ToolHelper;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -635,8 +636,10 @@ namespace CFLMedCab.Http.Bll
 
         public BaseData<CommodityCode> GetExpirationAndManufactor(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
         {
-            isSuccess = false;
 
+            LogUtils.Error("GetExpirationAndManufactor: 1 " + "CCNum" + bdCommodityCode.body.objects.Count);
+            isSuccess = false;
+            
             //检查参数是否正确
             if (null == bdCommodityCode.body.objects || bdCommodityCode.body.objects.Count <= 0)
             {
@@ -647,8 +650,11 @@ namespace CFLMedCab.Http.Bll
                 return bdCommodityCode; 
             }
 
+            
             //通过【商品码】从表格【商品库存管理】中查询该条库存的id（CommodityInventoryDetailId）。
             var commodityCodeIds = bdCommodityCode.body.objects.Select(it => it.id).Distinct().ToList();
+            LogUtils.Error("GetExpirationAndManufactor: 2 "+ "ccidNum:" + commodityCodeIds.Count);
+
             var commodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventoryDetail>(new QueryParam
             {
                 @in =
@@ -677,6 +683,8 @@ namespace CFLMedCab.Http.Bll
 
             //通过【关联商品】（CommodityInventoryDetailId）从表格【商品库存货品明细】中获取相关货品列表。
             var CommodityInventoryDetailIds = bdCommodityCode.body.objects.Select(it => it.CommodityInventoryDetailId).Distinct().ToList();
+            LogUtils.Error("GetExpirationAndManufactor: 3"+ "cididNum:" + CommodityInventoryDetailIds.Count);
+
             var commodityInventoryGoods = HttpHelper.GetInstance().Get<CommodityInventoryGoods>(new QueryParam
             {
                 @in =
@@ -707,6 +715,7 @@ namespace CFLMedCab.Http.Bll
 
             //通过【生产批号】（CommodityInventoryGoods.BatchNumberId）从表格【生产批号管理详情】中获得相关批号信息。
             var batchNumberIds = bdCommodityCode.body.objects.Select(it => it.BatchNumberId).Distinct().ToList();
+            LogUtils.Error("GetExpirationAndManufactor: 4" + "bnidNum:" + batchNumberIds.Count);
             var batchNumber = HttpHelper.GetInstance().Get<BatchNumber>(new QueryParam
             {
                 @in =
@@ -735,6 +744,7 @@ namespace CFLMedCab.Http.Bll
 
             //通过【货品名称】（HospitalGoodsId）从表格【医院货品管理详情】中获得厂家名称。
             var hospitalGoodsIds = bdCommodityCode.body.objects.Select(it => it.HospitalGoodsId).Distinct().ToList();
+            LogUtils.Error("GetExpirationAndManufactor: 5" + "hgidNum:" + hospitalGoodsIds.Count);
             var hospitalGoods = HttpHelper.GetInstance().Get<HospitalGoods>(new QueryParam
             {
                 @in =
@@ -762,6 +772,8 @@ namespace CFLMedCab.Http.Bll
             });
 
             isSuccess = true;
+            LogUtils.Error("GetExpirationAndManufactor: 6" + "bdccNum:" + bdCommodityCode.body.objects.Count);
+
             return bdCommodityCode;
         }
 

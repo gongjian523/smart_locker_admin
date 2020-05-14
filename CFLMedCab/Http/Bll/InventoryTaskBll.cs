@@ -310,7 +310,8 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns> 
 		public BaseData<Equipment> GetEquipmentByEquipmentNameOrId(string equipmentNameOrId)
 		{
-			if (null == equipmentNameOrId)
+            LogUtils.Error("GetEquipmentByEquipmentNameOrId: 1");
+            if (null == equipmentNameOrId)
 			{
 				return new BaseData<Equipment>()
 				{
@@ -318,8 +319,10 @@ namespace CFLMedCab.Http.Bll
 					message = ResultCode.Parameter_Exception.ToString()
 				};
 			}
-			//根据设备号或设备ID获取设备信息
-			var equipment = HttpHelper.GetInstance().Get<Equipment>(new QueryParam
+            LogUtils.Error("GetEquipmentByEquipmentNameOrId: 2");
+
+            //根据设备号或设备ID获取设备信息
+            var equipment = HttpHelper.GetInstance().Get<Equipment>(new QueryParam
 			{
 				view_filter =
 				{
@@ -346,8 +349,8 @@ namespace CFLMedCab.Http.Bll
 			});
 			//校验是否含有数据，如果含有数据，拼接具体字段
 			HttpHelper.GetInstance().ResultCheck(equipment, out bool isSuccess);
-
-			return equipment;
+            LogUtils.Error("GetEquipmentByEquipmentNameOrId: 3");
+            return equipment;
 		}
 		/// <summary>
 		/// 自动盘点：
@@ -363,7 +366,8 @@ namespace CFLMedCab.Http.Bll
 			//校验是否含有数据，如果含有数据，进行后续操作
 			HttpHelper.GetInstance().ResultCheck(equipment, out bool isSuccess);
             BaseData<InventoryPlan> plans = new BaseData<InventoryPlan>();
-			if (isSuccess)
+            LogUtils.Error("GetInventoryPlanByEquipmnetNameOrId: 1");
+            if (isSuccess)
 			{
 				//根据自动盘点计划Id查询盘点计划相关信息
 				if (null != equipment.body.objects[0].InventoryPlanId && equipment.body.objects[0].InventoryPlanId.Count > 0)
@@ -379,12 +383,14 @@ namespace CFLMedCab.Http.Bll
 				}
                 //校验是否含有数据，如果含有数据，拼接具体字段
                 plans = HttpHelper.GetInstance().ResultCheck(plans, out bool isSuccess2);
+                LogUtils.Error("GetInventoryPlanByEquipmnetNameOrId: 2 " + "plansNum" + plans.body.objects.Count);
             }
 			else
 			{
 				plans.code = equipment.code;
 				plans.message = equipment.message;
-			}
+                LogUtils.Error("GetInventoryPlanByEquipmnetNameOrId: 3 ");
+            }
 
 			return plans;
 		}
