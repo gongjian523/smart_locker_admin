@@ -349,7 +349,11 @@ namespace CFLMedCab.Http.Bll
 			});
 			//校验是否含有数据，如果含有数据，拼接具体字段
 			HttpHelper.GetInstance().ResultCheck(equipment, out bool isSuccess);
-            LogUtils.Error("GetEquipmentByEquipmentNameOrId: 3");
+            LogUtils.Error("GetEquipmentByEquipmentNameOrId: 3 "+ isSuccess.ToString() +" " +equipment.code.ToString());
+            
+            if(equipment.code == 0 && equipment.body != null)
+                LogUtils.Error("GetEquipmentByEquipmentNameOrId: 4 " + equipment.body.objects.Count.ToString());
+            
             return equipment;
 		}
 		/// <summary>
