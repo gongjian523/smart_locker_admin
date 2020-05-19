@@ -358,10 +358,14 @@ namespace CFLMedCab.Http.Bll
 		/// <returns></returns>
 		public BaseData<InventoryPlan> GetInventoryPlanByEquipmnetNameOrId(string equipmentNameOrId)
 		{
-			//根据设备编码或ID获取设备信息
-			var equipment = GetEquipmentByEquipmentNameOrId(equipmentNameOrId);
-			//校验是否含有数据，如果含有数据，进行后续操作
-			HttpHelper.GetInstance().ResultCheck(equipment, out bool isSuccess);
+            //根据设备编码或ID获取设备信息
+#if MOCK
+            var equipment = CommodityCodeMockBll.GetEquipment();
+#else
+            var equipment = GetEquipmentByEquipmentNameOrId(equipmentNameOrId);
+#endif
+            //校验是否含有数据，如果含有数据，进行后续操作
+            HttpHelper.GetInstance().ResultCheck(equipment, out bool isSuccess);
             BaseData<InventoryPlan> plans = new BaseData<InventoryPlan>();
 			if (isSuccess)
 			{

@@ -459,6 +459,13 @@ namespace CFLMedCab.Http.Bll
             return Deserialize<BaseData<CommodityCatalogue>>(str);
         }
 
+        public static BaseData<Equipment> GetEquipment()
+        {
+            string str = Read("D:\\1\\8.txt");
+            return Deserialize<BaseData<Equipment>>(str);
+        }
+
+
         private static string Read(string path)
         {
             System.IO.StreamReader file = new System.IO.StreamReader(path);
