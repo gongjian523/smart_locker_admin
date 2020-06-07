@@ -60,7 +60,15 @@
     Ae0kAFOHHF0AAEFRQUNRcXdlSjVjQkFBQUF1cExjbFdKU29CVUZjUlFBQVFBQ1Fxd2VNSWdCQUFBQUY4LWpsV0pTb0JXUHB4VUH0y7iG-0fJJYsEhQeKyCbno1iv5jjVq-EN2xf0RG1Fvnd_PrvSGFxXg2CjMhq5isDjtI4ez0GbyxsWmzmgZa1t
   </admin_token>-->
   <!--测试 admin_token信息 -->
+  <!--贵阳二医院正式token -->
   <admin_token>
     AYwBAOnbFl4AAEFRQVdiOUhPbko0QkFBQUFscmR4RTYxWTJoVWQtQVFBQVFBV2I5SE9uSjRCQUFBQVh4MVRFNjFZMmhVYy1BUUEtEgRiidxAqk7y9g3DFJVWX_CefquFpWtZRSPizGt1NpQoAA1YAW5OdaL1lhqY4ZrS_fYVHcI4_lrJyfpDahcc
   </admin_token>
+  <!--贵阳二医院正式token end-->
+  <!--贵阳二医院测试token -->
+  <!--<admin_token>
+    AYX5AFXFu14AAEFRREtsakRtU3o0QkFBQUExUV9EUU1paERCYnFmd0VBQVFES2xqRG1TejRCQUFBQXZoeGRRTWloREJicGZ3RUG6INE1JwtP94IrO-xyAHtGx3gBER-1RemIsh6vM3zyMSmZRPck72Zq7qNb4lOEUbIch9ylDkvI8rHBlBFH-Nas
+  </admin_token>-->
+  <!--贵阳二医院测试token end-->
+  
 </config>

@@ -450,9 +450,10 @@ namespace CFLMedCab
 									source = "app"
 								};
 
+                                LogUtils.Debug("onFingerDetectedLocal: psw" + currentOnlineUser.Password);
 
-								//获取用户Token
-								var bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
+                                //获取用户Token
+                                var bdUserToken = UserLoginBll.GetInstance().GetUserToken(siParam);
 
 								HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isBdUserTokenSuccess);
 

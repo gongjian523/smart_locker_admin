@@ -1,4 +1,5 @@
 ﻿using CFLMedCab.Http.Constant;
+using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
@@ -135,10 +136,46 @@ namespace CFLMedCab.Http.Bll
         /// <returns></returns>
         public BaseSinglePostData<UserToken> GetUserToken(SignInParam siParam)
         {
-			BaseSinglePostData<Token> dataSignIn = HttpHelper.GetInstance().Post<Token, SignInParam>(HttpHelper.GetSignInUrl(), siParam, true);
+            LogUtils.Error("GetUserToken：" + siParam.phone + " " + siParam.password);
 
-			//根据账户获取用户数据
-			BaseSinglePostData<UserToken> dataUserToken = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
+            BaseSinglePostData<Token> dataSignIn = HttpHelper.GetInstance().Post<Token, SignInParam>(HttpHelper.GetSignInUrl(), siParam, true);
+
+            if (dataSignIn == null)
+            {
+                LogUtils.Error("GetUserToken：dataSignIn null");
+            }
+            else
+            {
+                if (dataSignIn.code == (int)ResultCode.OK)
+                {
+                    if (dataSignIn.body != null)
+                    {
+                        if(dataSignIn.body.token != null)
+                        {
+                            LogUtils.Error("GetUserToken：dataSignIn.body.token.length：" + dataSignIn.body.token.Length);
+                            LogUtils.Error("GetUserToken：dataSignIn.body.token：" + dataSignIn.body.token);
+                        }
+                        else
+                        {
+                            LogUtils.Error("GetUserToken：dataSignIn.body.token null");
+                        }
+                    }
+                    //结果集正常，但为空
+                    else
+                    {
+                        LogUtils.Error("GetUserToken：dataSignIn.body null");
+                    }
+                }
+                //结果集异常
+                else
+                {
+                    LogUtils.Error("GetUserToken：dataSignIn.code error：" + dataSignIn.code);
+                }
+            }
+
+
+            //根据账户获取用户数据
+            BaseSinglePostData<UserToken> dataUserToken = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 
                 UserSignInParam bodyPara = new UserSignInParam();
                 IDictionary<string, string> headerParam = new Dictionary<string, string>();
@@ -147,6 +184,42 @@ namespace CFLMedCab.Http.Bll
                 return hh.Post<UserToken, UserSignInParam>(HttpHelper.GetUserSignInUrl(), bodyPara, headerParam, true);
 
             }, dataSignIn);
+
+            if (dataUserToken == null)
+            {
+                LogUtils.Error("GetUserToken：dataUserToken null");
+            }
+            else
+            {
+                if (dataUserToken.code == (int)ResultCode.OK)
+                {
+                    if (dataUserToken.body != null)
+                    {
+                        if (dataUserToken.body.access_token != null)
+                        {
+                            LogUtils.Error("GetUserToken：dataUserToken.body.access_token.length：" + dataUserToken.body.access_token.Length);
+                            LogUtils.Error("GetUserToken：dataUserToken.body.access_token：" + dataUserToken.body.access_token);
+                        }
+                        else
+                        {
+                            LogUtils.Error("GetUserToken：dataUserToken.body.access_token null");
+                        }
+                    }
+                    //结果集正常，但为空
+                    else
+                    {
+                        LogUtils.Error("GetUserToken：dataUserToken.body null");
+                    }
+                }
+                //结果集异常
+                else
+                {
+                    LogUtils.Error("GetUserToken：dataUserToken.code error：" + dataUserToken.code);
+                }
+            }
+
+
+
 
             return dataUserToken;
         } 

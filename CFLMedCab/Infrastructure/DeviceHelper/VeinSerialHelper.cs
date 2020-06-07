@@ -611,6 +611,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 					if (clientConn.IsOpen)
 					{
+                        Thread.Sleep(50);
 
 						clientConn.Read(receivedData, 0, receivedData.Length);
 
@@ -706,8 +707,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 					if (clientConn.IsOpen)
 					{
+                        Thread.Sleep(50);
 
-						clientConn.Read(preReceivedData, 0, preReceivedData.Length);
+                        clientConn.Read(preReceivedData, 0, preReceivedData.Length);
 
 						LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】 串口数据已接收：{HexHelper.ByteToHexStr(",", preReceivedData)}");
 

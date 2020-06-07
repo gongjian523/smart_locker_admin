@@ -95,7 +95,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				byte[] TxData = { 0xA1 };
 				clientConn.Write(TxData, 0, 1);
-			}
+                LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已发送：{HexHelper.ByteToHexStr(",", TxData)}");
+            }
 			catch (Exception ex)
 			{
 				LogUtils.Error(ex.ToString());
@@ -133,7 +134,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				byte[] TxData = { 0xA1 };
 				clientConn.Write(TxData, 0, 1);
-			}
+                LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已发送：{HexHelper.ByteToHexStr(",", TxData)}");
+            }
 			catch (Exception ex)
 			{
 				LogUtils.Error(ex.ToString());
@@ -361,13 +363,14 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				
 				byte[] receivedData = new byte[4];
 				currentClientConn.Read(receivedData, 0, 4);
+                LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已接收：{HexHelper.ByteToHexStr(",", receivedData)}");
 
-				//看上报数据格式为：08 81 xx xx(16进制)
-				//08 81 表示帧头
-				//第一XX: 表示1 - 8号锁的工作状态
-				//第二XX: 表示9 - 16号锁的工作状态
-				//xx&0x01==0x01   1号锁门关闭，否则1号打开
-				if (receivedData[0] != 0x08)
+                //看上报数据格式为：08 81 xx xx(16进制)
+                //08 81 表示帧头
+                //第一XX: 表示1 - 8号锁的工作状态
+                //第二XX: 表示9 - 16号锁的工作状态
+                //xx&0x01==0x01   1号锁门关闭，否则1号打开
+                if (receivedData[0] != 0x08)
 					isClose = 0;
 
 				if (receivedData[1] != 0x81)
@@ -395,13 +398,14 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 				byte[] receivedData = new byte[4];
 				currentClientConn.Read(receivedData, 0, 4);
+                LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已接收：{HexHelper.ByteToHexStr(",", receivedData)}");
 
-				//看上报数据格式为：08 81 xx xx(16进制)
-				//08 81 表示帧头
-				//第一XX: 表示1 - 8号锁的工作状态
-				//第二XX: 表示9 - 16号锁的工作状态
-				//xx&0x01==0x01   1号锁门关闭，否则1号打开
-				if (receivedData[0] != 0x08)
+                //看上报数据格式为：08 81 xx xx(16进制)
+                //08 81 表示帧头
+                //第一XX: 表示1 - 8号锁的工作状态
+                //第二XX: 表示9 - 16号锁的工作状态
+                //xx&0x01==0x01   1号锁门关闭，否则1号打开
+                if (receivedData[0] != 0x08)
 					isClose = 0;
 
 				if (receivedData[1] != 0x81)
