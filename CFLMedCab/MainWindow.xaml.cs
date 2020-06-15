@@ -983,7 +983,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -1115,7 +1115,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -1343,7 +1343,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -1477,7 +1477,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -1642,7 +1642,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -1811,7 +1811,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -1981,7 +1981,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -2131,7 +2131,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -2264,7 +2264,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
@@ -2467,7 +2467,7 @@ namespace CFLMedCab
 
             locOpenNum++;
 
-            SpeakerHelper.Sperker("柜门已开，请检查相关耗材，检查完毕请关闭柜门");
+            //SpeakerHelper.Sperker("柜门已开，请检查相关耗材，检查完毕请关闭柜门");
 
             ((InventoryDtl)subViewHandler).SetButtonVisibility(false);
 

@@ -339,7 +339,7 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 					Interval = 100 //执行间隔时间,单位为毫秒;
 				};
 				voiceBroadcastTimer.Elapsed += new ElapsedEventHandler(VoiceBroadcastEventHandler);
-				voiceBroadcastTimer.Start();
+				//voiceBroadcastTimer.Start();
 
 
 			}
