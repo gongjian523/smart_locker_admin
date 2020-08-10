@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Model
 {
-    public class LoginInfo
+    public class LoginRecord
     {
 		/// <summary>
 		/// 登录ID
@@ -18,13 +18,13 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 姓名
 		/// </summary>
-		public string name { get; set; }
+		public string user_name { get; set; }
 
 		/// <summary>
 		/// 用户名,手机号码，带有+86
 		/// </summary>
 		[SugarColumn(IsNullable = true)]
-		public string username { get; set; }
+		public string phone_num { get; set; }
 
 		/// <summary>
 		/// 科室
@@ -35,19 +35,20 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 登录时间
 		/// </summary>
-		public DateTime logintime { get; set; }
+		public DateTime login_time { get; set; }
 
 
 		/// <summary>
 		/// 登出时间
 		/// </summary>
-		public DateTime logouttime { get; set; }
+		[SugarColumn(IsNullable = true)]
+		public DateTime logout_time { get; set; }
 
 		/// <summary>
 		/// 退出类型
 		/// </summary>
 		[SugarColumn(IsNullable = true)]
-		public string logoutInfo  { get; set; }
+		public string logout_info  { get; set; }
 
 	}
 }

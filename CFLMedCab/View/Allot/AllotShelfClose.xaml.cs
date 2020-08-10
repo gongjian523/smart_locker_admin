@@ -237,7 +237,10 @@ namespace CFLMedCab.View.Allot
                     }
                 }
 
-                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "AllotShelf");
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "AllotShelf",  out List<LocalCommodityCode> localCommodities);
+
+                InOutRecordBll inOutBill = new InOutRecordBll();
+                inOutBill.NewInOutRecord(localCommodities, "AllotShelf");
             }
 
             ApplicationState.SetGoodsInfoInSepcLoc(after,locCodes);

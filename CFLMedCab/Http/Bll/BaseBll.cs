@@ -243,13 +243,61 @@ namespace CFLMedCab.Http.Bll
 					SqlSugarHelper.GetInstance().Db.Insertable(localCommodityCodes).ExecuteCommand();
 
 				}).IsSuccess;
-
 			}
 
             if(!result)
             {
                 LogUtils.Warn("InsertLocalCommodityCodeInfo" + sourceBill);
             }
+
+			return result;
+		}
+
+
+		/// <summary>
+		/// 插入变化后的商品信息
+		/// </summary>
+		/// <param name="baseDataCommodityCode">所有数据</param>
+		/// <param name="sourceBill">业务类型</param>
+		/// <returns></returns>
+		public bool InsertLocalCommodityCodeInfo(BaseData<CommodityCode> baseDataCommodityCode, string sourceBill, out List<LocalCommodityCode> localCommodities)
+		{
+			var result = false;
+
+			//校验是否含有数据，如果含有数据，有就继续下一步
+			baseDataCommodityCode = HttpHelper.GetInstance().ResultCheck(baseDataCommodityCode, out bool isSuccess);
+			localCommodities = new List<LocalCommodityCode>();
+
+			if (isSuccess)
+			{
+				List<LocalCommodityCode>  localCommodityCodes = baseDataCommodityCode.body.objects.MapToListIgnoreId<CommodityCode, LocalCommodityCode>();
+
+				var createTime = DateTime.Now;
+				var operater = ApplicationState.GetUserInfo().name;
+
+				localCommodityCodes.ForEach(it =>
+				{
+					it.sourceBill = sourceBill;
+					it.create_time = createTime;
+					it.operater = operater;
+				});
+
+				//事务防止多插入产生脏数据
+				result = SqlSugarHelper.GetInstance().Db.Ado.UseTran(() =>
+				{
+
+					SqlSugarHelper.GetInstance().Db.Insertable(localCommodityCodes).ExecuteCommand();
+
+				}).IsSuccess;
+
+				localCommodities.AddRange(localCommodityCodes);
+			}
+			
+
+			if (!result)
+			{
+				LogUtils.Warn("InsertLocalCommodityCodeInfo" + sourceBill);
+			}
 
 			return result;
 		}

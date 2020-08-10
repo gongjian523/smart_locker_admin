@@ -24,6 +24,7 @@ namespace CFLMedCab.Infrastructure
         COM_MVein,
         AccessToken,
         RefreshToken,
+        LoginId
     };
 
     public static class ApplicationState
@@ -427,5 +428,25 @@ namespace CFLMedCab.Infrastructure
 			string BaseDirectoryPath = Directory.GetCurrentDirectory(); 
 			return BaseDirectoryPath;
 		}
-	}
+
+
+        /// <summary>
+        /// 保存登录Id
+        /// </summary>
+        /// <param name="loginId"></param>
+        public static void SetLoginId(int loginId)
+        {
+            SetValue((int)ApplicationKey.LoginId, loginId);
+            return;
+        }
+
+        /// <summary>
+        /// 获取登录Id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetLoginId()
+        {
+            return GetValue<int>((int)ApplicationKey.LoginId);
+        }
+    }
 }

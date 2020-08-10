@@ -103,7 +103,15 @@ namespace CFLMedCab.Infrastructure.DbHelper
 			//本地库存eps表
 			Db.CodeFirst.InitTables<LocalCommodityEps>();
 
-		}
+            //本地登录信息表
+            Db.CodeFirst.InitTables<LoginRecord>();
+
+            //本地开关柜信息表
+            Db.CodeFirst.InitTables<InOutRecord>();
+            Db.CodeFirst.InitTables<InOutDetail>();
+
+
+        }
 
         public static string GetCurrentProjectPath
         {

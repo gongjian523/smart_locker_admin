@@ -183,7 +183,11 @@
     <Compile Include="BLL\FetchOrderBll.cs" />
     <Compile Include="BLL\GoodsBll.cs" />
     <Compile Include="BLL\GoodsChangeOrderBll.cs" />
+    <Compile Include="BLL\InOutRecordBll.cs" />
+    <Compile Include="BLL\LoginBll.cs" />
     <Compile Include="Controls\TouchScreenKeyboard.cs" />
+    <Compile Include="DAL\InOutRecordeDal.cs" />
+    <Compile Include="DAL\LoginDal.cs" />
     <Compile Include="Http\Bll\AllotShelfBll.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
     <Compile Include="Http\Bll\CommodityCodeBll.cs" />
@@ -337,10 +341,13 @@
     <Compile Include="Model\Enum\NavBtnEnum.cs" />
     <Compile Include="Model\Enum\RPCommanEnum.cs" />
     <Compile Include="Model\Enum\UserIdEnum.cs" />
+    <Compile Include="Model\InOutRecord.cs" />
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />
     <Compile Include="Model\Enum\SubViewEnum.cs" />
     <Compile Include="Model\Locations.cs" />
+    <Compile Include="Model\InOutDetail.cs" />
+    <Compile Include="Model\LoginRecord.cs" />
     <Compile Include="Model\LoginStatus.cs" />
     <Compile Include="Model\ReplenishSubOrder.cs" />
     <Compile Include="Model\Enum\CollarType.cs" />
@@ -373,6 +380,9 @@
     </Compile>
     <Compile Include="View\Common\AbnOptBoard.xaml.cs">
       <DependentUpon>AbnOptBoard.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\InOut\PersonalSetting.xaml.cs">
+      <DependentUpon>PersonalSetting.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Inventory\InventoryDtlLocal.xaml.cs">
       <DependentUpon>InventoryDtlLocal.xaml</DependentUpon>
@@ -541,6 +551,10 @@
     <Page Include="View\Common\AbnOptBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InOut\PersonalSetting.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\Inventory\InventoryDtlLocal.xaml">
       <Generator>MSBuild:Compile</Generator>

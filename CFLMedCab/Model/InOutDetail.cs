@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CFLMedCab.Model
 {
-    public class LoginDetail
+    public class InOutDetail
     {
 		/// <summary>
 		/// ID
@@ -16,33 +16,44 @@ namespace CFLMedCab.Model
 		public int id { get; set; }
 
 		/// <summary>
-		/// 登录ID
+		/// 出入库记录id
 		/// </summary>
-		public string loginId { get; set; }
+		public int in_out_id { get; set; }
 
 		/// <summary>
-		/// 登录时间
+		/// 登录id
 		/// </summary>
-		public DateTime logintime { get; set; }
+		public int login_id { get; set; }
 
 		/// <summary>
-		/// 操作
+		/// 操作时间
+		/// </summary
+		public DateTime create_time { get; set; }
+
+		/// <summary>
+		/// 操作类型
 		/// </summary>
 		public string operate { get; set; }
+
+
+		/// <summary>
+		/// 操作人
+		/// </summary>
+		public string user_name { get; set; }
 
 
 		/// <summary>
 		/// 目录名字
 		/// </summary>
 		[SugarColumn(IsNullable = true)]
-		public string CatalogueName { get; set; }
+		public string ctalogue_name { get; set; }
 
 
 		/// <summary>
 		/// 规格
 		/// </summary>
 		[SugarColumn(IsNullable = true)]
-		public string Specifications { get; set; }
+		public string specifications { get; set; }
 
 
 		/// <summary>
@@ -56,7 +67,6 @@ namespace CFLMedCab.Model
 		/// 出入库
 		/// </summary>
 		[SugarColumn(IsNullable = true)]
-		public string InOrOut { get; set; }
-
-	}
+		public string in_out { get; set; }
+	} 
 }
