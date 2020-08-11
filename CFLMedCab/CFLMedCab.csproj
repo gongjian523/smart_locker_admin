@@ -381,6 +381,9 @@
     <Compile Include="View\Common\AbnOptBoard.xaml.cs">
       <DependentUpon>AbnOptBoard.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\InOut\InOutDetailWin.xaml.cs">
+      <DependentUpon>InOutDetailWin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\InOut\PersonalSetting.xaml.cs">
       <DependentUpon>PersonalSetting.xaml</DependentUpon>
     </Compile>
@@ -551,6 +554,10 @@
     <Page Include="View\Common\AbnOptBoard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\InOut\InOutDetailWin.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="View\InOut\PersonalSetting.xaml">
       <Generator>MSBuild:Compile</Generator>

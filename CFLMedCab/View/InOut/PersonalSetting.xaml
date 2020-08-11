@@ -29,10 +29,10 @@
                     <Label Content="个人信息"  Style="{StaticResource lblTitle2}"/>
                     <Label Content="姓名"   Grid.Row="1" Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
                     <Label Content="电话"   Grid.Row="1" Grid.Column="1" Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
-                    <Label x:Name="lbDepartmenTitle" Grid.Row="1" Grid.Column="2"  Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
+                    <Label Content="科室/部门"  Grid.Row="1" Grid.Column="2"  Margin="0,0,20,0"  Style="{StaticResource lblTitle3}"/>
                     <Label x:Name="lbName" Grid.Row="2" Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
                     <Label x:Name="lbPhone"    Grid.Row="2" Grid.Column="1" Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
-                    <Label x:Name="lbDepartmen"  Grid.Row="2"  Grid.Column="2"  Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label x:Name="lbDepartment"  Grid.Row="2"  Grid.Column="2"  Margin="0,0,20,0"  Style="{StaticResource lblTitle4_0}"/>
                 </Grid>
             </Border >
             <Border  Style="{StaticResource TopRadiusBorder}" Grid.Row="1">
@@ -69,7 +69,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="科室" Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <GridViewColumn  x:Name="departmentClo1" Header="科室/部门" Width="{Binding ElementName=column2,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding department}"/>
@@ -103,7 +103,7 @@
                 </Grid>
             </Border>
 
-            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2" Name="Content1" Visibility="Hidden" >
+            <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2" Name="Content1" Visibility="Collapsed" >
                 <Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -130,7 +130,7 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="科室" Width="{Binding ElementName=ycolumn2,Path=ActualWidth}">
+                                <GridViewColumn  x:Name="departmentClo2" Header="科室" Width="{Binding ElementName=ycolumn2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding department}"/>
@@ -155,7 +155,7 @@
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                                <Button Style="{StaticResource ListButton}" Content="查看" Click="onStockDetailed"  CommandParameter="{Binding Path=id}" />
+                                                <Button Style="{StaticResource ListButton}" Content="查看" Click="onEnterInOutDetail"  CommandParameter="{Binding Path=id}" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
@@ -163,10 +163,8 @@
                             </GridView>
                         </ListView.View>
                     </ListView>
-
                 </Grid>
             </Border>
-
         </Grid>
     </Border>
 </UserControl>

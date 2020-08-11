@@ -56,6 +56,11 @@ namespace CFLMedCab.BLL
             return inOutRecordeDal.GetInOutRecordByUserName(name);
         }
 
+        public InOutRecord GetInOutRecordById(int id)
+        {
+            return inOutRecordeDal.GetInOutRecordById(id);
+        }
+
         public List<InOutRecord> GetAllInOutRecord()
         {
             return inOutRecordeDal.GetAllInOutRecord();

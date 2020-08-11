@@ -59,6 +59,16 @@ namespace CFLMedCab.DAL
             return list;
         }
 
+        public InOutRecord GetInOutRecordById(int id)
+        {
+            var item = Db.Queryable<InOutRecord>()
+                .Where(it => it.id == id)
+                .OrderBy(it => it.create_time, OrderByType.Desc)
+                .Select<InOutRecord>()
+                .First();
+            return item;
+        }
+
 
         public List<InOutRecord> GetAllInOutRecord()
         {
