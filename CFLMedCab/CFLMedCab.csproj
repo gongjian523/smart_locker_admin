@@ -198,6 +198,7 @@
     <Compile Include="Http\Bll\LocalGoodsChangeBll.cs" />
     <Compile Include="Http\Bll\RollbackBll.cs" />
     <Compile Include="Http\Bll\PickBll.cs" />
+    <Compile Include="Http\Bll\ShelfFastBll.cs" />
     <Compile Include="Http\Bll\ShelfBll.cs" />
     <Compile Include="Http\Bll\UserLoginBll.cs" />
     <Compile Include="BLL\InventoryBll.cs" />
@@ -294,6 +295,8 @@
     <Compile Include="Http\Model\PickTask.cs" />
     <Compile Include="Http\Model\PrescriptionBill.cs" />
     <Compile Include="Http\Model\PrescriptionOrderGoodsDetail.cs" />
+    <Compile Include="Http\Model\ShelfTaskFastDetail.cs" />
+    <Compile Include="Http\Model\ShelfTaskFast.cs" />
     <Compile Include="Http\Model\ShelfTask.cs" />
     <Compile Include="Http\Model\ShelfTaskCommodityDetail.cs" />
     <Compile Include="Http\Model\StoreHouse.cs" />
@@ -366,6 +369,18 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\ShelfFast\ShelfFastClose.xaml.cs">
+      <DependentUpon>ShelfFastClose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ShelfFast\ShelfFastDetail.xaml.cs">
+      <DependentUpon>ShelfFastDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ShelfFast\ShelfFastDetailOpen.xaml.cs">
+      <DependentUpon>ShelfFastDetailOpen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\ShelfFast\ShelfFastView.xaml.cs">
+      <DependentUpon>ShelfFastView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Allot\AllotShelfView.xaml.cs">
       <DependentUpon>AllotShelfView.xaml</DependentUpon>
     </Compile>
@@ -535,6 +550,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\ShelfFast\ShelfFastClose.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ShelfFast\ShelfFastDetail.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ShelfFast\ShelfFastDetailOpen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\ShelfFast\ShelfFastView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Allot\AllotShelfView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
