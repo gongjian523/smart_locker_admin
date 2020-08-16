@@ -730,8 +730,8 @@ namespace CFLMedCab
                 NavBtnEnterInvtory.SetValue(Grid.ColumnProperty,2);
                 NavBtnEnterStock.SetValue(Grid.RowProperty, 0);
                 NavBtnEnterStock.SetValue(Grid.ColumnProperty, 3);
-                NavBtnEnterStock.SetValue(Grid.RowProperty, 0);
-                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 4);
+                NavBtnEnterPersonalSetting.SetValue(Grid.RowProperty, 0);
+                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 4);
             }
             else
             {
@@ -739,8 +739,8 @@ namespace CFLMedCab
                 NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 1);
                 NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
                 NavBtnEnterStock.SetValue(Grid.ColumnProperty, 2);
-                NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 3);
+                NavBtnEnterPersonalSetting.SetValue(Grid.RowProperty, 1);
+                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 3);
             }
         }
 
@@ -819,7 +819,7 @@ namespace CFLMedCab
                     ((ReturnGoodsClose)subViewHandler).onExitTimerExpired();
                     break;
             }
-            onReturnToLogin();
+            onReturnToLogin("超时退出");
         }
 
         /// <summary>
@@ -839,7 +839,7 @@ namespace CFLMedCab
 
 
         //退出登录，回到登录页
-        private void onReturnToLogin()
+        private void onReturnToLogin(string logoutInfo)
         {
             LogUtils.Debug("onReturnToLogin");
             PopFrame.Visibility = Visibility.Hidden;
@@ -869,9 +869,18 @@ namespace CFLMedCab
             ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
 #endif
 #endif
+            //绑定指静脉结束、主动退出或者超时退出都会走到这个分支
+            //绑定指静脉结束的logoutInfo 为 "",其他两种常见logoutInfo 会填写退出原因
+            if (logoutInfo != null && logoutInfo != "")
+            {
+                var loginBll = new LoginBll();
+                loginBll.UptadeLoingOutInfo(ApplicationState.GetLoginId(), logoutInfo);
+                ApplicationState.SetLoginId(-1);
+            }
         }
 
         //登录，进入首页
+        //指静脉登陆和用户名密码登陆都调用这个函数，但是绑定指静脉时的登陆不会
         private void onEnterHomePage(User user)
         {
             LoginBkView.Visibility = Visibility.Hidden;
@@ -883,6 +892,11 @@ namespace CFLMedCab
 
             //进入首页，将句柄设置成null，避免错误调用
             SetSubViewInfo(null, SubViewType.Home);
+
+            //生成和保存全局的登陆id，用于生成登陆记录以及后续的开关门记录
+            var loginBll = new LoginBll();
+            var loginId = loginBll.NewLogin();
+            ApplicationState.SetLoginId(loginId);
         }
 
         private void onShowPopFrame(object content)
@@ -2801,12 +2815,6 @@ namespace CFLMedCab
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 onEnterHomePage(e);
-                //LoginBkView.Visibility = Visibility.Hidden;
-                //PopFrame.Visibility = Visibility.Hidden;
-
-                //ApplicationState.SetUserInfo(e);
-                //SetNavBtnVisiblity(e.Role);
-                //tbNameText.Text = e.name;
             }));
         }
 
@@ -2860,11 +2868,11 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onHidePopClose(object sender, RoutedEventArgs e)
+        private void onHidePopClose(object sender, string e)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                onReturnToLogin();
+                onReturnToLogin(e);
 			}));
         }
 
@@ -2904,7 +2912,7 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onExit(object sender, RoutedEventArgs e)
         {
-            onReturnToLogin();
+            onReturnToLogin("正常");
         }
 
         /// <summary>

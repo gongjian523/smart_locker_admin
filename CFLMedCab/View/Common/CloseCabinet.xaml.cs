@@ -19,7 +19,7 @@ namespace CFLMedCab.View.Common
     {
         private Timer timer;
 
-        public delegate void HidePopCloseHandler(object sender, RoutedEventArgs e);
+        public delegate void HidePopCloseHandler(object sender, string e);
         public event HidePopCloseHandler HidePopCloseEvent;
 
         public CloseCabinet()
@@ -41,7 +41,7 @@ namespace CFLMedCab.View.Common
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                HidePopCloseEvent(this, null);
+                HidePopCloseEvent(this, "正常");
             }));
         }
     }

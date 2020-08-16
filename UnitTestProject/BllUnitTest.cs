@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using CFLMedCab.BLL;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Helper;
@@ -396,6 +398,33 @@ namespace UnitTestProject
 
 		}
 
+        [TestMethod]
+        public void TestLoginAndLogoitRecord()
+        {
+            User user = new User()
+            {
+                name = "gongjian",
+                MobilePhone = "+86 186298293149",
+            };
 
-	}
+            ApplicationState.SetUserInfo(user);
+
+            var loginBll = new LoginBll();
+
+            int id = loginBll.NewLogin();
+
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+
+            loginBll.UptadeLoingOutInfo(id, "正常");
+
+            var record1 = loginBll.GetAllLoginRecord();
+
+            var record2 = loginBll.GetLoginRecordByUserName(ApplicationState.GetUserInfo().name);
+        }
+
+        
+
+
+
+    }
 }

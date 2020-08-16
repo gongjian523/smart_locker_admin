@@ -122,7 +122,7 @@
                                  Tag="/CFLMedCab;component/Resources/Images/btn-Inv.png" Click="onEnterInvtory" x:Name="NavBtnEnterInvtory" />
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Margin="10,10,10,10"   Background="#8B8CFF"  Content="库存查询"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-InvQuery.png" Click="onEnterStock" x:Name="NavBtnEnterStock"/>
-                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="4"  Margin="10,10,10,10"   Background="#3D7CFF"  Content="个人设置"
+                        <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="3"  Margin="10,10,10,10"   Background="#3D7CFF"  Content="个人设置"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-SysSetting.png" Click="onEnterPersonalSetting" x:Name="NavBtnEnterPersonalSetting"/>
                         <Button  Style="{DynamicResource HPNavButton}" Grid.Row="1" Grid.Column="4"  Margin="10,10,10,10"   Background="#3D7CFF"  Content="系统设置"
                                  Tag="/CFLMedCab;component/Resources/Images/btn-SysSetting.png" Click="onEnterSysSetting" x:Name="NavBtnEnterSysSetting"/>
