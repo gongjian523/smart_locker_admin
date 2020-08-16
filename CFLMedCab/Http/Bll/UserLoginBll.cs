@@ -249,6 +249,8 @@ namespace CFLMedCab.Http.Bll
                         in_list =  { HttpUtility.UrlEncode(mobilePhone) }
                     }
             });
+
+            //BaseData<User> baseDataUser = HttpHelper.GetInstance().Get<User>();
             baseDataUser = HttpHelper.GetInstance().ResultCheck(baseDataUser, out bool isSuccess);
 
             return baseDataUser;

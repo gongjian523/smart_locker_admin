@@ -19,6 +19,68 @@ namespace CFLMedCab.Http.Bll
 	/// </summary>
 	public class ShelfFastBll : BaseBll<ShelfFastBll>
 	{
+        
+        /// <summary>
+        /// 根据加工/调拨任务单获取快捷上架任务单
+        /// </summary>
+        /// <param name="business"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public BaseData<ShelfTaskFast> GetShelfTaskFast(string  business, string id)
+        {
+            //获取待完成上架工单
+            BaseData<ShelfTaskFast> bdShelfTaskFast = HttpHelper.GetInstance().Get<ShelfTaskFast>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1 AND 2 AND 3",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "SourceBill.object_id",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(id) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "SourceBill.object_id",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(business) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
+                            }
+                        }
+                    }
+                }
+            });
+
+            bdShelfTaskFast = HttpHelper.GetInstance().ResultCheck(bdShelfTaskFast, out bool isSuccess);
+
+            if (!isSuccess)
+            {
+                bdShelfTaskFast.code = (int)ResultCode.Result_Exception;
+                bdShelfTaskFast.message = ResultCode.Result_Exception.ToString();
+            }
+            else
+            {
+                //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
+                if ("已完成".Equals(bdShelfTaskFast.body.objects[0].Status) || "已撤销".Equals(bdShelfTaskFast.body.objects[0].Status))
+                {
+                    bdShelfTaskFast.code = (int)ResultCode.Result_Exception;
+                    bdShelfTaskFast.message = ResultCode.Result_Exception.ToString();
+                }
+            }
+
+            return bdShelfTaskFast;
+        }
+
 
 		/// <summary>
 		/// 根据上架单号获取任务单详情
@@ -72,7 +134,6 @@ namespace CFLMedCab.Http.Bll
             }
 
             return bdShelfTaskFast;
-
         }
 
 		/// <summary>

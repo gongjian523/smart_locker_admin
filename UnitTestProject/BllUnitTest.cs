@@ -379,8 +379,8 @@ namespace UnitTestProject
 		[TestMethod]
 		public void TestNetwork()
 		{
-
-			BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo("+86 13765810065");
+            BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo("+86 18628293148");
+            //BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo("+86 13765810065");
 			HttpHelper.GetInstance().ResultCheck(bdUser, out bool bdUserIsSucess);
 
 		}

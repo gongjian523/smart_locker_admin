@@ -18,12 +18,16 @@ namespace CFLMedCab.Http.Model.param
         //public string tenant_id { get; set; } = "AQACQqweMIgBAAAAF8-jlWJSoBWPpxUA";
 
         //贵阳二医正式租户id
-        public string tenant_id { get; set; } = "AQAWb9HOnJ4BAAAAXx1TE61Y2hUc-AQA";
+        //public string tenant_id { get; set; } = "AQAWb9HOnJ4BAAAAXx1TE61Y2hUc-AQA";
         //贵阳二医正式租户id - END
 
         //贵阳二医测试租户id
         //public string tenant_id { get; set; } = "AQDKljDmSz4BAAAAvhxdQMihDBbpfwEA";
         //贵阳二医测试租户id - END
+
+        //新系统的测试租户id
+        public string tenant_id { get; set; } = "AQCqGpNPSs4BAAAAGNKb5apJIRZP8wIA";
+        //新系统的测试租户id - END
 
         /// <summary>
         /// 用户id
