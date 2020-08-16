@@ -49,6 +49,11 @@ namespace CFLMedCab.Model.Enum
         ReplenishmentClose,
 
         /// <summary>
+        /// 快捷上架关门页
+        /// </summary>
+        ShelfFastClose,
+
+        /// <summary>
         /// 调拨上架关门页
         /// </summary>
         AllotShelfClose,

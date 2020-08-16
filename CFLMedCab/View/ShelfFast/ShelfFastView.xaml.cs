@@ -35,8 +35,8 @@ namespace CFLMedCab.View.ShelfFast
         public delegate void EnterShelfFastDetailHandler(object sender, ShelfTaskFast e);
         public event EnterShelfFastDetailHandler EnterShelfFastDetailEvent;
 
-        public delegate void EnterAllotShelfDetailOpenHandler(object sender, ShelfTaskFast e);
-        public event EnterAllotShelfDetailOpenHandler EnterAllotShelfDetailOpenEvent;
+        public delegate void EnterShelfFastDetailOpenHandler(object sender, ShelfTaskFast e);
+        public event EnterShelfFastDetailOpenHandler EnterShelfFastDetailOpenEvent;
 
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
@@ -117,7 +117,7 @@ namespace CFLMedCab.View.ShelfFast
         private void onEnterDetailOpen(object sender, RoutedEventArgs e)
         {
             ShelfTaskFast shelfTaskFast = (ShelfTaskFast)((Button)sender).Tag;
-            EnterAllotShelfDetailOpenEvent(this, shelfTaskFast);
+            EnterShelfFastDetailOpenEvent(this, shelfTaskFast);
         }
 
         /// <summary>

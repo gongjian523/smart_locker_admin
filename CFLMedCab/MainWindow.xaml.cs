@@ -43,6 +43,8 @@ using System.Xml;
 using CFLMedCab.Model.Constant;
 using CFLMedCab.View.Allot;
 using CFLMedCab.View.Common;
+using CFLMedCab.View.InOut;
+using CFLMedCab.View.ShelfFast;
 
 namespace CFLMedCab
 {
@@ -707,25 +709,29 @@ namespace CFLMedCab
             bool isMedicalStuff = (role == "医院医护人员") ? true : false;
 
 			NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterPrescription.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+            //NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+            //NavBtnEnterPrescription.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
 
             NavBtnEnterReplenishment.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterShlefFast.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterAllotShlef.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnAll.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStockSwitch.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = Visibility.Visible;
             NavBtnEnterStock.Visibility = Visibility.Visible;
+            NavBtnEnterPersonalSetting.Visibility = Visibility;
             NavBtnEnterSysSetting.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
 
             if(isMedicalStuff)
             {
-                NavBtnEnterInvtory.SetValue(Grid.RowProperty,1);
-                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty,0);
-                NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 1);
+                NavBtnEnterInvtory.SetValue(Grid.RowProperty,0);
+                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty,2);
+                NavBtnEnterStock.SetValue(Grid.RowProperty, 0);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 3);
+                NavBtnEnterStock.SetValue(Grid.RowProperty, 0);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 4);
             }
             else
             {
@@ -733,6 +739,8 @@ namespace CFLMedCab
                 NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 1);
                 NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
                 NavBtnEnterStock.SetValue(Grid.ColumnProperty, 2);
+                NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 3);
             }
         }
 
@@ -800,6 +808,9 @@ namespace CFLMedCab
                     break;
                 case SubViewType.AllotShelfClose:
                     ((AllotShelfClose)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.ShelfFastClose:
+                    ((ShelfFastClose)subViewHandler).onExitTimerExpired();
                     break;
                 case SubViewType.ReturnClose:
                     ((ReturnClose)subViewHandler).onExitTimerExpired();
@@ -1704,6 +1715,175 @@ namespace CFLMedCab
 
         #endregion
 
+        #region ShelfFast
+        /// <summary>
+        /// 进入快捷上架单列表页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterShelfFastView(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
+
+            ShelfFastView shelfFastView = new ShelfFastView();
+            shelfFastView.EnterShelfFastDetailEvent += new ShelfFastView.EnterShelfFastDetailHandler(onEnterShelfFastDetail);
+            shelfFastView.EnterShelfFastDetailOpenEvent += new ShelfFastView.EnterShelfFastDetailOpenHandler(onEnterShelfFastDetail);
+            shelfFastView.LoadingDataEvent += new ShelfFastView.LoadingDataHandler(onLoadingData);
+
+            ContentFrame.Navigate(shelfFastView);
+            //进入上架页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+        /// <summary>
+        /// 进入快捷上架单详情页
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterShelfFastDetail(object sender, ShelfTaskFast e)
+        {
+            ShelfFastDetail shelfFastDetail = new ShelfFastDetail(e);
+            shelfFastDetail.EnterShelfFastDetailOpenEvent += new ShelfFastDetail.EnterShelfFastDetailOpenHandler(onEnterShelfFastDetailOpen);
+            shelfFastDetail.EnterShelfFastViewEvent += new ShelfFastDetail.EnterShelfFastViewHandler(onEnterShelfFastView);
+            shelfFastDetail.LoadingDataEvent += new ShelfFastDetail.LoadingDataHandler(onLoadingData);
+
+            ContentFrame.Navigate(shelfFastDetail);
+            //进入上架任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+        /// <summary>
+        /// 进入快捷单详情页-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterShelfFastDetailOpen(object sender, ShelfTaskFast e)
+        {
+            NaviView.Visibility = Visibility.Hidden;
+
+            ShelfFastDetailOpen shelfFastDetailOpenDetailOpen = new ShelfFastDetailOpen(e);
+            shelfFastDetailOpenDetailOpen.LoadingDataEvent += new ShelfFastDetailOpen.LoadingDataHandler(onLoadingData);
+            shelfFastDetailOpenDetailOpen.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onShelfFastOpenDoorEvent);
+
+            FullFrame.Navigate(shelfFastDetailOpenDetailOpen);
+            //进入调拨上架开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(shelfFastDetailOpenDetailOpen, SubViewType.Others);
+
+            locOpenNum = 0;
+
+            //只有从上架列表或者详情页面发出的开门事件，才能清空此列表；
+            //从关门页面发出的开门事件，不能清除此列表
+            if ((sender as Control).Name != "CtrlShelfFastClose")
+            {
+                listOpenLocCom.Clear();
+            }
+
+            List<Locations> locs = ApplicationState.GetLocations();
+
+            //只有一个货位，直接开门
+            if (locs.Count == 1)
+            {
+                onShelfFastOpenDoorEvent(this, locs[0].Code);
+
+                OpenCabinet openCabinet = new OpenCabinet();
+                openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+                onShowPopFrame(openCabinet);
+            }
+        }
+
+        /// <summary>
+        /// 快捷上架开门事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onShelfFastOpenDoorEvent(object sender, string e)
+        {
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
+
+            if (rfidCom == "" || lockerCom == "")
+            {
+                return;
+            }
+
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            if (!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+#if TESTENV
+#else
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterShelfFastCloseEvent);
+            delegateGetMsg.userData = e;
+#endif
+
+            locOpenNum++;
+
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
+        }
+
+        /// <summary>
+        /// 进入快捷上架单详情页-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterShelfFastCloseEvent(object sender, bool isClose)
+        {
+            LogUtils.Debug($"返回开锁状态{isClose}");
+
+            if (!isClose)
+                return;
+
+            locOpenNum--;
+
+            if (locOpenNum > 0)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((ShelfFastDetailOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
+                }));
+
+                return;
+            }
+
+            //弹出盘点中弹窗
+            onSetPopInventory(this, true);
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
+
+            //关闭盘点中弹窗
+            ClosePop();
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
+
+            ShelfTaskFast shelfTaskFast = ((ShelfFastDetailOpen)subViewHandler).GetShelfTaskFast();
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                ShelfFastClose shelfFastClose = new ShelfFastClose(shelfTaskFast, hs, listOpenLocCom);
+                shelfFastClose.EnterShelfFastDetailOpenEvent += new ShelfFastClose.EnterShelfFastDetailOpenHandler(onEnterShelfFastDetailOpen);
+                shelfFastClose.EnterPopCloseEvent += new ShelfFastClose.EnterPopCloseHandler(onEnterPopClose);
+                shelfFastClose.LoadingDataEvent += new ShelfFastClose.LoadingDataHandler(onLoadingData);
+
+                FullFrame.Navigate(shelfFastClose);
+                //进入调拨上架关门页面
+                SetSubViewInfo(shelfFastClose, SubViewType.ShelfFastClose);
+            }));
+        }
+
+        #endregion
+
         #region AllotShelf
         /// <summary>
         /// 进入调拨上架单列表页
@@ -2559,7 +2739,39 @@ namespace CFLMedCab
         {
             ClosePop();
         }
-#endregion
+        #endregion
+
+
+        #region 个人设置
+        private void onEnterPersonalSetting(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
+
+            PersonalSetting personalSetting = new PersonalSetting();
+            personalSetting.EnterInOutDetailEvent += new PersonalSetting.EnterInOutDetailHandler(onEnterInOutkDetailedEvent);
+            ContentFrame.Navigate(personalSetting);
+            //进入库存盘点页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+        private void onEnterInOutkDetailedEvent(object sender, int paras)
+        {
+            InOutDetailWin inOutDetailWin = new InOutDetailWin(paras);
+            inOutDetailWin.BackPersonalSettingEvent += new InOutDetailWin.BackPersonalSettingHandler(colseInOutDetailedEvent);
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                onShowPopFrame(inOutDetailWin);
+            }));
+        }
+
+        private void colseInOutDetailedEvent(object sender, RoutedEventArgs e)
+        {
+            ClosePop();
+        }
+        #endregion
+
 
         private void onEnterBindingVein(object sender, RoutedEventArgs e)
         {
