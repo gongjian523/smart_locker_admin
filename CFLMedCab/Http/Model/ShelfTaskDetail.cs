@@ -9,18 +9,16 @@ namespace CFLMedCab.Http.Model
 	/// 上架任务商品明细
 	/// </summary>
 	[JsonObject(MemberSerialization.OptOut)]
-	public class ShelfTaskFastDetail : BaseModel
+	public class ShelfTaskDetail : BaseModel
 	{
 		/// <summary>
-		/// 商品码
+		/// 
 		/// </summary>
-		public string CommodityCodeId { get; set; }
-
+		public int Commodity { get; set; }
 		/// <summary>
 		/// 商品id
 		/// </summary>
 		public string CommodityId { get; set; }
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -35,35 +33,46 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public int GoodsNumber { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string ManufactorName { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ManufactorName { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Model { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Model { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string ShelfTaskFastId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Number { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Spec { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ShelfNumber { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Status { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ShelfTaskId { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string StoreHouseId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Spec { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string StoreHouseId { get; set; }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int auto_id { get; set; }
 
 		/// <summary>
 		/// 

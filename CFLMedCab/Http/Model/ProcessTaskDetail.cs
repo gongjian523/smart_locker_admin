@@ -9,66 +9,72 @@ namespace CFLMedCab.Http.Model
 	/// 上架任务商品明细
 	/// </summary>
 	[JsonObject(MemberSerialization.OptOut)]
-	public class ShelfTaskFastDetail : BaseModel
+	public class ProcessTaskDetail : BaseModel
 	{
 		/// <summary>
-		/// 商品码
+		/// 
 		/// </summary>
-		public string CommodityCodeId { get; set; }
+		public string Commodity { get; set; }
 
 		/// <summary>
 		/// 商品id
 		/// </summary>
 		public string CommodityId { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string EquipmentId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Donation { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string GoodsLocationId { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public int GoodsNumber { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int FinishNumber { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int GoodsNumber { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public string ManufactorName { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Model { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string MixedBatch { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string ShelfTaskFastId { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Model { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Number { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string ProcessTaskId { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public string Spec { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string Status { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public int auto_id { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string StoreHouseId { get; set; }
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public string created_at { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public string created_at { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>

@@ -295,6 +295,11 @@
     <Compile Include="Http\Model\PickTask.cs" />
     <Compile Include="Http\Model\PrescriptionBill.cs" />
     <Compile Include="Http\Model\PrescriptionOrderGoodsDetail.cs" />
+    <Compile Include="Http\Model\Allot.cs" />
+    <Compile Include="Http\Model\ProcessTask.cs" />
+    <Compile Include="Http\Model\AllotDetail.cs" />
+    <Compile Include="Http\Model\ProcessTaskDetail.cs" />
+    <Compile Include="Http\Model\ShelfTaskDetail.cs" />
     <Compile Include="Http\Model\ShelfTaskFastDetail.cs" />
     <Compile Include="Http\Model\ShelfTaskFast.cs" />
     <Compile Include="Http\Model\ShelfTask.cs" />
