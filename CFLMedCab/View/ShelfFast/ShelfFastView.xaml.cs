@@ -5,6 +5,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
 using Newtonsoft.Json;
@@ -144,7 +145,7 @@ namespace CFLMedCab.View.ShelfFast
             string inputStr = tbInputNumbers.Text;
             if (string.IsNullOrWhiteSpace(inputStr))
             {
-                MessageBox.Show("调拨上架工单号不可以为空！", "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("任务单号不可以为空！", "温馨提示", MessageBoxButton.OK);
                 return false;
             }
 
@@ -162,19 +163,62 @@ namespace CFLMedCab.View.ShelfFast
             }
 
             LoadingDataEvent(this, true);
-            BaseData<ShelfTaskFast> baseDataShelfTaskFast = ShelfFastBll.GetInstance().GetShelfTaskFast(name.ToUpper());
+
+            SourceBill sourceBill = new SourceBill();
+
+            if(Name.StartsWith("GPT"))
+            {
+                LoadingDataEvent(this, true);
+                BaseData<ProcessTask> baseDataProcessTask = ShelfFastBll.GetInstance().GetProcessTask(name.ToUpper());
+                LoadingDataEvent(this, false);
+
+                HttpHelper.GetInstance().ResultCheck(baseDataProcessTask, out bool isSuccess1);
+
+                if (!isSuccess1)
+                {
+                    MessageBox.Show("此调拨上架工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
+                    return false;
+                }
+
+                sourceBill.object_name = "ProcessTask";
+                sourceBill.object_id = baseDataProcessTask.body.objects[0].id;
+
+            }
+            else
+            {
+                MessageBox.Show("输入的不是加工任务单或者调拨配送！", "温馨提示", MessageBoxButton.OK);
+                return false;
+            }
+
+            LoadingDataEvent(this, true);
+            BaseData<ShelfTaskFast> baseDataShelfTaskFast = ShelfFastBll.GetInstance().GetShelfTaskFast(sourceBill.object_name, sourceBill.object_id);
             LoadingDataEvent(this, false);
 
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskFast, out bool isSuccess);
             if (!isSuccess)
             {
+                //此任务单下没有便捷上架单需要新建
+
+
+
+                
                 MessageBox.Show("此调拨上架工单中商品已经领取完毕, 或没有登记在您名下，或者不存在！", "温馨提示", MessageBoxButton.OK);
                 return false;
             }
-
-            EnterShelfFastDetailEvent(this, baseDataShelfTaskFast.body.objects[0]);
-
-            return true;
+            else
+            {
+                //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
+                if ("已完成".Equals(baseDataShelfTaskFast.body.objects[0].Status) || "已撤销".Equals(baseDataShelfTaskFast.body.objects[0].Status))
+                {
+                    MessageBox.Show("此任务单下的便捷上架已经完成或被撤销！", "温馨提示", MessageBoxButton.OK);
+                    return false;
+                }
+                else
+                {
+                    EnterShelfFastDetailEvent(this, baseDataShelfTaskFast.body.objects[0]);
+                    return true;
+                }
+            }
         }
 
 

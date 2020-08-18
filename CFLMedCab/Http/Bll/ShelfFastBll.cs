@@ -19,36 +19,23 @@ namespace CFLMedCab.Http.Bll
 	/// </summary>
 	public class ShelfFastBll : BaseBll<ShelfFastBll>
 	{
-        
-        /// <summary>
-        /// 根据加工/调拨任务单获取快捷上架任务单
-        /// </summary>
-        /// <param name="business"></param>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public BaseData<ShelfTaskFast> GetShelfTaskFast(string  business, string id)
+        public BaseData<ProcessTask> GetProcessTask(string name)
         {
             //获取待完成上架工单
-            BaseData<ShelfTaskFast> bdShelfTaskFast = HttpHelper.GetInstance().Get<ShelfTaskFast>(new QueryParam
+            BaseData<ProcessTask> bdShelfTaskFast = HttpHelper.GetInstance().Get<ProcessTask>(new QueryParam
             {
                 view_filter =
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2 AND 3",
+                        logical_relation = "1 AND 2",
                         expressions =
                         {
                             new QueryParam.Expressions
                             {
-                                field = "SourceBill.object_id",
+                                field = "name",
                                 @operator = "==",
-                                operands =  {$"'{ HttpUtility.UrlEncode(id) }'"}
-                            },
-                            new QueryParam.Expressions
-                            {
-                                field = "SourceBill.object_id",
-                                @operator = "==",
-                                operands =  {$"'{ HttpUtility.UrlEncode(business) }'"}
+                                operands =  {$"'{ HttpUtility.UrlEncode(name) }'"}
                             },
                             new QueryParam.Expressions
                             {
@@ -77,6 +64,87 @@ namespace CFLMedCab.Http.Bll
                     bdShelfTaskFast.message = ResultCode.Result_Exception.ToString();
                 }
             }
+
+            return bdShelfTaskFast;
+        }
+
+
+
+
+
+        public BasePostData<ShelfTaskFast> CreateShelfTaskFask(ShelfTaskFast task)
+        {
+            if (null == task)
+            {
+                return new BasePostData<ShelfTaskFast>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
+            return HttpHelper.GetInstance().Post<ShelfTaskFast>(new PostParam<ShelfTaskFast>()
+            {
+                objects = new List<ShelfTaskFast>() { task }
+            });
+        }
+
+        public BasePostData<ShelfTaskFastDetail> CreateShelfTaskFaskDetail( List<ShelfTaskFastDetail> detailList)
+        {
+            if (null == detailList)
+            {
+                return new BasePostData<ShelfTaskFastDetail>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
+            return HttpHelper.GetInstance().Post<ShelfTaskFastDetail>(new PostParam<ShelfTaskFastDetail>()
+            {
+                objects = detailList
+            });  
+        }
+
+
+        /// <summary>
+        /// 根据加工/调拨任务单获取快捷上架任务单
+        /// </summary>
+        /// <param name="business"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public BaseData<ShelfTaskFast> GetShelfTaskFast(string  business, string id)
+        {
+            //获取待完成上架工单
+            BaseData<ShelfTaskFast> bdShelfTaskFast = HttpHelper.GetInstance().Get<ShelfTaskFast>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1 AND 2 AND 3",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "SourceBill.object_id",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(id) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "SourceBill.object_name",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(business) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
+                            }
+                        }
+                    }
+                }
+            });
 
             return bdShelfTaskFast;
         }

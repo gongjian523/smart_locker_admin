@@ -55,14 +55,14 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <Label  x:Name="titleLb" Content="请输入调拨上架工单号或扫描二维码"   Margin="20,0,20,0"  Style="{StaticResource lblTitle1}"/>
+                <Label  x:Name="titleLb" Content="请输入加工/调拨配送任务单号或扫描二维码"   Margin="20,0,20,0"  Style="{StaticResource lblTitle1}"/>
                 <Button Style="{StaticResource CommonYesButton}"  Content="查询"  HorizontalAlignment="Right"   Margin="0,0,20,5" Click="EnterDetail_Click"/>
             </Grid>
             <TextBox x:Name="tbInputNumbers" Grid.Row="1"  Height="48" Margin="20,5,20,0"  TextWrapping="Wrap" FontSize="22"
                             VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
                             Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
-            <Label Content="待完成调拨上架工单"  Grid.Row="2" HorizontalAlignment="Left"   Margin="20,10,0,0" VerticalAlignment="Center" Style="{StaticResource lblTitle1}" />
-            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20">
+            <Label Content="待完成调拨上架工单"  Grid.Row="2" HorizontalAlignment="Left"   Margin="20,10,0,0" VerticalAlignment="Center" Style="{StaticResource lblTitle1}"  Visibility="Collapsed"/>
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20" Visibility="Collapsed">
                 <ItemsControl ItemTemplate="{StaticResource allotShelfView}" ItemsSource="{Binding AllotShelfList, UpdateSourceTrigger=PropertyChanged}"/>
             </ScrollViewer>
         </Grid>

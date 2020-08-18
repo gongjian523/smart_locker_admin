@@ -5,9 +5,11 @@ using System;
 
 namespace CFLMedCab.Http.Model
 {
+	
 	/// <summary>
 	/// 上架任务商品明细
 	/// </summary>
+	[Obsolete]
 	[JsonObject(MemberSerialization.OptOut)]
 	public class ShelfTaskCommodityDetail : BaseModel
 	{

@@ -66,7 +66,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 LoadingDataEvent(this, true);
-                BaseData<ShelfTaskCommodityDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(entity);
+                BaseData<ShelfTaskDetail> commodityDetail = ShelfBll.GetInstance().GetShelfTaskDetail(entity);
                 LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(commodityDetail, out bool isSuccess);

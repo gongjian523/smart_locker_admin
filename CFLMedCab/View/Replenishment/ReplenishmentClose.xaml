@@ -79,12 +79,18 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0" x:Name="column1"/>
                                 <Grid Grid.Column="1" x:Name="column2"/>
                                 <Grid Grid.Column="2" x:Name="column3"/>
                                 <Grid Grid.Column="3" x:Name="column4"/>
                                 <Grid Grid.Column="4" x:Name="column5"/>
+                                <Grid Grid.Column="5" x:Name="column6"/>
+                                <Grid Grid.Column="6" x:Name="column7"/>
+                                <Grid Grid.Column="7" x:Name="column8"/>
                             </Grid>
                             <ListView  VerticalAlignment="Top" Grid.Row="1"  
                                Style="{StaticResource DefaultListView}"
@@ -106,21 +112,43 @@
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="货柜"  Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                        <GridViewColumn Header="厂家"  Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=ManufactorNameStr}"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="规格" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=SpecStr}"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+                                        <GridViewColumn Header="型号" Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=ModelStr}"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="货柜"  Width="{Binding ElementName=column6,Path=ActualWidth}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=GoodsLocationName}"/>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="操作类型" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                        <GridViewColumn Header="操作类型" Width="{Binding ElementName=column7,Path=ActualWidth}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}"/>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>
-                                        <GridViewColumn Header="异常说明" Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                        <GridViewColumn Header="异常说明" Width="{Binding ElementName=column8,Path=ActualWidth}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=AbnormalDisplay}"/>
@@ -152,7 +180,7 @@
                                 <ColumnDefinition Width="2*"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <Label Style="{StaticResource lblTitle1}" Content="请将异常的商品拿出或放回！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Label Style="{StaticResource lblTitle1}" Content="请将异常的商品放回！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <StackPanel Orientation="Horizontal" Grid.Column="1">
                                 <Button Style="{StaticResource CommonNoButton}"  Content="开柜" Margin="60,0,0,0" Width="220"  Click="onNoEndOperation"/>
                             </StackPanel>

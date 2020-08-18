@@ -89,7 +89,7 @@ namespace UnitTestProject
 
 			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
 
-			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
+			BaseData<ShelfTaskDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskDetail(baseDataShelfTask);
 
 			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0], baseDataShelfTaskCommodityDetail);
 

@@ -52,7 +52,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         private HashSet<CommodityEps> after;
 
         private BaseData<CommodityCode> bdCommodityCode;
-        private BaseData<ShelfTaskCommodityDetail> bdCommodityDetail;
+        private BaseData<ShelfTaskDetail> bdCommodityDetail;
 
         private List<string> locCodes = new List<string>();
 
@@ -110,7 +110,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 }
 
                 LoadingDataEvent(this, true);
-                bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(shelfTask);
+                bdCommodityDetail = ShelfBll.GetInstance().GetShelfTaskDetail(shelfTask);
                 LoadingDataEvent(this, false);
                 HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
                 if (!isSuccess)
@@ -128,11 +128,11 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 inNum.Content = inCnt;
                 abnormalInNum.Content = abnormalInCnt;
                 abnormalOutNum.Content = abnormalOutCnt;
-                int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => (item.CurShelfNumber > (item.NeedShelfNumber - item.AlreadyShelfNumber))).Count();
+                int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurShelfNumber > item.Number).Count();
 
                 listView.DataContext = bdCommodityCode.body.objects;
 
-                if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
+                if (abnormalOutCnt == 0)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;
@@ -155,7 +155,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
             if (isSuccess)
             {
                 //任务单里的商品上架全部完成
-                if (bdCommodityDetail.body.objects.Where(item => (item.NeedShelfNumber - item.AlreadyShelfNumber != item.CurShelfNumber)).Count() == 0)
+                if (bdCommodityDetail.body.objects.Where(item => item.Number != item.CurShelfNumber).Count() == 0)
                 {
                     //shelftask的状态在数据初始化的时候赋值
                     bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);

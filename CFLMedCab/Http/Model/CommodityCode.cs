@@ -186,5 +186,24 @@ namespace CFLMedCab.Http.Model
         [JsonIgnore]
         public string InventoryStatus { get; set; }
 
-    }
+
+		/// <summary>
+		/// 新系统下的厂商 原有ManufactorName的准备停止使用
+		/// </summary>
+		[JsonIgnore]
+		public string ManufactorNameStr { get; set; }
+
+		/// <summary>
+		/// 新系统下的型号
+		/// </summary>
+		[JsonIgnore]
+		public string ModelStr { get; set; }
+
+		/// <summary>
+		/// 新系统下的规格 原有Specifications的准备停止使用
+		/// </summary>
+		[JsonIgnore]
+		public string SpecStr { get; set; }
+
+	}
 }

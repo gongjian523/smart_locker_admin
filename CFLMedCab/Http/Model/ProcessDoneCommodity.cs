@@ -9,12 +9,12 @@ namespace CFLMedCab.Http.Model
 	/// 上架任务商品明细
 	/// </summary>
 	[JsonObject(MemberSerialization.OptOut)]
-	public class ProcessTaskDetail : BaseModel
+	public class ProcessDoneCommodity : BaseModel
 	{
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Commodity { get; set; }
+		public string CommodityCodeId { get; set; }
 
 		/// <summary>
 		/// 商品id
@@ -24,27 +24,12 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public string Donation { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int FinishNumber { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int GoodsNumber { get; set; }
+        public string CommodityInventoryId { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public string ManufactorName { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string MixedBatch { get; set; }
 
         /// <summary>
         /// 
