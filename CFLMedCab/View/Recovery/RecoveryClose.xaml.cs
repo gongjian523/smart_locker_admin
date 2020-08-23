@@ -19,13 +19,9 @@ namespace CFLMedCab.View.Recovery
     public partial class RecoveryClose : UserControl
     {
         //回收取货开门事件
-        public delegate void EnterReturnOpenHandler(object sender, CommodityRecovery e);
-        public event EnterReturnOpenHandler EnterReturnOpenEvent;
+        public delegate void EnterRecoveryOpenHandler(object sender, CommodityRecovery e);
+        public event EnterRecoveryOpenHandler EnterRecoveryOpenEvent;
             
-        //库存调整开门事件
-        public delegate void EnterStockSwitchOpenHandler(object sender, RoutedEventArgs e);
-        public event EnterStockSwitchOpenHandler EnterStockSwitchOpenEvent;
-
         //跳出关闭弹出框
         public delegate void EnterPopCloseHandler(object sender, bool e);
         public event EnterPopCloseHandler EnterPopCloseEvent;
@@ -40,7 +36,11 @@ namespace CFLMedCab.View.Recovery
         private BaseData<CommodityCode> bdCommodityCode;
         private CommodityRecovery commodityRecovery;
 
+        private BaseData<CommodityRecoveryDetail> bdCommodityDetail;
+
         private List<string> locCodes = new List<string>();
+
+        bool bExit;
 
         public RecoveryClose(HashSet<CommodityEps> afterEps, List<string> rfidComs, CommodityRecovery order)
         {
@@ -48,7 +48,7 @@ namespace CFLMedCab.View.Recovery
 
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日");
             operatorName.Content = ApplicationState.GetUserInfo().name;
-            lbTypeContent.Content = order == null ? "库存调整" : "回收下架";
+            orderNum.Content = order.name;
 
             commodityRecovery = order;
             after = afterEps;
@@ -83,11 +83,6 @@ namespace CFLMedCab.View.Recovery
 
                 LoadingDataEvent(this, true);
                 bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeStock(commodityCodeList);
-                HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
-                if (isSuccess)
-                {
-                    bdCommodityCode = CommodityCodeBll.GetInstance().GetQualityStatus(bdCommodityCode, out isSuccess);
-                }
                 LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out isSuccess);
@@ -97,29 +92,27 @@ namespace CFLMedCab.View.Recovery
                     return;
                 }
 
+                bdCommodityDetail = CommodityRecoveryBll.GetInstance().GetCommodityRecoveryDetail(commodityRecovery);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
+                if (!isSuccess)
+                {
+                    MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
+                    return;
+                }
+
+                LoadingDataEvent(this, true);
+                CommodityRecoveryBll.GetInstance().GetCommodityRecoveryChange(bdCommodityCode, commodityRecovery, bdCommodityDetail);
+                LoadingDataEvent(this, false);
+
                 listView.DataContext = bdCommodityCode.body.objects;
                 outNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
-                abnormalInNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
+                inNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
 
-                //回收取货
-                if (commodityRecovery != null)
+                if (bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count() > 0)
                 {
-                    bdCommodityCode.body.objects.Where(item => item.operate_type == 1).ToList().ForEach(it => {
-                        it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                    });
-
-                    if (bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count() > 0)
-                    {
-                        normalBtmView.Visibility = Visibility.Collapsed;
-                        abnormalBtmView.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        normalBtmView.Visibility = Visibility.Visible;
-                        abnormalBtmView.Visibility = Visibility.Collapsed;
-                    }
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
                 }
-                //库存调整
                 else
                 {
                     normalBtmView.Visibility = Visibility.Visible;
@@ -136,6 +129,30 @@ namespace CFLMedCab.View.Recovery
         /// <param name="e"></param>
         private void onEndOperation(object sender, RoutedEventArgs e)
         {
+            if (isSuccess)
+            {
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+
+                //还有未上架的商品,让用户选择原因
+                if (commodityRecovery.Status == CommodityRecoveryStatusEnum.进行中.ToString())
+                {
+                    normalView.Visibility = Visibility.Hidden;
+                    abnormalView.Visibility = Visibility.Visible;
+
+                    List<string> codes = bdCommodityCode.body.objects.Select(item => item.name).ToList();
+                    list2View.DataContext = bdCommodityDetail.body.objects.Where(item => !codes.Contains(item.CommodityCodeName)).ToList();
+                }
+                else
+                {
+                    EndOperation(bExit);
+                }
+            }
+            else
+            {
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+                EndOperation(bExit);
+            }
+
             Button btn = (Button)sender;
             EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
@@ -147,14 +164,39 @@ namespace CFLMedCab.View.Recovery
         /// <param name="e"></param>
         private void onNoEndOperation(object sender, RoutedEventArgs e)
         {
-            if (commodityRecovery == null)
-            {
-                EnterStockSwitchOpenEvent(this, null);
-            }
-            else
-            {
-                EnterReturnOpenEvent(this, commodityRecovery);
-            }
+            EnterRecoveryOpenEvent(this, commodityRecovery);
+        }
+
+        /// <summary>
+        /// 暂未完成按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onNotComplete(object sender, RoutedEventArgs e)
+        {
+            EndOperation(bExit);
+        }
+
+        /// <summary>
+        /// 异常提交
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onAbnormalSubmit(object sender, RoutedEventArgs e)
+        {
+            commodityRecovery.Status = CommodityRecoveryStatusEnum.异常.ToString();
+            EndOperation(bExit);
+        }
+
+        /// <summary>
+        /// 返回按钮
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onBackwords(object sender, RoutedEventArgs e)
+        {
+            normalView.Visibility = Visibility.Visible;
+            abnormalView.Visibility = Visibility.Collapsed;
         }
 
         /// <summary>
@@ -177,32 +219,30 @@ namespace CFLMedCab.View.Recovery
         {
             if(isSuccess)
             {
-                if (commodityRecovery == null)
+                LoadingDataEvent(this, true);
+                BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, commodityRecovery, bAutoSubmit);
+                LoadingDataEvent(this, false);
+
+                if (bdCommodityInventoryChange.code != 0)
                 {
-                    LoadingDataEvent(this, true);
-                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChangeInStockChange(bdCommodityCode);
-                    LoadingDataEvent(this, false);
-
-                    if (bdCommodityInventoryChange.code != 0)
-                    {
-                        MessageBox.Show("创建库存调整商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
-                    }
-
-                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "IntentoryAdjust");
+                    MessageBox.Show("创建回收取货商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
                 }
                 else
                 {
                     LoadingDataEvent(this, true);
-                    BasePostData<CommodityInventoryChange> bdCommodityInventoryChange = CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, commodityRecovery, bAutoSubmit);
+                    BasePutData<CommodityRecovery> putData = CommodityRecoveryBll.GetInstance().PutCommodityRecovery(commodityRecovery);
                     LoadingDataEvent(this, false);
 
-                    if (bdCommodityInventoryChange.code != 0)
-                    {
-                        MessageBox.Show("创建回收取货商品变更明细失败！" + bdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
-                    }
+                    HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
 
-                    ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "CommodityRecovery");
+                    if (!isSuccess1)
+                    {
+                        MessageBox.Show("更新回收取货单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    }
                 }
+
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "CommodityRecovery");
+
             }
 
             ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);

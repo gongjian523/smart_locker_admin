@@ -18,6 +18,11 @@ namespace CFLMedCab.Http.Model
 		public string CommodityCodeId { get; set; }
 
 		/// <summary>
+		/// 商品码
+		/// </summary>
+		public string CommodityCodeName { get; set; }
+
+		/// <summary>
 		/// 商品id
 		/// </summary>
 		public string CommodityId { get; set; }

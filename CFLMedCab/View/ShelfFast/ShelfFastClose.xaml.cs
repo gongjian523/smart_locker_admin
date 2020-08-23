@@ -154,6 +154,8 @@ namespace CFLMedCab.View.ShelfFast
         {
             if (isSuccess)
             {
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+
                 //还有未上架的商品,让用户选择原因
                 if (shelfTaskFast.Status == AllotShelfStatusEnum.进行中.ToString())
                 {
@@ -161,10 +163,10 @@ namespace CFLMedCab.View.ShelfFast
                     abnormalView.Visibility = Visibility.Visible;
 
                     List<string> codes = bdCommodityCode.body.objects.Select(item => item.name).ToList();
+                    list2View.DataContext = bdCommodityDetail.body.objects.Where(item => !codes.Contains(item.CommodityCodeName)).ToList();
                 }
                 else
                 {
-                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
                     EndOperation(bExit);
                 }
             }
@@ -192,7 +194,6 @@ namespace CFLMedCab.View.ShelfFast
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                shelfTaskFast.Status = AllotShelfStatusEnum.异常.ToString();
                 EndOperation(true, false);              
             }));
         }
@@ -256,7 +257,6 @@ namespace CFLMedCab.View.ShelfFast
         /// <param name="e"></param>
         private void onNotComplete(object sender, RoutedEventArgs e)
         {
-            //shelfTaskFast.Status = AllotShelfStatusEnum.进行中.ToString();
             EndOperation(bExit);
         }
 
@@ -267,7 +267,7 @@ namespace CFLMedCab.View.ShelfFast
         /// <param name="e"></param>
         private void onAbnormalSubmit(object sender, RoutedEventArgs e)
         {
-            //shelfTaskFast.Status = AllotShelfStatusEnum.异常.ToString();
+            shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
             EndOperation(bExit);
         }
 

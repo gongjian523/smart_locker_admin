@@ -464,8 +464,14 @@ namespace CFLMedCab.Http.Bll
 						it.GoodsLocationName = GetNameById<GoodsLocation>(it.GoodsLocationId);
 					}
 
-					//拼接商品名字
-					if (!string.IsNullOrEmpty(it.CommodityId))
+                    //拼接货位名字
+                    if (!string.IsNullOrEmpty(it.CommodityCodeId))
+                    {
+                        it.CommodityCodeName = GetNameById<CommodityCode>(it.CommodityCodeId);
+                    }
+
+                    //拼接商品名字
+                    if (!string.IsNullOrEmpty(it.CommodityId))
 					{
                         var bdCommodity = GetCommodityById(it.CommodityId);
 
@@ -562,26 +568,25 @@ namespace CFLMedCab.Http.Bll
                 });
 
 
-
                 if(bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.出库).Count() > 0)
                 {
                     //包含了出库商品，状态单就显示异常
-                    shelfTaskFast.Status = DocumentStatus.异常.ToString();
+                    shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
                 }
                 else
                 {
                     int needShelfNum = bdShelfTaskFastDetail.body.objects.Where(item => item.Status == AllotShelfCommodityStatus.未上架.ToString()).Count();
                     int normalShelfNum = bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库 && item.AbnormalDisplay == AbnormalDisplay.正常.ToString()).Count();
-
                     
                     if(normalShelfNum >= needShelfNum)
                     {   
                         //正常上架的商品数量超过或者等于（实际上不应该超过）需要上架的商品数量，状态设置成已完成
-                        shelfTaskFast.Status = DocumentStatus.已完成.ToString();
+                        //便捷上架不用考虑其他设备，已经完成状态可以直接上传
+                        shelfTaskFast.Status = ShelfTaskFastStatusEnum.已完成.ToString();
                     }
                     else
                     {
-                        shelfTaskFast.Status = DocumentStatus.进行中.ToString();
+                        shelfTaskFast.Status = ShelfTaskFastStatusEnum.进行中.ToString();
                     }
                 }
             }
@@ -604,13 +609,13 @@ namespace CFLMedCab.Http.Bll
                 version = shelfTaskFast.version
             };
 
-            if (shelfTaskFast.Status == DocumentStatus.异常.ToString() && shelfTaskFast.AbnormalCauses != "")
+            if (shelfTaskFast.Status == ShelfTaskFastStatusEnum.异常.ToString() && shelfTaskFast.AbnormalCauses != "")
             {
                 task.AbnormalCauses = shelfTaskFast.AbnormalCauses;
             }
 
             //当任务单状态为已完成时，携带完成时间进行更新
-            if (shelfTaskFast.Status == DocumentStatus.已完成.ToString())
+            if (shelfTaskFast.Status == ShelfTaskFastStatusEnum.已完成.ToString())
             {
                 task.FinishDate = GetDateTimeNow();
             }
@@ -660,15 +665,11 @@ namespace CFLMedCab.Http.Bll
                         //GoodsLocationId = it.GoodsLocationId
                     };
 
-                    if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
-                    {
-                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
-                    }
-
                     if (it.operate_type == (int)OperateType.出库)
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
                         cic.StoreHouseId = ApplicationState.GetHouseId();
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                     }
                     else
                     {

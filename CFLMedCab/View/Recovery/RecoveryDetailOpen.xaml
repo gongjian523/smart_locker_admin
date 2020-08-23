@@ -62,7 +62,7 @@
                         <Grid Grid.Column="4" x:Name="column5"/>
                         <Grid Grid.Column="5" x:Name="column6"/>
                     </Grid>
-                    <Label Content="本柜待拣货商品" Grid.Row="0" Padding="0 10" Style="{StaticResource lblTitle5}"/>
+                    <Label Content="本柜待回收商品" Grid.Row="0" Padding="0 10" Style="{StaticResource lblTitle5}"/>
                     <ListView  Grid.Row="1" Grid.Column="1"  VerticalAlignment="Top" ItemsSource="{Binding}" Name="listView" HorizontalAlignment="Left" Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView>
@@ -73,10 +73,10 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="待拣货数量" Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                <GridViewColumn Header="商品编码" Width="{Binding ElementName=column2,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Number}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding CommodityCodeName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

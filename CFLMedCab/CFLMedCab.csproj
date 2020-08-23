@@ -257,6 +257,7 @@
     <Compile Include="Http\Model\Base\BasePutData.cs" />
     <Compile Include="Http\Model\BatchNumber.cs" />
     <Compile Include="Http\Model\CommodityCatalogue.cs" />
+    <Compile Include="Http\Model\CommodityInventory.cs" />
     <Compile Include="Http\Model\CommodityInventoryDetail.cs" />
     <Compile Include="Http\Model\CommodityInventoryGoods.cs" />
     <Compile Include="Http\Model\CommodityRecovery.cs" />
@@ -291,6 +292,7 @@
     <Compile Include="Http\Model\param\SignInParam.cs" />
     <Compile Include="Http\Model\param\TokenQueryParam.cs" />
     <Compile Include="Http\Model\param\VeinmatchPostParam.cs" />
+    <Compile Include="Http\Model\CommodityRecoveryDetail.cs" />
     <Compile Include="Http\Model\PickCommodity.cs" />
     <Compile Include="Http\Model\PickTask.cs" />
     <Compile Include="Http\Model\PrescriptionBill.cs" />

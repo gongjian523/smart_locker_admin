@@ -1,6 +1,7 @@
 ﻿
 
 using CFLMedCab.Http.Model.Base;
+using Newtonsoft.Json;
 
 namespace CFLMedCab.Http.Model
 {
@@ -29,5 +30,9 @@ namespace CFLMedCab.Http.Model
         /// 密码
         /// </summary>
         public string Password { get; set; }
-    }
+
+		[JsonIgnore]
+		public string DepartmentIdInUse { get; set; }
+
+	}
 }

@@ -1,6 +1,5 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,56 +10,72 @@ using System.Threading.Tasks;
 namespace CFLMedCab.Http.Model
 {
     /// <summary>
-    /// 商品回收任务单
+    /// 商品库存管理理资料表
     /// </summary>
-    [JsonObject(MemberSerialization.OptOut)]
-    public class CommodityRecovery : BaseModel
+    public class CommodityInventory : BaseModel
     {
         /// <summary>
         /// 
         /// </summary>
-        public string AbnormalCauses { get; set; }
+        public string CommodityCode { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string AbnormalDescribe { get; set; }
-
+        public string CommodityCodeId { get; set; }
+        /// <summary>
+        /// 商品名称编号
+        /// </summary>
+        public string CommodityId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public string ApprovalStatus { get; set; }
-
+        public string DepartmentId { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public string Department { get; set; }
-
+        public string EquipmentId { get; set; }
+        
+        public DateTime ExpirationDate { get; set; } 
         /// <summary>
         /// 
         /// </summary>
-        public string FinishDate { get; set; }
+        public string ManufactorName { get; set; }
         /// <summary>
-        /// 操作人
+        /// 
         /// </summary>
-        public string Operator { get; set; }
+        public string Model { get; set; }
         /// <summary>
-        /// 单据状态：待回收，已完成
+        /// 质量状态
+        /// </summary>
+        public string QualityStatus { get; set; }
+
+        /// <summary>
+        /// 未领用
+        /// </summary>
+        public string Spec { get; set; }
+
+        /// <summary>
+        /// 未领用
         /// </summary>
         public string Status { get; set; }
         /// <summary>
-        /// 回收库房
+        /// 所在库房编号
         /// </summary>
-        public string StoreHouse { get; set; }
+        public string StoreHouseId { get; set; }
         /// <summary>
-        /// 回收库房名称
+        /// 所在库房名称
         /// </summary>
-        [JsonIgnore]
         public string StoreHouseName { get; set; }
+        /// <summary>
+        /// 定数包
+        /// </summary>
+        public string Type { get; set; }
         /// <summary>
         /// 
         /// </summary>
-        public int auto_id { get; set; }
+        public string UserId { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -69,10 +84,7 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string created_by { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public int is_deleted { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -92,46 +104,21 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
+        public object unusedAmount { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public string updated_at { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public string updated_by { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public object usedAmount { get; set; }
     }
 
-    /// <summary>
-    /// 回收取货任务状态
-    /// </summary>
-    public enum CommodityRecoveryStatusEnum
-    {
-        /// <summary>
-        /// 待回收
-        /// </summary>
-        [Description("待回收")]
-        待回收 = 0,
 
-        /// <summary>
-        /// 进行中
-        /// </summary>
-        [Description("进行中")]
-        进行中 = 1,
 
-        /// <summary>
-        /// 已完成
-        /// </summary>
-        [Description("已完成")]
-        已完成 = 3,
-
-        /// <summary>
-        /// 已撤销
-        /// </summary>
-        [Description("已撤销")]
-        已撤销 = 4,
-
-        /// <summary>
-        /// 异常
-        /// </summary>
-        [Description("异常")]
-        异常 = 5,
-    }
 }

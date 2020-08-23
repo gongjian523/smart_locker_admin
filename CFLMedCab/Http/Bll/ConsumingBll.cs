@@ -43,7 +43,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2",
+                        logical_relation = "1",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -52,12 +52,12 @@ namespace CFLMedCab.Http.Bll
                                 @operator = "==",
                                 operands =  {$"'{ HttpUtility.UrlEncode(consumingOrderName) }'"}
                             },
-                            new QueryParam.Expressions
-                            {
-                                field = "StoreHouseId",
-                                @operator = "==",
-                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.HouseId)) }'" }
-                            }
+                            //new QueryParam.Expressions
+                            //{
+                            //    field = "StoreHouseId",
+                            //    @operator = "==",
+                            //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.HouseId)) }'" }
+                            //}
                         }
                     }
                 }
@@ -66,17 +66,17 @@ namespace CFLMedCab.Http.Bll
             //校验是否含有数据，如果含有数据，拼接具体字段
             bdConsumingOrder = HttpHelper.GetInstance().ResultCheck(bdConsumingOrder, out bool isSuccess);
 
-			if (isSuccess)
-			{
-                bdConsumingOrder.body.objects.ForEach(it =>
-				{
-					//拼接库房名称
-					if (!string.IsNullOrEmpty(it.StoreHouseId))
-					{
-						it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
-					}
-				});
-			}
+			//if (isSuccess)
+			//{
+            //  bdConsumingOrder.body.objects.ForEach(it =>
+			//	{
+			//		//拼接库房名称
+			//		if (!string.IsNullOrEmpty(it.StoreHouseId))
+			//		{
+			//			it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouseId);
+			//		}
+			//	});
+			//}
 
             if(bdConsumingOrder.body.objects == null)
             {
@@ -86,9 +86,10 @@ namespace CFLMedCab.Http.Bll
             else
             {
                 //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
-                if ("是".Equals(bdConsumingOrder.body.objects[0].markId) || "已完成".Equals(bdConsumingOrder.body.objects[0].Status) 
-                    || "已撤销".Equals(bdConsumingOrder.body.objects[0].Status))
-                {
+                //if ("是".Equals(bdConsumingOrder.body.objects[0].markId) || "已完成".Equals(bdConsumingOrder.body.objects[0].Status) 
+                //    || "已撤销".Equals(bdConsumingOrder.body.objects[0].Status))
+               if ("已完成".Equals(bdConsumingOrder.body.objects[0].Status)|| "已撤销".Equals(bdConsumingOrder.body.objects[0].Status))
+               {
                     bdConsumingOrder.code = (int)ResultCode.Result_Exception;
                     bdConsumingOrder.message = ResultCode.Result_Exception.ToString();
                 }
@@ -281,7 +282,7 @@ namespace CFLMedCab.Http.Bll
                 id = order.id,//ID
                 Status = order.Status,//状态
                 //当主单完成状态为已完成时，携带完成时间（FinishDate）进行更新
-                FinishDate = order.Status.Equals(ConsumingOrderStatus.已完成.ToString()) ? GetDateTimeNow() : null,
+                //FinishDate = order.Status.Equals(ConsumingOrderStatus.已完成.ToString()) ? GetDateTimeNow() : null,
                 version = order.version//版本
             };
 
@@ -315,9 +316,10 @@ namespace CFLMedCab.Http.Bll
                     ////当入库数量大于0说明在领用的时候进行了入库操作,变更领用单状态为异常
                     //Status = normalList.Count > 0 ? ConsumingOrderStatus.异常.ToString() : ConsumingOrderStatus.已完成.ToString(), //
                     //Status = (type == ConsumingOrderType.故障领用 ? null : ConsumingOrderStatus.领用中.ToString()), //故障领用不填领用中
-                    StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
+                    //StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),//领用库房
                     Type = type.ToString(),//领用类型
-                    SourceBill = (type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null) // 需要填写医嘱处方SourceBill
+                    DepartmentId = ApplicationState.GetUserInfo().DepartmentIdInUse,
+                    //SourceBill = (type == ConsumingOrderType.医嘱处方领用 ? sourceBill : null) // 需要填写医嘱处方SourceBill
                 };
 
                 //创建领用单

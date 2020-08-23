@@ -33,10 +33,10 @@
                     <Label Content="便捷上架" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" Style="{StaticResource lblTitle2}" />
 
                     <Label Grid.Column="1" Grid.Row="0"   Content="操作人" Style="{StaticResource lblTitle3}" />
-                    <Label Grid.Column="1" Grid.Row="1"   Content="操作人" Name="operatorName" Style="{StaticResource lblTitle4_0}" />
+                    <Label Grid.Column="1" Grid.Row="1"   Content="" Name="operatorName" Style="{StaticResource lblTitle4_0}" />
 
-                    <Label Grid.Column="2" Grid.Row="0"  Content="上架工单号"  Style="{StaticResource lblTitle3}" />
-                    <Label Grid.Column="2" Grid.Row="1"  Content="上架工单号" Name="orderNum" Style="{StaticResource lblTitle4_0}" />
+                    <Label Grid.Column="2" Grid.Row="0"  Content="便捷上架单号"  Style="{StaticResource lblTitle3}" />
+                    <Label Grid.Column="2" Grid.Row="1"  Content="" Name="orderNum" Style="{StaticResource lblTitle4_0}" />
                   
                 </Grid>
             </Border>

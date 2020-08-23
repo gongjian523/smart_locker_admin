@@ -36,9 +36,9 @@ namespace CFLMedCab.View.Recovery
 
         public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
 
-        private PickTask pickTask;
+        private CommodityRecovery commodityRecovery;
 
-        public RecoveryDetailOpen(PickTask task)
+        public RecoveryDetailOpen(CommodityRecovery task)
         {
             InitializeComponent();
             ////操作人
@@ -46,7 +46,7 @@ namespace CFLMedCab.View.Recovery
             ////工单号
             //orderNum.Content = task.name;
 
-            pickTask = task;
+            commodityRecovery = task;
 
             //只有一个柜门的时候，开门按钮不用显示，直接开门
             if (ApplicationState.GetAllLocIds().Count() == 1)
@@ -73,17 +73,17 @@ namespace CFLMedCab.View.Recovery
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 LoadingDataEvent(this, true);
-                BaseData<PickCommodity> bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
+                BaseData<CommodityRecoveryDetail> bdCommodityRecoveryDetail = CommodityRecoveryBll.GetInstance().GetCommodityRecoveryDetail(commodityRecovery);
                 LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityRecoveryDetail, out bool isSuccess);
                 if (!isSuccess)
                 {
                     MessageBox.Show("获取拣货单商品明细错误！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 
-                listView.DataContext = bdCommodityDetail.body.objects;
+                listView.DataContext = bdCommodityRecoveryDetail.body.objects;
             }));
         }
 
@@ -92,9 +92,9 @@ namespace CFLMedCab.View.Recovery
             openDoorBtnBoard.SetButtonEnable(true, com);
         }
 
-        public PickTask GetPickTask()
+        public CommodityRecovery GetCommodityRecovery()
         {
-            return pickTask;
+            return commodityRecovery;
         }
     }
 }

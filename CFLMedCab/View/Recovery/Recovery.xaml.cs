@@ -15,11 +15,11 @@ namespace CFLMedCab.View.Recovery
     /// </summary>
     public partial class Recovery : UserControl
     {
-        //public delegate void EnterRecoveryDetailHandler(object sender, CommodityRecovery e);
-        //public event EnterRecoveryDetailHandler EnterRecoveryDetailEvent;
+        public delegate void EnterRecoveryDetailHandler(object sender, CommodityRecovery e);
+        public event EnterRecoveryDetailHandler EnterRecoveryDetailEvent;
 
-        public delegate void EnterRecoveryDetailOpenHandler(object sender, CommodityRecovery e);
-        public event EnterRecoveryDetailOpenHandler EnterRecoveryDetailOpenEvent;
+        //public delegate void EnterRecoveryDetailOpenHandler(object sender, CommodityRecovery e);
+        //public event EnterRecoveryDetailOpenHandler EnterRecoveryDetailOpenEvent;
 
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
@@ -82,7 +82,7 @@ namespace CFLMedCab.View.Recovery
 				return;
 			}
 
-            EnterRecoveryDetailOpenEvent(this, bdCommodityRecovery.body.objects[0]);
+            EnterRecoveryDetailEvent(this, bdCommodityRecovery.body.objects[0]);
         }
         
         /// <summary>

@@ -16,22 +16,44 @@ namespace CFLMedCab.Http.Model
     [JsonObject(MemberSerialization.OptOut)]
     public class ConsumingOrder : BaseModel
     {
+
         /// <summary>
         /// 
         /// </summary>
+        public string DepartmentId { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Remarks { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [Obsolete]
+        [JsonIgnore]
         public string FinishDate { get; set; }
         /// <summary>
         /// 未打印
         /// </summary>
+        [Obsolete]
+        [JsonIgnore]
         public string PrintStatus { get; set; }
         /// <summary>
         /// 
         /// </summary>
+        [Obsolete]
+        [JsonIgnore]
         public string Printer { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public SourceBill SourceBill { get; set; }
+
+        /// <summary>
+        ///
+        /// </summary>
+        public string Type { get; set; }
         /// <summary>
         /// 未领用
         /// </summary>
@@ -39,16 +61,15 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 所在库房
         /// </summary>
+        [Obsolete]
+        [JsonIgnore]
         public string StoreHouseId { get; set; }
         /// <summary>
         /// 所在库房名称
         /// </summary>
         [JsonIgnore]
         public string StoreHouseName { get; set; }
-        /// <summary>
-        /// 手术领用
-        /// </summary>
-        public string Type { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -68,6 +89,8 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
+        [Obsolete]
+        [JsonIgnore]
         public string markId { get; set; }
 
         /// <summary>
