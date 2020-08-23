@@ -208,7 +208,6 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             if (isSuccess)
             {
-
                 LoadingDataEvent(this, true);
                 BasePostData<CommodityInventoryChange> basePostData = ShelfBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTask, bAutoSubmit);
                 LoadingDataEvent(this, false);

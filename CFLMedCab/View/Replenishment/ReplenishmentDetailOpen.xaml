@@ -42,9 +42,6 @@
             </Border>
             <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="1">
                 <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
@@ -66,10 +63,7 @@
                         <Grid Grid.Column="5" x:Name="column6"/>
                     </Grid>
                     <Label Content="本柜待上架商品" Grid.Row="0" Style="{StaticResource lblTitle5}"/>
-                    <ListView  Grid.Row="1" Grid.Column="1"  
-                               ItemsSource="{Binding}" 
-                               Name="listView" 
-                               Style="{StaticResource DefaultListView}">
+                    <ListView  Grid.Row="1" Grid.Column="1"  ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView}">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="商品名称"  Width="{Binding ElementName=column1,Path=ActualWidth}">
@@ -82,21 +76,21 @@
                                 <GridViewColumn Header="厂家" Width="{Binding ElementName=column2,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorNameStr}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName1}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="规格" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding SpecStr}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Spec1}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="型号" Width="{Binding ElementName=column4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ModelStr}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Model1}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

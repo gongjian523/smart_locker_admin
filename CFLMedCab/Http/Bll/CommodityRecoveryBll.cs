@@ -41,7 +41,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2",
+                        logical_relation = "1 AND 2 AND",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -55,7 +55,13 @@ namespace CFLMedCab.Http.Bll
                                 field = "Operator",
                                 @operator = "==",
                                 operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
-                            }
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "StoreHouse",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId())}'"}
+                            },
                         }
                     }
                 }
@@ -63,17 +69,21 @@ namespace CFLMedCab.Http.Bll
             //校验是否含有数据，如果含有数据，拼接具体字段
             recovery = HttpHelper.GetInstance().ResultCheck(recovery, out bool isSuccess);
 
-            if (isSuccess)
+            if (!isSuccess)
             {
-                recovery.body.objects.ForEach(it =>
-                {
-                    //拼接库房名称
-                    if (!string.IsNullOrEmpty(it.StoreHouse))
-                    {
-                        it.StoreHouseName = GetNameById<StoreHouse>(it.StoreHouse);
-                    }
-                });
+                recovery.code = (int)ResultCode.Result_Exception;
+                recovery.message = ResultCode.Result_Exception.ToString();
             }
+            else
+            {
+                //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
+                if ("已完成".Equals(recovery.body.objects[0].Status) || "已撤销".Equals(recovery.body.objects[0].Status))
+                {
+                    recovery.code = (int)ResultCode.Task_Exception;
+                    recovery.message = ResultCode.Task_Exception.ToString();
+                }
+            }
+
             return recovery;
         }
         /// <summary>

@@ -264,11 +264,21 @@ namespace CFLMedCab.Http.Bll
 					}
 
 					//拼接商品名字
-					if (!string.IsNullOrEmpty(it.CommodityId))
+					if (!string.IsNullOrEmpty(it.Commodity))
 					{
-						it.CommodityName = GetNameById<Commodity>(it.CommodityId);
+                        var bdCommodity = GetCommodityById(it.Commodity);
+
+                        HttpHelper.GetInstance().ResultCheck(bdCommodity, out bool isSuccess1);
+
+                        if(isSuccess1)
+                        {
+                            it.CommodityName = bdCommodity.body.objects[0].name;
+                            it.ManufactorName1 = bdCommodity.body.objects[0].ManufactorName1;
+                            it.Model1 = bdCommodity.body.objects[0].Model1;
+                            it.Spec1 = bdCommodity.body.objects[0].Spec1;
+                        }
 					}
-				});
+                });
 			}
 
 			return baseDataShelfTaskDetail;
@@ -327,7 +337,7 @@ namespace CFLMedCab.Http.Bll
                     //上架任务单商品详情列表
                     var shelfTaskDetails = baseDataShelfTaskDetail.body.objects.Where(item => item.Number != 0 && item.GoodsLocationId == id);
                     //上架任务单商品码
-                    var sfdCommodityIds = shelfTaskDetails.Select(it => it.CommodityId).Distinct().ToList();
+                    var sfdCommodityIds = shelfTaskDetails.Select(it => it.Commodity).Distinct().ToList();
 
                     var commodityCodes = baseDatacommodityCode.body.objects.Where(item => item.GoodsLocationId == id).ToList();
 
@@ -341,7 +351,7 @@ namespace CFLMedCab.Http.Bll
                         {
                             if (sfdCommodityIds.Contains(it.CommodityId))
                             {
-                                var shelfTaskDetail = shelfTaskDetails.Where(item => item.CommodityId == it.CommodityId).First();
+                                var shelfTaskDetail = shelfTaskDetails.Where(item => item.Commodity == it.CommodityId).First();
 
                                 if (shelfTaskDetail.Number  >= ++shelfTaskDetail.CountShelfNumber)
                                 {
@@ -374,14 +384,14 @@ namespace CFLMedCab.Http.Bll
                         foreach (ShelfTaskDetail stcd in shelfTaskDetails)
                         {
                             //数量超出
-                            if (stcd.Number < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                            if (stcd.Number < commodityCodes.Where(cit => cit.CommodityId == stcd.Commodity).Count())
                             {
                                 isNoOver = false;
                                 break;
                             }
 
                             //数量不相等
-                            if (stcd.Number != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                            if (stcd.Number != commodityCodes.Where(cit => cit.CommodityId == stcd.Commodity).Count())
                             {
                                 isAllSame = false;
                             }
@@ -445,7 +455,7 @@ namespace CFLMedCab.Http.Bll
 
                 foreach (ShelfTaskDetail stcd in baseDataShelfTaskDetail.body.objects)
                 {
-                    stcd.CurShelfNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
+                    stcd.CurShelfNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.Commodity).Count();
                 }
             }
 		}
@@ -518,20 +528,14 @@ namespace CFLMedCab.Http.Bll
                             object_id = shelfTask.id
                         },
                         operate_type = it.operate_type
-                        //EquipmentId = ApplicationState.GetEquipId(),
-                        //StoreHouseId = ApplicationState.GetHouseId(),
-                        //GoodsLocationId = it.GoodsLocationId
                     };
-
-                    if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
-                    {
-                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
-                    }
 
                     if (it.operate_type == (int)OperateType.出库)
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
                         cic.StoreHouseId = ApplicationState.GetHouseId();
+                        //只有出库的时候才会设置调整状态
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                     }
                     else
                     {

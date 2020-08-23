@@ -12,7 +12,7 @@ namespace CFLMedCab.Http.Model
 	public class ProcessDoneCommodity : BaseModel
 	{
 		/// <summary>
-		/// 
+		/// 商品码ID
 		/// </summary>
 		public string CommodityCodeId { get; set; }
 

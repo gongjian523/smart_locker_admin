@@ -24,12 +24,12 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace CFLMedCab.View.Return
+namespace CFLMedCab.View.Recovery
 {
     /// <summary>
     /// ReturnGoodsDetail.xaml 的交互逻辑
     /// </summary>
-    public partial class ReturnGoodsDetail : UserControl
+    public partial class RecoveryDetail : UserControl
     {
         //进入拣货单详情开门状态页面
         public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickTask e);
@@ -45,7 +45,7 @@ namespace CFLMedCab.View.Return
 
         private PickTask pickTask;
 
-        public ReturnGoodsDetail(PickTask task)
+        public RecoveryDetail(PickTask task)
         {
             InitializeComponent();
 

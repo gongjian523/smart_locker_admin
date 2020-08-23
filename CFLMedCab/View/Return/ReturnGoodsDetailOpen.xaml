@@ -48,12 +48,12 @@
                     </Grid.RowDefinitions>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
@@ -80,24 +80,24 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="已拣货数量" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                <GridViewColumn Header="厂家" Width="{Binding ElementName=column3,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding PickNumber}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="库房" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                <GridViewColumn Header="规格" Width="{Binding ElementName=column4,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding StoreHouseName}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Specifications}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="设备" Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                <GridViewColumn Header="型号" Width="{Binding ElementName=column5,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding EquipmentName}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Model}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

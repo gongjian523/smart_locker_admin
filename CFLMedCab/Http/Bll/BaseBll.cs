@@ -428,6 +428,22 @@ namespace CFLMedCab.Http.Bll
             //return DateTime.Now.ToString("s") + "Z";
             return DateTime.UtcNow.ToString("s") + "Z";
         }
+
+		//
+		public BaseData<Commodity> GetCommodityById(string id)
+        {
+			BaseData<Commodity> baseData = HttpHelper.GetInstance().Get<Commodity>(new QueryParam
+			{
+				@in =
+				{
+				field = "id",
+				in_list =  { HttpUtility.UrlEncode(id) }
+				}
+			});
+
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+			return baseData;
+		}
 	}
 
 }

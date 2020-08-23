@@ -12,12 +12,11 @@ namespace CFLMedCab.Http.Model
 	public class ShelfTaskDetail : BaseModel
 	{
 		/// <summary>
-		/// 
-		/// </summary>
-		public int Commodity { get; set; }
-		/// <summary>
 		/// 商品id
 		/// </summary>
+		public string Commodity { get; set; }
+
+		[Obsolete]
 		public string CommodityId { get; set; }
 		/// <summary>
 		/// 
@@ -39,10 +38,10 @@ namespace CFLMedCab.Http.Model
 		public string ManufactorName { get; set; }
 
 		/// <summary>
-		///  厂商，通过Model查询
+		///  厂商字符串
 		/// </summary>
 		[JsonIgnore]
-		public string ManufactorNameStr { get; set; }
+		public string ManufactorName1 { get; set; }
 
 		/// <summary>
 		/// 型号id，从系统中过来
@@ -50,10 +49,10 @@ namespace CFLMedCab.Http.Model
 		public string Model { get; set; }
 
 		/// <summary>
-		/// 型号，通过Model查询
+		/// 型号字符串
 		/// </summary>
 		[JsonIgnore]
-		public string ModelStr { get; set; }
+		public string Model1 { get; set; }
 
 		/// <summary>
 		/// 
@@ -79,13 +78,12 @@ namespace CFLMedCab.Http.Model
 		/// 规格，通过Spec查询
 		/// </summary>
 		[JsonIgnore]
-		public string SpecStr { get; set; }
+		public string Spec1 { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
 		public string StoreHouseId { get; set; }
-
 
         /// <summary>
         /// 
@@ -160,8 +158,9 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 本次应上架数量
         /// </summary>
-        //[JsonIgnore]
-        //public int PlanShelfNumber { get; set; }
+        [JsonIgnore]
+		[Obsolete]
+        public int PlanShelfNumber { get; set; }
 
 		/// <summary>
 		/// 上架数量计数

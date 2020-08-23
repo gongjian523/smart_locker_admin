@@ -45,6 +45,7 @@ using CFLMedCab.View.Allot;
 using CFLMedCab.View.Common;
 using CFLMedCab.View.InOut;
 using CFLMedCab.View.ShelfFast;
+using CFLMedCab.View.Recovery;
 
 namespace CFLMedCab
 {
@@ -715,9 +716,9 @@ namespace CFLMedCab
 
             NavBtnEnterReplenishment.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterShlefFast.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterAllotShlef.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            //NavBtnEnterAllotShlef.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterReturnAll.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterRecovery.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStockSwitch.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = Visibility.Visible;
             NavBtnEnterStock.Visibility = Visibility.Visible;
@@ -736,11 +737,11 @@ namespace CFLMedCab
             else
             {
                 NavBtnEnterInvtory.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 1);
+                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 0);
                 NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 2);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 1);
                 NavBtnEnterPersonalSetting.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 3);
+                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 2);
             }
         }
 
@@ -930,9 +931,6 @@ namespace CFLMedCab
         {
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
-
-		
-
 
         #region 领用
         #region 一般领用
@@ -1742,9 +1740,7 @@ namespace CFLMedCab
 
             ShelfFastView shelfFastView = new ShelfFastView();
             shelfFastView.EnterShelfFastDetailEvent += new ShelfFastView.EnterShelfFastDetailHandler(onEnterShelfFastDetail);
-            shelfFastView.EnterShelfFastDetailOpenEvent += new ShelfFastView.EnterShelfFastDetailOpenHandler(onEnterShelfFastDetail);
             shelfFastView.LoadingDataEvent += new ShelfFastView.LoadingDataHandler(onLoadingData);
-
             ContentFrame.Navigate(shelfFastView);
             //进入上架页面，将句柄设置成null，类型设置成other，避免错误调用
             SetSubViewInfo(null, SubViewType.Others);
@@ -2242,16 +2238,16 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnPick(object sender, RoutedEventArgs e)
+        private void onEnterRecovery(object sender, RoutedEventArgs e)
         {          
             HomePageView.Visibility = Visibility.Hidden;
             btnBackHP.Visibility = Visibility.Visible;
 
-            ReturnQuery returnQuery = new ReturnQuery();
-            returnQuery.EnterReturnOpenEvent += new ReturnQuery.EnterReturnOpenHandler(onEnterReturnOpen);
-            returnQuery.LoadingDataEvent += new ReturnQuery.LoadingDataHandler(onLoadingData);
+            Recovery recovery = new Recovery();
+            recovery.EnterRecoveryDetailOpenEvent += new Recovery.EnterRecoveryDetailOpenHandler(onEnterReturnOpen);
+            recovery.LoadingDataEvent += new Recovery.LoadingDataHandler(onLoadingData);
 
-            ContentFrame.Navigate(returnQuery);
+            ContentFrame.Navigate(recovery);
             //进入回收取货页面，将句柄设置成null，类型设置成other，避免错误调用
             SetSubViewInfo(null, SubViewType.Others);
         }

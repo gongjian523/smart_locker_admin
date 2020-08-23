@@ -248,7 +248,7 @@ namespace CFLMedCab.View.Inventory
 
                         if (isSuccess2)
                         {
-                            goodItem.Specifications = item.Specifications;
+                            goodItem.Specifications = item.Spec;
                             if (item.ManufactorName != null)
                             {
                                 goodItem.ManufactorName = item.ManufactorName;

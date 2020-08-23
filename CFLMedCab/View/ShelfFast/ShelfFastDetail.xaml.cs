@@ -27,7 +27,7 @@ using System.Windows.Threading;
 namespace CFLMedCab.View.ShelfFast
 {
     /// <summary>
-    /// ReturnGoodsConfirm.xaml 的交互逻辑
+    /// ShelfFastDetail.xaml 的交互逻辑
     /// </summary>
     public partial class ShelfFastDetail : UserControl
     {
@@ -69,17 +69,17 @@ namespace CFLMedCab.View.ShelfFast
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 LoadingDataEvent(this, true);
-                BaseData<ShelfTaskFastDetail> bdAllotShelf = ShelfFastBll.GetInstance().GetShelfTaskFastDetail(shelfTaskFast);
+                BaseData<ShelfTaskFastDetail> bdShelfTaskFastDetail = ShelfFastBll.GetInstance().GetShelfTaskFastDetail(shelfTaskFast);
                 LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(bdAllotShelf, out bool isSuccess);
+                HttpHelper.GetInstance().ResultCheck(bdShelfTaskFastDetail, out bool isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("获取拣货单商品明细错误！", "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("获取便捷上架单明细错误！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 
-                listView.DataContext = bdAllotShelf.body.objects;
+                listView.DataContext = bdShelfTaskFastDetail.body.objects;
             }));
         }
 

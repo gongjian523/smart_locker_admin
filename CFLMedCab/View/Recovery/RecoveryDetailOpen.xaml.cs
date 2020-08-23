@@ -1,5 +1,4 @@
 ﻿using CFLMedCab.BLL;
-using CFLMedCab.DAL;
 using CFLMedCab.DTO.Picking;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
@@ -7,6 +6,7 @@ using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Model;
+using CFLMedCab.View.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,38 +22,42 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using System.Windows.Threading;
 
-namespace CFLMedCab.View.Return
+namespace CFLMedCab.View.Recovery
 {
     /// <summary>
-    /// ReturnGoodsDetail.xaml 的交互逻辑
+    /// ReturnGoodsDetailOpen.xaml 的交互逻辑
     /// </summary>
-    public partial class ReturnGoodsDetail : UserControl
+    public partial class RecoveryDetailOpen : UserControl
     {
-        //进入拣货单详情开门状态页面
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickTask e);
-        public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
-
-        //进入拣货单列表页面
-        public delegate void EnterReturnGoodsHandler(object sender, RoutedEventArgs e);
-        public event EnterReturnGoodsHandler EnterReturnGoodsEvent;
-
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
+        public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
+
         private PickTask pickTask;
 
-        public ReturnGoodsDetail(PickTask task)
+        public RecoveryDetailOpen(PickTask task)
         {
             InitializeComponent();
+            ////操作人
+            //operatorName.Content = ApplicationState.GetUserInfo().name;
+            ////工单号
+            //orderNum.Content = task.name;
 
             pickTask = task;
-            //操作人
-            operatorName.Content = ApplicationState.GetUserInfo().name;
-            //工单号
-            orderNum.Content = task.name;
+
+            //只有一个柜门的时候，开门按钮不用显示，直接开门
+            if (ApplicationState.GetAllLocIds().Count() == 1)
+            {
+                btnBorder.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                btnBorder.Visibility = Visibility.Visible;
+                btnGrid.Children.Add(openDoorBtnBoard);
+            }
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -83,24 +87,14 @@ namespace CFLMedCab.View.Return
             }));
         }
 
-        /// <summary>
-        /// 返回工单列表
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onBackward(object sender, RoutedEventArgs e)
+        public void onDoorClosed(string com)
         {
-            EnterReturnGoodsEvent(this, null);
+            openDoorBtnBoard.SetButtonEnable(true, com);
         }
 
-        /// <summary>
-        /// 确认开柜
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnerDetailOpen(object sender, RoutedEventArgs e)
+        public PickTask GetPickTask()
         {
-            EnterReturnGoodsDetailOpenEvent(this, pickTask);
+            return pickTask;
         }
     }
 }

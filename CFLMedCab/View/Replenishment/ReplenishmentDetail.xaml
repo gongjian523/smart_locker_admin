@@ -85,21 +85,21 @@
                                     <GridViewColumn Header="厂家"  Width="{Binding ElementName=column2,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorNameStr}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName1}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="规格"  Width="{Binding ElementName=column3,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding SpecStr}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Spec1}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="型号"  Width="{Binding ElementName=column4,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ModelStr}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Model1}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

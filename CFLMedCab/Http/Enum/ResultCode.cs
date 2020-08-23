@@ -14,6 +14,12 @@ namespace CFLMedCab.Http.Enum
 	{
 
 		/// <summary>
+		/// Task_Exception
+		/// </summary>
+		[Description("Task_Exception")]
+		Task_Exception = -3,
+
+		/// <summary>
 		/// Result_Exception
 		/// </summary>
 		[Description("Result_Exception")]

@@ -395,7 +395,7 @@ namespace CFLMedCab.Http.Bll
                             {
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == it.CommodityId).First();
                                 it.CommodityName = commodity.name;
-                                it.Specifications = commodity.Specifications;
+                                it.Spec = commodity.Spec1;
                                 it.CatalogueId = commodity.CommodityCatalogueId;
                             }
                         }
@@ -441,7 +441,6 @@ namespace CFLMedCab.Http.Bll
 
             commodityCodes.ForEach(it =>
             {
-
                 commodityCodeNames.Add(HttpUtility.UrlEncode(it.name));
             });
 
@@ -514,7 +513,7 @@ namespace CFLMedCab.Http.Bll
                             {
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == fullCommodityCode.CommodityId).First();
                                 it.CommodityName = commodity.name;
-                                it.Specifications = commodity.Specifications;
+                                it.Spec = commodity.Spec1;
                             }
                         }
                         else
@@ -526,7 +525,6 @@ namespace CFLMedCab.Http.Bll
                 }
                 else
                 {
-
 					if (baseDataCommodityCode.code != (int)ResultCode.Request_Exception) {
 						baseDataCommodityCode = new BaseData<CommodityCode>()
 						{

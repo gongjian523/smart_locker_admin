@@ -132,7 +132,7 @@ namespace CFLMedCab.View.ShelfFast
                 listView.DataContext = bdCommodityCode.body.objects;
 
                 //没有异常商品才能进入提交页面
-                if (abnormalInCnt == 0 && abnormalOutCnt == 0)
+                if (abnormalOutCnt == 0)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;
@@ -161,8 +161,6 @@ namespace CFLMedCab.View.ShelfFast
                     abnormalView.Visibility = Visibility.Visible;
 
                     List<string> codes = bdCommodityCode.body.objects.Select(item => item.name).ToList();
-
-                    //list2View.DataContext = bdCommodityDetail.body.objects.Where(item => !codes.Contains(item.CommodityCodeName)).ToList();
                 }
                 else
                 {
@@ -218,7 +216,7 @@ namespace CFLMedCab.View.ShelfFast
                 {
                     if (bAutoSubmit)
                     {
-                        MessageBox.Show("创建调拨上架任务单库存明细失败！" + basePostData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("创建便捷上架任务单库存明细失败！" + basePostData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
                 else
@@ -233,14 +231,14 @@ namespace CFLMedCab.View.ShelfFast
 
                     if (!isSuccess2 && bAutoSubmit)
                     {
-                        MessageBox.Show("更新挑拨上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("更新便捷上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
 
-                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "AllotShelf",  out List<LocalCommodityCode> localCommodities);
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTaskFast",  out List<LocalCommodityCode> localCommodities);
 
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                inOutBill.NewInOutRecord(localCommodities, "AllotShelf");
+                inOutBill.NewInOutRecord(localCommodities, "ShelfTaskFast");
             }
 
             ApplicationState.SetGoodsInfoInSepcLoc(after,locCodes);
@@ -258,7 +256,7 @@ namespace CFLMedCab.View.ShelfFast
         /// <param name="e"></param>
         private void onNotComplete(object sender, RoutedEventArgs e)
         {
-            shelfTaskFast.Status = AllotShelfStatusEnum.进行中.ToString();
+            //shelfTaskFast.Status = AllotShelfStatusEnum.进行中.ToString();
             EndOperation(bExit);
         }
 
@@ -269,7 +267,7 @@ namespace CFLMedCab.View.ShelfFast
         /// <param name="e"></param>
         private void onAbnormalSubmit(object sender, RoutedEventArgs e)
         {
-            shelfTaskFast.Status = AllotShelfStatusEnum.异常.ToString();
+            //shelfTaskFast.Status = AllotShelfStatusEnum.异常.ToString();
             EndOperation(bExit);
         }
 

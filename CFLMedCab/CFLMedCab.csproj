@@ -374,6 +374,15 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\Recovery\RecoveryClose.xaml.cs">
+      <DependentUpon>RecoveryClose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Recovery\RecoveryDetail.xaml.cs">
+      <DependentUpon>RecoveryDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Recovery\RecoveryDetailOpen.xaml.cs">
+      <DependentUpon>RecoveryDetailOpen.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\ShelfFast\ShelfFastClose.xaml.cs">
       <DependentUpon>ShelfFastClose.xaml</DependentUpon>
     </Compile>
@@ -416,8 +425,8 @@
     <Compile Include="View\Common\OpenDoorBtnBoard.xaml.cs">
       <DependentUpon>OpenDoorBtnBoard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\Return\ReturnQuery.xaml.cs">
-      <DependentUpon>ReturnQuery.xaml</DependentUpon>
+    <Compile Include="View\Recovery\Recovery.xaml.cs">
+      <DependentUpon>Recovery.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Return\ReturnClose.xaml.cs">
       <DependentUpon>ReturnClose.xaml</DependentUpon>
@@ -555,6 +564,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Recovery\RecoveryClose.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Recovery\RecoveryDetail.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Recovery\RecoveryDetailOpen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\ShelfFast\ShelfFastClose.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -611,7 +632,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="View\Return\ReturnQuery.xaml">
+    <Page Include="View\Recovery\Recovery.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

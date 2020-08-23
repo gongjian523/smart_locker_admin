@@ -1,32 +1,15 @@
 ﻿using CFLMedCab.BLL;
-using CFLMedCab.DAL;
-using CFLMedCab.DTO.Goodss;
-using CFLMedCab.DTO.Picking;
 using CFLMedCab.Http.Bll;
-using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
-using CFLMedCab.Infrastructure.DeviceHelper;
-using CFLMedCab.Model;
-using CFLMedCab.Model.Constant;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CFLMedCab.View.Allot
 {

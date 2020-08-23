@@ -11,12 +11,12 @@ namespace CFLMedCab.Http.Model
        	public string CommodityName { get; set; }
 
 		/// <summary>
-		/// 商品码id
+		/// 商品码CommodityCodeName对应id
 		/// </summary>
 		public string CommodityCodeId { get; set; }
 
 		/// <summary>
-		/// 商品码
+		/// 商品码(就是RFid)
 		/// </summary>
 		public string CommodityCodeName { get; set; }
 

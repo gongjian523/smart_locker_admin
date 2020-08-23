@@ -30,7 +30,7 @@
                         <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
                     <Label Content="业务类型" Grid.Column="0" Grid.Row="0" Style="{StaticResource lblTitle1}" />
-                    <Label Content="调拨上架" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" Style="{StaticResource lblTitle2}" />
+                    <Label Content="便捷上架" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" Style="{StaticResource lblTitle2}" />
 
                     <Label Grid.Column="1" Grid.Row="0"   Content="操作人" Style="{StaticResource lblTitle3}" />
                     <Label Grid.Column="1" Grid.Row="1"   Content="操作人" Name="operatorName" Style="{StaticResource lblTitle4_0}" />
@@ -43,7 +43,6 @@
             <Border Style="{StaticResource BottomRadiusBorder}" Grid.Row="2">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="auto"></RowDefinition>
                     </Grid.RowDefinitions>
@@ -51,17 +50,17 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="column1"/>
                         <Grid Grid.Column="1" x:Name="column2"/>
+                        <Grid Grid.Column="2" x:Name="column3"/>
+                        <Grid Grid.Column="3" x:Name="column4"/>
+                        <Grid Grid.Column="4" x:Name="column5"/>
                     </Grid>
-                    <Border Grid.Row="0"  Width="{Binding ElementName=myGrid,Path=ActualWidth}" CornerRadius="{DynamicResource GRadius}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Label Content="待上架商品" Padding="0 5" Style="{StaticResource lblTitle5}"/>
-                        </StackPanel>
-                    </Border>
-                    <ListView  Grid.Row="1"   ItemsSource="{Binding}" Name="listView" 
-                              Style="{StaticResource DefaultListView }">
+                    <ListView  Grid.Row="0"   ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView }">
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="商品名称" Width="{Binding ElementName=column1,Path=ActualWidth}" >
@@ -78,14 +77,31 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
+                                <GridViewColumn Header="厂家"  Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName1}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="规格"  Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Spec1}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="型号"  Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Model1}"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
                             </GridView>
                         </ListView.View>
                     </ListView>
-
-                    <Button Content="确认开柜"  Grid.Row="2" Style="{StaticResource CommonYesButton}" HorizontalAlignment="Center" Click="onEnerDetailOpen"/>
-                    <Grid Grid.Row="0" Grid.Column="0" x:Name="ContentView">
-                        <Frame x:Name="ContentFrame" NavigationUIVisibility="Hidden" Panel.ZIndex="0" Margin="0,-20,0,20"/>
-                    </Grid>
+                    <Button Content="确认开柜"  Grid.Row="1" Style="{StaticResource CommonYesButton}" HorizontalAlignment="Center" Click="onEnerDetailOpen"/>
                 </Grid>
             </Border>
         </Grid>

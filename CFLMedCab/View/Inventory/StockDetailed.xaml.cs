@@ -68,7 +68,7 @@ namespace CFLMedCab.View.Inventory
             specView.Visibility = Visibility.Hidden;
 
             commodityView.Visibility = Visibility.Visible;
-            listView2.DataContext = paras.commodityList.Where(item => item.CatalogueName == paras.CatalogueName && item.Specifications == spec).ToList();
+            listView2.DataContext = paras.commodityList.Where(item => item.CatalogueName == paras.CatalogueName && item.Spec == spec).ToList();
 
             specBtnView.Visibility = Visibility.Hidden;
             commodityBtnView.Visibility = Visibility.Visible;

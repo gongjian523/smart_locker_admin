@@ -56,13 +56,13 @@ namespace CFLMedCab.Http.Bll
 
                     foreach (var spec in listDtl)
                     {
-                        if (listSpec.Where(si => si.Spec == spec.Specifications).Count() == 0)
+                        if (listSpec.Where(si => si.Spec == spec.Spec).Count() == 0)
                         {
                             listSpec.Add(new SpecCommodity
                             {
                                 CatalogueName = spec.CatalogueName,
-                                Spec = spec.Specifications,
-                                SpecNum = listDtl.Where(id => id.Specifications == spec.Specifications).Count()
+                                Spec = spec.Spec,
+                                SpecNum = listDtl.Where(id => id.Spec == spec.Spec).Count()
                             });
                         }
                     }
