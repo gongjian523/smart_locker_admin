@@ -540,9 +540,6 @@ namespace CFLMedCab.Http.Bll
                             object_id = shelfTask.id
                         },
                         operate_type = it.operate_type
-                        //EquipmentId = ApplicationState.GetEquipId(),
-                        //StoreHouseId = ApplicationState.GetHouseId(),
-                        //GoodsLocationId = it.GoodsLocationId
                     };
 
                     if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())

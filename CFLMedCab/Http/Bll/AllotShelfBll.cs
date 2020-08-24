@@ -409,9 +409,6 @@ namespace CFLMedCab.Http.Bll
                             object_id = allotShelf.id
                         },
                         operate_type = it.operate_type
-                        //EquipmentId = ApplicationState.GetEquipId(),
-                        //StoreHouseId = ApplicationState.GetHouseId(),
-                        //GoodsLocationId = it.GoodsLocationId
                     };
 
                     //【待确认】出库
