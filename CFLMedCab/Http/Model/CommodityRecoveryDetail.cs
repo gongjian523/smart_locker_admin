@@ -2,31 +2,41 @@
 using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
-using System.ComponentModel;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
-	
 	/// <summary>
-	/// 上架任务商品明细
+	/// 拣选商品管理理资料
 	/// </summary>
-	[Obsolete]
 	[JsonObject(MemberSerialization.OptOut)]
-	public class ShelfTaskCommodityDetail : BaseModel
+	public class CommodityRecoveryDetail : BaseModel
 	{
 		/// <summary>
-		/// 已上架数量量
+		/// 
 		/// </summary>
-		public int AlreadyShelfNumber { get; set; }
+		[JsonIgnore]
+		public string CommodityCodeName { get; set; }
+
 		/// <summary>
-		/// 商品id
+		/// 
 		/// </summary>
-		public string CommodityId { get; set; }
+		public string CommodityCodeId { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string CommodityInventoryId { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string CommodityRecoveryId { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
 		public string EquipmentId { get; set; }
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -34,19 +44,23 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public int NeedShelfNumber { get; set; }
+		public string ManufactorName { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
-		public string ShelfTaskId { get; set; }
+		public string Model { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Specifications { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Status { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
 		public string StoreHouseId { get; set; }
-		/// <summary>
-		/// 定数包
-		/// </summary>
-		public string Type { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -55,7 +69,6 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string created_by { get; set; }
-
 		/// <summary>
 		/// 
 		/// </summary>
@@ -104,43 +117,5 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		[JsonIgnore]
 		public string CommodityName { get; set; }
-
-
-        /// <summary>
-        /// 本次上架数量
-        /// </summary>
-        [JsonIgnore]
-        public int CurShelfNumber { get; set; }
-
-        /// <summary>
-        /// 本次应上架数量
-        /// </summary>
-        [JsonIgnore]
-        public int PlanShelfNumber { get; set; }
-
-		/// <summary>
-		/// 上架数量计数
-		/// </summary>
-		[JsonIgnore]
-		public int CountShelfNumber { get; set; } = 0;
-
-	}
-
-	/// <summary>
-	/// 便捷上架任务商品明细明细
-	/// </summary>
-	public enum ShelfTaskFastCommodityStatus
-	{
-		/// <summary>
-		/// 未上架
-		/// </summary>
-		[Description("未上架")]
-		未上架 = 0,
-
-		/// <summary>
-		/// 已上架
-		/// </summary>
-		[Description("已上架")]
-		已上架 = 1,
-	}
+    }
 }

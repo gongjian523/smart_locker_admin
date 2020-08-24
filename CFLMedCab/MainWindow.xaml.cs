@@ -45,6 +45,7 @@ using CFLMedCab.View.Allot;
 using CFLMedCab.View.Common;
 using CFLMedCab.View.InOut;
 using CFLMedCab.View.ShelfFast;
+using CFLMedCab.View.Recovery;
 
 namespace CFLMedCab
 {
@@ -715,9 +716,9 @@ namespace CFLMedCab
 
             NavBtnEnterReplenishment.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterShlefFast.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterAllotShlef.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            //NavBtnEnterAllotShlef.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-            NavBtnEnterReturnAll.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterRecovery.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStockSwitch.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = Visibility.Visible;
             NavBtnEnterStock.Visibility = Visibility.Visible;
@@ -736,11 +737,11 @@ namespace CFLMedCab
             else
             {
                 NavBtnEnterInvtory.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 1);
+                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 0);
                 NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 2);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 1);
                 NavBtnEnterPersonalSetting.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 3);
+                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 2);
             }
         }
 
@@ -811,6 +812,9 @@ namespace CFLMedCab
                     break;
                 case SubViewType.ShelfFastClose:
                     ((ShelfFastClose)subViewHandler).onExitTimerExpired();
+                    break;
+                case SubViewType.RecoveryClose:
+                    ((RecoveryClose)subViewHandler).onExitTimerExpired();
                     break;
                 case SubViewType.ReturnClose:
                     ((ReturnClose)subViewHandler).onExitTimerExpired();
@@ -930,9 +934,6 @@ namespace CFLMedCab
         {
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
-
-		
-
 
         #region 领用
         #region 一般领用
@@ -1742,9 +1743,7 @@ namespace CFLMedCab
 
             ShelfFastView shelfFastView = new ShelfFastView();
             shelfFastView.EnterShelfFastDetailEvent += new ShelfFastView.EnterShelfFastDetailHandler(onEnterShelfFastDetail);
-            shelfFastView.EnterShelfFastDetailOpenEvent += new ShelfFastView.EnterShelfFastDetailOpenHandler(onEnterShelfFastDetail);
             shelfFastView.LoadingDataEvent += new ShelfFastView.LoadingDataHandler(onLoadingData);
-
             ContentFrame.Navigate(shelfFastView);
             //进入上架页面，将句柄设置成null，类型设置成other，避免错误调用
             SetSubViewInfo(null, SubViewType.Others);
@@ -2242,39 +2241,61 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnPick(object sender, RoutedEventArgs e)
+        private void onEnterRecovery(object sender, RoutedEventArgs e)
         {          
             HomePageView.Visibility = Visibility.Hidden;
             btnBackHP.Visibility = Visibility.Visible;
 
-            ReturnQuery returnQuery = new ReturnQuery();
-            returnQuery.EnterReturnOpenEvent += new ReturnQuery.EnterReturnOpenHandler(onEnterReturnOpen);
-            returnQuery.LoadingDataEvent += new ReturnQuery.LoadingDataHandler(onLoadingData);
+            Recovery recovery = new Recovery();
+            recovery.EnterRecoveryDetailEvent += new Recovery.EnterRecoveryDetailHandler(onEnterRecoveryDetail);
+            //recovery.EnterRecoveryDetailOpenEvent += new Recovery.EnterRecoveryDetailOpenHandler(onEnterRecoveryDetailOpen);
+            recovery.LoadingDataEvent += new Recovery.LoadingDataHandler(onLoadingData);
 
-            ContentFrame.Navigate(returnQuery);
+            ContentFrame.Navigate(recovery);
             //进入回收取货页面，将句柄设置成null，类型设置成other，避免错误调用
             SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
-        /// 进入回收取货页面-开门状态
+        /// 进入回收取货详情页 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onEnterReturnOpen(object sender, CommodityRecovery e)
+        private void onEnterRecoveryDetail(object sender, CommodityRecovery e)
+        {
+            RecoveryDetail recoveryDetailDetail = new RecoveryDetail(e);
+            recoveryDetailDetail.EnterRecoveryDetailOpenEvent += new RecoveryDetail.EnterRecoveryDetailOpenHandler(onEnterRecoveryDetailOpen);
+            recoveryDetailDetail.EnterRecoveryEvent += new RecoveryDetail.EnterRecoveryHandler(onEnterRecovery);
+            recoveryDetailDetail.LoadingDataEvent += new RecoveryDetail.LoadingDataHandler(onLoadingData);
+
+            ContentFrame.Navigate(recoveryDetailDetail);
+            //进入上架任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+
+        /// <summary>
+        /// 进入回收取货详情页-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterRecoveryDetailOpen(object sender, CommodityRecovery e)
         {
             NaviView.Visibility = Visibility.Hidden;
 
-            GerFetchState gerFetchState = new GerFetchState(OpenDoorViewType.Fetch,null,e);
-            gerFetchState.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onReturnOpenDoorEvent);
+            RecoveryDetailOpen recoveryDetailOpen = new RecoveryDetailOpen(e);
+            recoveryDetailOpen.LoadingDataEvent += new RecoveryDetailOpen.LoadingDataHandler(onLoadingData);
+            recoveryDetailOpen.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onRecoveryOpenDoorEvent);
 
-            FullFrame.Navigate(gerFetchState);
-            //进入回收取货开门页面，类型设置成Others，表明柜门还没有开启
-            SetSubViewInfo(gerFetchState, SubViewType.Others);
+            FullFrame.Navigate(recoveryDetailOpen);
+            //进入上架任务单详情开门页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(recoveryDetailOpen, SubViewType.Others);
 
-            //只有从回收取货查询页面发出的开门事件，才能清空此列表；
+            locOpenNum = 0;
+
+            //只有从上架列表或者详情页面发出的开门事件，才能清空此列表；
             //从关门页面发出的开门事件，不能清除此列表
-            if ((sender as Control).Name != "CtrlReturnClose")
+            if ((sender as Control).Name != "CtrlRecoveryClose")
             {
                 listOpenLocCom.Clear();
             }
@@ -2284,7 +2305,11 @@ namespace CFLMedCab
             //只有一个货位，直接开门
             if (locs.Count == 1)
             {
-                onReturnOpenDoorEvent(this, locs[0].Code);
+                onRecoveryOpenDoorEvent(this, locs[0].Code);
+
+                OpenCabinet openCabinet = new OpenCabinet();
+                openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+                onShowPopFrame(openCabinet);
             }
         }
 
@@ -2293,9 +2318,8 @@ namespace CFLMedCab
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void onReturnOpenDoorEvent(object sender, string e)
+        private void onRecoveryOpenDoorEvent(object sender, string e)
         {
-            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
             string rfidCom = ApplicationState.GetRfidComByLocCode(e);
             string lockerCom = ApplicationState.GetLockerComByLocCode(e);
 
@@ -2304,24 +2328,15 @@ namespace CFLMedCab
                 return;
             }
 
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
             if (!listOpenLocCom.Contains(rfidCom))
             {
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
-            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnClose);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterRecoveryCloseEvent);
             delegateGetMsg.userData = e;
-#endif
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                if (subViewHandler != null)
-                {
-                    ((GerFetchState)subViewHandler).onDoorOpen();
-                }
-            }));
 
             locOpenNum++;
 
@@ -2331,12 +2346,7 @@ namespace CFLMedCab
             SetSubViewType(SubViewType.DoorOpen);
         }
 
-        /// <summary>
-        /// 进入回收取货-关门状态
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onEnterReturnClose(object sender, bool isClose)
+        private void onEnterRecoveryCloseEvent(object sender, bool isClose)
         {
             LogUtils.Debug($"返回开锁状态{isClose}");
 
@@ -2352,7 +2362,7 @@ namespace CFLMedCab
                     if (subViewHandler != null)
                     {
                         LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
-                        ((GerFetchState)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                        ((RecoveryDetailOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
                     }
                 }));
                 return;
@@ -2364,7 +2374,7 @@ namespace CFLMedCab
 
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
 
-            CommodityRecovery commodityRecovery = ((GerFetchState)subViewHandler).GetCommodityRecovery();
+            CommodityRecovery commodityRecovery = ((RecoveryDetailOpen)subViewHandler).GetCommodityRecovery();
 
             //关闭盘点中弹窗
             ClosePop();
@@ -2374,17 +2384,17 @@ namespace CFLMedCab
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnClose returnClose = new ReturnClose(hs, listOpenLocCom, commodityRecovery);
-                returnClose.EnterReturnOpenEvent += new ReturnClose.EnterReturnOpenHandler(onEnterReturnOpen);
-                returnClose.EnterStockSwitchOpenEvent += new ReturnClose.EnterStockSwitchOpenHandler(onEnterStockSwitch);
-                returnClose.EnterPopCloseEvent += new ReturnClose.EnterPopCloseHandler(onEnterPopClose);
-                returnClose.LoadingDataEvent += new ReturnClose.LoadingDataHandler(onLoadingData);
+                RecoveryClose recoveryClose = new RecoveryClose(hs, listOpenLocCom, commodityRecovery);
+                recoveryClose.EnterRecoveryOpenEvent += new RecoveryClose.EnterRecoveryOpenHandler(onEnterRecoveryDetailOpen);
+                recoveryClose.EnterPopCloseEvent += new RecoveryClose.EnterPopCloseHandler(onEnterPopClose);
+                recoveryClose.LoadingDataEvent += new RecoveryClose.LoadingDataHandler(onLoadingData);
 
-                FullFrame.Navigate(returnClose);
+                FullFrame.Navigate(recoveryClose);
                 //进入回收取货关门页面
-                SetSubViewInfo(returnClose, SubViewType.ReturnClose);
+                SetSubViewInfo(recoveryClose, SubViewType.ReturnClose);
             }));
         }
+
 
         /// <summary>
         /// 进入库存调整
@@ -2505,8 +2515,7 @@ namespace CFLMedCab
 
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                ReturnClose returnClose = new ReturnClose(hs, listOpenLocCom,null);
-                returnClose.EnterReturnOpenEvent += new ReturnClose.EnterReturnOpenHandler(onEnterReturnOpen);
+                ReturnClose returnClose = new ReturnClose(hs, listOpenLocCom);
                 returnClose.EnterStockSwitchOpenEvent += new ReturnClose.EnterStockSwitchOpenHandler(onEnterStockSwitch);
                 returnClose.EnterPopCloseEvent += new ReturnClose.EnterPopCloseHandler(onEnterPopClose);
                 returnClose.LoadingDataEvent += new ReturnClose.LoadingDataHandler(onLoadingData);

@@ -89,7 +89,7 @@ namespace UnitTestProject
 
 			BaseData<ShelfTask> baseDataShelfTask = ShelfBll.GetInstance().GetShelfTask("OS20190721000052");
 
-			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskCommodityDetail(baseDataShelfTask);
+			BaseData<ShelfTaskDetail> baseDataShelfTaskCommodityDetail = ShelfBll.GetInstance().GetShelfTaskDetail(baseDataShelfTask);
 
 			ShelfBll.GetInstance().GetShelfTaskChange(baseDataCommodityCode, baseDataShelfTask.body.objects[0], baseDataShelfTaskCommodityDetail);
 
@@ -160,9 +160,9 @@ namespace UnitTestProject
             //测试移动端 创建【领用单】，且领⽤用状态为 ‘已完成’。
             var temp = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
             {
-                FinishDate = "2019-07-23T09:31:00Z",//完成时间
+                //FinishDate = "2019-07-23T09:31:00Z",//完成时间
                 Status = ConsumingOrderStatus.已完成.ToString(),//领用状态
-                StoreHouseId = null,//领用库房【暂未知数据来源】
+                //StoreHouseId = null,//领用库房【暂未知数据来源】
                 Type = ConsumingOrderType.一般领用.ToString()
             });
             LogUtils.Debug(temp);

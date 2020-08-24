@@ -59,7 +59,12 @@ namespace CFLMedCab.Model.Enum
         AllotShelfClose,
 
         /// <summary>
-        /// 回收取货和库存调整关门页
+        /// 回收取货关门页
+        /// </summary>
+        RecoveryClose,
+
+        /// <summary>
+        /// 库存调整关门页
         /// </summary>
         ReturnClose,
 

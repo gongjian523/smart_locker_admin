@@ -13,17 +13,68 @@ namespace CFLMedCab.Http.Model
     public class Commodity: BaseModel
 	{
 		/// <summary>
+		/// 
+		/// </summary>
+		public string Category { get; set; }
+
+		/// <summary>
 		/// 商品码
 		/// </summary>
 		public string CommodityCode { get; set; }
+
+
 		/// <summary>
 		/// 
 		/// </summary>
+		public string Donation { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string HospitalGoodsId { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string HospitalGoodsId1 { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[Obsolete]
+		[JsonIgnore]
 		public string Manufacturer { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ManufactorName { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ManufactorName1 { get; set; }
+
 		/// <summary>
 		/// 是
 		/// </summary>
 		public string MixedBatch { get; set; }
+
+		/// <summary>
+		/// 是
+		/// </summary>
+		public string Model { get; set; }
+
+		/// <summary>
+		/// 是
+		/// </summary>
+		public string Model1 { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int Number { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -32,36 +83,69 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string Remark { get; set; }
+		
 		/// <summary>
 		/// 
 		/// </summary>
+		[Obsolete]
+		[JsonIgnore]
 		public string Size { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>
+		[Obsolete]
+		[JsonIgnore]
 		public string Specifications { get; set; }
 
-        /// <summary>
-        /// 目录id
-        /// </summary>
-        public string CommodityCatalogueId { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Spec { get; set; }
 
-        /// <summary>
-        /// 常温;阴凉
-        /// </summary>
-        public string StorageAttribute { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Spec1 { get; set; }
+
+		/// <summary>
+		/// 目录id
+		/// </summary>
+		[JsonIgnore]
+		public string CommodityCatalogueId { get; set; }
+
+		/// <summary>
+		/// 常温;阴凉
+		/// </summary>
+		[Obsolete]
+		[JsonIgnore]
+		public string StorageAttribute { get; set; }
+
 		/// <summary>
 		/// 定数包
 		/// </summary>
+		[Obsolete]
+		[JsonIgnore]
 		public string Type { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
+		[Obsolete]
+		[JsonIgnore]
 		public string Volume { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
+		[Obsolete]
+		[JsonIgnore]
 		public string Weight { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Track { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>

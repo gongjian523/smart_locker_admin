@@ -428,6 +428,40 @@ namespace CFLMedCab.Http.Bll
             //return DateTime.Now.ToString("s") + "Z";
             return DateTime.UtcNow.ToString("s") + "Z";
         }
+
+		//
+		public BaseData<Commodity> GetCommodityById(string id)
+        {
+			BaseData<Commodity> baseData = HttpHelper.GetInstance().Get<Commodity>(new QueryParam
+			{
+				@in =
+				{
+				field = "id",
+				in_list =  { HttpUtility.UrlEncode(id) }
+				}
+			});
+
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+			return baseData;
+		}
+
+		/// <summary>
+		/// 根据商品码获取完整商品属性集合
+		/// </summary>
+		/// <returns></returns>
+		public BaseData<CommodityCode> GetCommodityCode(string commodityCodeId)
+		{
+			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
+			{
+				@in =
+				{
+					field = "id",
+					in_list =  { HttpUtility.UrlEncode(commodityCodeId) }
+				}
+			});
+
+			return HttpHelper.GetInstance().ResultCheck(baseData);
+		}
 	}
 
 }

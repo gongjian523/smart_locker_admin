@@ -151,7 +151,7 @@ namespace CFLMedCab.Http.ExceptionApi
 			var consumingOrder = ConsumingBll.GetInstance().CreateConsumingOrder(new ConsumingOrder()
 			{
 				//Status = ConsumingOrderStatus.领用中.ToString(),
-				StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),
+				//StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),
 				Type = ConsumingOrderType.一般领用.ToString()
 			});
 

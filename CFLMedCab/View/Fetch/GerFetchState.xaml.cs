@@ -32,17 +32,13 @@ namespace CFLMedCab.View.Fetch
         //只是用来传递医嘱处方领用中的领用单
         private ConsumingOrder consumingOrder;
 
-        //只是用来传递医嘱处方领用中的领用单
-        private CommodityRecovery  commodityRecovery;
-
-        public GerFetchState(OpenDoorViewType openDoorViewType, ConsumingOrder order = null, CommodityRecovery recovery= null)
+        public GerFetchState(OpenDoorViewType openDoorViewType, ConsumingOrder order = null)
         {
             InitializeComponent();
 
             viewType = openDoorViewType;
 
             consumingOrder = order;
-            commodityRecovery = recovery;
 
             //只有一个柜门的时候，开门按钮不用显示，直接开门
             if (ApplicationState.GetAllLocIds().Count() == 1)
@@ -77,11 +73,6 @@ namespace CFLMedCab.View.Fetch
         public ConsumingOrder GetConsumingOrder()
         {
             return consumingOrder;
-        }
-
-        public CommodityRecovery GetCommodityRecovery()
-        {
-            return commodityRecovery;
         }
     }
 }

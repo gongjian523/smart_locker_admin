@@ -26,11 +26,20 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
+		[Obsolete]
 		public string EquipmentId { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
-		public string GoodsLocationId { get; set; }
+		public string GoodsLocationIds { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string ManufactorName { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Model { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -46,10 +55,15 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
+		public string Specifications { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
 		public string StoreHouseId { get; set; }
 		/// <summary>
 		/// 定数包
 		/// </summary>
+		[Obsolete]
 		public string Type { get; set; }
 
 		/// <summary>
@@ -113,6 +127,7 @@ namespace CFLMedCab.Http.Model
         /// 计划拣货数
         /// </summary>
         [JsonIgnore]
+		[Obsolete]
         public int PlanPickNumber { get; set; }
 
 

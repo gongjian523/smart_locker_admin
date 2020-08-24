@@ -83,19 +83,16 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
-                if (!isSuccess)
+                if (isSuccess)
                 {
-                    //MessageBox.Show("此上架工单中失败！", "温馨提示", MessageBoxButton.OK);
-                    return;
+                    List<ShelfTask> tasks = baseDataShelfTask.body.objects;
+                    tasks.ForEach(task =>
+                    {
+                        DateTime dt = Convert.ToDateTime(task.created_at);
+                        task.created_at = dt.ToString("yyyy年MM月dd日");
+                        ReplenishOrderViewList.Add(task);
+                    });
                 }
-
-                List<ShelfTask> tasks = baseDataShelfTask.body.objects;
-                tasks.ForEach(task =>
-                {
-                    DateTime dt = Convert.ToDateTime(task.created_at);
-                    task.created_at = dt.ToString("yyyy年MM月dd日");
-                    ReplenishOrderViewList.Add(task);
-                });
 
                 tbInputNumbers.Focus();
             }));

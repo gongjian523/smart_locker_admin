@@ -133,7 +133,7 @@ namespace CFLMedCab.View.Return
 
                 int abnormalLargeNum = bdCommodityDetail.body.objects.Where(item => item.CurPickNumber > (item.Number - item.PickNumber)).Count();
 
-                if (abnormalInCnt == 0 && abnormalOutCnt == 0 && abnormalLargeNum == 0)
+                if (abnormalInCnt == 0)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;

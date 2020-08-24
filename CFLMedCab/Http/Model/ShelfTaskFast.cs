@@ -2,6 +2,7 @@
 using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
 
 namespace CFLMedCab.Http.Model
 {
@@ -84,4 +85,40 @@ namespace CFLMedCab.Http.Model
         public string GoodLocationName{ get; set; }
 
     }
+
+	/// <summary>
+	/// 便捷上货任务状态
+	/// </summary>
+	public enum ShelfTaskFastStatusEnum
+	{
+		/// <summary>
+		/// 待上架
+		/// </summary>
+		[Description("待上架")]
+		待上架 = 0,
+
+		/// <summary>
+		/// 已完成
+		/// </summary>
+		[Description("已完成")]
+		已完成 = 1,
+
+		/// <summary>
+		/// 进行中
+		/// </summary>
+		[Description("进行中")]
+		进行中 = 2,
+
+		/// <summary>
+		/// 异常
+		/// </summary>
+		[Description("异常")]
+		异常 = 3,
+
+		/// <summary>
+		/// 已撤销
+		/// </summary>
+		[Description("已撤销")]
+		已撤销 = 4,
+	}
 }

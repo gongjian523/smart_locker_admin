@@ -395,7 +395,7 @@ namespace CFLMedCab.Http.Bll
                             {
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == it.CommodityId).First();
                                 it.CommodityName = commodity.name;
-                                it.Specifications = commodity.Specifications;
+                                it.Spec = commodity.Spec1;
                                 it.CatalogueId = commodity.CommodityCatalogueId;
                             }
                         }
@@ -441,7 +441,6 @@ namespace CFLMedCab.Http.Bll
 
             commodityCodes.ForEach(it =>
             {
-
                 commodityCodeNames.Add(HttpUtility.UrlEncode(it.name));
             });
 
@@ -489,13 +488,14 @@ namespace CFLMedCab.Http.Bll
                         CommodityCode fullCommodityCode = baseDataCommodityCode.body.objects.Where(cit => cit.name == it.name).First();
 
                         it.CommodityId = fullCommodityCode.CommodityId;
-                        it.ExpirationDate = fullCommodityCode.ExpirationDate;
-                        it.QStatus = fullCommodityCode.QStatus;
                         it.Status = fullCommodityCode.Status;
                         it.Type = fullCommodityCode.Type;
                         it.created_at = fullCommodityCode.created_at;
                         it.created_by = fullCommodityCode.created_by;
-                        it.id = fullCommodityCode.id;
+						it.ManufactorName = fullCommodityCode.ManufactorName;
+						it.Spec = fullCommodityCode.Spec;
+						it.Model = fullCommodityCode.Model;
+						it.id = fullCommodityCode.id;
                         it.owner = fullCommodityCode.owner;
                         it.permission = fullCommodityCode.permission;
                         it.record_type = fullCommodityCode.record_type;
@@ -514,7 +514,6 @@ namespace CFLMedCab.Http.Bll
                             {
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == fullCommodityCode.CommodityId).First();
                                 it.CommodityName = commodity.name;
-                                it.Specifications = commodity.Specifications;
                             }
                         }
                         else
@@ -526,7 +525,6 @@ namespace CFLMedCab.Http.Bll
                 }
                 else
                 {
-
 					if (baseDataCommodityCode.code != (int)ResultCode.Request_Exception) {
 						baseDataCommodityCode = new BaseData<CommodityCode>()
 						{
@@ -547,24 +545,6 @@ namespace CFLMedCab.Http.Bll
             return baseDataCommodityCode;
         }
 
-
-        /// <summary>
-        /// 根据商品码获取完整商品属性集合
-        /// </summary>
-        /// <returns></returns>
-        public BaseData<CommodityCode> GetCommodityCode(string commodityCodeId)
-		{
-			BaseData<CommodityCode> baseData = HttpHelper.GetInstance().Get<CommodityCode>(new QueryParam
-			{
-				@in =
-				{
-					field = "id",
-					in_list =  { HttpUtility.UrlEncode(commodityCodeId) }
-				}
-			});
-
-			return HttpHelper.GetInstance().ResultCheck(baseData);
-		}
 
 		/// <summary>
 		/// 根据商品码获取完整商品属性集合
@@ -794,7 +774,7 @@ namespace CFLMedCab.Http.Bll
 
             //通过【商品码】从表格【商品库存管理】中查询该条库存的id（CommodityInventoryDetailId）。
             var commodityCodeIds = bdCommodityCode.body.objects.Select(it => it.id).Distinct().ToList();
-            var commodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventoryDetail>(new QueryParam
+            var commodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventory>(new QueryParam
             {
                 @in =
                     {

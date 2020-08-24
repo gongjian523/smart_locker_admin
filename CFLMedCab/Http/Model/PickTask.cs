@@ -15,6 +15,8 @@ namespace CFLMedCab.Http.Model
 	[JsonObject(MemberSerialization.OptOut)]
 	public class PickTask:BaseModel
 	{
+
+		public string AllotId { get; set; }
 		/// <summary>
 		/// 已完成
 		/// </summary>

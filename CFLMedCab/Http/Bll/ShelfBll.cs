@@ -103,33 +103,20 @@ namespace CFLMedCab.Http.Bll
 				}
 			});
 
-			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = GetShelfTaskCommodityDetail(baseDataShelfTask);
+			BaseData<ShelfTaskDetail> baseDataShelfTaskDetail = GetShelfTaskDetail(baseDataShelfTask);
 
 			//校验是否含有数据
-			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
+			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskDetail, out bool isSuccess);
 
 			if (isSuccess)
 			{
                 List<ShelfTask> taskList = new List<ShelfTask>();
 
 				var shelfTasks = baseDataShelfTask.body.objects.Where(item=>(item.Status  != ShelfTaskStatus.已完成.ToString() && item.Status != ShelfTaskStatus.已撤销.ToString())).ToList();
-                //var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects;
-                //shelfTasks.ForEach(it =>
-                //{
-                //                ids.ForEach(id => {
-                //                    it.NeedShelfTotalNumber = shelfTaskCommodityDetails.Where(sit => sit.ShelfTaskId == it.id && sit.GoodsLocationId == id).GroupBy(sit => new { sit.ShelfTaskId, sit.GoodsLocationId}).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).Single();
-                //                    //it.NeedShelfTotalNumber = 1;
-                //                    if (it.NeedShelfTotalNumber != 0)
-                //                    {
-                //                        it.GoodLocationName = ApplicationState.GetLocCodeById(id);
-                //                        taskList.Add(it);
-                //                    }                      
-                //                });
-                //});
 
                 shelfTasks.ForEach(it =>
                 {
-                    it.NeedShelfTotalNumber = baseDataShelfTaskCommodityDetail.body.objects.Where(sit => sit.ShelfTaskId == it.id).GroupBy(sit =>sit.ShelfTaskId).Select(group => group.Sum(sit => (sit.NeedShelfNumber - sit.AlreadyShelfNumber))).FirstOrDefault();
+                    it.NeedShelfTotalNumber = baseDataShelfTaskDetail.body.objects.Where(sit => sit.ShelfTaskId == it.id).GroupBy(sit =>sit.ShelfTaskId).Select(group => group.Sum(sit => sit.Number)).FirstOrDefault();
                     if (it.NeedShelfTotalNumber != 0)
                     {
                         taskList.Add(it);
@@ -146,9 +133,9 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="shelfTaskName"></param>
 		/// <returns></returns>
-		public BaseData<ShelfTaskCommodityDetail> GetShelfTaskCommodityDetail(string shelfTaskName)
+		public BaseData<ShelfTaskDetail> GetShelfTaskCommodityDetail(string shelfTaskName)
 		{
-			return GetShelfTaskCommodityDetail(GetShelfTask(shelfTaskName));
+			return GetShelfTaskDetail(GetShelfTask(shelfTaskName));
 		}
 
 		/// <summary>
@@ -156,19 +143,14 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="shelfTaskName"></param>
 		/// <returns></returns>
-		public BaseData<ShelfTaskCommodityDetail> GetShelfTaskCommodityDetail(BaseData<ShelfTask> baseDataShelfTask)
+		public BaseData<ShelfTaskDetail> GetShelfTaskDetail(BaseData<ShelfTask> baseDataShelfTask)
 		{
 
 			//校验是否含有数据，如果含有数据，拼接具体字段
-			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
+			BaseData<ShelfTaskDetail> baseDataShelfTaskDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
 				
-				return hh.Get<ShelfTaskCommodityDetail>(new QueryParam
+				return hh.Get<ShelfTaskDetail>(new QueryParam
 				{
-					//@in =
-					//{
-					//	field = "ShelfTaskId",
-					//	in_list = BllHelper.ParamUrlEncode(shelfTaskIds)
-					//}
                     view_filter =
                     {
                         filter =
@@ -203,17 +185,15 @@ namespace CFLMedCab.Http.Bll
 
 			}, baseDataShelfTask);
 
-            //baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => it.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).ToList();
-
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTask, out bool isSuccess);
-            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess1);
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskDetail, out bool isSuccess1);
 
             if (isSuccess && isSuccess1)
             {
                 var shelfTaskIds = baseDataShelfTask.body.objects.Select(it => it.id).ToList();
-                baseDataShelfTaskCommodityDetail.body.objects = baseDataShelfTaskCommodityDetail.body.objects.Where(it => shelfTaskIds.Contains(it.ShelfTaskId)).ToList();
+                baseDataShelfTaskDetail.body.objects = baseDataShelfTaskDetail.body.objects.Where(it => shelfTaskIds.Contains(it.ShelfTaskId)).ToList();
             }
-            return baseDataShelfTaskCommodityDetail;
+            return baseDataShelfTaskDetail;
 		}
 
 
@@ -222,10 +202,9 @@ namespace CFLMedCab.Http.Bll
 		/// </summary>
 		/// <param name="shelfTaskName"></param>
 		/// <returns></returns>
-		public BaseData<ShelfTaskCommodityDetail> GetShelfTaskCommodityDetail(ShelfTask shelfTask)
+		public BaseData<ShelfTaskDetail> GetShelfTaskDetail(ShelfTask shelfTask)
 		{
-
-			BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().Get<ShelfTaskCommodityDetail>(new QueryParam
+			BaseData<ShelfTaskDetail> baseDataShelfTaskDetail = HttpHelper.GetInstance().Get<ShelfTaskDetail>(new QueryParam
 			{
 				view_filter =
 				{
@@ -260,11 +239,11 @@ namespace CFLMedCab.Http.Bll
 			});
 
 			//校验是否含有数据，如果含有数据，拼接具体字段
-			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
+			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskDetail, out bool isSuccess);
 
 			if (isSuccess)
 			{
-				baseDataShelfTaskCommodityDetail.body.objects.ForEach(it =>
+				baseDataShelfTaskDetail.body.objects.ForEach(it =>
 				{
 					//拼接设备名字
 					if (!string.IsNullOrEmpty(it.EquipmentId))
@@ -285,14 +264,24 @@ namespace CFLMedCab.Http.Bll
 					}
 
 					//拼接商品名字
-					if (!string.IsNullOrEmpty(it.CommodityId))
+					if (!string.IsNullOrEmpty(it.Commodity))
 					{
-						it.CommodityName = GetNameById<Commodity>(it.CommodityId);
+                        var bdCommodity = GetCommodityById(it.Commodity);
+
+                        HttpHelper.GetInstance().ResultCheck(bdCommodity, out bool isSuccess1);
+
+                        if(isSuccess1)
+                        {
+                            it.CommodityName = bdCommodity.body.objects[0].name;
+                            it.ManufactorName1 = bdCommodity.body.objects[0].ManufactorName1;
+                            it.Model1 = bdCommodity.body.objects[0].Model1;
+                            it.Spec1 = bdCommodity.body.objects[0].Spec1;
+                        }
 					}
-				});
+                });
 			}
 
-			return baseDataShelfTaskCommodityDetail;
+			return baseDataShelfTaskDetail;
 		}
 
 
@@ -301,9 +290,9 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="shelfTaskName"></param>
         /// <returns></returns>
-        public BaseData<ShelfTaskCommodityDetail> GetShelfTaskAllCommodityDetail(ShelfTask shelfTask)
+        public BaseData<ShelfTaskDetail> GetShelfTaskAllDetail(ShelfTask shelfTask)
         {
-            BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail = HttpHelper.GetInstance().Get<ShelfTaskCommodityDetail>(new QueryParam
+            BaseData<ShelfTaskDetail> baseDataShelfTaskDetail = HttpHelper.GetInstance().Get<ShelfTaskDetail>(new QueryParam
             {
                 view_filter =
                 {
@@ -324,7 +313,7 @@ namespace CFLMedCab.Http.Bll
 
             });
 
-            return baseDataShelfTaskCommodityDetail;
+            return baseDataShelfTaskDetail;
         }
 
         /// <summary>
@@ -332,23 +321,23 @@ namespace CFLMedCab.Http.Bll
         /// </summary>
         /// <param name="baseDatacommodityCode"></param>
         /// <param name="baseDataShelfTask"></param>
-        /// <param name="baseDataShelfTaskCommodityDetail"></param>
+        /// <param name="baseDataShelfTaskDetail"></param>
         /// <returns></returns>
-        public void GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, ShelfTask shelfTask, BaseData<ShelfTaskCommodityDetail> baseDataShelfTaskCommodityDetail)
+        public void GetShelfTaskChange(BaseData<CommodityCode> baseDatacommodityCode, ShelfTask shelfTask, BaseData<ShelfTaskDetail> baseDataShelfTaskDetail)
 		{
-			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskCommodityDetail, out bool isSuccess);
+			HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskDetail, out bool isSuccess);
             HttpHelper.GetInstance().ResultCheck(baseDatacommodityCode, out bool isSuccess1);
 
             if (isSuccess && isSuccess1)
 			{
-                List<string> locIds = baseDataShelfTaskCommodityDetail.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
+                List<string> locIds = baseDataShelfTaskDetail.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
                 List<string> status = new List<string>();
 
                 locIds.ForEach(id => {
                     //上架任务单商品详情列表
-                    var shelfTaskCommodityDetails = baseDataShelfTaskCommodityDetail.body.objects.Where(item => item.NeedShelfNumber != item.AlreadyShelfNumber && item.GoodsLocationId == id);
+                    var shelfTaskDetails = baseDataShelfTaskDetail.body.objects.Where(item => item.Number != 0 && item.GoodsLocationId == id);
                     //上架任务单商品码
-                    var sfdCommodityIds = shelfTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
+                    var sfdCommodityIds = shelfTaskDetails.Select(it => it.Commodity).Distinct().ToList();
 
                     var commodityCodes = baseDatacommodityCode.body.objects.Where(item => item.GoodsLocationId == id).ToList();
 
@@ -362,9 +351,9 @@ namespace CFLMedCab.Http.Bll
                         {
                             if (sfdCommodityIds.Contains(it.CommodityId))
                             {
-                                var shelfTaskCommodityDetail = shelfTaskCommodityDetails.Where(item => item.CommodityId == it.CommodityId).First();
+                                var shelfTaskDetail = shelfTaskDetails.Where(item => item.Commodity == it.CommodityId).First();
 
-                                if ((shelfTaskCommodityDetail.NeedShelfNumber - shelfTaskCommodityDetail.AlreadyShelfNumber) >= ++shelfTaskCommodityDetail.CountShelfNumber)
+                                if (shelfTaskDetail.Number  >= ++shelfTaskDetail.CountShelfNumber)
                                 {
                                     it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
                                 }
@@ -392,17 +381,17 @@ namespace CFLMedCab.Http.Bll
                         //所有商品的数量都和领用单规定的一样
                         bool isAllSame = true;
 
-                        foreach (ShelfTaskCommodityDetail stcd in shelfTaskCommodityDetails)
+                        foreach (ShelfTaskDetail stcd in shelfTaskDetails)
                         {
                             //数量超出
-                            if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) < commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                            if (stcd.Number < commodityCodes.Where(cit => cit.CommodityId == stcd.Commodity).Count())
                             {
                                 isNoOver = false;
                                 break;
                             }
 
                             //数量不相等
-                            if ((stcd.NeedShelfNumber - stcd.AlreadyShelfNumber) != commodityCodes.Where(cit => cit.CommodityId == stcd.CommodityId).Count())
+                            if (stcd.Number != commodityCodes.Where(cit => cit.CommodityId == stcd.Commodity).Count())
                             {
                                 isAllSame = false;
                             }
@@ -442,14 +431,14 @@ namespace CFLMedCab.Http.Bll
                 else
                 {
                     //获取这个任务单中所有的商品详情
-                    BaseData<ShelfTaskCommodityDetail> bdAllstcd = GetShelfTaskAllCommodityDetail(shelfTask);
+                    BaseData<ShelfTaskDetail> bdAllstcd = GetShelfTaskAllDetail(shelfTask);
 
                     HttpHelper.GetInstance().ResultCheck(bdAllstcd, out bool isSuccess2);
 
                     if (isSuccess2)
                     {
                         //只有所有商品都完成了上架，不管在那个货架上，才能将这个任务单的状态改为“已完成”
-                        if (bdAllstcd.body.objects.Where(it => it.NeedShelfNumber != it.AlreadyShelfNumber && it.EquipmentId != ApplicationState.GetEquipId()).Count() == 0)
+                        if (bdAllstcd.body.objects.Where(it => it.Number != 0 && it.EquipmentId != ApplicationState.GetEquipId()).Count() == 0)
                         {
                             shelfTask.Status = DocumentStatus.已完成.ToString();
                         }
@@ -460,14 +449,13 @@ namespace CFLMedCab.Http.Bll
                     }
                     else
                     {
-                        LogUtils.Error("GetShelfTaskChange: GetShelfTaskAllCommodityDetail" + bdAllstcd.message);
+                        LogUtils.Error("GetShelfTaskChange: GetShelfTaskAllDetail" + bdAllstcd.message);
                     }
                 }
 
-                foreach (ShelfTaskCommodityDetail stcd in baseDataShelfTaskCommodityDetail.body.objects)
+                foreach (ShelfTaskDetail stcd in baseDataShelfTaskDetail.body.objects)
                 {
-                    stcd.CurShelfNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId).Count();
-                    stcd.PlanShelfNumber = stcd.NeedShelfNumber - stcd.AlreadyShelfNumber;
+                    stcd.CurShelfNumber = baseDatacommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.Commodity).Count();
                 }
             }
 		}
@@ -542,15 +530,12 @@ namespace CFLMedCab.Http.Bll
                         operate_type = it.operate_type
                     };
 
-                    if (!bAutoSubmit && it.AbnormalDisplay == AbnormalDisplay.异常.ToString())
-                    {
-                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
-                    }
-
                     if (it.operate_type == (int)OperateType.出库)
                     {
                         cic.ChangeStatus = CommodityInventoryChangeStatus.未上架.ToString();
                         cic.StoreHouseId = ApplicationState.GetHouseId();
+                        //只有出库的时候才会设置调整状态
+                        cic.AdjustStatus = CommodityInventoryChangeAdjustStatus.是.ToString();
                     }
                     else
                     {

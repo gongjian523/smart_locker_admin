@@ -23,12 +23,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace CFLMedCab.View.ShelfFast
+namespace CFLMedCab.View.Recovery
 {
     /// <summary>
-    /// ShelfFastDetailOpen.xaml 的交互逻辑
+    /// ReturnGoodsDetailOpen.xaml 的交互逻辑
     /// </summary>
-    public partial class ShelfFastDetailOpen : UserControl
+    public partial class RecoveryDetailOpen : UserControl
     {
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
@@ -36,9 +36,9 @@ namespace CFLMedCab.View.ShelfFast
 
         public OpenDoorBtnBoard openDoorBtnBoard = new OpenDoorBtnBoard();
 
-        private ShelfTaskFast shelfTaskFast;
+        private CommodityRecovery commodityRecovery;
 
-        public ShelfFastDetailOpen(ShelfTaskFast task)
+        public RecoveryDetailOpen(CommodityRecovery task)
         {
             InitializeComponent();
             ////操作人
@@ -46,7 +46,7 @@ namespace CFLMedCab.View.ShelfFast
             ////工单号
             //orderNum.Content = task.name;
 
-            shelfTaskFast = task;
+            commodityRecovery = task;
 
             //只有一个柜门的时候，开门按钮不用显示，直接开门
             if (ApplicationState.GetAllLocIds().Count() == 1)
@@ -58,7 +58,6 @@ namespace CFLMedCab.View.ShelfFast
                 btnBorder.Visibility = Visibility.Visible;
                 btnGrid.Children.Add(openDoorBtnBoard);
             }
-
 
             Timer iniTimer = new Timer(100);
             iniTimer.AutoReset = false;
@@ -74,17 +73,17 @@ namespace CFLMedCab.View.ShelfFast
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 LoadingDataEvent(this, true);
-                BaseData<ShelfTaskFastDetail> bdShelfTaskFastDetail = ShelfFastBll.GetInstance().GetShelfTaskFastDetail(shelfTaskFast);
+                BaseData<CommodityRecoveryDetail> bdCommodityRecoveryDetail = CommodityRecoveryBll.GetInstance().GetCommodityRecoveryDetail(commodityRecovery);
                 LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(bdShelfTaskFastDetail, out bool isSuccess);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityRecoveryDetail, out bool isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("获取便捷上架任务单商品明细错误！", "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("获取拣货单商品明细错误！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 
-                listView.DataContext = bdShelfTaskFastDetail.body.objects;
+                listView.DataContext = bdCommodityRecoveryDetail.body.objects;
             }));
         }
 
@@ -93,9 +92,9 @@ namespace CFLMedCab.View.ShelfFast
             openDoorBtnBoard.SetButtonEnable(true, com);
         }
 
-        public ShelfTaskFast GetShelfTaskFast()
+        public CommodityRecovery GetCommodityRecovery()
         {
-            return shelfTaskFast;
+            return commodityRecovery;
         }
     }
 }

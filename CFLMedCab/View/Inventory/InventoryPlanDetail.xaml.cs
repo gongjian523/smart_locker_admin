@@ -21,6 +21,7 @@ namespace CFLMedCab.View.Inventory
     /// <summary>
     /// InventoryPlan.xaml 的交互逻辑
     /// </summary>
+    [Obsolete]
     public partial class InventoryPlanDetail : UserControl
     {
         public delegate void HidePopInventoryPlanHandler(object sender, RoutedEventArgs e);

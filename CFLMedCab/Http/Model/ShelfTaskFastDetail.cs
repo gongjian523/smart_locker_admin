@@ -2,6 +2,7 @@
 using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
+using System.ComponentModel;
 
 namespace CFLMedCab.Http.Model
 {
@@ -15,6 +16,11 @@ namespace CFLMedCab.Http.Model
 		/// 商品码
 		/// </summary>
 		public string CommodityCodeId { get; set; }
+
+		/// <summary>
+		/// 商品码
+		/// </summary>
+		public string CommodityCodeName { get; set; }
 
 		/// <summary>
 		/// 商品id
@@ -43,7 +49,19 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
+		[JsonIgnore]
+		public string ManufactorName1 { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
 		public string Model { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[JsonIgnore]
+		public string Model1 { get; set; }
 
 		/// <summary>
 		/// 
@@ -54,6 +72,12 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string Spec { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[JsonIgnore]
+		public string Spec1 { get; set; }
 
 		/// <summary>
 		/// 
@@ -143,4 +167,24 @@ namespace CFLMedCab.Http.Model
 		public int CountShelfNumber { get; set; } = 0;
 
 	}
+
+
+	/// <summary>
+	/// 质量状态
+	/// </summary>
+	public enum ShelfTaskFastDetailStatusType
+	{
+		/// <summary>
+		/// 待上架
+		/// </summary>
+		[Description("待上架")]
+		待上架 = 0,
+
+		/// <summary>
+		/// 已上架
+		/// </summary>
+		[Description("已上架")]
+		已上架 = 1,
+	}
+
 }

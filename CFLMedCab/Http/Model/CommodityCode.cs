@@ -15,7 +15,22 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public string CommodityId { get; set; }
-	
+
+		/// <summary>
+		/// 厂家名称 在新系统中可以直接获取到
+		/// </summary>
+		public string ManufactorName { get; set; }
+
+		/// <summary>
+		/// 新系统下的型号 可以直接获取
+		/// </summary>
+		public string Model { get; set; }
+
+		/// <summary>
+		/// 新系统下的规格 原有Specifications的准备停止使用
+		/// </summary>
+		public string Spec { get; set; }
+
 		/// <summary>
 		/// 可使用
 		/// </summary>
@@ -144,11 +159,6 @@ namespace CFLMedCab.Http.Model
         [JsonIgnore]
         public string BatchNumberId { get; set; }
 
-        /// <summary>
-        /// 厂家名称
-        /// </summary>
-        [JsonIgnore]
-        public string ManufactorName { get; set; }
 
         /// <summary>
         /// 医院货品ID
@@ -159,6 +169,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 规格
         /// </summary>
+		[Obsolete]
         [JsonIgnore]
         public string Specifications { get; set; }
 
@@ -166,7 +177,7 @@ namespace CFLMedCab.Http.Model
         /// 目录id
         /// </summary>
         [JsonIgnore]
-        public string CatalogueId { get; set; }
+		public string CatalogueId { get; set; }
 
         /// <summary>
         /// 目录名字
@@ -185,6 +196,5 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         [JsonIgnore]
         public string InventoryStatus { get; set; }
-
-    }
+	}
 }

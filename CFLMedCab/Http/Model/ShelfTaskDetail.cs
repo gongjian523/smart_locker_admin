@@ -12,12 +12,11 @@ namespace CFLMedCab.Http.Model
 	public class ShelfTaskDetail : BaseModel
 	{
 		/// <summary>
-		/// 
-		/// </summary>
-		public int Commodity { get; set; }
-		/// <summary>
 		/// 商品id
 		/// </summary>
+		public string Commodity { get; set; }
+
+		[Obsolete]
 		public string CommodityId { get; set; }
 		/// <summary>
 		/// 
@@ -33,20 +32,32 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public int GoodsNumber { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string ManufactorName { get; set; }
+		/// <summary>
+		/// 厂商id，从系统中过来
+		/// </summary>
+		public string ManufactorName { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Model { get; set; }
+		/// <summary>
+		///  厂商字符串
+		/// </summary>
+		[JsonIgnore]
+		public string ManufactorName1 { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Number { get; set; }
+		/// <summary>
+		/// 型号id，从系统中过来
+		/// </summary>
+		public string Model { get; set; }
+
+		/// <summary>
+		/// 型号字符串
+		/// </summary>
+		[JsonIgnore]
+		public string Model1 { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int Number { get; set; }
 
         /// <summary>
         /// 
@@ -59,15 +70,20 @@ namespace CFLMedCab.Http.Model
         public string ShelfTaskId { get; set; }
 
         /// <summary>
-        /// 
+        /// 规格id，从系统中过来
         /// </summary>
         public string Spec { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public string StoreHouseId { get; set; }
+		/// <summary>
+		/// 规格，通过Spec查询
+		/// </summary>
+		[JsonIgnore]
+		public string Spec1 { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public string StoreHouseId { get; set; }
 
         /// <summary>
         /// 
@@ -143,6 +159,7 @@ namespace CFLMedCab.Http.Model
         /// 本次应上架数量
         /// </summary>
         [JsonIgnore]
+		[Obsolete]
         public int PlanShelfNumber { get; set; }
 
 		/// <summary>

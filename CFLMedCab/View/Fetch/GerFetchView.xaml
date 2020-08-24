@@ -51,17 +51,19 @@
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                             <Label Content="当前领用了" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="outNum" Style="{StaticResource lblTitleRed}"/>
-                            <Label Content="个商品，异常操作" Style="{StaticResource lblTitle1}"/>
+                            <Label Content="个商品，" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="abnormalOutNum" Style="{StaticResource lblTitleRed}"/>
                             <Label Content="个商品过期，退回" Style="{StaticResource lblTitle1}"/>
                             <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
-                            <Label Content="个商品入库" Style="{StaticResource lblTitle1}"/>
+                            <Label Content="个商品" Style="{StaticResource lblTitle1}"/>
                         </StackPanel>
                     </Border>
 
                     <Grid Grid.Row="2">
                         <Grid>
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
                                 <ColumnDefinition Width="*"/>
@@ -75,6 +77,8 @@
                             <Grid Grid.Column="3" x:Name="column4"/>
                             <Grid Grid.Column="4" x:Name="column5"/>
                             <Grid Grid.Column="5" x:Name="column6"/>
+                            <Grid Grid.Column="6" x:Name="column7"/>
+                            <Grid Grid.Column="7" x:Name="column8"/>
                         </Grid>
                         <ListView Grid.Row="1"  ItemsSource="{Binding}" Name="listView" Style="{StaticResource DefaultListView}" Margin="0,10,0,0">
                             <ListView.View>
@@ -93,31 +97,45 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="货柜"  Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn Header="厂家" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}" Text="{Binding Path=ManufactorName}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="规格" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=Spec}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="型号"  Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=Model}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="货柜"  Width="{Binding ElementName=column6,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=GoodsLocationName}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="操作类型" Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn Header="操作类型" Width="{Binding ElementName=column7,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="质量状态" Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                    <GridViewColumn Header="质量状态" Width="{Binding ElementName=column8,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=QualityStatus}"/>
-                                            </DataTemplate>
-                                        </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
-                                    <GridViewColumn Header="异常标识" Width="{Binding ElementName=column6,Path=ActualWidth}">
-                                        <GridViewColumn.CellTemplate>
-                                            <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=AbnormalDisplay}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

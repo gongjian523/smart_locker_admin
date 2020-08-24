@@ -31,10 +31,10 @@
                         <Label Content="上架" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Name="surgeryNum" Style="{StaticResource lblTitle2}"/>
 
                         <Label Grid.Column="1" Grid.Row="0"  Content="操作人" Style="{StaticResource lblTitle3}"/>
-                        <Label  Grid.Column="1" Grid.Row="1" Content="操作人" Name="operatorName" Style="{StaticResource lblTitle4_0}"/>
+                        <Label  Grid.Column="1" Grid.Row="1" Name="operatorName" Style="{StaticResource lblTitle4_0}"/>
 
                         <Label  Grid.Column="2" Grid.Row="0" Content="上架工单号" Style="{StaticResource lblTitle3}"/>
-                        <Label Grid.Column="2" Grid.Row="1"  Content="上架工单号" Name="orderNum" Style="{StaticResource lblTitle4_1}"/>
+                        <Label Grid.Column="2" Grid.Row="1"  Name="orderNum" Style="{StaticResource lblTitle4_1}"/>
 
                     </Grid>
                 </Border>
@@ -78,31 +78,31 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="待上架数量"  Width="{Binding ElementName=column2,Path=ActualWidth}">
+                                    <GridViewColumn Header="厂家"  Width="{Binding ElementName=column2,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding NeedShelfNumber}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName1}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="已上架数量" Width="{Binding ElementName=column3,Path=ActualWidth}">
+                                    <GridViewColumn Header="规格"  Width="{Binding ElementName=column3,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding AlreadyShelfNumber}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Spec1}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="库房"  Width="{Binding ElementName=column4,Path=ActualWidth}">
+                                    <GridViewColumn Header="型号"  Width="{Binding ElementName=column4,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding StoreHouseName}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Model1}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="设备"  Width="{Binding ElementName=column5,Path=ActualWidth}">
+                                    <GridViewColumn Header="待上架数量"  Width="{Binding ElementName=column5,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding EquipmentName}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Number}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

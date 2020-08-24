@@ -24,32 +24,32 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace CFLMedCab.View.Return
+namespace CFLMedCab.View.Recovery
 {
     /// <summary>
-    /// ReturnGoodsDetail.xaml 的交互逻辑
+    /// RecoveryDetail.xaml 的交互逻辑
     /// </summary>
-    public partial class ReturnGoodsDetail : UserControl
+    public partial class RecoveryDetail : UserControl
     {
-        //进入拣货单详情开门状态页面
-        public delegate void EnterReturnGoodsDetailOpenHandler(object sender, PickTask e);
-        public event EnterReturnGoodsDetailOpenHandler EnterReturnGoodsDetailOpenEvent;
+        //进入回收拣货单详情开门状态页面
+        public delegate void EnterRecoveryDetailOpenHandler(object sender, CommodityRecovery e);
+        public event EnterRecoveryDetailOpenHandler EnterRecoveryDetailOpenEvent;
 
-        //进入拣货单列表页面
-        public delegate void EnterReturnGoodsHandler(object sender, RoutedEventArgs e);
-        public event EnterReturnGoodsHandler EnterReturnGoodsEvent;
+        //进入回收拣货单列表页面
+        public delegate void EnterRecoveryHandler(object sender, RoutedEventArgs e);
+        public event EnterRecoveryHandler EnterRecoveryEvent;
 
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
         public event LoadingDataHandler LoadingDataEvent;
 
-        private PickTask pickTask;
+        private CommodityRecovery commodityRecovery;
 
-        public ReturnGoodsDetail(PickTask task)
+        public RecoveryDetail(CommodityRecovery task)
         {
             InitializeComponent();
 
-            pickTask = task;
+            commodityRecovery = task;
             //操作人
             operatorName.Content = ApplicationState.GetUserInfo().name;
             //工单号
@@ -69,17 +69,17 @@ namespace CFLMedCab.View.Return
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 LoadingDataEvent(this, true);
-                BaseData<PickCommodity> bdCommodityDetail = PickBll.GetInstance().GetPickTaskCommodityDetail(pickTask);
+                BaseData<CommodityRecoveryDetail> bdCommodityRecoveryDetail = CommodityRecoveryBll.GetInstance().GetCommodityRecoveryDetail(commodityRecovery);
                 LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess);
+                HttpHelper.GetInstance().ResultCheck(bdCommodityRecoveryDetail, out bool isSuccess);
                 if (!isSuccess)
                 {
                     MessageBox.Show("获取拣货单商品明细错误！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 
-                listView.DataContext = bdCommodityDetail.body.objects;
+                listView.DataContext = bdCommodityRecoveryDetail.body.objects;
             }));
         }
 
@@ -90,7 +90,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onBackward(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsEvent(this, null);
+            EnterRecoveryEvent(this, null);
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace CFLMedCab.View.Return
         /// <param name="e"></param>
         private void onEnerDetailOpen(object sender, RoutedEventArgs e)
         {
-            EnterReturnGoodsDetailOpenEvent(this, pickTask);
+            EnterRecoveryDetailOpenEvent(this, commodityRecovery);
         }
     }
 }
