@@ -59,13 +59,13 @@
                         </Grid.RowDefinitions>
                         <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}" Margin="0 0 0 20">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Label Content="当前出库了" Style="{StaticResource lblTitle1}"/>
+                                <Label Content="当前回收" Style="{StaticResource lblTitle1}"/>
                                 <Label Content=" " Name="outNum" Style="{StaticResource lblTitleRed}"/>
-                                <Label Content="个商品，其中异常操作" Style="{StaticResource lblTitle1}"/>
-                                <Label Content=" " Name="abnormalOutNum" Style="{StaticResource lblTitleRed}"/>
-                                <Label Content="个商品出库；异常操作" Style="{StaticResource lblTitle1}"/>
+                                <Label Content="个商品，异常上架了" Style="{StaticResource lblTitle1}"/>
+                                <Label Content=" " Name="abnormalOutNum" Style="{StaticResource lblTitleRed}" Visibility="Collapsed"/>
+                                <Label Content="个商品出库；异常操作" Style="{StaticResource lblTitle1}" Visibility="Collapsed"/>
                                 <Label Content=" " Name="abnormalInNum" Style="{StaticResource lblTitleRed}"/>
-                                <Label Content="个商品入库" Style="{StaticResource lblTitle1}"/>
+                                <Label Content="个商品" Style="{StaticResource lblTitle1}"/>
                             </StackPanel>
                         </Border>
 

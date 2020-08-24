@@ -250,6 +250,9 @@
     <Compile Include="Http\Enum\ResultHandleType.cs" />
     <Compile Include="Http\ExceptionApi\ExEntity.cs" />
     <Compile Include="Http\ExceptionApi\ExStepHandle.cs" />
+    <Compile Include="Http\Model\AcceptanceCommodity.cs" />
+    <Compile Include="Http\Model\AllotAcceptance.cs" />
+    <Compile Include="Http\Model\DistributionTask.cs" />
     <Compile Include="Http\Model\AllotShelf.cs" />
     <Compile Include="Http\Model\AllotShelfCommodity.cs" />
     <Compile Include="Http\Model\Base\BaseModel.cs" />

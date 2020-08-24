@@ -155,11 +155,12 @@ namespace CFLMedCab.View.Return
         {
             if (isSuccess)
             {
+                //shelftask的状态在数据初始化的时候赋值
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+
                 //任务单里的商品拣货架全部完成
-                if (bdCommodityDetail.body.objects.Where(item => (item.Number - item.PickNumber != item.CurPickNumber)).Count() == 0)
+                if (bdCommodityDetail.body.objects.Where(item => (item.CurPickNumber < item.Number)).Count() == 0)
                 {
-                    //shelftask的状态在数据初始化的时候赋值
-                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
                     EndOperation(bExit);
                 }
                 else

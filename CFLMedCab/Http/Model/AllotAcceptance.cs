@@ -6,54 +6,35 @@ using System;
 namespace CFLMedCab.Http.Model
 {
 	/// <summary>
-	/// 上架任务商品明细
+	/// 调拨
 	/// </summary>
-	[Obsolete]
 	[JsonObject(MemberSerialization.OptOut)]
-	public class AllotDetail : BaseModel
+	public class AllotAcceptance : BaseModel
 	{
-        /// <summary>
-        /// 
-        /// </summary>
-        public string AllotId { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Commodity { get; set; }
-
-		/// <summary>
-		/// 商品id
-		/// </summary>
-		public string CommodityId { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int GoodsNumber { get; set; }
-
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string ManufactorName { get; set; }
-
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string Model { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Number { get; set; }
-
+		public string AllotId { get; set; }
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Spec { get; set; }
+		public string DistributionTaskId { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string InDepartment { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public string OutStoreHouseId { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string StoreHouseId { get; set; }
 
         /// <summary>
         /// 
@@ -94,5 +75,7 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string updated_by { get; set; }
 
-	}
+
+
+    }
 }

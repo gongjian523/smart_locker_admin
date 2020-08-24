@@ -8,30 +8,23 @@ namespace CFLMedCab.Http.Model
 	/// <summary>
 	/// 上架任务商品明细
 	/// </summary>
-	[Obsolete]
 	[JsonObject(MemberSerialization.OptOut)]
-	public class AllotDetail : BaseModel
+	public class AcceptanceCommodity : BaseModel
 	{
         /// <summary>
         /// 
         /// </summary>
-        public string AllotId { get; set; }
+        public string AllotAcceptanceId { get; set; }
 
         /// <summary>
         /// 
         /// </summary>
-        public string Commodity { get; set; }
+        public string CommodityCodeId { get; set; }
 
 		/// <summary>
-		/// 商品id
+		/// 
 		/// </summary>
 		public string CommodityId { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int GoodsNumber { get; set; }
-
 
 		/// <summary>
 		/// 
@@ -53,12 +46,17 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public string Spec { get; set; }
+		public string Specifications { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public int auto_id { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string Status { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public int auto_id { get; set; }
 
         /// <summary>
         /// 

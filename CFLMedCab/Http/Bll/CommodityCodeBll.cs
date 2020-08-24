@@ -614,6 +614,8 @@ namespace CFLMedCab.Http.Bll
             return HttpHelper.GetInstance().ResultCheck(baseData);
 		}
 
+
+
         public BaseData<CommodityCode> GetExpirationAndManufactor(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
         {
 

@@ -194,6 +194,7 @@ namespace CFLMedCab.View.ShelfFast
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
                 EndOperation(true, false);              
             }));
         }
@@ -257,6 +258,7 @@ namespace CFLMedCab.View.ShelfFast
         /// <param name="e"></param>
         private void onNotComplete(object sender, RoutedEventArgs e)
         {
+            shelfTaskFast.Status = ShelfTaskFastStatusEnum.进行中.ToString();
             EndOperation(bExit);
         }
 

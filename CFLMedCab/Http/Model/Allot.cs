@@ -9,6 +9,7 @@ namespace CFLMedCab.Http.Model
 	/// 调拨
 	/// </summary>
 	[JsonObject(MemberSerialization.OptOut)]
+	[Obsolete]
 	public class Allot : BaseModel
 	{
 

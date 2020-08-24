@@ -282,6 +282,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onAbnormalSubmit(object sender, RoutedEventArgs e)
         {
+            shelfTask.Status = DocumentStatus.异常.ToString();
             EndOperation(bExit);
         }
     }

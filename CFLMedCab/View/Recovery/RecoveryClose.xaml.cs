@@ -206,6 +206,7 @@ namespace CFLMedCab.View.Recovery
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                commodityRecovery.Status = CommodityRecoveryStatusEnum.异常.ToString();
                 EndOperation(true, false);
             }));
         }
