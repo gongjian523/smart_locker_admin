@@ -177,6 +177,7 @@ namespace CFLMedCab.Http.Model
         /// 目录id
         /// </summary>
         [JsonIgnore]
+		[Obsolete]
 		public string CatalogueId { get; set; }
 
         /// <summary>

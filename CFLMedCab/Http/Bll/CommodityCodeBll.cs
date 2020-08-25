@@ -396,14 +396,12 @@ namespace CFLMedCab.Http.Bll
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == it.CommodityId).First();
                                 it.CommodityName = commodity.name;
                                 it.Spec = commodity.Spec1;
-                                it.CatalogueId = commodity.CommodityCatalogueId;
                             }
                         }
                         else
                         {
                             it.CommodityName = "未知商品";
                         }
-
 
 						CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.name == it.name).First();
 						it.operate_type = simpleCommodityCode.operate_type;
@@ -802,7 +800,7 @@ namespace CFLMedCab.Http.Bll
             return bdCommodityCode;
         }
 
-
+		[Obsolete]
         public BaseData<CommodityCode> GetCatalogueName(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
         {
             isSuccess = false;
