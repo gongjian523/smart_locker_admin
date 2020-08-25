@@ -236,7 +236,12 @@ namespace CFLMedCab.Http.Bll
                     });
                 });
 
-                if (bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.出库).Count() > 0)
+                if (bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库).Count() > 0)
+                {
+                    //包含了出库商品，状态单就显示异常
+                    commodityRecovery.Status = DocumentStatus.异常.ToString();
+                }
+                else if (bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.出库 && item.AbnormalDisplay == AbnormalDisplay.异常.ToString()).Count() > 0)
                 {
                     //包含了出库商品，状态单就显示异常
                     commodityRecovery.Status = DocumentStatus.异常.ToString();

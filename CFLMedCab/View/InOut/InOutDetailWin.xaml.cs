@@ -38,6 +38,7 @@ namespace CFLMedCab.View.InOut
         public string Operater { get; set; }
         public string Department { get; set; }
         public DateTime CreateTime { get; set; }
+        public DateTime CloseTime { get; set; }
         public string BusinessType { get; set; }
 
 
@@ -49,7 +50,8 @@ namespace CFLMedCab.View.InOut
 
             InOutRecord record = inOutRecordBll.GetInOutRecordById(inventoryId);
 
-            CreateTime = record.create_time;
+            CreateTime = record.open_time;
+            CloseTime = record.close_time;
             BusinessType = record.operate;
             Operater = record.user_name;
             Department = record.department;
@@ -57,7 +59,6 @@ namespace CFLMedCab.View.InOut
             List<InOutDetail> detals = inOutRecordBll.GetInOutDetails(inventoryId);
 
             listView1.DataContext = detals;
-
         }
 
         /// <summary>

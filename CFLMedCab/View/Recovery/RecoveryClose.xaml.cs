@@ -1,4 +1,5 @@
-﻿using CFLMedCab.Http.Bll;
+﻿using CFLMedCab.BLL;
+using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
@@ -243,12 +244,18 @@ namespace CFLMedCab.View.Recovery
                 }
 
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "CommodityRecovery");
-
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "SurgeryConsumingOrder");
 
-            EnterPopCloseEvent(this, bExit);
+            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
+            ApplicationState.SetOpenDoorId(-1);
+
+            if (bAutoSubmit)
+            {
+                EnterPopCloseEvent(this, bExit);
+            }
         }
     }
 }

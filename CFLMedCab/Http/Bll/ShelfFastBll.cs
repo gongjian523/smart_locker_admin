@@ -677,7 +677,12 @@ namespace CFLMedCab.Http.Bll
                     //包含了出库商品，状态单就显示异常
                     shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
                 }
-                else
+                else if(bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库 && item.AbnormalDisplay == AbnormalDisplay.异常.ToString()).Count() > 0)
+                {
+                    //入库的不在任务单上面的商品，状态单就显示异常
+                    shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
+                }
+                else 
                 {
                     int needShelfNum = bdShelfTaskFastDetail.body.objects.Where(item => item.Status == AllotShelfCommodityStatus.未上架.ToString()).Count();
                     int normalShelfNum = bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库 && item.AbnormalDisplay == AbnormalDisplay.正常.ToString()).Count();

@@ -22,14 +22,32 @@ namespace CFLMedCab.BLL
             inOutRecordeDal = InOutRecordeDal.GetInstance();
         }
 
-        public void NewInOutRecord(List<LocalCommodityCode> goods, string business)
+        public int NewInOutRecord()
         {
-            int id = inOutRecordeDal.NewInOutRecord(new InOutRecord { 
+            int id = inOutRecordeDal.NewInOutRecord(new InOutRecord
+            {
                 login_id = ApplicationState.GetLoginId(),
-                create_time = System.DateTime.Now,
+                open_time = DateTime.Now,
                 user_name = ApplicationState.GetUserInfo().name,
-                operate = business,
             });
+
+            return id;
+        }
+
+        public void UpdateInOutRecord(List<CommodityCode> goods = null, string business = "")
+        {
+
+            int openDoorId = ApplicationState.GetOpenDoorId();
+
+            InOutRecord record = inOutRecordeDal.GetInOutRecordById(openDoorId);
+
+            record.close_time = DateTime.Now;
+            record.operate = business;
+
+            inOutRecordeDal.UpdateInOutRecord(record);
+
+            if (goods == null)
+                return;
 
             List<InOutDetail> details = new List<InOutDetail>();
 
@@ -37,14 +55,17 @@ namespace CFLMedCab.BLL
             {
                 details.Add(new InOutDetail()
                 {
-                    in_out_id = id,
+                    in_out_id = openDoorId,
                     login_id = ApplicationState.GetLoginId(),
-                    create_time = item.create_time,
+                    create_time = DateTime.Now,
                     operate = business,
                     user_name = ApplicationState.GetUserInfo().name,
                     ctalogue_name = item.CommodityName,
                     position = item.GoodsLocationName,
                     in_out = item.operate_type == 0 ? "出库" : "入库",
+                    manufactor_name = item.ManufactorName,
+                    specifications = item.Spec,
+                    model = item.Model,
                 }) ; 
             }
 

@@ -379,6 +379,9 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\Common\DepartChooseBoard.xaml.cs">
+      <DependentUpon>DepartChooseBoard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Recovery\RecoveryClose.xaml.cs">
       <DependentUpon>RecoveryClose.xaml</DependentUpon>
     </Compile>
@@ -569,6 +572,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Common\DepartChooseBoard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Recovery\RecoveryClose.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

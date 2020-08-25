@@ -159,7 +159,8 @@ namespace CFLMedCab.View.Return
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
 
                 //任务单里的商品拣货架全部完成
-                if (bdCommodityDetail.body.objects.Where(item => (item.CurPickNumber < item.Number)).Count() == 0)
+                if (pickTask.BillStatus != DocumentStatus.进行中.ToString())
+                //if (bdCommodityDetail.body.objects.Where(item => (item.CurPickNumber < item.Number)).Count() == 0)
                 {
                     EndOperation(bExit);
                 }
@@ -242,8 +243,13 @@ namespace CFLMedCab.View.Return
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "PickTask");
             }
 
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "PickTask");
+
             ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
-            if(bAutoSubmit)
+            ApplicationState.SetOpenDoorId(-1);
+
+            if (bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);
             }

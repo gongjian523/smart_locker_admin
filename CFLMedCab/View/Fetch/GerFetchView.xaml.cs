@@ -198,10 +198,14 @@ namespace CFLMedCab.View.Fetch
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ConsumingOrder");
             }
 
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "ConsumingOrder");
+
             ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
+            ApplicationState.SetOpenDoorId(-1);
 
             //主动提交，需要发送退出事件
-            if(bAutoSubmit)
+            if (bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);
             }

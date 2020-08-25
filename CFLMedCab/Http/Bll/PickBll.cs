@@ -308,13 +308,17 @@ namespace CFLMedCab.Http.Bll
             HttpHelper.GetInstance().ResultCheck(bdcommodityCode, out bool isSuccess1);
 
             if (isSuccess && isSuccess1)
-			{
+            {
+                //拣货单商品码详情
+                var pickTaskDetails = bdPickTaskCommodityDetail.body.objects.Where(item => item.Number != 0);
+                //拣货单商品码
+                var ptdCommodityIds = pickTaskDetails.Select(it => it.CommodityId).Distinct().ToList();
+
                 List<string> locIds = bdcommodityCode.body.objects.Select(item => item.GoodsLocationId).Distinct().ToList();
                 List<string> status = new List<string>();
 
                 locIds.ForEach(id =>
                 {
-
                     var commodityCodes = bdcommodityCode.body.objects.Where(item => item.GoodsLocationId == id).ToList();
 
                     commodityCodes.ForEach(it =>
@@ -325,16 +329,28 @@ namespace CFLMedCab.Http.Bll
                         }
                         else
                         {
-                            it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                            if (ptdCommodityIds.Contains(it.CommodityId))
+                            {
+                                var pickTaskDetail = pickTaskDetails.Where(item => item.CommodityId == it.CommodityId).First();
+
+                                if (pickTaskDetail.Number >= ++pickTaskDetail.CountPickNumber)
+                                {
+                                    it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                                }
+                                else
+                                {
+                                    it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                                }
+                            }
+                            else
+                            {
+                                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                            }
                         }
                     });
                 });
 
-                var pickTaskCommodityDetails = bdPickTaskCommodityDetail.body.objects.Where(item => item.Number != 0);
-                var sfdCommodityIds = pickTaskCommodityDetails.Select(it => it.CommodityId).Distinct().ToList();
-
-
-                foreach (PickCommodity stcd in pickTaskCommodityDetails)
+                foreach (PickCommodity stcd in pickTaskDetails)
                 {
                     stcd.CurPickNumber = bdcommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId && cit.operate_type == (int)OperateType.入库).Count();
 

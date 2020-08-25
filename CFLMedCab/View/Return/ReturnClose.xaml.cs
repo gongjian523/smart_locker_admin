@@ -167,12 +167,18 @@ namespace CFLMedCab.View.Return
                 }
 
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "IntentoryAdjust");
-
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "IntentoryAdjust");
 
-            EnterPopCloseEvent(this, bExit);
+            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
+            ApplicationState.SetOpenDoorId(-1);
+
+            if (bAutoSubmit)
+            {
+                EnterPopCloseEvent(this, bExit);
+            }
         }
     }
 }

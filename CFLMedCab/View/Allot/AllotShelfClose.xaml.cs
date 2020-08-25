@@ -220,15 +220,17 @@ namespace CFLMedCab.View.Allot
                     }
                 }
 
-                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "AllotShelf",  out List<LocalCommodityCode> localCommodities);
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "AllotShelf");
 
-                InOutRecordBll inOutBill = new InOutRecordBll();
-                inOutBill.NewInOutRecord(localCommodities, "AllotShelf");
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after,locCodes);
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "AllotShelf");
 
-            if(bAutoSubmit)
+            ApplicationState.SetGoodsInfoInSepcLoc(after,locCodes);
+            ApplicationState.SetOpenDoorId(-1);
+
+            if (bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);
             }

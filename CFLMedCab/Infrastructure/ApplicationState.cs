@@ -24,7 +24,8 @@ namespace CFLMedCab.Infrastructure
         COM_MVein,
         AccessToken,
         RefreshToken,
-        LoginId
+        LoginId,
+        OpenDoorId
     };
 
     public static class ApplicationState
@@ -447,6 +448,25 @@ namespace CFLMedCab.Infrastructure
         public static int GetLoginId()
         {
             return GetValue<int>((int)ApplicationKey.LoginId);
+        }
+
+        /// <summary>
+        /// 保存开门Id
+        /// </summary>
+        /// <param name="id"></param>
+        public static void SetOpenDoorId(int id)
+        {
+            SetValue((int)ApplicationKey.OpenDoorId, id);
+            return;
+        }
+
+        /// <summary>
+        /// 获取开门Id
+        /// </summary>
+        /// <returns></returns>
+        public static int GetOpenDoorId()
+        {
+            return GetValue<int>((int)ApplicationKey.OpenDoorId);
         }
     }
 }
