@@ -35,19 +35,28 @@ namespace CFLMedCab.Model
 		/// </summary>
 		public string operate { get; set; }
 
-
 		/// <summary>
 		/// 操作人
 		/// </summary>
 		public string user_name { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string manufactor_name { get; set; }
+
+		/// <summary>
+		/// 新系统下的型号
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string model { get; set; }
 
 		/// <summary>
 		/// 目录名字
 		/// </summary>
 		[SugarColumn(IsNullable = true)]
 		public string ctalogue_name { get; set; }
-
 
 		/// <summary>
 		/// 规格

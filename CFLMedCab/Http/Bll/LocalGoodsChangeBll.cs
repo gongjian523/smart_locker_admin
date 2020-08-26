@@ -27,8 +27,7 @@ namespace CFLMedCab.Http.Bll
             if (isSuccess)
             {
                 //获取有效期和生产商
-                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(baseCommodityCodes, out bool isSuccess2);
-                CommodityCodeBll.GetInstance().GetCatalogueName(baseCommodityCodes, out bool isSuccess3);
+                //CommodityCodeBll.GetInstance().GetCatalogueName(baseCommodityCodes, out bool isSuccess3);
 
                 return baseCommodityCodes.body.objects;
             }
@@ -41,6 +40,7 @@ namespace CFLMedCab.Http.Bll
         /// 获取本地商品快照列表（包含详情）
         /// </summary>
         /// <returns></returns>
+        [Obsolete]
         public static List<CatalogueCommodity> GetCatalogueCommodity(List<CommodityCode> commodolityList)
         {
             List<CatalogueCommodity> catalogueList = new List<CatalogueCommodity>();

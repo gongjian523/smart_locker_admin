@@ -58,6 +58,11 @@ namespace CFLMedCab.DTO.Goodss
         public string Specifications { get; set; }
 
         /// <summary>
+        /// 规格
+        /// </summary>
+        public string Mode { get; set; }
+
+        /// <summary>
         /// 有效期
         /// </summary>
         public DateTime ExpirationDate { get; set; }
@@ -70,6 +75,7 @@ namespace CFLMedCab.DTO.Goodss
         /// <summary>
         /// 目录ID
         /// </summary>
+        [Obsolete]
         public string CatalogueId { get; set; }
 
         /// <summary>

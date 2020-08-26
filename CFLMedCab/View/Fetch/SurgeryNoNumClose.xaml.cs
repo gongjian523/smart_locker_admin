@@ -226,7 +226,11 @@ namespace CFLMedCab.View.Fetch
                 }
             }
 
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, consumingOrderType == ConsumingOrderType.手术领用 ? "SurgeryConsumingOrder" : "PrescriptionConsumingOrder");
+
             ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
+            ApplicationState.SetOpenDoorId(-1);
 
             //主动提交，需要发送退出事件
             if (bAutoSubmit)

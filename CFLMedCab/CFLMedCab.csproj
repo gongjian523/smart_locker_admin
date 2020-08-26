@@ -250,6 +250,9 @@
     <Compile Include="Http\Enum\ResultHandleType.cs" />
     <Compile Include="Http\ExceptionApi\ExEntity.cs" />
     <Compile Include="Http\ExceptionApi\ExStepHandle.cs" />
+    <Compile Include="Http\Model\AcceptanceCommodity.cs" />
+    <Compile Include="Http\Model\AllotAcceptance.cs" />
+    <Compile Include="Http\Model\DistributionTask.cs" />
     <Compile Include="Http\Model\AllotShelf.cs" />
     <Compile Include="Http\Model\AllotShelfCommodity.cs" />
     <Compile Include="Http\Model\Base\BaseModel.cs" />
@@ -376,6 +379,9 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\Common\DepartChooseBoard.xaml.cs">
+      <DependentUpon>DepartChooseBoard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Recovery\RecoveryClose.xaml.cs">
       <DependentUpon>RecoveryClose.xaml</DependentUpon>
     </Compile>
@@ -566,6 +572,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\Common\DepartChooseBoard.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Recovery\RecoveryClose.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

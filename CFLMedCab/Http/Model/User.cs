@@ -2,6 +2,8 @@
 
 using CFLMedCab.Http.Model.Base;
 using Newtonsoft.Json;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace CFLMedCab.Http.Model
 {
@@ -31,8 +33,15 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string Password { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[JsonIgnore]
 		public string DepartmentIdInUse { get; set; }
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public List<string> DepartmentIds { get; set; }
 	}
 }

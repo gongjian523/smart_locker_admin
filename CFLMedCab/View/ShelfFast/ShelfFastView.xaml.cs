@@ -94,17 +94,18 @@ namespace CFLMedCab.View.ShelfFast
                 name = inputStr;
             }
 
-            LoadingDataEvent(this, true);
 
             var shelfFastBillInst = ShelfFastBll.GetInstance();
 
             SourceBill sourceBill = new SourceBill();
             BaseData<ProcessTask> bdProcessTask = new BaseData<ProcessTask>();
-            BaseData<Http.Model.Allot> bdAllot = new BaseData<Http.Model.Allot>();
+            BaseData<AllotAcceptance> bdAllotAcceptance = new BaseData<AllotAcceptance>();
 
             if (Name.StartsWith("GPT"))
             {
+                LoadingDataEvent(this, true);
                 bdProcessTask = shelfFastBillInst.GetProcessTask(name.ToUpper());
+                LoadingDataEvent(this, false);
 
                 HttpHelper.GetInstance().ResultCheck(bdProcessTask, out bool isSuccess1);
                 if (!isSuccess1)
@@ -116,19 +117,31 @@ namespace CFLMedCab.View.ShelfFast
                 sourceBill.object_name = "ProcessTask";
                 sourceBill.object_id = bdProcessTask.body.objects[0].id;
             }
-            else if (Name.StartsWith("A"))
+            else if (Name.StartsWith("DT"))
             {
-                bdAllot = shelfFastBillInst.GetAllot(name.ToUpper());
-
-                HttpHelper.GetInstance().ResultCheck(bdAllot, out bool isSuccess1);
+                LoadingDataEvent(this, true);
+                BaseData<DistributionTask> bdDistributionTask = shelfFastBillInst.GetDistributionTask (name.ToUpper());
+                LoadingDataEvent(this, false);
+                HttpHelper.GetInstance().ResultCheck(bdDistributionTask, out bool isSuccess1);
                 if (!isSuccess1)
                 {
-                    waring = "此调拨单中商品已经领取完毕, 或没有登记在您名下，或者不存在！";
+                    waring = "此配送任务单已完成或被撤销, 或没有登记在您名下，或者不存在！";
                     return false;
                 }
 
-                sourceBill.object_name = "Allot";
-                sourceBill.object_id = bdAllot.body.objects[0].id;
+                LoadingDataEvent(this, true);
+                bdAllotAcceptance = shelfFastBillInst.GetAllotAcceptanceByDistributionTaskId(bdDistributionTask.body.objects[0].id);
+                LoadingDataEvent(this, false);
+
+                HttpHelper.GetInstance().ResultCheck(bdDistributionTask, out isSuccess1);
+                if (!isSuccess1)
+                {
+                    waring = "无法找到此配送任务单对应的调拨验收单！";
+                    return false;
+                }
+
+                sourceBill.object_name = "AllotAcceptance";
+                sourceBill.object_id = bdAllotAcceptance.body.objects[0].id;
             }
             else
             {
@@ -136,13 +149,15 @@ namespace CFLMedCab.View.ShelfFast
                 return false;
             }
 
+            LoadingDataEvent(this, true);
             BaseData<ShelfTaskFast> baseDataShelfTaskFast = shelfFastBillInst.GetShelfTaskFast(sourceBill.object_name, sourceBill.object_id);
+            LoadingDataEvent(this, false);
             HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskFast, out bool isSuccess);
             
             if (!isSuccess)
             {
                 BaseData<ProcessDoneCommodity> bdProcessDoneCommodity = new BaseData<ProcessDoneCommodity>();
-                BaseData<AllotDetail> bdAllotDetail = new BaseData<AllotDetail>();
+                BaseData<AcceptanceCommodity> bdAcceptanceCommodity = new BaseData<AcceptanceCommodity>();
 
                 if (Name.StartsWith("GPT"))
                 {
@@ -157,12 +172,12 @@ namespace CFLMedCab.View.ShelfFast
                 }
                 else
                 {
-                    bdAllotDetail = shelfFastBillInst.GetAllotDetail(bdAllot.body.objects[0]);
-                    HttpHelper.GetInstance().ResultCheck(bdAllotDetail, out bool isSuccess1);
+                    bdAcceptanceCommodity = shelfFastBillInst.GetAcceptanceCommodity(bdAllotAcceptance.body.objects[0]);
+                    HttpHelper.GetInstance().ResultCheck(bdAcceptanceCommodity, out bool isSuccess1);
 
                     if (!isSuccess1)
                     {
-                        waring = "无法获取调拨单的商品明细！";
+                        waring = "无法获取调拨验收单的商品明细！";
                         return false;
                     }
                 }
@@ -197,7 +212,16 @@ namespace CFLMedCab.View.ShelfFast
                 }
                 else
                 {
-                    
+                    foreach (var item in bdAcceptanceCommodity.body.objects)
+                    {
+                        shelfTaskFastDetails.Add(new ShelfTaskFastDetail
+                        {
+                            CommodityCodeId = item.CommodityCodeId,
+                            CommodityId = item.CommodityId,
+                            Status = "待上架",
+                            ShelfTaskFastId = baseDataShelfTaskFastNew.body[0].id,
+                        });
+                    }
                 }
 
                 BasePostData<ShelfTaskFastDetail> basePostDataShelfTaskFastDetail = shelfFastBillInst.CreateShelfTaskFaskDetail(shelfTaskFastDetails);

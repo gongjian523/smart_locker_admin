@@ -11,6 +11,7 @@ using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure;
 using CFLMedCab.Infrastructure.ToolHelper;
+using System;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -95,6 +96,7 @@ namespace CFLMedCab.Http.Bll
             return baseDataProcessDoneCommodity;
         }
 
+        [Obsolete]
         public BaseData<Allot> GetAllot(string name)
         {
             //获取待完成上架工单
@@ -136,7 +138,7 @@ namespace CFLMedCab.Http.Bll
 
             return bdShelfTaskFast;
         }
-
+        [Obsolete]
         public BaseData<AllotDetail> GetAllotDetail(Allot allot)
         {
             BaseData<AllotDetail> baseDataProcessDoneCommodity = HttpHelper.GetInstance().Get<AllotDetail>(new QueryParam
@@ -162,6 +164,108 @@ namespace CFLMedCab.Http.Bll
 
             HttpHelper.GetInstance().ResultCheck(baseDataProcessDoneCommodity, out bool isSuccess);
             return baseDataProcessDoneCommodity;
+        }
+
+        public BaseData<DistributionTask> GetDistributionTask(string name)
+        {
+            BaseData<DistributionTask> bdShelfTaskFast = HttpHelper.GetInstance().Get<DistributionTask>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1 AND 2",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "name",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(name) }'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
+                            }
+                        }
+                    }
+                }
+            });
+
+            bdShelfTaskFast = HttpHelper.GetInstance().ResultCheck(bdShelfTaskFast, out bool isSuccess);
+
+            if (!isSuccess)
+            {
+                bdShelfTaskFast.code = (int)ResultCode.Result_Exception;
+                bdShelfTaskFast.message = ResultCode.Result_Exception.ToString();
+            }
+            else
+            {
+                //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
+                if ("已完成".Equals(bdShelfTaskFast.body.objects[0].Status) || "已撤销".Equals(bdShelfTaskFast.body.objects[0].Status))
+                {
+                    bdShelfTaskFast.code = (int)ResultCode.Result_Exception;
+                    bdShelfTaskFast.message = ResultCode.Result_Exception.ToString();
+                }
+            }
+
+            return bdShelfTaskFast;
+        }
+
+        public BaseData<AllotAcceptance> GetAllotAcceptanceByDistributionTaskId(string distributionTaskId)
+        {
+            BaseData<AllotAcceptance> bdShelfTaskFast = HttpHelper.GetInstance().Get<AllotAcceptance>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "DistributionTaskId",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(distributionTaskId) }'"}
+                            }
+                        }
+                    }
+                }
+            });
+
+            bdShelfTaskFast = HttpHelper.GetInstance().ResultCheck(bdShelfTaskFast, out bool isSuccess);
+
+            return bdShelfTaskFast;
+        }
+
+        public BaseData<AcceptanceCommodity> GetAcceptanceCommodity(AllotAcceptance allotAcceptance)
+        {
+            BaseData<AcceptanceCommodity> bdAcceptanceCommodity = HttpHelper.GetInstance().Get<AcceptanceCommodity>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "AllotAcceptanceId",
+                                @operator = "==",
+                                operands =  {$"'{ HttpUtility.UrlEncode(allotAcceptance.id) }'"}
+                            },
+                        }
+                    }
+                }
+
+            });
+
+            HttpHelper.GetInstance().ResultCheck(bdAcceptanceCommodity, out bool isSuccess);
+            return bdAcceptanceCommodity;
         }
 
         public BasePostData<ShelfTaskFast> CreateShelfTaskFask(ShelfTaskFast task)
@@ -573,7 +677,12 @@ namespace CFLMedCab.Http.Bll
                     //包含了出库商品，状态单就显示异常
                     shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
                 }
-                else
+                else if(bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库 && item.AbnormalDisplay == AbnormalDisplay.异常.ToString()).Count() > 0)
+                {
+                    //入库的不在任务单上面的商品，状态单就显示异常
+                    shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
+                }
+                else 
                 {
                     int needShelfNum = bdShelfTaskFastDetail.body.objects.Where(item => item.Status == AllotShelfCommodityStatus.未上架.ToString()).Count();
                     int normalShelfNum = bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库 && item.AbnormalDisplay == AbnormalDisplay.正常.ToString()).Count();

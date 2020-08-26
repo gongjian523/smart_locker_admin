@@ -48,12 +48,20 @@ namespace CFLMedCab.DAL
             return Db.Insertable<InOutRecord>(inOutRecord).ExecuteReturnEntity().id;
         }
 
+        /// <summary>
+        /// 插入出入记录详情（列表）
+        /// </summary>
+        /// <returns></returns>
+        public void UpdateInOutRecord(InOutRecord inOutRecord)
+        {
+            Db.Updateable<InOutRecord>(inOutRecord).ExecuteCommand();
+        }
 
         public List<InOutRecord> GetInOutRecordByUserName(string userName)
         {
             var list = Db.Queryable<InOutRecord>()
                 .Where(it => it.user_name == userName)
-                .OrderBy(it => it.create_time, OrderByType.Desc)
+                .OrderBy(it => it.open_time, OrderByType.Desc)
                 .Select<InOutRecord>()
                 .ToList();
             return list;
@@ -63,7 +71,7 @@ namespace CFLMedCab.DAL
         {
             var item = Db.Queryable<InOutRecord>()
                 .Where(it => it.id == id)
-                .OrderBy(it => it.create_time, OrderByType.Desc)
+                .OrderBy(it => it.open_time, OrderByType.Desc)
                 .Select<InOutRecord>()
                 .First();
             return item;
@@ -73,7 +81,7 @@ namespace CFLMedCab.DAL
         public List<InOutRecord> GetAllInOutRecord()
         {
             var list = Db.Queryable<InOutRecord>()
-                .OrderBy(it => it.create_time, OrderByType.Desc)
+                .OrderBy(it => it.open_time, OrderByType.Desc)
                 .Select<InOutRecord>()
                 .ToList();
             return list;

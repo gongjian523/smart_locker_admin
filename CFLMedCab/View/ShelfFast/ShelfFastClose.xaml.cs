@@ -194,6 +194,7 @@ namespace CFLMedCab.View.ShelfFast
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
+                shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
                 EndOperation(true, false);              
             }));
         }
@@ -236,15 +237,17 @@ namespace CFLMedCab.View.ShelfFast
                     }
                 }
 
-                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTaskFast",  out List<LocalCommodityCode> localCommodities);
-
-                InOutRecordBll inOutBill = new InOutRecordBll();
-                inOutBill.NewInOutRecord(localCommodities, "ShelfTaskFast");
+                ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTaskFast");
             }
 
-            ApplicationState.SetGoodsInfoInSepcLoc(after,locCodes);
 
-            if(bAutoSubmit)
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord( isSuccess? bdCommodityCode.body.objects : null, "ShelfTaskFast");
+
+            ApplicationState.SetGoodsInfoInSepcLoc(after,locCodes);
+            ApplicationState.SetOpenDoorId(-1);
+
+            if (bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);
             }
@@ -257,6 +260,7 @@ namespace CFLMedCab.View.ShelfFast
         /// <param name="e"></param>
         private void onNotComplete(object sender, RoutedEventArgs e)
         {
+            shelfTaskFast.Status = ShelfTaskFastStatusEnum.进行中.ToString();
             EndOperation(bExit);
         }
 

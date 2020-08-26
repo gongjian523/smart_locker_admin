@@ -154,11 +154,13 @@ namespace CFLMedCab.View.ReplenishmentOrder
         {
             if (isSuccess)
             {
+                bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
+
                 //任务单里的商品上架全部完成
-                if (bdCommodityDetail.body.objects.Where(item => item.Number != item.CurShelfNumber).Count() == 0)
+                //if (bdCommodityDetail.body.objects.Where(item => item.Number != item.CurShelfNumber).Count() == 0)
+                if(shelfTask.Status != DocumentStatus.进行中.ToString())
                 {
                     //shelftask的状态在数据初始化的时候赋值
-                    bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
                     EndOperation(bExit);
                 }
                 else
@@ -238,11 +240,16 @@ namespace CFLMedCab.View.ReplenishmentOrder
                 }
 
                 ConsumingBll.GetInstance().InsertLocalCommodityCodeInfo(bdCommodityCode, "ShelfTask");
-            }
-            
-            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
 
-            if(bAutoSubmit)
+            }
+
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "ShelfTask");
+
+            ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
+            ApplicationState.SetOpenDoorId(-1);
+
+            if (bAutoSubmit)
             {
                 EnterPopCloseEvent(this, bExit);
             }
@@ -282,6 +289,7 @@ namespace CFLMedCab.View.ReplenishmentOrder
         /// <param name="e"></param>
         private void onAbnormalSubmit(object sender, RoutedEventArgs e)
         {
+            shelfTask.Status = DocumentStatus.异常.ToString();
             EndOperation(bExit);
         }
     }

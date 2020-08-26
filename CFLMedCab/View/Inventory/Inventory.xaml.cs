@@ -224,7 +224,7 @@ namespace CFLMedCab.View.Inventory
                 BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
                 CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
-                CommodityCodeBll.GetInstance().GetCatalogueName(bdCommodityCode, out bool isSuccess3);
+                //CommodityCodeBll.GetInstance().GetCatalogueName(bdCommodityCode, out bool isSuccess3);
 
                 if (!isSuccess)
                 {
@@ -243,29 +243,31 @@ namespace CFLMedCab.View.Inventory
                             name = item.CommodityName,
                             code = item.name,
                             position = item.GoodsLocationName,
-                            CatalogueId = item.CatalogueId
+                            ManufactorName = item.ManufactorName,
+                            Specifications = item.Spec,
+                            Mode = item.Model,
+
+                            //CatalogueId = item.CatalogueId
                         };
 
                         if (isSuccess2)
                         {
-                            goodItem.Specifications = item.Spec;
-                            if (item.ManufactorName != null)
-                            {
-                                goodItem.ManufactorName = item.ManufactorName;
-                            }
+
                             if (item.ExpirationDate != null)
                             {
                                 goodItem.ExpirationDate = item.ExpirationDate;
                             }
                         }
-                        
-                        if(isSuccess3)
-                        {
-                            if(item.CatalogueName != null)
-                            {
-                                goodItem.CatalogueName = item.CatalogueName;
-                            }
-                        }
+
+                        goodItem.CatalogueName = item.name;
+
+                        //if(isSuccess3)
+                        //{
+                        //    if(item.CatalogueName != null)
+                        //    {
+                        //        goodItem.CatalogueName = item.CatalogueName;
+                        //    }
+                        //}
                         list.Add(goodItem);
                     }
 

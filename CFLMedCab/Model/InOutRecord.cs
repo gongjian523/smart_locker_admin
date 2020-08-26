@@ -24,7 +24,12 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 操作时间
 		/// </summary
-		public DateTime create_time { get; set; }
+		public DateTime open_time { get; set; }
+
+		/// <summary>
+		/// 操作时间
+		/// </summary
+		public DateTime close_time { get; set; }
 
 		/// <summary>
 		/// 操作类型
