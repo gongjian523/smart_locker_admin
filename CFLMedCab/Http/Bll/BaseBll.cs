@@ -50,7 +50,7 @@ namespace CFLMedCab.Http.Bll
 		/// <summary>
 		/// 通用业务，通过id查询名称,如果出错，返回出错信息
 		/// </summary>
-		public string GetNameById<K>(string id) where K : BaseModel 
+		public string GetNameById<K>(string id) where K : BaseModel
 		{
 			BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
 			{
@@ -73,149 +73,149 @@ namespace CFLMedCab.Http.Bll
 			}
 		}
 
-        /// <summary>
-        /// 通用业务，通过id查询名称,如果出错，返回出错信息
-        /// </summary>
-        public BaseData<K> GetNameById<K>(string id, out bool isSuccess1) where K : BaseModel
-        {
-            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
-            {
-                @in =
-                {
-                field = "id",
-                in_list =  { HttpUtility.UrlEncode(id) }
-                }
-            });
+		/// <summary>
+		/// 通用业务，通过id查询名称,如果出错，返回出错信息
+		/// </summary>
+		public BaseData<K> GetNameById<K>(string id, out bool isSuccess1) where K : BaseModel
+		{
+			BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+			{
+				@in =
+				{
+				field = "id",
+				in_list =  { HttpUtility.UrlEncode(id) }
+				}
+			});
 
-            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
 
-            isSuccess1 = isSuccess;
+			isSuccess1 = isSuccess;
 
-            return baseData;
-        }
-
-
-        /// <summary>
-        /// 通用业务，通过id查询对象,如果出错，返回出错信息
-        /// </summary>
-        public BaseData<K> GetObjectByIds<K>(List<string> ids, out bool isSuccess1) where K : BaseModel
-        {
-            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
-            {
-                @in =
-                {
-                field = "id",
-                in_list =  ids
-                }
-            });
-
-            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
-
-            isSuccess1 = isSuccess;
-
-            return baseData;
-        }
-
-        /// <summary>
-        /// 通用业务，通过id查询名称,如果出错，返回出错信息
-        /// </summary>
-        public string GetStoreHouseCodeById<K> (string id) where K : StoreHouse
-        {
-            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
-            {
-                @in =
-                {
-                field = "id",
-                in_list =  { HttpUtility.UrlEncode(id) }
-                }
-            });
-
-            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
-
-            if (isSuccess)
-            {
-                return baseData.body.objects[0].StoreHouseCode;
-            }
-            else
-            {
-                return baseData.message;
-            }
-        }
+			return baseData;
+		}
 
 
-        /// <summary>
-        /// 通用业务，通过name查询id,如果出错，返回出错信息
-        /// </summary>
-        public BaseData<string> GetIdByName<K>(string name) where K : BaseModel
-        {
-            BaseData<string> baseDataRet = new BaseData<string>()
-            {
-                body = new BaseBody<string>()
-                {
-                    objects = new List<string>() { "" }
-                }
-            };
+		/// <summary>
+		/// 通用业务，通过id查询对象,如果出错，返回出错信息
+		/// </summary>
+		public BaseData<K> GetObjectByIds<K>(List<string> ids, out bool isSuccess1) where K : BaseModel
+		{
+			BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+			{
+				@in =
+				{
+				field = "id",
+				in_list =  ids
+				}
+			});
 
-            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
-            {
-                @in =
-                {
-                field = "name",
-                in_list =  { HttpUtility.UrlEncode(name) }
-                }
-            });
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
 
-            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
-            baseDataRet.code = baseData.code;
-            baseDataRet.message = baseData.message;
+			isSuccess1 = isSuccess;
 
-            if (isSuccess)
-            {
-                baseDataRet.body.objects[0] = baseData.body.objects[0].id;
-            }
-            return baseDataRet;
-        }
+			return baseData;
+		}
 
-        /// <summary>
-        /// 通用业务，通过name查询id,如果出错，返回出错信息
-        /// </summary>
-        public BaseData<string> GetIdByStoreHouseCode<K>(string storeHouseCode) where K : StoreHouse
-        {
-            BaseData<string> baseDataRet = new BaseData<string>()
-            {
-                body = new BaseBody<string>()
-                {
-                    objects = new List<string>() { "" }
-                }
-            };
+		/// <summary>
+		/// 通用业务，通过id查询名称,如果出错，返回出错信息
+		/// </summary>
+		public string GetStoreHouseCodeById<K>(string id) where K : StoreHouse
+		{
+			BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+			{
+				@in =
+				{
+				field = "id",
+				in_list =  { HttpUtility.UrlEncode(id) }
+				}
+			});
 
-            BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
-            {
-                @in =
-                {
-                field = "StoreHouseCode",
-                in_list =  { HttpUtility.UrlEncode(storeHouseCode) }
-                }
-            });
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
 
-            baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
-            baseDataRet.code = baseData.code;
-            baseDataRet.message = baseData.message;
+			if (isSuccess)
+			{
+				return baseData.body.objects[0].StoreHouseCode;
+			}
+			else
+			{
+				return baseData.message;
+			}
+		}
 
-            if (isSuccess)
-            {
-                baseDataRet.body.objects[0] = baseData.body.objects[0].id;
-            }
-            return baseDataRet;
-        }
 
-        /// <summary>
-        /// 插入变化后的商品信息
-        /// </summary>
-        /// <param name="baseDataCommodityCode">所有数据</param>
-        /// <param name="sourceBill">业务类型</param>
-        /// <returns></returns>
-        public bool InsertLocalCommodityCodeInfo(BaseData<CommodityCode> baseDataCommodityCode, string sourceBill)
+		/// <summary>
+		/// 通用业务，通过name查询id,如果出错，返回出错信息
+		/// </summary>
+		public BaseData<string> GetIdByName<K>(string name) where K : BaseModel
+		{
+			BaseData<string> baseDataRet = new BaseData<string>()
+			{
+				body = new BaseBody<string>()
+				{
+					objects = new List<string>() { "" }
+				}
+			};
+
+			BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+			{
+				@in =
+				{
+				field = "name",
+				in_list =  { HttpUtility.UrlEncode(name) }
+				}
+			});
+
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+			baseDataRet.code = baseData.code;
+			baseDataRet.message = baseData.message;
+
+			if (isSuccess)
+			{
+				baseDataRet.body.objects[0] = baseData.body.objects[0].id;
+			}
+			return baseDataRet;
+		}
+
+		/// <summary>
+		/// 通用业务，通过name查询id,如果出错，返回出错信息
+		/// </summary>
+		public BaseData<string> GetIdByStoreHouseCode<K>(string storeHouseCode) where K : StoreHouse
+		{
+			BaseData<string> baseDataRet = new BaseData<string>()
+			{
+				body = new BaseBody<string>()
+				{
+					objects = new List<string>() { "" }
+				}
+			};
+
+			BaseData<K> baseData = HttpHelper.GetInstance().Get<K>(new QueryParam
+			{
+				@in =
+				{
+				field = "StoreHouseCode",
+				in_list =  { HttpUtility.UrlEncode(storeHouseCode) }
+				}
+			});
+
+			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
+			baseDataRet.code = baseData.code;
+			baseDataRet.message = baseData.message;
+
+			if (isSuccess)
+			{
+				baseDataRet.body.objects[0] = baseData.body.objects[0].id;
+			}
+			return baseDataRet;
+		}
+
+		/// <summary>
+		/// 插入变化后的商品信息
+		/// </summary>
+		/// <param name="baseDataCommodityCode">所有数据</param>
+		/// <param name="sourceBill">业务类型</param>
+		/// <returns></returns>
+		public bool InsertLocalCommodityCodeInfo(BaseData<CommodityCode> baseDataCommodityCode, string sourceBill)
 		{
 			var result = false;
 
@@ -227,28 +227,27 @@ namespace CFLMedCab.Http.Bll
 				List<LocalCommodityCode> localCommodityCodes = baseDataCommodityCode.body.objects.MapToListIgnoreId<CommodityCode, LocalCommodityCode>();
 
 				var createTime = DateTime.Now;
-                var operater = ApplicationState.GetUserInfo().name;
+				var operater = ApplicationState.GetUserInfo().name;
 
 				localCommodityCodes.ForEach(it =>
 				{
 					it.sourceBill = sourceBill;
 					it.create_time = createTime;
-                    it.operater = operater;
-                });
+					it.operater = operater;
+				});
 
 				//事务防止多插入产生脏数据
 				result = SqlSugarHelper.GetInstance().Db.Ado.UseTran(() =>
 				{
-
 					SqlSugarHelper.GetInstance().Db.Insertable(localCommodityCodes).ExecuteCommand();
 
 				}).IsSuccess;
 			}
 
-            if(!result)
-            {
-                LogUtils.Warn("InsertLocalCommodityCodeInfo" + sourceBill);
-            }
+			if (!result)
+			{
+				LogUtils.Warn("InsertLocalCommodityCodeInfo" + sourceBill);
+			}
 
 			return result;
 		}
@@ -315,7 +314,7 @@ namespace CFLMedCab.Http.Bll
 
 			}).IsSuccess;
 
-	
+
 			if (!result)
 			{
 				LogUtils.Warn("InsertLocalCommodityEpsInfo 失败" + DateTime.Now);
@@ -368,22 +367,22 @@ namespace CFLMedCab.Http.Bll
 			//查询语句
 			var queryable = SqlSugarHelper.GetInstance().Db.Queryable<LocalCommodityCode>()
 				.Distinct()
-                .OrderBy((lcc) => lcc.create_time, OrderByType.Desc)
-				.Select(it=>it.CommodityName).ToList();
+				.OrderBy((lcc) => lcc.create_time, OrderByType.Desc)
+				.Select(it => it.CommodityName).ToList();
 
 			return queryable;
 		}
 
 
 		public string GetDateTimeNow()
-        {
-            //return DateTime.Now.ToString("s") + "Z";
-            return DateTime.UtcNow.ToString("s") + "Z";
-        }
+		{
+			//return DateTime.Now.ToString("s") + "Z";
+			return DateTime.UtcNow.ToString("s") + "Z";
+		}
 
 		//
 		public BaseData<Commodity> GetCommodityById(string id)
-        {
+		{
 			BaseData<Commodity> baseData = HttpHelper.GetInstance().Get<Commodity>(new QueryParam
 			{
 				@in =
@@ -414,6 +413,8 @@ namespace CFLMedCab.Http.Bll
 
 			return HttpHelper.GetInstance().ResultCheck(baseData);
 		}
+
+
 	}
 
 }

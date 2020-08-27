@@ -6,10 +6,22 @@
              xmlns:local="clr-namespace:CFLMedCab.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-        <Grid Height="300" Width="500">
+    <Grid Height="600" Width="920">
             <Border CornerRadius="6,6,6,6" Background="{StaticResource LoginBkBrush}">
-                <Grid x:Name="btnGrid" >
+            <Grid>
+
+                <Grid x:Name="btnGrid"  Margin="60,40,60,40" >
                 </Grid>
-            </Border>
+                <Grid x:Name="warningView">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="3*"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock x:Name="warningText" HorizontalAlignment="Center" Margin="150,0" VerticalAlignment="Center" FontFamily="Microsoft YaHei UI" FontWeight="Regular" FontSize="36" 
+                               Foreground="#333333" Text="获取您的部门信息时发生错误,请联系工作人员！"  TextWrapping="WrapWithOverflow" TextAlignment="Center" Visibility="Collapsed"/>
+                    <Button Grid.Row="1"  Style="{StaticResource CommonNoButtonT2}" Width="245" Height="80"  Content="退出"   Click="onExit" />
+                </Grid>
+            </Grid>
+        </Border>
         </Grid>
 </UserControl>

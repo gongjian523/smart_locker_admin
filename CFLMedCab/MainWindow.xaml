@@ -59,26 +59,12 @@
                         <BitmapImage UriSource="/CFLMedCab;component/Resources/Images/cfyl.png" />
                     </Image.Source>
                 </Image>
-
                 <Button Style="{StaticResource ReturnButton}" Content="退出"     Name="btnExit" Margin="-150,5,0,5" HorizontalAlignment="Center"   Click="onExit" />
                 <Button Style="{StaticResource ReturnButton}" Content="回到首页" Name="btnBackHP"  Margin="-600,5,0,5" HorizontalAlignment="Center"  Click="onBackToHP" Visibility="Hidden"/>
                 <Button Style="{StaticResource ReturnButton}" Content="退出程序" Name="btnExitApp"  Margin="220,5,0,5" HorizontalAlignment="Center"  Click="onExitApp" Visibility="Collapsed"/>
-
-                <TextBlock Height="Auto"
-                    Margin="0,0,150,0"
-                    x:Name="tbDateText"
-                    Foreground="Black"
-                    FontWeight="Bold"
-                    FontFamily="Arial"
-                    FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
-                <TextBlock Height="Auto"
-                    Margin="0,0,30,0"
-                    x:Name="tbNameText"
-                    Foreground="Black"
-                    FontWeight="Bold"
-                    FontFamily="Arial"
-                    FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
-
+                <TextBlock Height="Auto" Margin="0,0,240,0" x:Name="tbDateText" Foreground="Black" FontWeight="Bold"  FontFamily="Arial" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <TextBlock Height="Auto" Margin="0,0,30,0" x:Name="tbNameText" Foreground="#457EFF" FontWeight="Bold" FontFamily="Arial" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
+                <TextBlock Height="Auto" Margin="0,0,120,0" x:Name="tbDepartText" Foreground="#457EFF" FontWeight="Bold" FontFamily="Arial" FontSize="25" HorizontalAlignment="Right" VerticalAlignment="Center" />
             </Grid>
             <Grid x:Name="HomePageView" Grid.Row="1" Background="{StaticResource ContentBkBrush}" Panel.ZIndex="1">
                 <Border Margin="40"  Background="#FFFFFF" CornerRadius="6,6,6,6" Padding="10">

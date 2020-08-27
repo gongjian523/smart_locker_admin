@@ -39,6 +39,9 @@ namespace CFLMedCab.Http.Model
 		[JsonIgnore]
 		public string DepartmentIdInUse { get; set; }
 
+		[JsonIgnore]
+		public string DepartmentInUse { get; set; }
+
 		/// <summary>
 		/// 
 		/// </summary>

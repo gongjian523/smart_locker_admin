@@ -93,5 +93,23 @@ namespace CFLMedCab.Http.Model
         [SugarColumn(IsNullable = true)]
         public string operater { get; set; }
 
-    }
+		/// <summary>
+		/// 厂家名称
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string ManufactorName { get; set; }
+
+		/// <summary>
+		/// 新系统下的型号
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string Model { get; set; }
+
+		/// <summary>
+		/// 新系统下的规格
+		/// </summary>
+		[SugarColumn(IsNullable = true)]
+		public string Spec { get; set; }
+
+	}
 }

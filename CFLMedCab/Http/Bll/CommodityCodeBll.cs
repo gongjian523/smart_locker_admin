@@ -395,7 +395,6 @@ namespace CFLMedCab.Http.Bll
                             {
                                 var commodity = baseDataCommodity.body.objects.Where(cit => cit.id == it.CommodityId).First();
                                 it.CommodityName = commodity.name;
-                                it.Spec = commodity.Spec1;
                             }
                         }
                         else

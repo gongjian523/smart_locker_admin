@@ -255,5 +255,19 @@ namespace CFLMedCab.Http.Bll
 
             return baseDataUser;
         }
+
+        public BaseData<Department> GetDepartmentByIds(List<string> ids)
+        {
+            BaseData<Department> baseData = HttpHelper.GetInstance().Get<Department>(new QueryParam
+            {
+                @in =
+                {
+                    field = "id",
+                    in_list =  BllHelper.ParamUrlEncode(ids)
+                }
+            });
+
+            return HttpHelper.GetInstance().ResultCheck(baseData);
+        }
     }
 }

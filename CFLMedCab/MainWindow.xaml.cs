@@ -887,7 +887,8 @@ namespace CFLMedCab
         //指静脉登陆和用户名密码登陆都调用这个函数，但是绑定指静脉时的登陆不会
         private void onReadyEnterHomePage(User user)
         {
-            user.DepartmentIds = new List<string>() { "总务科", "儿科" };
+            user.DepartmentIds = new List<string>() { "AQB2Zi3IdykBAAAAZXBVOEJ6LhZyoAsA", "AQB2Zi3IdykBAAAA_j11h3KvLhaurgsA", "AQBuDp7wws8BAAAABvQMfMl1LhYIgQEA",
+            "AQB2Zi3IdykBAAAA7pCgGvAyJhZyrggA", "AQBuDp7wws8BAAAA6_kUWU90LhaogAEA"};
 
             if(user.DepartmentIds.Count() == 1)
             {
@@ -896,17 +897,25 @@ namespace CFLMedCab
             }
             else
             {
-
                 PopFrame.Visibility = Visibility.Visible;
 
                 DepartChooseBoard departChooseBoard = new DepartChooseBoard(user);
                 departChooseBoard.EnterMainFrameEvent += new DepartChooseBoard.EnterMainFrameHandler(onEnterHomePage);
+                departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
 
                 PopFrame.Navigate(departChooseBoard);
-                
-
             }
         }
+
+
+        private void onExitDepartChooseBoard(object sender, string e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+            }));
+        }
+
 
         private void onEnterHomePage(object sender, User e)
         {
@@ -921,9 +930,14 @@ namespace CFLMedCab
             LoginBkView.Visibility = Visibility.Hidden;
             PopFrame.Visibility = Visibility.Hidden;
 
+            var bdDepartment = UserLoginBll.GetInstance().GetDepartmentByIds( new List<string>() { user.DepartmentIdInUse });
+            HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
+            user.DepartmentInUse = isSuccess ? bdDepartment.body.objects[0].name : "";
+
             ApplicationState.SetUserInfo(user);
             SetNavBtnVisiblity(user.Role);
             tbNameText.Text = user.name;
+            tbDepartText.Text = user.DepartmentInUse;
 
             //进入首页，将句柄设置成null，避免错误调用
             SetSubViewInfo(null, SubViewType.Home);

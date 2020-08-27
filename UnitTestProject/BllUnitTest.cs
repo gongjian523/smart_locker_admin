@@ -48,6 +48,14 @@ namespace UnitTestProject
    //         });
 		}
 
+        [TestMethod]
+        public void CALS()
+        {
+            int a = 7 / 3;
+            int b = 8 / 3;
+
+        }
+
         public BaseData<CommodityCode> GetBaseData()
         {
             return CommodityCodeBll.GetInstance().GetCompareCommodity(

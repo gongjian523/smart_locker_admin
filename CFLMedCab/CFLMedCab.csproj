@@ -275,6 +275,7 @@
     <Compile Include="Http\Model\Enum\OperateType.cs" />
     <Compile Include="Http\Model\Enum\PickTaskStatus.cs" />
     <Compile Include="Http\Model\Enum\ShelfTaskStatus.cs" />
+    <Compile Include="Http\Model\Department.cs" />
     <Compile Include="Http\Model\Equipment.cs" />
     <Compile Include="Http\Model\FetchParam.cs" />
     <Compile Include="Http\Model\GoodsLocation.cs" />
