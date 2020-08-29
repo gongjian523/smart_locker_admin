@@ -22,14 +22,30 @@ namespace CFLMedCab.BLL
             inOutRecordeDal = InOutRecordeDal.GetInstance();
         }
 
-        public int NewInOutRecord()
+        public int NewInOutRecord(string business)
         {
             int id = inOutRecordeDal.NewInOutRecord(new InOutRecord
             {
                 login_id = ApplicationState.GetLoginId(),
                 open_time = DateTime.Now,
                 user_name = ApplicationState.GetUserInfo().name,
+                operate = business,
+                department = ApplicationState.GetUserInfo().DepartmentInUse
             });
+
+            return id;
+        }
+
+        public int NewInOutRecordTest()
+        {
+            int id = inOutRecordeDal.NewInOutRecord(new InOutRecord
+            {
+                login_id = 1,
+                open_time = DateTime.Now,
+                user_name = "Nathan",
+                operate = "test",
+                department = "test"
+            }) ;
 
             return id;
         }

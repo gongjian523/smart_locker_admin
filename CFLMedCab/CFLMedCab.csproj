@@ -865,6 +865,10 @@
     <Resource Include="Resources\Images\ico-calendar.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\btn-PersonalSetting.png" />
+    <Resource Include="Resources\Images\btn-ShelfFast.png" />
+    <Resource Include="Resources\Images\cfyl.ico" />
+    <Resource Include="Resources\Images\logoIcon.png" />
     <Resource Include="cfyl.ico" />
     <Content Include="Lib\GReaderApi.dll" />
     <Content Include="Lib\IWshRuntimeLibrary.dll" />

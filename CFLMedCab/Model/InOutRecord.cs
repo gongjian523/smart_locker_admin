@@ -29,11 +29,13 @@ namespace CFLMedCab.Model
 		/// <summary>
 		/// 操作时间
 		/// </summary
+		[SugarColumn(IsNullable = true)]
 		public DateTime close_time { get; set; }
 
 		/// <summary>
 		/// 操作类型
 		/// </summary>
+		[SugarColumn(IsNullable = true)]
 		public string operate { get; set; }
 
 
@@ -44,8 +46,9 @@ namespace CFLMedCab.Model
 
 
 		/// <summary>
-		/// 操作人
+		/// 部门
 		/// </summary>
+		[SugarColumn(IsNullable = true)]
 		public string department { get; set; }
 
 	}

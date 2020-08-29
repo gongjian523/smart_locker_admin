@@ -103,8 +103,9 @@ namespace CFLMedCab.View.Inventory
             {
                 BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess1);
-                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
-                if(isSuccess1)
+                //CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+                CommodityCodeBll.GetInstance().GetExpiration(bdCommodityCode, out bool isSuccess2);
+                if (isSuccess1)
                 {
                     list = bdCommodityCode.body.objects.ToList();
                 }
@@ -180,7 +181,8 @@ namespace CFLMedCab.View.Inventory
             HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
             if(isSuccess)
             {
-                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+                //CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+                CommodityCodeBll.GetInstance().GetExpiration(bdCommodityCode, out bool isSuccess2);
             }
             LoadingDataEvent(this, false);
 

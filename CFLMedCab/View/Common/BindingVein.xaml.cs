@@ -160,36 +160,37 @@ namespace CFLMedCab.View.Common
                 WarnInfo.Content = "";
             }));
 
-            //BaseSinglePostData<UserToken> bdUserToken = GetUserToken(out string warningString, out BitmapImage bi);
-            //HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isSuccess);
+            BaseSinglePostData<UserToken> bdUserToken = GetUserToken(out string warningString, out BitmapImage bi);
+            HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isSuccess);
 
-            //if (!isSuccess)
-            //{
-            //    Dispatcher.BeginInvoke(new Action(() => {
+            if (!isSuccess)
+            {
+                Dispatcher.BeginInvoke(new Action(() =>
+                {
 
-            //        WarnInfo.Content = warningString;
-            //        if (bi != null)
-            //        {
-            //            lbInputAuth.Visibility = Visibility.Visible;
-            //            tbInputAuth.Visibility = Visibility.Visible;
-            //            imageAuth.Visibility = Visibility.Visible;
-            //            imageAuth.Source = bi;
-            //        }
-            //    }));
-            //    return;
-            //}
+                    WarnInfo.Content = warningString;
+                    if (bi != null)
+                    {
+                        lbInputAuth.Visibility = Visibility.Visible;
+                        tbInputAuth.Visibility = Visibility.Visible;
+                        imageAuth.Visibility = Visibility.Visible;
+                        imageAuth.Source = bi;
+                    }
+                }));
+                return;
+            }
 
-            //SetTokens(bdUserToken.body.access_token, bdUserToken.body.refresh_token);
-
-            //LoadingDataEvent(this, true);
-            //BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
-            //LoadingDataEvent(this, false);
-            //HttpHelper.GetInstance().ResultCheck(bdUser, out bool isSuccess2);
+            SetTokens(bdUserToken.body.access_token, bdUserToken.body.refresh_token);
 
             LoadingDataEvent(this, true);
-            BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + "18628293148"));
+            BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + tbInputName.Text));
             LoadingDataEvent(this, false);
             HttpHelper.GetInstance().ResultCheck(bdUser, out bool isSuccess2);
+
+            //LoadingDataEvent(this, true);
+            //BaseData<User> bdUser = UserLoginBll.GetInstance().GetUserInfo(("+86 " + "18628293148"));
+            //LoadingDataEvent(this, false);
+            //HttpHelper.GetInstance().ResultCheck(bdUser, out bool isSuccess2);
 
             if (!isSuccess2)
             {

@@ -32,10 +32,6 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public string Status { get; set; }
 		/// <summary>
-		/// 常温;阴凉
-		/// </summary>
-		public string StorageConditions { get; set; }
-		/// <summary>
 		/// 
 		/// </summary>
 		public string StoreHouseId { get; set; }

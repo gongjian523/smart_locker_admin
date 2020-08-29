@@ -223,7 +223,8 @@ namespace CFLMedCab.View.Inventory
             {
                 BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
-                CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
+                CommodityCodeBll.GetInstance().GetExpiration(bdCommodityCode, out bool isSuccess2);
+                //CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
                 //CommodityCodeBll.GetInstance().GetCatalogueName(bdCommodityCode, out bool isSuccess3);
 
                 if (!isSuccess)
@@ -246,28 +247,15 @@ namespace CFLMedCab.View.Inventory
                             ManufactorName = item.ManufactorName,
                             Specifications = item.Spec,
                             Mode = item.Model,
-
-                            //CatalogueId = item.CatalogueId
+                            CatalogueName = item.name,
                         };
 
-                        if (isSuccess2)
+                        if (isSuccess2 && item.ExpirationDate != null)
                         {
-
-                            if (item.ExpirationDate != null)
-                            {
-                                goodItem.ExpirationDate = item.ExpirationDate;
-                            }
+                            goodItem.ExpirationDate = item.ExpirationDate;
                         }
 
-                        goodItem.CatalogueName = item.name;
 
-                        //if(isSuccess3)
-                        //{
-                        //    if(item.CatalogueName != null)
-                        //    {
-                        //        goodItem.CatalogueName = item.CatalogueName;
-                        //    }
-                        //}
                         list.Add(goodItem);
                     }
 

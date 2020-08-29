@@ -53,11 +53,11 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" >
                         <Label Content="库房编号" Style="{StaticResource lblTitle3}" FontSize="25"/>
-                        <TextBox x:Name="tbHouseCode" Width="200" FontSize="25"/>
+                        <TextBox x:Name="tbHouseCode" Width="300" FontSize="25"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1">
                         <Label Content="设备编号" Style="{StaticResource lblTitle3}" FontSize="25"/>
-                        <TextBox x:Name="tbEquipCode" Width="200" FontSize="25"/>
+                        <TextBox x:Name="tbEquipCode" Width="300" FontSize="25"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="2">
                         <Label Content="指静脉串口" Style="{StaticResource lblTitle3}" FontSize="25"/>
@@ -86,7 +86,7 @@
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Horizontal" >
                         <Label Content="货柜编号" Style="{StaticResource lblTitle3}" FontSize="25"/>
-                        <TextBox x:Name="tbLocationCode" FontSize="25" Width="200"/>
+                        <TextBox x:Name="tbLocationCode" FontSize="25" Width="300"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Grid.Column="1">
                         <Label Content="货柜锁串口" Style="{StaticResource lblTitle3}" FontSize="25"/>

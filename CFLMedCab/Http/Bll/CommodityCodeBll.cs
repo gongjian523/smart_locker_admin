@@ -611,6 +611,7 @@ namespace CFLMedCab.Http.Bll
             return HttpHelper.GetInstance().ResultCheck(baseData);
 		}
 
+		[Obsolete]
         public BaseData<CommodityCode> GetExpirationAndManufactor(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
         {
 
@@ -755,7 +756,51 @@ namespace CFLMedCab.Http.Bll
         }
 
 
-        public BaseData<CommodityCode> GetQualityStatus(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
+		public BaseData<CommodityCode> GetExpiration(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
+		{
+			isSuccess = false;
+
+			//检查参数是否正确
+			if (null == bdCommodityCode.body.objects || bdCommodityCode.body.objects.Count <= 0)
+			{
+
+				bdCommodityCode.code = (int)ResultCode.Parameter_Exception;
+				bdCommodityCode.message = ResultCode.Parameter_Exception.ToString();
+
+				return bdCommodityCode;
+			}
+
+			var commodityCodeIds = bdCommodityCode.body.objects.Select(it => it.id).Distinct().ToList();
+			var commodityInventoryDetails = HttpHelper.GetInstance().Get<CommodityInventory>(new QueryParam
+			{
+				@in =
+					{
+						field = "CommodityCodeId",
+						in_list = BllHelper.ParamUrlEncode(commodityCodeIds)
+					}
+			});
+
+			HttpHelper.GetInstance().ResultCheck(commodityInventoryDetails, out bool isSuccess1);
+			if (!isSuccess1)
+			{
+				bdCommodityCode.code = (int)ResultCode.Result_Exception;
+				bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+
+				return bdCommodityCode;
+			}
+
+			bdCommodityCode.body.objects.ForEach(it =>
+			{
+				it.ExpirationDate = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().ExpirationDate;
+			});
+
+			isSuccess = true;
+			return bdCommodityCode;
+		}
+
+
+
+		public BaseData<CommodityCode> GetQualityStatus(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
         {
             isSuccess = false;
 
