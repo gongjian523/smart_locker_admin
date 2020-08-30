@@ -341,7 +341,6 @@ namespace CFLMedCab.Http.Bll
 
 			commodityCodes.ForEach(it =>
 			{
-
 				commodityCodeNames.Add(HttpUtility.UrlEncode(it.name));
 			});
 

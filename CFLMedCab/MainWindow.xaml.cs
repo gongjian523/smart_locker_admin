@@ -970,11 +970,7 @@ namespace CFLMedCab
 
         private void initCurrentGoodsInfo()
         {
-#if TESTENV
-            HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
-#else
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
-#endif
             ApplicationState.SetGoodsInfo(hs);
         }
 
