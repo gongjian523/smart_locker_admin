@@ -219,7 +219,7 @@ namespace CFLMedCab.View.Inventory
                 HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess);
                 CommodityCodeBll.GetInstance().GetExpiration(bdCommodityCode, out bool isSuccess2);
                 //CommodityCodeBll.GetInstance().GetExpirationAndManufactor(bdCommodityCode, out bool isSuccess2);
-                CommodityCodeBll.GetInstance().GetCatalogueName(bdCommodityCode, out bool isSuccess3);
+                //CommodityCodeBll.GetInstance().GetCatalogueName(bdCommodityCode, out bool isSuccess3);
 
                 if (!isSuccess)
                 {

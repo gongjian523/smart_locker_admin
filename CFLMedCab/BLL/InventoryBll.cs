@@ -209,9 +209,9 @@ namespace CFLMedCab.BLL
             foreach(var item in commodolityList)
             {
                 //没有包含相同CatalogueId的数据
-                if (catalogueList.Where(ci =>ci.CatalogueId == item.CatalogueId).Count() == 0)
+                if (catalogueList.Where(ci =>ci.CatalogueName == item.CatalogueName).Count() == 0)
                 {
-                    List<InventoryOrderdtl> listDtl = commodolityList.Where(di => di.CatalogueId == item.CatalogueId).ToList();
+                    List<InventoryOrderdtl> listDtl = commodolityList.Where(di => di.CatalogueName == item.CatalogueName).ToList();
 
                     List<SpecCommodity> listSpec = new List<SpecCommodity>();
 
@@ -229,7 +229,6 @@ namespace CFLMedCab.BLL
 
                     catalogueList.Add(new CatalogueCommodity
                     {
-                        CatalogueId = item.CatalogueId,
                         CatalogueName = item.CatalogueName,
                         Num = listDtl.Count,
                         SpecNum = listSpec.Count,
