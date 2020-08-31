@@ -100,6 +100,9 @@ namespace CFLMedCab.View.Common
                 UpdateEquipment();
 
                 MessageBox.Show("保存成功!", "温馨提示", MessageBoxButton.OK);
+
+                equipView.Visibility = Visibility.Visible;
+                eidtEquipView.Visibility = Visibility.Collapsed;
             }
             else
             {
@@ -117,9 +120,6 @@ namespace CFLMedCab.View.Common
 
                 MessageBox.Show(err.Remove(err.Length - 1) + "!", "温馨提示", MessageBoxButton.OK);
             }
-
-            equipView.Visibility = Visibility.Visible;
-            eidtEquipView.Visibility = Visibility.Collapsed;
         }
 
         private void onCancelEditEquip(object sender, RoutedEventArgs e)

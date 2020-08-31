@@ -45,7 +45,16 @@ namespace CFLMedCab.Infrastructure
 
         public static T GetValue<T>(int key)
         {
-            return (T)_values[key];
+            object sValue;
+
+            if (_values.TryGetValue(key, out sValue))
+            {
+                return (T)_values[key];
+            }
+            else
+            {
+                return default(T);
+            }
         }
 
         #region the serial name of the lockers

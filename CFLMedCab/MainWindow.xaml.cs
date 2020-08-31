@@ -46,6 +46,7 @@ using CFLMedCab.View.Common;
 using CFLMedCab.View.InOut;
 using CFLMedCab.View.ShelfFast;
 using CFLMedCab.View.Recovery;
+using GDotnet.Reader.Api.Utils;
 
 namespace CFLMedCab
 {
@@ -446,10 +447,10 @@ namespace CFLMedCab
 								//签名参数	
 								SignInParam siParam = new SignInParam
 								{
-									//base64解码
-									password = BllHelper.DecodeBase64Str(currentOnlineUser.Password),
-									//带有+86
-									phone = currentOnlineUser.MobilePhone,
+                                    //base64解码
+                                    password = BllHelper.DecodeBase64Str(currentOnlineUser.Password),
+                                    //带有+86
+                                    phone = currentOnlineUser.MobilePhone,
 									source = "app"
 								};
 
@@ -887,26 +888,38 @@ namespace CFLMedCab
         //指静脉登陆和用户名密码登陆都调用这个函数，但是绑定指静脉时的登陆不会
         private void onReadyEnterHomePage(User user)
         {
-            user.DepartmentIds = new List<string>() { "总务科", "儿科" };
+            LogUtils.Debug("onReadyEnterHomePage");
+            user.DepartmentIds = new List<string>() { "AQB2Zi3IdykBAAAAZXBVOEJ6LhZyoAsA", "AQB2Zi3IdykBAAAA_j11h3KvLhaurgsA", "AQBuDp7wws8BAAAABvQMfMl1LhYIgQEA",
+            "AQB2Zi3IdykBAAAA7pCgGvAyJhZyrggA", "AQBuDp7wws8BAAAA6_kUWU90LhaogAEA"};
 
-            if(user.DepartmentIds.Count() == 1)
+            //user.DepartmentIds = new List<string>() { "AQB2Zi3IdykBAAAAZXBVOEJ6LhZyoAsA"};
+
+            if (user.DepartmentIds.Count() == 1)
             {
                 user.DepartmentIdInUse = user.DepartmentIds[0];
                 EnterHomePage(user);
             }
             else
             {
-
                 PopFrame.Visibility = Visibility.Visible;
 
                 DepartChooseBoard departChooseBoard = new DepartChooseBoard(user);
                 departChooseBoard.EnterMainFrameEvent += new DepartChooseBoard.EnterMainFrameHandler(onEnterHomePage);
+                departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
 
                 PopFrame.Navigate(departChooseBoard);
-                
-
             }
         }
+
+
+        private void onExitDepartChooseBoard(object sender, string e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+            }));
+        }
+
 
         private void onEnterHomePage(object sender, User e)
         {
@@ -918,12 +931,18 @@ namespace CFLMedCab
 
         private void EnterHomePage(User user)
         {
+            LogUtils.Debug("EnterHomePage");
             LoginBkView.Visibility = Visibility.Hidden;
             PopFrame.Visibility = Visibility.Hidden;
+
+            var bdDepartment = UserLoginBll.GetInstance().GetDepartmentByIds( new List<string>() { user.DepartmentIdInUse });
+            HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
+            user.DepartmentInUse = isSuccess ? bdDepartment.body.objects[0].name : "";
 
             ApplicationState.SetUserInfo(user);
             SetNavBtnVisiblity(user.Role);
             tbNameText.Text = user.name;
+            tbDepartText.Text = user.DepartmentInUse;
 
             //进入首页，将句柄设置成null，避免错误调用
             SetSubViewInfo(null, SubViewType.Home);
@@ -951,11 +970,7 @@ namespace CFLMedCab
 
         private void initCurrentGoodsInfo()
         {
-#if TESTENV
-            HashSet<CommodityEps> hs = new HashSet<CommodityEps>();
-#else
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
-#endif
             ApplicationState.SetGoodsInfo(hs);
         }
 
@@ -1042,7 +1057,7 @@ namespace CFLMedCab
             if(locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId =  inOutBill.NewInOutRecord();
+                int openDoorId =  inOutBill.NewInOutRecord("ConsumingOrder");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
@@ -1182,7 +1197,7 @@ namespace CFLMedCab
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("SurgeryConsumingOrder");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
@@ -1415,15 +1430,15 @@ namespace CFLMedCab
             delegateGetMsg.userData = e;
 #endif
 
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("SurgeryConsumingOrder");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
+
+            locOpenNum++;
 
             //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
@@ -1557,15 +1572,15 @@ namespace CFLMedCab
                 }
             }));
 
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("ConsumingReturnOrder");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
+
+            locOpenNum++;
 
             //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
@@ -1897,15 +1912,15 @@ namespace CFLMedCab
             delegateGetMsg.userData = e;
 #endif
 
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("ShelfTaskFast");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
+
+            locOpenNum++;
 
             //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
@@ -2073,16 +2088,15 @@ namespace CFLMedCab
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterAllotShelfCloseEvent);
             delegateGetMsg.userData = e;
 #endif
-
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("AllotShelf");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
+
+            locOpenNum++;
 
             //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
@@ -2251,16 +2265,15 @@ namespace CFLMedCab
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
             delegateGetMsg.userData = e;
 #endif
-
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("PickTask");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
+
+            locOpenNum++;
 
             //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
@@ -2426,15 +2439,15 @@ namespace CFLMedCab
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterRecoveryCloseEvent);
             delegateGetMsg.userData = e;
 
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("CommodityRecovery");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
+
+            locOpenNum++;
 
             //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
@@ -2549,10 +2562,12 @@ namespace CFLMedCab
             }
 
 #if TESTENV
+
 #else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterStockSwitchClose);
             delegateGetMsg.userData = e;
+
 #endif
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
@@ -2562,15 +2577,16 @@ namespace CFLMedCab
                 }
             }));
 
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("IntentoryAdjust");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
+
+            locOpenNum++;
+
 
             //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
 
@@ -2774,16 +2790,16 @@ namespace CFLMedCab
             delegateGetMsg.userData = e;
 #endif
 
-            locOpenNum++;
-
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
-                int openDoorId = inOutBill.NewInOutRecord();
+                int openDoorId = inOutBill.NewInOutRecord("Intentory");
 
                 ApplicationState.SetOpenDoorId(openDoorId);
             }
 
+            locOpenNum++;
+            
             //SpeakerHelper.Sperker("柜门已开，请检查相关耗材，检查完毕请关闭柜门");
 
             ((InventoryDtl)subViewHandler).SetButtonVisibility(false);

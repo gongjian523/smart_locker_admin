@@ -19,7 +19,6 @@ namespace CFLMedCab.Infrastructure.QuartzHelper.job
 	public class ExecuteInventoryPlanJoB : IJob
 	{
 
-
 		public Task Execute(IJobExecutionContext context)
 		{
 			LogUtils.Debug("ExecuteInventoryPlanJoB进入");

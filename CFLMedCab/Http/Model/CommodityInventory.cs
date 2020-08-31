@@ -36,7 +36,18 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string EquipmentId { get; set; }
         
-        public DateTime ExpirationDate { get; set; } 
+        public DateTime ExpirationDate { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string GoodsLocationId { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string GroupId { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
@@ -63,18 +74,6 @@ namespace CFLMedCab.Http.Model
         /// 所在库房编号
         /// </summary>
         public string StoreHouseId { get; set; }
-        /// <summary>
-        /// 所在库房名称
-        /// </summary>
-        public string StoreHouseName { get; set; }
-        /// <summary>
-        /// 定数包
-        /// </summary>
-        public string Type { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public string UserId { get; set; }
 
         /// <summary>
         /// 

@@ -6,35 +6,30 @@ using System.Collections.Generic;
 namespace CFLMedCab.Http.Model
 {
 	/// <summary>
-	/// 设备表
+	/// 部门表
 	/// </summary>
-	public class Equipment: BaseModel
+	public class Department: BaseModel
 	{
-		/// <summary>
-		/// 正常
-		/// </summary>
-		public string EquipmentStatus { get; set; }
-		/// <summary>
-		/// 智能柜
-		/// </summary>
-		public string EquipmentType { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
-		public List<string> InventoryPlanId { get; set; }
+		public string DepartmentCode { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public string GroupId { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
 		public string Remarks { get; set; }
-
 		/// <summary>
-		/// 启用
+		/// 
 		/// </summary>
 		public string Status { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
-		public string StoreHouseId { get; set; }
+		public string auto_id { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>
@@ -52,10 +47,6 @@ namespace CFLMedCab.Http.Model
 		/// 
 		/// </summary>
 		public Permission permission { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public string place { get; set; }
 		/// <summary>
 		/// 
 		/// </summary>

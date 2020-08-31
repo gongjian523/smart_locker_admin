@@ -132,8 +132,8 @@ namespace CFLMedCab.Model
         /// <summary>
         /// 目录id
         /// </summary>
-        [SugarColumn(IsNullable = true)]
-        public string CatalogueId { get; set; }
+        //[SugarColumn(IsNullable = true)]
+        //public string CatalogueId { get; set; }
 
         /// <summary>
         /// 目录名字
@@ -155,6 +155,7 @@ namespace CFLMedCab.Model
 
     public class CatalogueCommodity
     {
+        [Obsolete]
         public string CatalogueId { get; set; }
 
         public string CatalogueName { get; set; }

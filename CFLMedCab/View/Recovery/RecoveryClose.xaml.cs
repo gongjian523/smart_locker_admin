@@ -247,7 +247,7 @@ namespace CFLMedCab.View.Recovery
             }
 
             InOutRecordBll inOutBill = new InOutRecordBll();
-            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "SurgeryConsumingOrder");
+            inOutBill.UpdateInOutRecord(isSuccess ? bdCommodityCode.body.objects : null, "CommodityRecovery");
 
             ApplicationState.SetGoodsInfoInSepcLoc(after, locCodes);
             ApplicationState.SetOpenDoorId(-1);

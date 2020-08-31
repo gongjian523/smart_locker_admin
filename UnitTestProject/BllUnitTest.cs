@@ -48,6 +48,21 @@ namespace UnitTestProject
    //         });
 		}
 
+        [TestMethod]
+        public void InAndOutRecord()
+        {
+            InOutRecordBll inOutBill = new InOutRecordBll();
+            int openDoorId = inOutBill.NewInOutRecordTest();
+
+            ApplicationState.SetOpenDoorId(openDoorId);
+
+            inOutBill.UpdateInOutRecord(null, "Inventory");
+            ApplicationState.SetOpenDoorId(-1);
+
+            var record = inOutBill.GetAllInOutRecord();
+
+        }
+
         public BaseData<CommodityCode> GetBaseData()
         {
             return CommodityCodeBll.GetInstance().GetCompareCommodity(
@@ -55,7 +70,7 @@ namespace UnitTestProject
                 {
                     new CommodityEps
                     {
-                        CommodityCodeId = "AQACQqweBhEBAAAAwXCOmiFcsxUmKAIA",
+                        CommodityCodeId = "AQCyzjbeA3cBAAAArVpYUOhTJBYfPDMA",
                         CommodityCodeName = "QR00000038",
                         CommodityName = "止血包",
                         EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
@@ -422,8 +437,32 @@ namespace UnitTestProject
             var record2 = loginBll.GetLoginRecordByUserName(ApplicationState.GetUserInfo().name);
         }
 
-        
 
+        [TestMethod]
+        public void GetExpireTestMethod()
+        {
+
+            BaseData<CommodityCode> baseDataCommodityCode = new BaseData<CommodityCode>()
+            {
+                code = (int)ResultCode.OK,
+                body = new BaseBody<CommodityCode> (){ 
+                    objects = new List<CommodityCode>() {
+                        new CommodityCode()
+                        {
+                            id = "AQCyzjbeA3cBAAAArVpYUOhTJBYfPDMA"
+                        },
+                        new CommodityCode()
+                        {
+                            id = "AQCqGpNPSs4BAAAA2cq7T-hTJBaPKgQA"
+                        },
+                    },
+                    global_offset = 2
+                },
+            };
+
+            CommodityCodeBll.GetInstance().GetExpiration(baseDataCommodityCode, out bool isSuccess2);
+
+        }
 
 
     }
