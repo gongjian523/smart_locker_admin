@@ -528,8 +528,9 @@ namespace CFLMedCab
 				// 进入首页
 				App.Current.Dispatcher.Invoke((Action)(() =>
 				{
-					onReadyEnterHomePage(user);
-				}));
+					//onReadyEnterHomePage(user);
+                    onEnterHomePage(user);
+                }));
 			}
 			bUsing = false;
 			LogUtils.Debug("detectFinger bUsing turn false 1");
@@ -650,7 +651,8 @@ namespace CFLMedCab
                 // 进入首页
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    onReadyEnterHomePage(user);
+                    //onReadyEnterHomePage(user);
+                    onEnterHomePage(user);
                 }));
             }
             bUsing = false;
@@ -708,9 +710,9 @@ namespace CFLMedCab
 
         private void SetNavBtnVisiblity(string role)
         {
-            bool isMedicalStuff = (role == "医院医护人员") ? true : false;
+            bool isMedicalStuff = (role != "医护人员") ? true : false;
 
-			NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             //NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             //NavBtnEnterPrescription.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -725,7 +727,7 @@ namespace CFLMedCab
             NavBtnEnterStock.Visibility = Visibility.Visible;
             NavBtnEnterPersonalSetting.Visibility = Visibility;
             NavBtnEnterSysSetting.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
-
+    
             if(isMedicalStuff)
             {
                 NavBtnEnterInvtory.SetValue(Grid.RowProperty,0);
@@ -745,6 +747,7 @@ namespace CFLMedCab
                 NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 2);
             }
         }
+
 
         /// <summary>
         /// 设置子页面信息
@@ -879,54 +882,20 @@ namespace CFLMedCab
             if (logoutInfo != null && logoutInfo != "")
             {
                 var loginBll = new LoginBll();
-                loginBll.UptadeLoingOutInfo(ApplicationState.GetLoginId(), logoutInfo);
+                if (!loginBll.UptadeLoingOutInfo(ApplicationState.GetLoginId(), logoutInfo))
+                {
+                    LogUtils.Debug("更新登陆信息失败：id " + ApplicationState.GetLoginId() + " " + logoutInfo);
+                }
                 ApplicationState.SetLoginId(-1);
             }
         }
 
-        //登录，进入首页
-        //指静脉登陆和用户名密码登陆都调用这个函数，但是绑定指静脉时的登陆不会
-        private void onReadyEnterHomePage(User user)
+        private void onEnterHomePage(User user)
         {
-            LogUtils.Debug("onReadyEnterHomePage");
-            user.DepartmentIds = new List<string>() { "AQB2Zi3IdykBAAAAZXBVOEJ6LhZyoAsA", "AQB2Zi3IdykBAAAA_j11h3KvLhaurgsA", "AQBuDp7wws8BAAAABvQMfMl1LhYIgQEA",
-            "AQB2Zi3IdykBAAAA7pCgGvAyJhZyrggA", "AQBuDp7wws8BAAAA6_kUWU90LhaogAEA"};
-
-            //user.DepartmentIds = new List<string>() { "AQB2Zi3IdykBAAAAZXBVOEJ6LhZyoAsA"};
-
-            if (user.DepartmentIds.Count() == 1)
+            if(IsEnterHomePageDerectly(user))
             {
-                user.DepartmentIdInUse = user.DepartmentIds[0];
                 EnterHomePage(user);
             }
-            else
-            {
-                PopFrame.Visibility = Visibility.Visible;
-
-                DepartChooseBoard departChooseBoard = new DepartChooseBoard(user);
-                departChooseBoard.EnterMainFrameEvent += new DepartChooseBoard.EnterMainFrameHandler(onEnterHomePage);
-                departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
-
-                PopFrame.Navigate(departChooseBoard);
-            }
-        }
-
-
-        private void onExitDepartChooseBoard(object sender, string e)
-        {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Hidden;
-            }));
-        }
-
-
-        private void onEnterHomePage(object sender, User e)
-        {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                EnterHomePage(e);
-            }));
         }
 
         private void EnterHomePage(User user)
@@ -935,24 +904,81 @@ namespace CFLMedCab
             LoginBkView.Visibility = Visibility.Hidden;
             PopFrame.Visibility = Visibility.Hidden;
 
-            var bdDepartment = UserLoginBll.GetInstance().GetDepartmentByIds( new List<string>() { user.DepartmentIdInUse });
-            HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
-            user.DepartmentInUse = isSuccess ? bdDepartment.body.objects[0].name : "";
-
-            ApplicationState.SetUserInfo(user);
             SetNavBtnVisiblity(user.Role);
-            tbNameText.Text = user.name;
-            tbDepartText.Text = user.DepartmentInUse;
 
             //进入首页，将句柄设置成null，避免错误调用
             SetSubViewInfo(null, SubViewType.Home);
 
-            //生成和保存全局的登陆id，用于生成登陆记录以及后续的开关门记录
             var loginBll = new LoginBll();
             var loginId = loginBll.NewLogin();
             ApplicationState.SetLoginId(loginId);
+
+            tbNameText.Text = user.name;
+            tbDepartText.Text = user.DepartmentInUse;
+        }
+ 
+        private bool IsEnterHomePageDerectly(User user)
+        {
+            if (user.Role != "医护人员")
+            {
+                user.DepartmentInUse = "SPD管理员";
+                ApplicationState.SetUserInfo(user);
+                return true;
+            }
+            else if (user.DepartmentId == null || user.DepartmentId.Count == 0)
+            {
+                user.DepartmentInUse = "***";
+                ApplicationState.SetUserInfo(user);
+                return true;
+            }
+            else
+            {
+                var bdDepartment = UserLoginBll.GetInstance().GetDepartmentByIds(user.DepartmentId);
+                HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
+
+                if (isSuccess && user.DepartmentId.Count == 1)
+                {
+                    user.DepartmentInUse = bdDepartment.body.objects[0].name;
+                    user.DepartmentIdInUse = user.DepartmentId[0];
+                    ApplicationState.SetUserInfo(user);
+                    return true;
+                }
+                else
+                {
+                    PopFrame.Visibility = Visibility.Visible;
+                    ApplicationState.SetUserInfo(user);
+
+                    DepartChooseBoard departChooseBoard = new DepartChooseBoard(bdDepartment);
+                    departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
+                    departChooseBoard.EnterHomePageEvent += new DepartChooseBoard.EnterHomePageHandler(onEnterHomePageFromDepartChooseBoard);
+
+                    PopFrame.Navigate(departChooseBoard);
+
+                    return false;
+                }
+            }
         }
 
+        private void onEnterHomePageFromDepartChooseBoard(object sender, Department e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                User user = ApplicationState.GetUserInfo();
+                user.DepartmentInUse = e.name;
+                user.DepartmentIdInUse = e.id;
+                ApplicationState.SetUserInfo(user);
+
+                EnterHomePage(user);
+            }));
+        }
+
+        private void onExitDepartChooseBoard(object sender, string e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+            }));
+        }
 
         private void onShowPopFrame(object content)
         {
@@ -1744,6 +1770,14 @@ namespace CFLMedCab
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
             delegateGetMsg.userData = e;
 #endif
+
+            if (locOpenNum == 0)
+            {
+                InOutRecordBll inOutBill = new InOutRecordBll();
+                int openDoorId = inOutBill.NewInOutRecord("ShelfTask");
+
+                ApplicationState.SetOpenDoorId(openDoorId);
+            }
 
             locOpenNum++;
 
@@ -2957,7 +2991,8 @@ namespace CFLMedCab
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                onReadyEnterHomePage(e);
+                //onReadyEnterHomePage(e);
+                onEnterHomePage(e);
             }));
         }
 

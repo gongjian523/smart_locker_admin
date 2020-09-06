@@ -56,6 +56,14 @@ namespace CFLMedCab.BLL
             int openDoorId = ApplicationState.GetOpenDoorId();
 
             InOutRecord record = inOutRecordeDal.GetInOutRecordById(openDoorId);
+            if (record == null)
+            {
+                int id = NewInOutRecord(business);
+                record = inOutRecordeDal.GetInOutRecordById(id);
+            }
+
+            if (record == null)
+                return;
 
             record.close_time = DateTime.Now;
             record.operate = business;

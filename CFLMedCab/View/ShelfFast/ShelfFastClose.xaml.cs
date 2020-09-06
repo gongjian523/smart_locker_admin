@@ -157,7 +157,7 @@ namespace CFLMedCab.View.ShelfFast
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
 
                 //还有未上架的商品,让用户选择原因
-                if (shelfTaskFast.Status == AllotShelfStatusEnum.进行中.ToString())
+                if (shelfTaskFast.Status == ShelfTaskFastStatusEnum.待上架.ToString())
                 {
                     normalView.Visibility = Visibility.Hidden;
                     abnormalView.Visibility = Visibility.Visible;
@@ -260,7 +260,7 @@ namespace CFLMedCab.View.ShelfFast
         /// <param name="e"></param>
         private void onNotComplete(object sender, RoutedEventArgs e)
         {
-            shelfTaskFast.Status = ShelfTaskFastStatusEnum.进行中.ToString();
+            shelfTaskFast.Status = ShelfTaskFastStatusEnum.待上架.ToString();
             EndOperation(bExit);
         }
 

@@ -45,6 +45,6 @@ namespace CFLMedCab.Http.Model
 		/// <summary>
 		/// 
 		/// </summary>
-		public List<string> DepartmentIds { get; set; }
+		public List<string> DepartmentId { get; set; }
 	}
 }

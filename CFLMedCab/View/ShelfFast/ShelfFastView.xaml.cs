@@ -101,7 +101,7 @@ namespace CFLMedCab.View.ShelfFast
             BaseData<ProcessTask> bdProcessTask = new BaseData<ProcessTask>();
             BaseData<AllotAcceptance> bdAllotAcceptance = new BaseData<AllotAcceptance>();
 
-            if (Name.StartsWith("GPT"))
+            if (name.StartsWith("GPT") || name.StartsWith("PT"))
             {
                 LoadingDataEvent(this, true);
                 bdProcessTask = shelfFastBillInst.GetProcessTask(name.ToUpper());
@@ -117,7 +117,7 @@ namespace CFLMedCab.View.ShelfFast
                 sourceBill.object_name = "ProcessTask";
                 sourceBill.object_id = bdProcessTask.body.objects[0].id;
             }
-            else if (Name.StartsWith("DT"))
+            else if (name.StartsWith("DT"))
             {
                 LoadingDataEvent(this, true);
                 BaseData<DistributionTask> bdDistributionTask = shelfFastBillInst.GetDistributionTask (name.ToUpper());
@@ -159,7 +159,7 @@ namespace CFLMedCab.View.ShelfFast
                 BaseData<ProcessDoneCommodity> bdProcessDoneCommodity = new BaseData<ProcessDoneCommodity>();
                 BaseData<AcceptanceCommodity> bdAcceptanceCommodity = new BaseData<AcceptanceCommodity>();
 
-                if (Name.StartsWith("GPT"))
+                if (name.StartsWith("GPT") || name.StartsWith("PT"))
                 {
                     bdProcessDoneCommodity = shelfFastBillInst.GetProcessDoneCommodity(bdProcessTask.body.objects[0]);
                     HttpHelper.GetInstance().ResultCheck(bdProcessDoneCommodity, out bool isSuccess1);
@@ -186,6 +186,7 @@ namespace CFLMedCab.View.ShelfFast
                 {
                     @Operator = ApplicationState.GetUserInfo().id,
                     Status = "待上架",
+                    SourceBill = sourceBill,
                 });
                 HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskFastNew, out bool isSuccess2);
 
@@ -197,7 +198,7 @@ namespace CFLMedCab.View.ShelfFast
 
                 List<ShelfTaskFastDetail> shelfTaskFastDetails = new List<ShelfTaskFastDetail>();
 
-                if (Name.StartsWith("GPT"))
+                if (name.StartsWith("GPT") || name.StartsWith("PT"))
                 {
                     foreach(var item in bdProcessDoneCommodity.body.objects)
                     {

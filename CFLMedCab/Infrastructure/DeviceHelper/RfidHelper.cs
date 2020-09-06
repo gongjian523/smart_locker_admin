@@ -400,7 +400,8 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
                 {
                     CommodityEps commodityEps = new CommodityEps
                     {
-                        CommodityCodeName = $"RF{rfid.Substring(rfid.Length - 8)}",
+                        //CommodityCodeName = $"RF{rfid.Substring(rfid.Length - 8)}",
+                        CommodityCodeName = $"RF{rfid}",
                         EquipmentId = ApplicationState.GetEquipId(),
                         EquipmentName = ApplicationState.GetEquipName(),
                         StoreHouseId = ApplicationState.GetHouseId(),

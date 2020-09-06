@@ -57,7 +57,7 @@
                             <RowDefinition Height="Auto" />
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <Border Grid.Row="0" Padding="10 5" Width="{Binding ElementName=myGrid,Path=ActualWidth}" Background="{DynamicResource TipBgColor}" CornerRadius="{DynamicResource GRadius}" Margin="0 0 0 20">
+                        <Border Grid.Row="0"  Style="{StaticResource TipBorder}">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Label Content="当前回收" Style="{StaticResource lblTitle1}"/>
                                 <Label Content=" " Name="outNum" Style="{StaticResource lblTitleRed}"/>

@@ -62,7 +62,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int ShelfNumber { get; set; }
+        //public int ShelfNumber { get; set; }
 
         /// <summary>
         /// 

@@ -38,7 +38,8 @@ namespace CFLMedCab.View.InOut
             User user = ApplicationState.GetUserInfo();
 
             lbName.Content = user.name;
-            lbPhone.Content = user.Phone;
+            lbPhone.Content = user.MobilePhone.Substring(4);
+            lbDepartment.Content = user.DepartmentInUse;
 
             LoginBll loginBll = new LoginBll();
             InOutRecordBll inOutRecordBll = new InOutRecordBll();

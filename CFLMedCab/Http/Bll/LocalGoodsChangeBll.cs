@@ -40,7 +40,6 @@ namespace CFLMedCab.Http.Bll
         /// 获取本地商品快照列表（包含详情）
         /// </summary>
         /// <returns></returns>
-        [Obsolete]
         public static List<CatalogueCommodity> GetCatalogueCommodity(List<CommodityCode> commodolityList)
         {
             List<CatalogueCommodity> catalogueList = new List<CatalogueCommodity>();
@@ -48,9 +47,9 @@ namespace CFLMedCab.Http.Bll
             foreach (var item in commodolityList)
             {
                 //没有包含相同CatalogueId的数据
-                if (catalogueList.Where(ci => ci.CatalogueId == item.CatalogueId).Count() == 0)
+                if (catalogueList.Where(ci => ci.CatalogueName == item.CatalogueName).Count() == 0)
                 {
-                    List<CommodityCode> listDtl = commodolityList.Where(di => di.CatalogueId == item.CatalogueId).ToList();
+                    List<CommodityCode> listDtl = commodolityList.Where(di => di.CatalogueName == item.CatalogueName).ToList();
 
                     List<SpecCommodity> listSpec = new List<SpecCommodity>();
 
@@ -69,7 +68,6 @@ namespace CFLMedCab.Http.Bll
 
                     catalogueList.Add(new CatalogueCommodity
                     {
-                        CatalogueId = item.CatalogueId,
                         CatalogueName = item.CatalogueName,
                         Num = listDtl.Count,
                         SpecNum = listSpec.Count,

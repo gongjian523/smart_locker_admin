@@ -156,10 +156,10 @@ namespace CFLMedCab.Http.Bll
                         temp.ChangeStatus = CommodityInventoryChangeStatus.已消耗.ToString();
                         break;
                     case 1:
-                        temp.SourceBill = new SourceBill()
-                        {
-                            object_name = "ConsumingReturnOrder",
-                        };
+                        //temp.SourceBill = new SourceBill()
+                        //{
+                        //    object_name = "ConsumingReturnOrder",
+                        //};
                         temp.ChangeStatus = CommodityInventoryChangeStatus.正常.ToString();
                         temp.EquipmentId = commodityCode.EquipmentId;
                         temp.GoodsLocationId = commodityCode.GoodsLocationId;
@@ -235,10 +235,10 @@ namespace CFLMedCab.Http.Bll
                 var temp = new CommodityInventoryChange()
                 {
                     CommodityCodeId = commodityCode.id,
-                    SourceBill = new SourceBill()
-                    {
-                        object_name = "ConsumingReturnOrder",
-                    },
+                    //SourceBill = new SourceBill()
+                    //{
+                    //    object_name = "ConsumingReturnOrder",
+                    //},
                     ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
                     operate_type = commodityCode.operate_type,
                     EquipmentId = commodityCode.EquipmentId,
@@ -313,11 +313,11 @@ namespace CFLMedCab.Http.Bll
 						var temp = new CommodityInventoryChange()
 						{
 							CommodityCodeId = commodityCode.id,
-							SourceBill = new SourceBill()
-							{
-								object_name = "ConsumingReturnOrder",
-							},
-							ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                            //SourceBill = new SourceBill()
+                            //{
+                            //    object_name = "ConsumingReturnOrder",
+                            //},
+                            ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
 							operate_type = commodityCode.operate_type,
 							EquipmentId = commodityCode.EquipmentId,
 							GoodsLocationId = commodityCode.GoodsLocationId,

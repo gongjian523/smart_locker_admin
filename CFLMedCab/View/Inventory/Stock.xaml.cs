@@ -306,7 +306,7 @@ namespace CFLMedCab.View
             if (listView1Data != null)
 			{
 
-                //listViewData = LocalGoodsChangeBll.GetCatalogueCommodity(listView1Data);
+                listViewData = LocalGoodsChangeBll.GetCatalogueCommodity(listView1Data);
             }
 			else
 			{

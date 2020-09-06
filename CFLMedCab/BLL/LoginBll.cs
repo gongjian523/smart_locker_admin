@@ -37,14 +37,18 @@ namespace CFLMedCab.BLL
         }
 
 
-        public void  UptadeLoingOutInfo(int id, string info)
+        public bool UptadeLoingOutInfo(int id, string info)
         {
             LoginRecord record = loginDal.GetLoginRecordById(id);
+
+            if(record == null)
+                return false; 
 
             record.logout_time = System.DateTime.Now;
             record.logout_info = info;
 
             loginDal.UpdateLoginRecode(record);
+            return true;
         }
 
 

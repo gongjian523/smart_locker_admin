@@ -217,13 +217,11 @@ namespace CFLMedCab.View.Common
 
             if (tbInputName.Text == "" || tbInputPsw.Password.ToString() == "")
             {
+                if (tbInputName.Text == "")
+                    warningString = "请输入用户名！";
+                else
+                    warningString = "请输入密码！";
 
-                //Dispatcher.BeginInvoke(new Action(() => {
-                    if (tbInputName.Text == "")
-                        warningString = "请输入用户名！";
-                    else
-                        warningString = "请输入密码！";
-                //}));
                 bi = null;
                 HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isSuccess);
                 return bdUserToken;
@@ -252,7 +250,6 @@ namespace CFLMedCab.View.Common
                 return bdUserToken;
             }
 
-
             //获得用户Token失败，首先获取图形验证的Toke
             LoadingDataEvent(this, true);
             var bdCaptchaToken = UserLoginBll.GetInstance().GetCaptchaImageToken();
@@ -260,12 +257,19 @@ namespace CFLMedCab.View.Common
             HttpHelper.GetInstance().ResultCheck(bdCaptchaToken, out bool isSuccess2);
             if (!isSuccess2)
             {
-                //Dispatcher.BeginInvoke(new Action(() => {
                 warningString = "获取验证码Token失败，请重试!";
-                //}));
                 bi = null;
-                bdUserToken.code = bdCaptchaToken.code;
-                bdUserToken.message = bdCaptchaToken.message;
+                if(bdCaptchaToken == null)
+                {
+                    bdUserToken.code = (int)ResultCode.Result_Exception;
+                    bdUserToken.message = "获取验证码Token的返回值为null";
+                }
+                else
+                {
+                    bdUserToken.code = bdCaptchaToken.code;
+                    bdUserToken.message = bdCaptchaToken.message;
+                }
+
                 return bdUserToken;
             }
 
@@ -283,14 +287,8 @@ namespace CFLMedCab.View.Common
             //BitmapImage bitmapImage = ImageUtils.BitmapToBitmapImage(bitmap);
             bi = ImageUtils.BitmapToBitmapImage(bitmap);
 
-            //Dispatcher.BeginInvoke(new Action(() => {
-            //lbInputAuth.Visibility = Visibility.Visible;
-            //tbInputAuth.Visibility = Visibility.Visible;
-            //imageAuth.Visibility = Visibility.Visible;
-
-            //imageAuth.Source = bitmapImage;
             warningString = "获取账号信息失败，请输入用户信息、密码和验证码，重新尝试!";
-            //}));
+
             bdUserToken.code = (int)ResultCode.Result_Exception;
             bdUserToken.message = ResultCode.Result_Exception.ToString();
             return bdUserToken;

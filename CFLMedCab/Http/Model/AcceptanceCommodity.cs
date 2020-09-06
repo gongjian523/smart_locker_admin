@@ -40,7 +40,7 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public int Number { get; set; }
+        //public int Number { get; set; }
 
 
 		/// <summary>

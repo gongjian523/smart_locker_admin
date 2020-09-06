@@ -103,11 +103,11 @@ namespace CFLMedCab.Http.Model
 		[Description("已完成")]
 		已完成 = 1,
 
-		/// <summary>
-		/// 进行中
-		/// </summary>
-		[Description("进行中")]
-		进行中 = 2,
+		///// <summary>
+		///// 进行中
+		///// </summary>
+		//[Description("进行中")]
+		//进行中 = 2,
 
 		/// <summary>
 		/// 异常
@@ -115,10 +115,10 @@ namespace CFLMedCab.Http.Model
 		[Description("异常")]
 		异常 = 3,
 
-		/// <summary>
-		/// 已撤销
-		/// </summary>
-		[Description("已撤销")]
-		已撤销 = 4,
+		///// <summary>
+		///// 已撤销
+		///// </summary>
+		//[Description("已撤销")]
+		//已撤销 = 4,
 	}
 }

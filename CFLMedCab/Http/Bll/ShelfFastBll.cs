@@ -29,7 +29,9 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2",
+                        //logical_relation = "1 AND 2",
+                        logical_relation = "1",
+
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -38,12 +40,12 @@ namespace CFLMedCab.Http.Bll
                                 @operator = "==",
                                 operands =  {$"'{ HttpUtility.UrlEncode(name) }'"}
                             },
-                            new QueryParam.Expressions
-                            {
-                                field = "Operator",
-                                @operator = "==",
-                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
-                            }
+                            //new QueryParam.Expressions
+                            //{
+                            //    field = "Operator",
+                            //    @operator = "==",
+                            //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
+                            //}
                         }
                     }
                 }
@@ -59,7 +61,7 @@ namespace CFLMedCab.Http.Bll
             else
             {
                 //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
-                if ("已完成".Equals(bdShelfTaskFast.body.objects[0].Status) || "已撤销".Equals(bdShelfTaskFast.body.objects[0].Status))
+                if (!"已完成".Equals(bdShelfTaskFast.body.objects[0].Status))
                 {
                     bdShelfTaskFast.code = (int)ResultCode.Result_Exception;
                     bdShelfTaskFast.message = ResultCode.Result_Exception.ToString();
@@ -174,7 +176,8 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2",
+                        //logical_relation = "1 AND 2",
+                        logical_relation = "1",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -183,12 +186,12 @@ namespace CFLMedCab.Http.Bll
                                 @operator = "==",
                                 operands =  {$"'{ HttpUtility.UrlEncode(name) }'"}
                             },
-                            new QueryParam.Expressions
-                            {
-                                field = "Operator",
-                                @operator = "==",
-                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
-                            }
+                            //new QueryParam.Expressions
+                            //{
+                            //    field = "Operator",
+                            //    @operator = "==",
+                            //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id) }'" }
+                            //}
                         }
                     }
                 }
@@ -204,7 +207,8 @@ namespace CFLMedCab.Http.Bll
             else
             {
                 //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
-                if ("已完成".Equals(bdShelfTaskFast.body.objects[0].Status) || "已撤销".Equals(bdShelfTaskFast.body.objects[0].Status))
+                //if ("已完成".Equals(bdShelfTaskFast.body.objects[0].Status) || "已撤销".Equals(bdShelfTaskFast.body.objects[0].Status))
+                if (!"已完成".Equals(bdShelfTaskFast.body.objects[0].Status))
                 {
                     bdShelfTaskFast.code = (int)ResultCode.Result_Exception;
                     bdShelfTaskFast.message = ResultCode.Result_Exception.ToString();
@@ -528,7 +532,7 @@ namespace CFLMedCab.Http.Bll
 				{
 					filter =
 					{
-						logical_relation = "1",
+						logical_relation = "1 AND 2",
 						expressions =
 						{
 							new QueryParam.Expressions
@@ -536,7 +540,13 @@ namespace CFLMedCab.Http.Bll
 								field = "ShelfTaskFastId",
 								@operator = "==",
 								operands =  {$"'{ HttpUtility.UrlEncode(shelfTaskFast.id) }'"}
-							}
+							},
+                            new QueryParam.Expressions
+                            {
+                                field = "Status",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode("待上架") }'" }
+                            },
                         }
 					}
 				}
@@ -684,7 +694,7 @@ namespace CFLMedCab.Http.Bll
                 }
                 else 
                 {
-                    int needShelfNum = bdShelfTaskFastDetail.body.objects.Where(item => item.Status == AllotShelfCommodityStatus.未上架.ToString()).Count();
+                    int needShelfNum = bdShelfTaskFastDetail.body.objects.Where(item => item.Status == ShelfTaskFastDetailStatusType.待上架.ToString()).Count();
                     int normalShelfNum = bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库 && item.AbnormalDisplay == AbnormalDisplay.正常.ToString()).Count();
                     
                     if(normalShelfNum >= needShelfNum)
@@ -695,7 +705,7 @@ namespace CFLMedCab.Http.Bll
                     }
                     else
                     {
-                        shelfTaskFast.Status = ShelfTaskFastStatusEnum.进行中.ToString();
+                        shelfTaskFast.Status = ShelfTaskFastStatusEnum.待上架.ToString();
                     }
                 }
             }

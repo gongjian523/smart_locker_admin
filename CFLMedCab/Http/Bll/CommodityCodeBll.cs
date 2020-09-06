@@ -401,7 +401,9 @@ namespace CFLMedCab.Http.Bll
                             it.CommodityName = "未知商品";
                         }
 
-						CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.name == it.name).First();
+                        it.CatalogueName = it.CommodityName;
+
+                        CommodityCode simpleCommodityCode = commodityCodes.Where(cit => cit.name == it.name).First();
 						it.operate_type = simpleCommodityCode.operate_type;
 						it.EquipmentId = simpleCommodityCode.EquipmentId;
 						it.EquipmentName = simpleCommodityCode.EquipmentName;
@@ -409,7 +411,7 @@ namespace CFLMedCab.Http.Bll
 						it.GoodsLocationName = simpleCommodityCode.GoodsLocationName;
 						it.StoreHouseId = simpleCommodityCode.StoreHouseId;
 						it.StoreHouseName = simpleCommodityCode.StoreHouseName;
-					});
+                    });
 				}
 			}
 			else

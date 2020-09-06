@@ -127,7 +127,6 @@ namespace CFLMedCab.Http.Model
         /// 计划拣货数
         /// </summary>
         [JsonIgnore]
-		[Obsolete]
         public int PlanPickNumber { get; set; }
 
 

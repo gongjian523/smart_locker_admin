@@ -109,8 +109,8 @@ namespace CFLMedCab.Http.Bll
 
                     pickTasks.ForEach(it =>
                     {
-                        //it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => (sit.Number-sit.PickNumber))).FirstOrDefault();
-                        it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => sit.Number)).FirstOrDefault();
+                        it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => (sit.Number-sit.PickNumber))).FirstOrDefault();
+                        //it.NeedPickTotalNumber = pickTaskCommodityDetails.Where(sit => sit.PickTaskId == it.id).GroupBy(sit => sit.PickTaskId).Select(group => group.Sum(sit => sit.Number)).FirstOrDefault();
                         if (it.NeedPickTotalNumber != 0)
                         {
                             taskList.Add(it);
@@ -155,7 +155,7 @@ namespace CFLMedCab.Http.Bll
                         filter =
                         {
                             //logical_relation = "1 AND 2 AND 3",
-                            logical_relation = "1 AND 2",
+                            logical_relation = "1",
                             expressions =
                             {
                                 //这种写法有问题，暂时把这个条件删除，在后面过滤
@@ -171,12 +171,12 @@ namespace CFLMedCab.Http.Bll
                                     @operator = "==",
                                     operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId()) }'" }
                                 },
-                                new QueryParam.Expressions
-                                {
-                                    field = "EquipmentId",
-                                    @operator = "==",
-                                    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
-                                }
+                                //new QueryParam.Expressions
+                                //{
+                                //    field = "EquipmentId",
+                                //    @operator = "==",
+                                //    operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetEquipId()) }'" }
+                                //}
                             }
                         }
                     }
@@ -254,8 +254,9 @@ namespace CFLMedCab.Http.Bll
 					{
 						it.CommodityName = GetNameById<Commodity>(it.CommodityId);
 					}
+                    it.PlanPickNumber = it.Number - it.PickNumber;
 
-				});
+                });
 			}
 
 			return baseDataPickTaskCommodityDetail;
@@ -333,7 +334,7 @@ namespace CFLMedCab.Http.Bll
                             {
                                 var pickTaskDetail = pickTaskDetails.Where(item => item.CommodityId == it.CommodityId).First();
 
-                                if (pickTaskDetail.Number >= ++pickTaskDetail.CountPickNumber)
+                                if ((pickTaskDetail.Number - pickTaskDetail.PickNumber) >= ++pickTaskDetail.CountPickNumber)
                                 {
                                     it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
                                 }
@@ -352,9 +353,9 @@ namespace CFLMedCab.Http.Bll
 
                 foreach (PickCommodity stcd in pickTaskDetails)
                 {
-                    stcd.CurPickNumber = bdcommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId && cit.operate_type == (int)OperateType.入库).Count();
+                    stcd.CurPickNumber = bdcommodityCode.body.objects.Where(cit => cit.CommodityId == stcd.CommodityId && cit.operate_type == (int)OperateType.出库).Count();
 
-                    if (stcd.Number < stcd.CurPickNumber)
+                    if ((stcd.Number - stcd.PickNumber) > stcd.CurPickNumber)
                     {
                         status.Add(DocumentStatus.进行中.ToString());
                     }
@@ -381,7 +382,7 @@ namespace CFLMedCab.Http.Bll
                     if (isSuccess2)
                     {
                         //只有所有商品都完成了拣货，不管在那个货架上，才能将这个任务单的状态改为“已完成”
-                        if (bdAllpc.body.objects.Where(it => it.Number == 0 && it.StoreHouseId != ApplicationState.GetHouseId()).Count() == 0)
+                        if (bdAllpc.body.objects.Where(it => (it.Number - it.PickNumber) == 0 && it.StoreHouseId != ApplicationState.GetHouseId()).Count() == 0)
                         {
                             pickTask.BillStatus = DocumentStatus.已完成.ToString();
                         }

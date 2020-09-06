@@ -714,9 +714,6 @@ namespace CFLMedCab.Http.Helper
 			var handleEventWait = new HandleEventWait();
 			BasePostData<T> ret = null;
 
-
-           
-
 			JsonSerializerSettings jsetting = new JsonSerializerSettings
 			{
 				NullValueHandling = NullValueHandling.Ignore
@@ -737,6 +734,11 @@ namespace CFLMedCab.Http.Helper
 			}).Go();
 
 			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+            if(ret.code != 0)
+            {
+                LogUtils.Debug("Post Err Code：" + ret.code + " \nDescription: " + ret.description + " \nMessage: " + ret.message);
+            }
 
 			return ret;
 
