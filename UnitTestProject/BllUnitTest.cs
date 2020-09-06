@@ -363,6 +363,35 @@ namespace UnitTestProject
 
         }
 
+
+        [TestMethod]
+        public void TestUserLogin2()
+        {
+            var bdUserToken = UserLoginBll.GetInstance().GetUserToken(new SignInParam()
+            {
+                phone = "+86 18665958237",
+                password = "cwang123456"
+            });
+
+            //获得用户Token后，返回true， 进入绑定指静脉或者用户名密码登录的下一步
+            HttpHelper.GetInstance().ResultCheck(bdUserToken, out bool isSuccess1);
+            if (isSuccess1)
+            {
+                return ;
+            }
+
+            //获得用户Token失败，首先获取图形验证的Toke
+            var bdCaptchaToken = UserLoginBll.GetInstance().GetCaptchaImageToken();
+            HttpHelper.GetInstance().ResultCheck(bdCaptchaToken, out bool isSuccess2);
+            if (!isSuccess2)
+            {
+                bdUserToken.code = bdCaptchaToken.code;
+                bdUserToken.message = bdCaptchaToken.message;
+                return ;
+            }
+
+        }
+
         [TestMethod]
         public void TestBase64()
         {
@@ -464,6 +493,72 @@ namespace UnitTestProject
 
         }
 
+        [TestMethod]
+        public void CreateShelfTaskFastMethod()
+        {
+            var shelfFastBillInst = ShelfFastBll.GetInstance();
 
+            var bdProcessTask = shelfFastBillInst.GetProcessTask("GPT#20200901-00010");
+
+            HttpHelper.GetInstance().ResultCheck(bdProcessTask, out bool isSuccess1);
+
+            if (!isSuccess1)
+                return;
+
+            SourceBill sourceBill = new SourceBill()
+            {
+                object_name = "ProcessTask",
+                object_id = bdProcessTask.body.objects[0].id,
+            };
+
+            var  bdProcessDoneCommodity = shelfFastBillInst.GetProcessDoneCommodity(bdProcessTask.body.objects[0]);
+            HttpHelper.GetInstance().ResultCheck(bdProcessDoneCommodity, out isSuccess1);
+            if (!isSuccess1)
+                return;
+
+            BasePostData<ShelfTaskFast> baseDataShelfTaskFastNew = shelfFastBillInst.CreateShelfTaskFask(new ShelfTaskFast
+            {
+                @Operator = "AQB2Zi3IdykBAAAAjYd6m-VwKhYjPwoA",
+                Status = "待上架",
+                SourceBill = sourceBill,
+            });
+            HttpHelper.GetInstance().ResultCheck(baseDataShelfTaskFastNew, out isSuccess1);
+            if (!isSuccess1)
+                return;
+
+            List<ShelfTaskFastDetail> shelfTaskFastDetails = new List<ShelfTaskFastDetail>();
+            foreach (var item in bdProcessDoneCommodity.body.objects)
+            {
+                shelfTaskFastDetails.Add(new ShelfTaskFastDetail
+                {
+                    CommodityCodeId = item.CommodityCodeId,
+                    CommodityId = item.CommodityId,
+                    Status = "待上架",
+                    ShelfTaskFastId = baseDataShelfTaskFastNew.body[0].id,
+                });
+            }
+
+            BasePostData<ShelfTaskFastDetail> basePostDataShelfTaskFastDetail = shelfFastBillInst.CreateShelfTaskFaskDetail(shelfTaskFastDetails);
+            HttpHelper.GetInstance().ResultCheck(basePostDataShelfTaskFastDetail, out isSuccess1);
+
+
+        }
+
+        [TestMethod]
+        public void CreateCommodityInventory()
+        {
+            List<CommodityInventoryChange> changes = new List<CommodityInventoryChange>();
+
+            changes.Add(new CommodityInventoryChange
+            {
+                CommodityCodeId = "AQCqGpNPSs4BAAAAcIdiYPNKMRahVwgA",
+                ChangeStatus = CommodityInventoryChangeStatus.正常.ToString(),
+                EquipmentId = "AQB2Zi3IdykBAAAAJrOudztwMRY9cgwA",
+                StoreHouseId = "AQCqGpNPSs4BAAAAjV2LZilzLhbwiAcA",
+                GoodsLocationId = "AQB2Zi3IdykBAAAAyskDvUBwMRY-cgwA"
+            });
+
+            CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changes);
+        }
     }
 }
