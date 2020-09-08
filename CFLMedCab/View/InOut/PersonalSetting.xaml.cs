@@ -44,7 +44,7 @@ namespace CFLMedCab.View.InOut
             LoginBll loginBll = new LoginBll();
             InOutRecordBll inOutRecordBll = new InOutRecordBll();
 
-            if (user.Role == "医院医护人员")
+            if (user.Role == "医护人员")
             {
                 loginList = loginBll.GetLoginRecordByUserName(user.name);
                 inOutList = inOutRecordBll.GetInOutRecordByName(user.name);

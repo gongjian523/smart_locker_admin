@@ -25,6 +25,7 @@
                         <ColumnDefinition/>
                         <ColumnDefinition/>
                         <ColumnDefinition/>
+                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"></RowDefinition>
@@ -34,10 +35,13 @@
                     <Label Content="一般领用" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource lblTitle2}"/>
 
                     <Label Grid.Row="0" Grid.Column="1"  Content="操作人" Style="{StaticResource lblTitle3}" />
-                    <Label Grid.Row="1" Grid.Column="1"  Content="Label" Name="operatorName"  Style="{StaticResource lblTitle4_0}"/>
+                    <Label Grid.Row="1" Grid.Column="1"  Name="operatorName"  Style="{StaticResource lblTitle4_0}"/>
 
-                    <Label Grid.Row="0" Grid.Column="2"  Content="操作日期"  Style="{StaticResource lblTitle3}"/>
-                    <Label Grid.Row="1" Grid.Column="2"  Content="Label" Name="time"  Style="{StaticResource lblTitle4_1}"/>
+                    <Label Grid.Row="0" Grid.Column="2"  Content="部门"  Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Row="1" Grid.Column="2"  Name="department"  Style="{StaticResource lblTitle4_1}"/>
+
+                    <Label Grid.Row="0" Grid.Column="3"  Content="操作日期"  Style="{StaticResource lblTitle3}"/>
+                    <Label Grid.Row="1" Grid.Column="3"  Name="time"  Style="{StaticResource lblTitle4_1}"/>
                 </Grid>
             </Border>
             <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="1">

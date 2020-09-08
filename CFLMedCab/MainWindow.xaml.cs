@@ -528,7 +528,6 @@ namespace CFLMedCab
 				// 进入首页
 				App.Current.Dispatcher.Invoke((Action)(() =>
 				{
-					//onReadyEnterHomePage(user);
                     onEnterHomePage(user);
                 }));
 			}
@@ -651,7 +650,6 @@ namespace CFLMedCab
                 // 进入首页
                 App.Current.Dispatcher.Invoke((Action)(() =>
                 {
-                    //onReadyEnterHomePage(user);
                     onEnterHomePage(user);
                 }));
             }
@@ -710,7 +708,7 @@ namespace CFLMedCab
 
         private void SetNavBtnVisiblity(string role)
         {
-            bool isMedicalStuff = (role != "医护人员") ? true : false;
+            bool isMedicalStuff = (role == "医护人员") ? true : false;
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             //NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -892,14 +890,6 @@ namespace CFLMedCab
 
         private void onEnterHomePage(User user)
         {
-            if(IsEnterHomePageDerectly(user))
-            {
-                EnterHomePage(user);
-            }
-        }
-
-        private void EnterHomePage(User user)
-        {
             LogUtils.Debug("EnterHomePage");
             LoginBkView.Visibility = Visibility.Hidden;
             PopFrame.Visibility = Visibility.Hidden;
@@ -908,76 +898,19 @@ namespace CFLMedCab
 
             //进入首页，将句柄设置成null，避免错误调用
             SetSubViewInfo(null, SubViewType.Home);
+            ApplicationState.SetUserInfo(user);
 
             var loginBll = new LoginBll();
             var loginId = loginBll.NewLogin();
             ApplicationState.SetLoginId(loginId);
 
             tbNameText.Text = user.name;
-            tbDepartText.Text = user.DepartmentInUse;
-        }
- 
-        private bool IsEnterHomePageDerectly(User user)
-        {
-            if (user.Role != "医护人员")
-            {
-                user.DepartmentInUse = "SPD管理员";
-                ApplicationState.SetUserInfo(user);
-                return true;
-            }
-            else if (user.DepartmentId == null || user.DepartmentId.Count == 0)
-            {
-                user.DepartmentInUse = "***";
-                ApplicationState.SetUserInfo(user);
-                return true;
-            }
-            else
+
+            if (user.Role == "医护人员" && (user.DepartmentId != null && user.DepartmentId.Count != 0))
             {
                 var bdDepartment = UserLoginBll.GetInstance().GetDepartmentByIds(user.DepartmentId);
-                HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
-
-                if (isSuccess && user.DepartmentId.Count == 1)
-                {
-                    user.DepartmentInUse = bdDepartment.body.objects[0].name;
-                    user.DepartmentIdInUse = user.DepartmentId[0];
-                    ApplicationState.SetUserInfo(user);
-                    return true;
-                }
-                else
-                {
-                    PopFrame.Visibility = Visibility.Visible;
-                    ApplicationState.SetUserInfo(user);
-
-                    DepartChooseBoard departChooseBoard = new DepartChooseBoard(bdDepartment);
-                    departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
-                    departChooseBoard.EnterHomePageEvent += new DepartChooseBoard.EnterHomePageHandler(onEnterHomePageFromDepartChooseBoard);
-
-                    PopFrame.Navigate(departChooseBoard);
-
-                    return false;
-                }
+                ApplicationState.SetDepartInfo(bdDepartment);
             }
-        }
-
-        private void onEnterHomePageFromDepartChooseBoard(object sender, Department e)
-        {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                User user = ApplicationState.GetUserInfo();
-                user.DepartmentInUse = e.name;
-                user.DepartmentIdInUse = e.id;
-                ApplicationState.SetUserInfo(user);
-
-                EnterHomePage(user);
-            }));
-        }
-
-        private void onExitDepartChooseBoard(object sender, string e)
-        {
-            App.Current.Dispatcher.Invoke((Action)(() =>
-            {
-                PopFrame.Visibility = Visibility.Hidden;
-            }));
         }
 
         private void onShowPopFrame(object content)
@@ -1017,6 +950,58 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onEnterGerFetch(object sender, RoutedEventArgs e)
         {
+            BaseData<Department> bdDepartment = ApplicationState.GetDepartInfo();
+            HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
+
+            
+            if ((sender as Control).Name != "NavBtnEnterGerFetch")
+            {
+                //不是从主页进来，从关门页面而来，直接进入开门页面不需要选择部门
+                EnterGerFetch(sender);
+            }
+            else if (isSuccess && bdDepartment.body.objects.Count == 1)
+            {
+                User user = ApplicationState.GetUserInfo();
+                user.DepartmentIdInUse = bdDepartment.body.objects[0].id;
+                user.DepartmentInUse = bdDepartment.body.objects[0].name;
+                EnterGerFetch(sender);
+            }
+            else
+            {
+                PopFrame.Visibility = Visibility.Visible;
+
+                DepartChooseBoard departChooseBoard = new DepartChooseBoard(bdDepartment, sender);
+                departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
+                departChooseBoard.EnterGerFetchOpenDoorViewEvent += new DepartChooseBoard.EnterGerFetchOpenDoorViewHandler(onEnterGerFetchOpenDoorView);
+
+                PopFrame.Navigate(departChooseBoard);
+            }
+        }
+
+        private void onEnterGerFetchOpenDoorView(object sender, Department e, object buttonSender)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+
+                User user = ApplicationState.GetUserInfo();
+                user.DepartmentIdInUse = e.id;
+                user.DepartmentInUse = e.name;
+                EnterGerFetch(buttonSender);
+            }));
+        }
+
+        private void onExitDepartChooseBoard(object sender, string e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+            }));
+        }
+
+
+        private void EnterGerFetch(object sender)
+        {
             HomePageView.Visibility = Visibility.Hidden;
             btnBackHP.Visibility = Visibility.Visible;
             NaviView.Visibility = Visibility.Hidden;
@@ -1037,13 +1022,14 @@ namespace CFLMedCab
             }
 
             List<Locations> locs = ApplicationState.GetLocations();
-            
+
             //只有一个货位，直接开门
             if (locs.Count == 1)
             {
                 onGerFectchOpenDoorEvent(this, locs[0].Code);
             }
         }
+
 
         /// <summary>
         /// 一般领用开门事件
@@ -2991,7 +2977,6 @@ namespace CFLMedCab
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                //onReadyEnterHomePage(e);
                 onEnterHomePage(e);
             }));
         }

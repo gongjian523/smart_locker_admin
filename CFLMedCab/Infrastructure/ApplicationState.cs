@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CFLMedCab.Http.Model.Base;
 
 namespace CFLMedCab.Infrastructure
 {
@@ -25,7 +26,8 @@ namespace CFLMedCab.Infrastructure
         AccessToken,
         RefreshToken,
         LoginId,
-        OpenDoorId
+        OpenDoorId,
+        DepartInfo,
     };
 
     public static class ApplicationState
@@ -476,6 +478,26 @@ namespace CFLMedCab.Infrastructure
         public static int GetOpenDoorId()
         {
             return GetValue<int>((int)ApplicationKey.OpenDoorId);
+        }
+
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        public static void SetDepartInfo(BaseData<Department> bdDepartment)
+        {
+            SetValue((int)ApplicationKey.DepartInfo, bdDepartment);
+            return;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns></returns>
+        public static BaseData<Department> GetDepartInfo()
+        {
+            return GetValue<BaseData<Department>>((int)ApplicationKey.DepartInfo);
         }
     }
 }

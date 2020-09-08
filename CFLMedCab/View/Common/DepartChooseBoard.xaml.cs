@@ -20,16 +20,19 @@ namespace CFLMedCab.View.Common
         public delegate void ExitDepartChooseBoardHandler(object sender, string e);
         public event ExitDepartChooseBoardHandler ExitDepartChooseBoardEvent;
 
-        public delegate void EnterHomePageHandler(object sender, Department e);
-        public event EnterHomePageHandler EnterHomePageEvent;
+        public delegate void EnterGerFetchOpenDoorViewHandler(object sender, Department e, object buttonSender);
+        public event EnterGerFetchOpenDoorViewHandler EnterGerFetchOpenDoorViewEvent;
 
         List<Button> buttons = new List<Button>();
 
         protected User user;
+        protected object ButtonSender;
 
-        public DepartChooseBoard(BaseData<Department> bdDepartment)
+        public DepartChooseBoard(BaseData<Department> bdDepartment, object sender)
         {
             InitializeComponent();
+
+            ButtonSender = sender;
 
             HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
             if (isSuccess)
@@ -49,7 +52,7 @@ namespace CFLMedCab.View.Common
                         Width = 180,
                     };
 
-                    button.Click += onExitDepartChooseBoard;
+                    button.Click += onEnterGerFetchOpenDoorView;
                     btnGrid.Children.Add(button);
 
                     buttons.Add(button);
@@ -153,18 +156,16 @@ namespace CFLMedCab.View.Common
                 warningView.Visibility = Visibility.Visible;
                 warningText.Text = "获取您的部门信息时发生错误,请联系工作人员！";
             }
-            
-
         }
 
-        private void onExitDepartChooseBoard(object sender, RoutedEventArgs e)
+        private void onEnterGerFetchOpenDoorView(object sender, RoutedEventArgs e)
         {
             Button btn = sender as Button;
-            EnterHomePageEvent(this, (Department)btn.Tag);
+            EnterGerFetchOpenDoorViewEvent(this, (Department)btn.Tag, ButtonSender); 
         }
 
 
-        private void onLogout(object sender, RoutedEventArgs e)
+        private void onExitDepartChooseBoard(object sender, RoutedEventArgs e)
         {
             Application.Current.Dispatcher.Invoke(() =>
             {

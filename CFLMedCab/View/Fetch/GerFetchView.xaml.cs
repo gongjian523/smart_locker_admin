@@ -61,6 +61,7 @@ namespace CFLMedCab.View.Fetch
             InitializeComponent();
             time.Content = DateTime.Now.ToString("yyyy年MM月dd日"); ;
             operatorName.Content = ApplicationState.GetUserInfo().name;
+            department.Content = ApplicationState.GetUserInfo().DepartmentInUse;
             after = afterEps;
 
             rfidComs.ForEach(com =>
