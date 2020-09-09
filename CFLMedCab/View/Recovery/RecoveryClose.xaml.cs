@@ -153,9 +153,6 @@ namespace CFLMedCab.View.Recovery
                 bExit = (((Button)sender).Name == "YesAndExitBtn" ? true : false);
                 EndOperation(bExit);
             }
-
-            Button btn = (Button)sender;
-            EndOperation(btn.Name == "YesAndExitBtn" ? true : false);
         }
 
         /// <summary>

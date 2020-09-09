@@ -43,7 +43,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2 AND",
+                        logical_relation = "1 AND 2 AND 3",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -174,7 +174,7 @@ namespace CFLMedCab.Http.Bll
                         }
 
                         //拼接RF码
-                        it.CommodityCodeName = it.name;
+                        it.CommodityCodeName = bdCommodityCode.body.objects[0].name;
 
                         //拼接商品名称
                         if (!string.IsNullOrEmpty(bdCommodityCode.body.objects[0].CommodityId))
@@ -248,7 +248,7 @@ namespace CFLMedCab.Http.Bll
                 }
                 else
                 {
-                    int needPickNum = bdCommodityRecoveryDetail.body.objects.Where(item => item.Status == AllotShelfCommodityStatus.未上架.ToString()).Count();
+                    int needPickNum = bdCommodityRecoveryDetail.body.objects.Where(item => item.Status == CommodityInventoryChangeStatus.待回收.ToString()).Count();
                     int normalPickNum = bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.出库 && item.AbnormalDisplay == AbnormalDisplay.正常.ToString()).Count();
 
                     if (normalPickNum >= needPickNum)

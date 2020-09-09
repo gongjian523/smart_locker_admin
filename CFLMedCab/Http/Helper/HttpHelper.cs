@@ -1069,7 +1069,12 @@ namespace CFLMedCab.Http.Helper
 
 			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
 
-			return ret;
+            if (ret.code != 0)
+            {
+                LogUtils.Debug("Put Err Code：" + ret.code + " \nDescription: " + ret.description + " \nMessage: " + ret.message);
+            }
+
+            return ret;
 
 		}
 

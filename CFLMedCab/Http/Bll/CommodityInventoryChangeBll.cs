@@ -384,9 +384,9 @@ namespace CFLMedCab.Http.Bll
                             object_name = "CommodityRecovery",
                             object_id = commodityRecovery.id
                         },
-                        ChangeStatus = CommodityInventoryChangeStatus.待回收.ToString(),
+                        ChangeStatus = CommodityInventoryChangeStatus.已回收.ToString(),
                         operate_type = commodityCode.operate_type,
-                        StoreHouseId = commodityRecovery.StoreHouse
+                        //StoreHouseId = commodityRecovery.StoreHouse
                     };
 
                     changes.Add(cic);
