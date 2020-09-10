@@ -89,6 +89,12 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string updated_by { get; set; }
+
+        /// <summary>
+        /// 回收数量
+        /// </summary>
+        [JsonIgnore]
+        public int RecoverNumber { get; set; }
     }
 
     /// <summary>

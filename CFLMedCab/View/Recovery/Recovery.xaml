@@ -7,11 +7,51 @@
              xmlns:k="clr-namespace:CFLMedCab.Controls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="commodityRecoveryView">
+            <Grid Margin="20 0">
+                <Border Style="{StaticResource CenterRadiusBorder}">
+                    <Grid  Name="data">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition  Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
+                            <Label Content="工单编号：" HorizontalAlignment="Left" Style="{StaticResource lblTitle7}"/>
+                            <Label  Content="{Binding name}"  Style="{StaticResource lblTitle7}"/>
+                        </StackPanel>
+                        <!--<StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" Margin="20 0"  Visibility="Hidden">
+                            <Label Content="货柜："  Style="{StaticResource lblTitle7}"/>
+                            <Label Content="{Binding GoodLocationName}" Style="{StaticResource lblTitle7}" HorizontalContentAlignment="Left"/>
+                        </StackPanel>-->
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">
+                            <Label Content="派发时间：" Style="{StaticResource lblTitle7}" />
+                            <TextBlock Text="{Binding created_at}" Style="{StaticResource tbTitle7}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="20 0" >
+                            <Label Content="回收数量：" Style="{StaticResource lblTitle7}" />
+                            <Label Content="{Binding RecoverNumber}"  Style="{StaticResource lblTitle7}" HorizontalContentAlignment="Left"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Right" Margin="0 10 0 0">
+                            <Button Style="{StaticResource CommonNoButtonT}" Content="查看详情" Name="Retract" Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetail"/>
+                            <Button Style="{StaticResource CommonYesButtonT}" Content="确认开柜" Name="Confirm"  Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetailOpen"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
     <Border Style="{StaticResource CommonBlueBorder}" >
         <Grid>
             <Border Background="White" Padding="30 40"  Grid.Row="0" CornerRadius="{DynamicResource GRadius}">
                 <Grid x:Name="GridView">
                     <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
@@ -23,6 +63,9 @@
                     <StackPanel  Grid.Row="2" HorizontalAlignment="Right" Orientation="Horizontal">
                         <Button Style="{StaticResource CommonYesButton}" Content="查询"  Width="200" Click="EnterDetail_Click"/>
                     </StackPanel>
+                    <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20">
+                        <ItemsControl ItemTemplate="{StaticResource commodityRecoveryView}" ItemsSource="{Binding CommodityRecoveryList, UpdateSourceTrigger=PropertyChanged}"/>
+                    </ScrollViewer>
                 </Grid>
             </Border>
         </Grid>

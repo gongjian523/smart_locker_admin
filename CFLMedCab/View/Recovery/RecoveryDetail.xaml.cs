@@ -75,7 +75,7 @@ namespace CFLMedCab.View.Recovery
                 HttpHelper.GetInstance().ResultCheck(bdCommodityRecoveryDetail, out bool isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("获取拣货单商品明细错误！", "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("此回收任务单中没有商品在此设备中或者获取商品详情时发生错误！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 

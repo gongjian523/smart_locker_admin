@@ -2369,7 +2369,7 @@ namespace CFLMedCab
 
             Recovery recovery = new Recovery();
             recovery.EnterRecoveryDetailEvent += new Recovery.EnterRecoveryDetailHandler(onEnterRecoveryDetail);
-            //recovery.EnterRecoveryDetailOpenEvent += new Recovery.EnterRecoveryDetailOpenHandler(onEnterRecoveryDetailOpen);
+            recovery.EnterRecoveryDetailOpenEvent += new Recovery.EnterRecoveryDetailOpenHandler(onEnterRecoveryDetailOpen);
             recovery.LoadingDataEvent += new Recovery.LoadingDataHandler(onLoadingData);
 
             ContentFrame.Navigate(recovery);

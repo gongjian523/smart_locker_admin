@@ -4,6 +4,10 @@ using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,8 +22,8 @@ namespace CFLMedCab.View.Recovery
         public delegate void EnterRecoveryDetailHandler(object sender, CommodityRecovery e);
         public event EnterRecoveryDetailHandler EnterRecoveryDetailEvent;
 
-        //public delegate void EnterRecoveryDetailOpenHandler(object sender, CommodityRecovery e);
-        //public event EnterRecoveryDetailOpenHandler EnterRecoveryDetailOpenEvent;
+        public delegate void EnterRecoveryDetailOpenHandler(object sender, CommodityRecovery e);
+        public event EnterRecoveryDetailOpenHandler EnterRecoveryDetailOpenEvent;
 
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
@@ -28,10 +32,58 @@ namespace CFLMedCab.View.Recovery
         public Recovery()
         {
             InitializeComponent();
+            DataContext = this;
 
-            tbInputCode.Focus();
+            Timer iniTimer = new Timer(100);
+            iniTimer.AutoReset = false;
+            iniTimer.Enabled = true;
+            iniTimer.Elapsed += new ElapsedEventHandler(onInitData);
         }
-    
+
+        /// <summary>
+        /// 数据加载
+        /// </summary>
+        private void onInitData(object sender, ElapsedEventArgs e)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                CommodityRecoveryList.Clear();
+
+                LoadingDataEvent(this, true);
+                BaseData<CommodityRecovery> bdCommodityRecovery = CommodityRecoveryBll.GetInstance().GetCommodityRecovery();
+                LoadingDataEvent(this, false);
+
+                HttpHelper.GetInstance().ResultCheck(bdCommodityRecovery, out bool isSuccess);
+                if (!isSuccess)
+                {
+                    return;
+                }
+
+                List<CommodityRecovery> tasks = bdCommodityRecovery.body.objects;
+                tasks.ForEach(task =>
+                {
+                    DateTime dt = Convert.ToDateTime(task.created_at);
+                    task.created_at = dt.ToString("yyyy年MM月dd日");
+                    CommodityRecoveryList.Add(task);
+                });
+
+                tbInputCode.Focus();
+            }));
+        }
+
+        private ObservableCollection<CommodityRecovery> _commodityRecoveryView = new ObservableCollection<CommodityRecovery>();
+        public ObservableCollection<CommodityRecovery> CommodityRecoveryList
+        {
+            get
+            {
+                return _commodityRecoveryView;
+            }
+            set
+            {
+                _commodityRecoveryView = value;
+            }
+        }
+
         /// <summary>
         /// 查看详情
         /// </summary>
@@ -96,6 +148,29 @@ namespace CFLMedCab.View.Recovery
             {
                 EnterDetail_Click(this, null);
             }
+        }
+
+
+        /// <summary>
+        /// 查看详情
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterDetail(object sender, RoutedEventArgs e)
+        {
+            CommodityRecovery commodityRecovery = (CommodityRecovery)((Button)sender).Tag;
+            EnterRecoveryDetailEvent(this, commodityRecovery);
+        }
+
+        /// <summary>
+        /// 确认开柜
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterDetailOpen(object sender, RoutedEventArgs e)
+        {
+            CommodityRecovery commodityRecovery = (CommodityRecovery)((Button)sender).Tag;
+            EnterRecoveryDetailOpenEvent(this, commodityRecovery);
         }
     }
 }

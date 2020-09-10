@@ -89,6 +89,69 @@ namespace CFLMedCab.Http.Bll
             return recovery;
         }
 
+
+        /// <summary>
+        /// 查询属于这个设备的所有回收任务单
+        /// </summary>
+        public BaseData<CommodityRecovery> GetCommodityRecovery()
+        {
+            //获取待完成上架工单
+            BaseData<CommodityRecovery> bdCommodityRecovery = HttpHelper.GetInstance().Get<CommodityRecovery>(new QueryParam
+            {
+                view_filter =
+                {
+                    filter =
+                    {
+                        logical_relation = "1 AND 2",
+                        expressions =
+                        {
+                            new QueryParam.Expressions
+                            {
+                                field = "Operator",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetUserInfo().id)}'"}
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "StoreHouse",
+                                @operator = "==",
+                                operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetHouseId())}'"}
+                            },
+                        }
+                    }
+                }
+            });
+
+
+            BaseData<CommodityRecoveryDetail> bDCommodityRecoveryDetail = GetCommodityRecoveryDetail(bdCommodityRecovery);
+
+            //校验是否含有数据
+            HttpHelper.GetInstance().ResultCheck(bDCommodityRecoveryDetail, out bool isSuccess);
+
+            if (isSuccess)
+            {
+                List<CommodityRecovery> taskList = new List<CommodityRecovery>();
+
+                var commodityRecoveries = bdCommodityRecovery.body.objects.Where(item => item.Status != "已完成" && item.Status != "已撤销").ToList();
+
+                commodityRecoveries.ForEach(it =>
+                {
+                    it.RecoverNumber = bDCommodityRecoveryDetail.body.objects.Where(crdit => crdit.CommodityRecoveryId == it.id && crdit.Status == "待回收" 
+                        && crdit.EquipmentId == ApplicationState.GetValue<string>((int)ApplicationKey.EquipId)).Count();
+                    if (it.RecoverNumber != 0)
+                    {
+                        taskList.Add(it);
+                    }
+                });
+
+                bdCommodityRecovery.body.objects = taskList;
+            }
+
+            return bdCommodityRecovery;
+        }
+
+
+
         /// <summary>
         /// 根据拣货单号获取商品详情（属于这个）
         /// </summary>
@@ -102,7 +165,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     filter =
                     {
-                        logical_relation = "1 AND 2 AND 3",
+                        logical_relation = "1 AND 2 AND 3 AND 4",
                         expressions =
                         {
                             new QueryParam.Expressions
@@ -122,11 +185,16 @@ namespace CFLMedCab.Http.Bll
                                 field = "StoreHouseId",
                                 @operator = "==",
                                 operands = {$"'{ HttpUtility.UrlEncode(ApplicationState.GetValue<string>((int)ApplicationKey.HouseId)) }'" }
-                            }
+                            },
+                            new QueryParam.Expressions
+                            {
+                                field = "Status",
+                                @operator = "==",
+                                operands = {$"'{"待回收" }'" }
+                            },
                         }
                     }
                 }
-
             });
 
             //校验是否含有数据，如果含有数据，拼接具体字段
@@ -190,6 +258,31 @@ namespace CFLMedCab.Http.Bll
 
         }
 
+        /// <summary>
+        /// 根据回收任务单号获取商品详情
+        /// </summary>
+        /// <param name="shelfTaskName"></param>
+        /// <returns></returns>
+        public BaseData<CommodityRecoveryDetail> GetCommodityRecoveryDetail(BaseData<CommodityRecovery> bdCommodityRecovery)
+        {
+            var commodityRecoveryIds = bdCommodityRecovery.body.objects.Select(it => it.id).ToList();
+
+            //校验是否含有数据，如果含有数据，拼接具体字段
+            BaseData<CommodityRecoveryDetail> bdCommodityRecoveryDetail = HttpHelper.GetInstance().ResultCheck((HttpHelper hh) => {
+
+                return hh.Get<CommodityRecoveryDetail>(new QueryParam
+                {
+                    @in =
+                    {
+                        field = "CommodityRecoveryId",
+                        in_list = BllHelper.ParamUrlEncode(commodityRecoveryIds)
+                    }
+                });
+
+            }, bdCommodityRecovery);
+
+            return bdCommodityRecoveryDetail;
+        }
 
 
         /// <summary>
@@ -292,11 +385,11 @@ namespace CFLMedCab.Http.Bll
             }
             else if(commodityRecovery.Status == CommodityRecoveryStatusEnum.已完成.ToString())
             {
-                if(IsCommodityRecoveryCompleteInOtherLocation(commodityRecovery))
-                {
-                    task.FinishDate = GetDateTimeNow();
-                }
-                else
+                //if(IsCommodityRecoveryCompleteInOtherLocation(commodityRecovery))
+                //{
+                //    task.FinishDate = GetDateTimeNow();
+                //}
+                //else
                 {
                     task.Status = CommodityRecoveryStatusEnum.进行中.ToString();
                 }
