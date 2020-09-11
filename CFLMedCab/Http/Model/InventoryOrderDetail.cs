@@ -1,80 +1,60 @@
 ﻿using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Http.Model.Common;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace CFLMedCab.Http.Model
 {
     /// <summary>
-    /// 
+    /// 盘点商品明细资料
     /// </summary>
-    public class CommodityInventory : BaseModel
+    [JsonObject(MemberSerialization.OptOut)]
+    public class InventoryOrderDetail : BaseModel
     {
         /// <summary>
         /// 
         /// </summary>
-        public string CommodityCode { get; set; }
-
+        public string Commodity { get; set; }
         /// <summary>
-        /// 
+        /// 商品码
         /// </summary>
         public string CommodityCodeId { get; set; }
         /// <summary>
-        /// 商品名称编号
+        /// 商品名称
         /// </summary>
-        public string CommodityId { get; set; }
+        [JsonIgnore]
+        public string CommodityCodeName { get; set; }
         /// <summary>
-        /// 
+        /// 商品编码
         /// </summary>
-        public string DepartmentId { get; set; }
+        public string CommodityInventoryId { get; set; }
         /// <summary>
-        /// 
+        /// 盘点关联单
         /// </summary>
-        public string EquipmentId { get; set; }
-        
-        public DateTime ExpirationDate { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string GoodsLocationId { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string GroupId { get; set; }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string ManufactorName { get; set; }
+        public string InventoryOrderId { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public string Model { get; set; }
         /// <summary>
-        /// 质量状态
+        /// 
         /// </summary>
-        public string QualityStatus { get; set; }
-
+        public string OperateMark { get; set; }
         /// <summary>
-        /// 未领用
+        /// 
         /// </summary>
         public string Spec { get; set; }
-
         /// <summary>
-        /// 未领用
+        /// 质量状态：正常 损坏
         /// </summary>
         public string Status { get; set; }
         /// <summary>
-        /// 所在库房编号
+        /// 类型：账面存在 盘点缺失 盘点新增
         /// </summary>
-        public string StoreHouseId { get; set; }
-
+        public string Type { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public object auto_id { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -83,7 +63,10 @@ namespace CFLMedCab.Http.Model
         /// 
         /// </summary>
         public string created_by { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        public object is_deleted { get; set; }
         /// <summary>
         /// 
         /// </summary>
@@ -103,21 +86,11 @@ namespace CFLMedCab.Http.Model
         /// <summary>
         /// 
         /// </summary>
-        public object unusedAmount { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
         public string updated_at { get; set; }
         /// <summary>
         /// 
         /// </summary>
         public string updated_by { get; set; }
-        /// <summary>
-        /// 
-        /// </summary>
-        public object usedAmount { get; set; }
     }
-
-
 
 }

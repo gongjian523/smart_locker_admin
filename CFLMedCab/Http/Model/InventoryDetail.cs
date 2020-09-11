@@ -2,11 +2,7 @@
 using CFLMedCab.Http.Model.Common;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CFLMedCab.Http.Model
 {
@@ -14,6 +10,7 @@ namespace CFLMedCab.Http.Model
     /// 盘点商品明细资料
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
+    [Obsolete]
     public class InventoryDetail : BaseModel
     {
         /// <summary>

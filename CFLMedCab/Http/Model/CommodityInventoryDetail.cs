@@ -10,8 +10,9 @@ using System.Threading.Tasks;
 namespace CFLMedCab.Http.Model
 {
     /// <summary>
-    /// 商品库存管理理资料表
+    /// 
     /// </summary>
+    [Obsolete]
     public class CommodityInventoryDetail :BaseModel
     {
         /// <summary>

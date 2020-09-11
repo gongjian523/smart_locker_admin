@@ -225,15 +225,15 @@ namespace CFLMedCab.View.Inventory
         private void onSubmit(object sender, RoutedEventArgs e)
         {
             LoadingDataEvent(this, true);
-            BasePostData<InventoryDetail> bdInventoryDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrders);
+            BasePostData<InventoryOrderDetail> bdInventoryOrderDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrders);
             LoadingDataEvent(this, false);
 
             //校验是否含有数据
-            HttpHelper.GetInstance().ResultCheck(bdInventoryDetail, out bool isSuccess1);
+            HttpHelper.GetInstance().ResultCheck(bdInventoryOrderDetail, out bool isSuccess1);
 
             if (!isSuccess1)
             {
-                MessageBox.Show("创建盘点任务明细失败!" + bdInventoryDetail.message, "温馨提示", MessageBoxButton.OK);
+                MessageBox.Show("创建盘点任务明细失败!" + bdInventoryOrderDetail.message, "温馨提示", MessageBoxButton.OK);
                 return;
             }
 
