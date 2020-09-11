@@ -225,7 +225,7 @@ namespace CFLMedCab.View.Inventory
         private void onSubmit(object sender, RoutedEventArgs e)
         {
             LoadingDataEvent(this, true);
-            BasePostData<InventoryOrderDetail> bdInventoryOrderDetail = InventoryTaskBll.GetInstance().CreateInventoryDetail(list, inventoryOrders);
+            BasePostData<InventoryOrderDetail> bdInventoryOrderDetail = InventoryTaskBll.GetInstance().CreateInventoryOrderDetail(list, inventoryOrders);
             LoadingDataEvent(this, false);
 
             //校验是否含有数据
