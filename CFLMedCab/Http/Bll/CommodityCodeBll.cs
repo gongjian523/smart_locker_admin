@@ -800,7 +800,6 @@ namespace CFLMedCab.Http.Bll
 		}
 
 
-
 		public BaseData<CommodityCode> GetQualityStatus(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
         {
             isSuccess = false;

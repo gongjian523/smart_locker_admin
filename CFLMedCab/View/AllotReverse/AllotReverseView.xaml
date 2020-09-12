@@ -1,0 +1,64 @@
+﻿<UserControl x:Class="CFLMedCab.View.AllotReverseView.AllotReverseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <DataTemplate x:Key="allotShelfView">
+            <Grid Margin="20 0">
+                <Border Style="{StaticResource CenterRadiusBorder}">
+                    <Grid  Name="data">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition  Width="4*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+                        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" >
+                            <Label Content="工单编号：" HorizontalAlignment="Left" Style="{StaticResource lblTitle7}"/>
+                            <Label  Content="{Binding name}"  Style="{StaticResource lblTitle7}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="0" VerticalAlignment="Center">
+                            <Label Content="派发时间：" Style="{StaticResource lblTitle7}" />
+                            <TextBlock Text="{Binding created_at}" Style="{StaticResource tbTitle7}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="20 0" >
+                            <Label Content="拣货数量：" Style="{StaticResource lblTitle7}" />
+                            <Label Content="{Binding PickNumber}"  Style="{StaticResource lblTitle7}" HorizontalContentAlignment="Left"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" Grid.RowSpan="2" Grid.Row="0" Grid.Column="2"  HorizontalAlignment="Right" Margin="0 10 0 0">
+                            <Button Style="{StaticResource CommonNoButtonT}" Content="查看详情" Name="Retract" Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetail"/>
+                            <Button Style="{StaticResource CommonYesButtonT}" Content="确认开柜" Name="Confirm"  Margin="40 0" Tag="{Binding}" HorizontalAlignment="Left"  Click="onEnterDetailOpen"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+    <Border Style="{StaticResource CommonBlueBorder}" >
+        <Grid  x:Name="myGrid" Background="{StaticResource ContentBkBrush}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Label  x:Name="titleLb" Content="请输入反向调拨单号或扫描二维码"   Margin="20,0,20,0"  Style="{StaticResource lblTitle1}"/>
+                <Button Style="{StaticResource CommonYesButton}"  Content="查询"  HorizontalAlignment="Right"   Margin="0,0,20,5" Click="EnterDetail_Click"/>
+            </Grid>
+            <TextBox x:Name="tbInputNumbers" Grid.Row="1"  Height="48" Margin="20,5,20,0"  TextWrapping="Wrap" FontSize="22"
+                            VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Left" 
+                            Width="{Binding Path=ActualWidth,ElementName=myGrid}" PreviewKeyDown="SearchBox_OnKeyDown" />
+            <Label Content="待完成反向调拨单"  Grid.Row="2" HorizontalAlignment="Left"   Margin="20,10,0,0" VerticalAlignment="Center" Style="{StaticResource lblTitle1}" />
+            <ScrollViewer Grid.Row="3" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="0,0,0,20">
+                <ItemsControl ItemTemplate="{StaticResource allotShelfView}" ItemsSource="{Binding AllotShelfList, UpdateSourceTrigger=PropertyChanged}"/>
+            </ScrollViewer>
+        </Grid>
+    </Border>
+</UserControl>

@@ -44,12 +44,5 @@ namespace CFLMedCab.Model
 		/// </summary>
 		public string user_name { get; set; }
 
-
-		/// <summary>
-		/// 部门
-		/// </summary>
-		[SugarColumn(IsNullable = true)]
-		public string department { get; set; }
-
 	}
 }

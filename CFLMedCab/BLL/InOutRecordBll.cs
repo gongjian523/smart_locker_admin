@@ -30,7 +30,6 @@ namespace CFLMedCab.BLL
                 open_time = DateTime.Now,
                 user_name = ApplicationState.GetUserInfo().name,
                 operate = business,
-                department = ApplicationState.GetUserInfo().DepartmentInUse == null ? "" : ApplicationState.GetUserInfo().DepartmentInUse,
             });
 
             return id;
@@ -44,7 +43,6 @@ namespace CFLMedCab.BLL
                 open_time = DateTime.Now,
                 user_name = "Nathan",
                 operate = "test",
-                department = "test"
             }) ;
 
             return id;

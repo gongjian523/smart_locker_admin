@@ -74,6 +74,11 @@ namespace CFLMedCab.Model.Enum
         ReturnGoodsClose,
 
         /// <summary>
+        /// 反向调拨的关门页
+        /// </summary>
+        AllotReverseClose,
+
+        /// <summary>
         /// 开门页
         /// </summary>
         DoorOpen,

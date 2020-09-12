@@ -94,11 +94,8 @@ namespace CFLMedCab.View.Inventory
         {
             SetPopInventoryEvent(this, true);
 
-#if TESTENV
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
-#else
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
-#endif
+
             if (hs.Count > 0)
             {
                 BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCode(hs);
@@ -157,23 +154,6 @@ namespace CFLMedCab.View.Inventory
             }
 
             List<CommodityCode> adds = new List<CommodityCode>();
-#if TESTENV
-            CommodityEps commodityEps = new CommodityEps
-            {
-                CommodityCodeId = "AQACQqweBhEBAAAAVF0JmCFcsxUkKAIA",
-                CommodityCodeName = "QR00000035",
-                CommodityName = "止血包",
-                EquipmentId = "AQACQqweDg8BAAAAFUD8WDEPsxV_FwQA",
-                EquipmentName = "E00000008",
-                GoodsLocationId = "AQACQqweJ4wBAAAAjYv6XmUPsxWWowMA",
-                GoodsLocationName = "L00000013"
-            };
-
-            HashSet<CommodityEps> addHs = new HashSet<CommodityEps>();
-            addHs.Add(commodityEps);
-
-            adds = CommodityCodeBll.GetInstance().GetCommodityCode(addHs).body.objects.ToList();
-#else
 
             LoadingDataEvent(this, true);
             BaseData<CommodityCode> bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeByName(inputStr.ToUpper());
@@ -198,7 +178,6 @@ namespace CFLMedCab.View.Inventory
             bdCommodityCode.body.objects[0].GoodsLocationName = ((Locations)locCb.SelectedItem).Code;
 
             adds.Add(bdCommodityCode.body.objects[0]);
-#endif
 
             if (list.Where(item => item.name == adds[0].name).Count() > 0)
             {

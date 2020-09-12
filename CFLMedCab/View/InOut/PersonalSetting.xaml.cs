@@ -39,7 +39,7 @@ namespace CFLMedCab.View.InOut
 
             lbName.Content = user.name;
             lbPhone.Content = user.MobilePhone.Substring(4);
-            lbDepartment.Content = user.DepartmentInUse;
+            lbDepartment.Content = "";
 
             LoginBll loginBll = new LoginBll();
             InOutRecordBll inOutRecordBll = new InOutRecordBll();

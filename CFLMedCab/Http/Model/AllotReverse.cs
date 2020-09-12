@@ -13,17 +13,23 @@ namespace CFLMedCab.Http.Model
     /// 调拨上架任务
     /// </summary>
     [JsonObject(MemberSerialization.OptOut)]
-    public class AllotShelf : BaseModel
+    public class AllotReverse : BaseModel
     {
         /// <summary>
-        /// 异常原因（‘商品缺失', ‘商品损坏', ‘商品遗失',‘其他’）
+        /// 
         /// </summary>
-        public string AbnormalCauses;
+        public string ApprovalStatus;
 
         /// <summary>
-        /// 异常描述
+        /// 
         /// </summary>
-        public string AbnormalDescribe;
+        public string GroupId;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string InStoreHouseId;
+
 
         /// <summary>
         /// 操作人
@@ -31,14 +37,25 @@ namespace CFLMedCab.Http.Model
         public string Operator;
 
         /// <summary>
-        /// 完成时间
+        /// 
         /// </summary>
-        public string FinishDate;
+        public string OutDepartment;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string OutStoreHouseId;
+
 
         /// <summary>
         /// 单据状态（待上架，已完成，异常，进行中）
         /// </summary>
         public string Status;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public object auto_id;
 
         /// <summary>
         /// 
@@ -53,7 +70,7 @@ namespace CFLMedCab.Http.Model
         ///// <summary>
         ///// 
         ///// </summary>
-        //public int is_deleted { get; set; }
+        public object is_deleted { get; set; }
 
         /// <summary>
         /// 
@@ -89,7 +106,7 @@ namespace CFLMedCab.Http.Model
         /// 该任务单总数
         /// </summary>
         [JsonIgnore]
-        public int ShelfNumber { get; set; }
+        public int PickNumber { get; set; }
 
         /// <summary>
         /// 货柜号
@@ -101,19 +118,26 @@ namespace CFLMedCab.Http.Model
     /// <summary>
     /// 调拨上架任务资料
     /// </summary>
-    public enum AllotShelfStatusEnum
+    public enum AllotReverseStatus
     {
         /// <summary>
-        /// 待上架
+        /// 仓库处理中
         /// </summary>
-        [Description("待上架")]
-        待上架 = 0,
+        [Description("仓库处理中")]
+        仓库处理中 = 0,
+
+
+        /// <summary>
+        /// 配送中
+        /// </summary>
+        [Description("配送中")]
+        配送中 = 1,
 
         /// <summary>
         /// 已完成
         /// </summary>
         [Description("已完成")]
-        已完成 = 1,
+        已完成 = 2,
 
         /// <summary>
         /// 异常
@@ -126,6 +150,6 @@ namespace CFLMedCab.Http.Model
         /// 进行中
         /// </summary>
         [Description("进行中")]
-        进行中 = 4
+        进行中 = 4,
     }
 }

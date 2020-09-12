@@ -1,36 +1,18 @@
 ﻿using CFLMedCab.BLL;
-using CFLMedCab.DAL;
-using CFLMedCab.DTO.Goodss;
-using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.ExceptionApi;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
-using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Infrastructure;
-using CFLMedCab.Infrastructure.DeviceHelper;
-using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Model;
-using CFLMedCab.Model.Constant;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CFLMedCab.View.Fetch
 {
@@ -45,6 +27,9 @@ namespace CFLMedCab.View.Fetch
 
         public delegate void EnterReturnFetchHandler(object sender, RoutedEventArgs e);
         public event EnterReturnFetchHandler EnterReturnFetchEvent;
+
+        public delegate void ShowDepartChooseBoardHandler(object sender, RoutedEventArgs e);
+        public event ShowDepartChooseBoardHandler ShowDepartChooseBoardEvent;
 
         //显示加载数据的进度条
         public delegate void LoadingDataHandler(object sender, bool e);
@@ -119,7 +104,8 @@ namespace CFLMedCab.View.Fetch
 
                 listView.DataContext = bdCommodityCode.body.objects;
                 returnNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
-                fetchNum.Content = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+                int outNum = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).Count();
+                fetchNum.Content = outNum;
                 int expiredCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count();
 
                 expiredNum.Content = expiredCnt;
@@ -129,16 +115,55 @@ namespace CFLMedCab.View.Fetch
                     it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                 });
 
-                //领用产品上包含过期商品不让用户主动提交
-                if (expiredCnt == 0)
+                var department = ApplicationState.GetDepartInfo();
+                //存在领用商品时，无法获取科室信息时，也不让用户提交
+                if (outNum > 0 && department.body.objects.Count == 0)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalInfoLbl.Content = "无法获取您的科室信息！";
+
+                    //用于强制提交
+                    ApplicationState.SetFetchDepartment(new FetchDepartment() {
+                        Id = "",
+                        Name = "",
+                    });
+                }
+                //领用产品上包含过期商品不让用户主动提交
+                else if (expiredCnt > 0)
+                {
+
+                    //用于强制提交
+                    ApplicationState.SetFetchDepartment(new FetchDepartment()
+                    {
+                        Id = "",
+                        Name = "",
+                    });
+                    normalBtmView.Visibility = Visibility.Visible;
+                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalInfoLbl.Content = "请将过期商品取出！";
                 }
                 else
                 {
                     normalBtmView.Visibility = Visibility.Collapsed;
                     abnormalBtmView.Visibility = Visibility.Visible;
+
+                    //存在领用商品时
+                    if (outNum > 0)
+                    {
+                        if (department.body.objects.Count == 1)
+                        {
+                            ApplicationState.SetFetchDepartment(new FetchDepartment()
+                            {
+                                Id = department.body.objects[0].id,
+                                Name = department.body.objects[0].name,
+                            });
+                        }
+                        else
+                        {
+                            ShowDepartChooseBoardEvent(this, null);
+                        }
+                    }
                 }
             }));
         }

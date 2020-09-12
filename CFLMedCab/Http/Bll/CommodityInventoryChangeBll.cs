@@ -201,7 +201,7 @@ namespace CFLMedCab.Http.Bll
                     //Status = ConsumingOrderStatus.领用中.ToString(),
                     //StoreHouseId = ApplicationState.GetValue<String>((int)ApplicationKey.HouseId),
                     Type = ConsumingOrderType.一般领用.ToString(),
-                    DepartmentId = ApplicationState.GetUserInfo().DepartmentIdInUse,
+                    DepartmentId = ApplicationState.GetFetchDepartment() == null ? "" : ApplicationState.GetFetchDepartment().Id,
                 });;
 
 				ExStepHandle.ExApiSendQueueReturnCreateOrderHandle(consumingOrder, baseDataCommodityCode);
@@ -299,10 +299,8 @@ namespace CFLMedCab.Http.Bll
             //创建商品库存变更记录资料【入库::上架】
             var inList = baseDataCommodityCode.body.objects.Where(it => it.operate_type == 1).ToList();
 
-
 			if (null != inList || inList.Count > 0)
             {
-
 				//已消耗走【入库::回退】
 				var consumedInList = inList.Where(it => it.InventoryStatus == CommodityInventoryChangeStatus.已消耗.ToString()).ToList();
 				if (null != consumedInList && consumedInList.Count > 0)

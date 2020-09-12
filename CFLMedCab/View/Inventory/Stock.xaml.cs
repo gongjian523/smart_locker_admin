@@ -291,11 +291,8 @@ namespace CFLMedCab.View
         {
             SetPopInventoryEvent(this, true);
 
-#if TESTENV
-            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJsonInventory(out bool isGetSuccess);
-#else
             HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, ApplicationState.GetAllRfidCom());
-#endif
+
             ApplicationState.SetGoodsInfo(hs);
 			
             listViewData.Clear();

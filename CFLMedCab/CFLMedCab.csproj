@@ -188,6 +188,7 @@
     <Compile Include="Controls\TouchScreenKeyboard.cs" />
     <Compile Include="DAL\InOutRecordeDal.cs" />
     <Compile Include="DAL\LoginDal.cs" />
+    <Compile Include="Http\Bll\AllotReverseBll.cs" />
     <Compile Include="Http\Bll\AllotShelfBll.cs" />
     <Compile Include="Http\Bll\BaseBll.cs" />
     <Compile Include="Http\Bll\CommodityCodeBll.cs" />
@@ -252,6 +253,9 @@
     <Compile Include="Http\ExceptionApi\ExStepHandle.cs" />
     <Compile Include="Http\Model\AcceptanceCommodity.cs" />
     <Compile Include="Http\Model\AllotAcceptance.cs" />
+    <Compile Include="Http\Model\AllotReverseCommodity.cs" />
+    <Compile Include="Http\Model\AllotReverse.cs" />
+    <Compile Include="Http\Model\CommodityRecoveryDetail.cs" />
     <Compile Include="Http\Model\DistributionTask.cs" />
     <Compile Include="Http\Model\AllotShelf.cs" />
     <Compile Include="Http\Model\AllotShelfCommodity.cs" />
@@ -297,7 +301,7 @@
     <Compile Include="Http\Model\param\SignInParam.cs" />
     <Compile Include="Http\Model\param\TokenQueryParam.cs" />
     <Compile Include="Http\Model\param\VeinmatchPostParam.cs" />
-    <Compile Include="Http\Model\CommodityRecoveryDetail.cs" />
+    <Compile Include="Http\Model\AllotReverseDetail.cs" />
     <Compile Include="Http\Model\PickCommodity.cs" />
     <Compile Include="Http\Model\PickTask.cs" />
     <Compile Include="Http\Model\PrescriptionBill.cs" />
@@ -356,6 +360,7 @@
     <Compile Include="Model\Enum\NavBtnEnum.cs" />
     <Compile Include="Model\Enum\RPCommanEnum.cs" />
     <Compile Include="Model\Enum\UserIdEnum.cs" />
+    <Compile Include="Model\FetchDepartment.cs" />
     <Compile Include="Model\InOutRecord.cs" />
     <Compile Include="Model\InventoryOrder.cs" />
     <Compile Include="Model\InventoryOrderdtl.cs" />
@@ -381,6 +386,18 @@
     <Compile Include="Model\SurgeryOrderdtl.cs" />
     <Compile Include="Model\CurrentUser.cs" />
     <Compile Include="Test\TestGoods.cs" />
+    <Compile Include="View\AllotReverse\AllotReverseClose.xaml.cs">
+      <DependentUpon>AllotReverseClose.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllotReverse\AllotReverseDetail.xaml.cs">
+      <DependentUpon>AllotReverseDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllotReverse\AllotReverseDetailOpen.xaml.cs">
+      <DependentUpon>AllotReverseDetailOpen.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\AllotReverse\AllotReverseView.xaml.cs">
+      <DependentUpon>AllotReverseView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\Common\DepartChooseBoard.xaml.cs">
       <DependentUpon>DepartChooseBoard.xaml</DependentUpon>
     </Compile>
@@ -574,6 +591,22 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="View\AllotReverse\AllotReverseClose.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AllotReverse\AllotReverseDetail.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AllotReverse\AllotReverseDetailOpen.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\AllotReverse\AllotReverseView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\Common\DepartChooseBoard.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

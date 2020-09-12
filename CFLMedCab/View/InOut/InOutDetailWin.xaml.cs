@@ -54,7 +54,6 @@ namespace CFLMedCab.View.InOut
             CloseTime = record.close_time;
             BusinessType = record.operate;
             Operater = record.user_name;
-            Department = record.department;
 
             List<InOutDetail> detals = inOutRecordBll.GetInOutDetails(inventoryId);
 

@@ -317,7 +317,7 @@ namespace CFLMedCab.Http.Bll
 
                 if(type != ConsumingOrderType.故障领用)
                 {
-                    consumingOrder.DepartmentId = ApplicationState.GetUserInfo().DepartmentIdInUse;
+                    consumingOrder.DepartmentId = ApplicationState.GetFetchDepartment() == null ? "" : ApplicationState.GetFetchDepartment().Id;
                 }
 
                 //创建领用单

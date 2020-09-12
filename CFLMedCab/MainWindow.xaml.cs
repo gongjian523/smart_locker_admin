@@ -47,6 +47,7 @@ using CFLMedCab.View.InOut;
 using CFLMedCab.View.ShelfFast;
 using CFLMedCab.View.Recovery;
 using GDotnet.Reader.Api.Utils;
+using CFLMedCab.View.AllotReverseView;
 
 namespace CFLMedCab
 {
@@ -68,18 +69,12 @@ namespace CFLMedCab
         private System.Timers.Timer processRingTimer;
         private System.Timers.Timer invingTimer;
 
-#if TESTENV
-        private System.Timers.Timer testTimer;
-        private FetchParam testFetchPara = new FetchParam();
-        private ShelfTask testROPara = new ShelfTask();
-        private PickTask testPOPara = new PickTask();
-#else
 #if VEINSERIAL
         private VeinHelper vein;
 #else
         private VeinUtils vein;
 #endif
-#endif
+
 
         /// <summary>
         /// 货柜开门的个数
@@ -177,13 +172,9 @@ namespace CFLMedCab
             LogUtils.Debug("onStart");
             vein.ChekVein();
 #else
-
-
 #if NOTLOCALSDK
-
 			//执行指静脉相关的逻辑处理
 			veinHandleNew(); 
-			
 #else
 			//执行指静脉相关的逻辑处理
 			veinHandleLocal();
@@ -720,6 +711,7 @@ namespace CFLMedCab
             //NavBtnEnterAllotShlef.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterReturnGoods.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterRecovery.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
+            NavBtnEnterAllotReverse.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterStockSwitch.Visibility = (!isMedicalStuff) ? Visibility.Visible : Visibility.Hidden;
             NavBtnEnterInvtory.Visibility = Visibility.Visible;
             NavBtnEnterStock.Visibility = Visibility.Visible;
@@ -738,11 +730,11 @@ namespace CFLMedCab
             else
             {
                 NavBtnEnterInvtory.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 0);
+                NavBtnEnterInvtory.SetValue(Grid.ColumnProperty, 1);
                 NavBtnEnterStock.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 1);
+                NavBtnEnterStock.SetValue(Grid.ColumnProperty, 2);
                 NavBtnEnterPersonalSetting.SetValue(Grid.RowProperty, 1);
-                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 2);
+                NavBtnEnterPersonalSetting.SetValue(Grid.ColumnProperty, 3);
             }
         }
 
@@ -824,6 +816,9 @@ namespace CFLMedCab
                 case SubViewType.ReturnGoodsClose:
                     ((ReturnGoodsClose)subViewHandler).onExitTimerExpired();
                     break;
+                case SubViewType.AllotReverseClose:
+                    ((ReturnGoodsClose)subViewHandler).onExitTimerExpired();
+                    break;
             }
             onReturnToLogin("超时退出");
         }
@@ -886,6 +881,17 @@ namespace CFLMedCab
                 }
                 ApplicationState.SetLoginId(-1);
             }
+
+            //退出时清空科室信息
+            ApplicationState.SetDepartInfo(new BaseData<Department>()
+            {
+                code = 0,
+                body = new BaseBody<Department>()
+                {
+                    objects = new List<Department>(),
+                    global_offset = 0,
+                }
+            });
         }
 
         private void onEnterHomePage(User user)
@@ -910,6 +916,18 @@ namespace CFLMedCab
             {
                 var bdDepartment = UserLoginBll.GetInstance().GetDepartmentByIds(user.DepartmentId);
                 ApplicationState.SetDepartInfo(bdDepartment);
+            }
+            else
+            {
+                ApplicationState.SetDepartInfo(new BaseData<Department>()
+                {
+                    code = 0,
+                    body = new BaseBody<Department>()
+                    {
+                        objects = new List<Department>(),
+                        global_offset = 0,
+                    }
+                });
             }
         }
 
@@ -941,7 +959,6 @@ namespace CFLMedCab
             CustomizeScheduler.GetInstance().SchedulerStart<GetInventoryPlanJoB>(CustomizeTrigger.GetInventoryPlanTrigger(), GroupName.GetInventoryPlan);
         }
 
-        #region 领用
         #region 一般领用
         /// <summary>
         /// 一般领用
@@ -952,7 +969,6 @@ namespace CFLMedCab
         {
             BaseData<Department> bdDepartment = ApplicationState.GetDepartInfo();
             HttpHelper.GetInstance().ResultCheck(bdDepartment, out bool isSuccess);
-
             
             if ((sender as Control).Name != "NavBtnEnterGerFetch")
             {
@@ -961,9 +977,10 @@ namespace CFLMedCab
             }
             else if (isSuccess && bdDepartment.body.objects.Count == 1)
             {
-                User user = ApplicationState.GetUserInfo();
-                user.DepartmentIdInUse = bdDepartment.body.objects[0].id;
-                user.DepartmentInUse = bdDepartment.body.objects[0].name;
+                ApplicationState.SetFetchDepartment(new FetchDepartment {
+                    Id = bdDepartment.body.objects[0].id,
+                    Name = bdDepartment.body.objects[0].name,
+                });
                 EnterGerFetch(sender);
             }
             else
@@ -983,10 +1000,10 @@ namespace CFLMedCab
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 PopFrame.Visibility = Visibility.Hidden;
-
-                User user = ApplicationState.GetUserInfo();
-                user.DepartmentIdInUse = e.id;
-                user.DepartmentInUse = e.name;
+                ApplicationState.SetFetchDepartment(new FetchDepartment() {
+                    Id = e.id,
+                    Name = e.name,
+                });
                 EnterGerFetch(buttonSender);
             }));
         }
@@ -1135,9 +1152,7 @@ namespace CFLMedCab
         }
 #endregion
 
-#region 手术领用
-
-#region 无手术单领用和医嘱处方领用
+        #region 无手术单领用和医嘱处方领用（已弃用）
         /// <summary>
         /// 进入医嘱处方领用-开门状态
         /// </summary>
@@ -1192,12 +1207,10 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNoNumLockerEvent);
             delegateGetMsg.userData = e;
-#endif
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 if (subViewHandler != null)
@@ -1321,9 +1334,9 @@ namespace CFLMedCab
                 SetSubViewInfo(surgeryNoNumClose, SubViewType.SurFetchWoOrderClose);
             }));
         }
-#endregion
+        #endregion
 
-#region 有手术单领用
+        #region 有手术单领用（已弃用）
         /// <summary>
         /// 手术领用医嘱处方领用
         /// </summary>
@@ -1435,12 +1448,9 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterSurgeryNumLockerEvent);
             delegateGetMsg.userData = e;
-#endif
 
             if (locOpenNum == 0)
             {
@@ -1510,9 +1520,8 @@ namespace CFLMedCab
             }));
         }
 #endregion
-#endregion
 
-#region 领用退回
+        #region 领用退回
         /// <summary>
         /// 领用退回
         /// </summary>
@@ -1570,12 +1579,10 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnFetchLockerEvent);
             delegateGetMsg.userData = e;
-#endif
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 if (subViewHandler != null)
@@ -1599,8 +1606,6 @@ namespace CFLMedCab
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
         }
-
-
 
         /// <summary>
         /// 领用退回关门状态
@@ -1644,15 +1649,42 @@ namespace CFLMedCab
                 returnFetchView.EnterPopCloseEvent += new ReturnFetchView.EnterPopCloseHandler(onEnterPopClose);
                 returnFetchView.EnterReturnFetchEvent += new ReturnFetchView.EnterReturnFetchHandler(onEnterReturnFetch);
                 returnFetchView.LoadingDataEvent += new ReturnFetchView.LoadingDataHandler(onLoadingData);
+                returnFetchView.ShowDepartChooseBoardEvent += new ReturnFetchView.ShowDepartChooseBoardHandler(onShowDepartChooseBoardFromReturnFetch);
                 FullFrame.Navigate(returnFetchView);
                 //进入领用退回关门页面
                 SetSubViewInfo(returnFetchView, SubViewType.ReturnFetchClose);
             }));
         }
-#endregion
-#endregion
 
-        #region Replenishment
+        private void onShowDepartChooseBoardFromReturnFetch(object sender, RoutedEventArgs e)
+        {
+            PopFrame.Visibility = Visibility.Visible;
+
+            BaseData<Department> bdDepartment = ApplicationState.GetDepartInfo();
+
+            DepartChooseBoard departChooseBoard = new DepartChooseBoard(bdDepartment, null);
+            departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
+            departChooseBoard.EnterGerFetchOpenDoorViewEvent += new DepartChooseBoard.EnterGerFetchOpenDoorViewHandler(onExitDepartChooseBoardFromReturnFetch);
+
+            PopFrame.Navigate(departChooseBoard);
+        }
+
+        private void onExitDepartChooseBoardFromReturnFetch(object sender, Department e, object buttonSender)
+        {
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                PopFrame.Visibility = Visibility.Hidden;
+                ApplicationState.SetFetchDepartment(new FetchDepartment()
+                {
+                    Id = e.id,
+                    Name = e.name,
+                });
+            }));
+        }
+
+        #endregion
+
+        #region 上架
         /// <summary>
         /// 进入上架单列表页
         /// </summary>
@@ -1750,12 +1782,9 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReplenishmentCloseEvent);
             delegateGetMsg.userData = e;
-#endif
 
             if (locOpenNum == 0)
             {
@@ -1826,12 +1855,11 @@ namespace CFLMedCab
                 SetSubViewInfo(replenishmentClose, SubViewType.ReplenishmentClose);
             }));
         }
-
         #endregion
 
-        #region ShelfFast
+        #region 便捷上架
         /// <summary>
-        /// 进入快捷上架单列表页
+        /// 进入便捷上架单列表页
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1844,12 +1872,12 @@ namespace CFLMedCab
             shelfFastView.EnterShelfFastDetailEvent += new ShelfFastView.EnterShelfFastDetailHandler(onEnterShelfFastDetail);
             shelfFastView.LoadingDataEvent += new ShelfFastView.LoadingDataHandler(onLoadingData);
             ContentFrame.Navigate(shelfFastView);
-            //进入上架页面，将句柄设置成null，类型设置成other，避免错误调用
+            //进入便捷上架页面，将句柄设置成null，类型设置成other，避免错误调用
             SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
-        /// 进入快捷上架单详情页
+        /// 进入便捷上架单详情页
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1866,7 +1894,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 进入快捷单详情页-开门状态
+        /// 进入便捷单详情页-开门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1905,7 +1933,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 快捷上架开门事件
+        /// 便捷上架开门事件
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1925,12 +1953,9 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterShelfFastCloseEvent);
             delegateGetMsg.userData = e;
-#endif
 
             if (locOpenNum == 0)
             {
@@ -1949,7 +1974,7 @@ namespace CFLMedCab
         }
 
         /// <summary>
-        /// 进入快捷上架单详情页-关门状态
+        /// 进入便捷上架单详情页-关门状态
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -2001,10 +2026,9 @@ namespace CFLMedCab
                 SetSubViewInfo(shelfFastClose, SubViewType.ShelfFastClose);
             }));
         }
-
         #endregion
 
-        #region AllotShelf
+        #region 调拨上架（已弃用）
         /// <summary>
         /// 进入调拨上架单列表页
         /// </summary>
@@ -2102,12 +2126,10 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterAllotShelfCloseEvent);
             delegateGetMsg.userData = e;
-#endif
+
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
@@ -2180,7 +2202,7 @@ namespace CFLMedCab
 
         #endregion
 
-        #region  ReturnGoods
+        #region 拣货
         /// <summary>
         /// 进入拣货页面
         /// </summary>
@@ -2279,12 +2301,10 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterReturnGoodsCloseEvent);
             delegateGetMsg.userData = e;
-#endif
+
             if (locOpenNum == 0)
             {
                 InOutRecordBll inOutBill = new InOutRecordBll();
@@ -2300,8 +2320,6 @@ namespace CFLMedCab
             //柜门实际打开后，类型设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
         }
-
-
 
         /// <summary>
         /// 进入拣货任务单详情页-关门状态
@@ -2356,7 +2374,9 @@ namespace CFLMedCab
                 SetSubViewInfo(returnGoodsClose, SubViewType.ReturnGoodsClose);
             }));
         }
+        #endregion
 
+        #region 回收取货
         /// <summary>
         /// 进入回收取货页面
         /// </summary>
@@ -2497,7 +2517,6 @@ namespace CFLMedCab
                 return;
             }
 
-
             //弹出盘点中弹窗
             onSetPopInventory(this, true);
 
@@ -2520,11 +2539,185 @@ namespace CFLMedCab
 
                 FullFrame.Navigate(recoveryClose);
                 //进入回收取货关门页面
-                SetSubViewInfo(recoveryClose, SubViewType.ReturnClose);
+                SetSubViewInfo(recoveryClose, SubViewType.RecoveryClose);
             }));
         }
+        #endregion
 
+        #region 反向调拨
+        /// <summary>
+        /// 进入反向调拨页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotReverse(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
 
+            AllotReverseView allotReverseView = new AllotReverseView();
+            allotReverseView.EnterAllotReverseDetailEvent += new AllotReverseView.EnterAllotReverseDetailHandler(onEnterAllotReverseDetail);
+            allotReverseView.EnterAllotReverseDetailOpenEvent += new AllotReverseView.EnterAllotReverseDetailOpenHandler(onEnterAllotReverseDetailOpen);
+            allotReverseView.LoadingDataEvent += new AllotReverseView.LoadingDataHandler(onLoadingData);
+
+            ContentFrame.Navigate(allotReverseView);
+            //进入拣货页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+        /// <summary>
+        /// 进入反向调拨详情页面
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotReverseDetail(object sender, AllotReverse e)
+        {
+            View.AllotReverseView.AllotReverseDetail allotReverseDetail = new View.AllotReverseView.AllotReverseDetail(e);
+            allotReverseDetail.EnterAllotReverseDetailOpenEvent += new View.AllotReverseView.AllotReverseDetail.EnterAllotReverseDetailOpenHandler(onEnterAllotReverseDetailOpen);
+            allotReverseDetail.EnterAllotReverseViewEvent += new View.AllotReverseView.AllotReverseDetail.EnterAllotReverseViewHandler(onEnterAllotReverse);
+            allotReverseDetail.LoadingDataEvent += new View.AllotReverseView.AllotReverseDetail.LoadingDataHandler(onLoadingData);
+
+            ContentFrame.Navigate(allotReverseDetail);
+            //进入拣货任务单详情页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+
+        /// <summary>
+        /// 进入反向调拨详情页面-开门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotReverseDetailOpen(object sender, AllotReverse e)
+        {
+            NaviView.Visibility = Visibility.Hidden;
+
+            AllotReverseDetailOpen allotReverseDetailOpen = new AllotReverseDetailOpen(e);
+            allotReverseDetailOpen.LoadingDataEvent += new AllotReverseDetailOpen.LoadingDataHandler(onLoadingData);
+            allotReverseDetailOpen.openDoorBtnBoard.OpenDoorEvent += new OpenDoorBtnBoard.OpenDoorHandler(onAllotReverseOpenDoorEvent);
+
+            FullFrame.Navigate(allotReverseDetailOpen);
+            //进入拣货任务单详情页面，类型设置成Others，表明柜门还没有开启
+            SetSubViewInfo(allotReverseDetailOpen, SubViewType.Others);
+
+            locOpenNum = 0;
+
+            //只有从反向调拨列表或者详情页面发出的开门事件，才能清空此列表；
+            //从关门页面发出的开门事件，不能清除此列表
+            if ((sender as Control).Name != "CtrlAllotReverseClose")
+            {
+                listOpenLocCom.Clear();
+            }
+
+            List<Locations> locs = ApplicationState.GetLocations();
+
+            //只有一个货位，直接开门
+            if (locs.Count == 1)
+            {
+                onAllotReverseOpenDoorEvent(this, locs[0].Code);
+
+                OpenCabinet openCabinet = new OpenCabinet();
+                openCabinet.HidePopOpenEvent += new OpenCabinet.HidePopOpenHandler(onHidePopOpen);
+                onShowPopFrame(openCabinet);
+            }
+        }
+
+        /// <summary>
+        /// 反向调拨开门事件
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onAllotReverseOpenDoorEvent(object sender, string e)
+        {
+            string rfidCom = ApplicationState.GetRfidComByLocCode(e);
+            string lockerCom = ApplicationState.GetLockerComByLocCode(e);
+
+            if (rfidCom == "" || lockerCom == "")
+            {
+                return;
+            }
+
+            //listOpenLocCom记录一次操作中，所有开过门的货柜的串口
+            if (!listOpenLocCom.Contains(rfidCom))
+            {
+                listOpenLocCom.Add(rfidCom);
+            }
+
+            LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
+            delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterAllotReverseCloseEvent);
+            delegateGetMsg.userData = e;
+
+            if (locOpenNum == 0)
+            {
+                InOutRecordBll inOutBill = new InOutRecordBll();
+                int openDoorId = inOutBill.NewInOutRecord("AllotReverse");
+
+                ApplicationState.SetOpenDoorId(openDoorId);
+            }
+
+            locOpenNum++;
+
+            //SpeakerHelper.Sperker("柜门已开，请拿取您需要的耗材，拿取完毕请关闭柜门");
+
+            //柜门实际打开后，类型设置成DoorOpen
+            SetSubViewType(SubViewType.DoorOpen);
+        }
+
+        /// <summary>
+        /// 进入反向调拨详情页-关门状态
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void onEnterAllotReverseCloseEvent(object sender, bool isClose)
+        {
+            LogUtils.Debug($"返回开锁状态{isClose}");
+
+            if (!isClose)
+                return;
+
+            locOpenNum--;
+
+            if (locOpenNum > 0)
+            {
+                App.Current.Dispatcher.Invoke((Action)(() =>
+                {
+                    if (subViewHandler != null)
+                    {
+                        LockHelper.DelegateGetMsg delegateGetMsg = (LockHelper.DelegateGetMsg)sender;
+                        ((ReturnGoodsDetailOpen)subViewHandler).onDoorClosed((string)delegateGetMsg.userData);
+                    }
+                }));
+
+                return;
+            }
+
+            //弹出盘点中弹窗
+            onSetPopInventory(this, true);
+
+            HashSet<CommodityEps> hs = RfidHelper.GetEpcDataJson(out bool isGetSuccess, listOpenLocCom);
+
+            //关闭盘点中弹窗
+            ClosePop();
+
+            //模拟从键盘输入0，空闲时间重新开始计时
+            SimulateKeybordInput0();
+
+            AllotReverse allotReverse = ((AllotReverseDetailOpen)subViewHandler).GetAllotReverse();
+
+            App.Current.Dispatcher.Invoke((Action)(() =>
+            {
+                AllotReverseClose allotReverseClose = new AllotReverseClose(allotReverse, hs, listOpenLocCom);
+                allotReverseClose.EnterAllotReverseDetailOpenEvent += new AllotReverseClose.EnterAllotReverseDetailOpenHandler(onEnterAllotReverseDetailOpen);
+                allotReverseClose.EnterPopCloseEvent += new AllotReverseClose.EnterPopCloseHandler(onEnterPopClose);
+                allotReverseClose.LoadingDataEvent += new AllotReverseClose.LoadingDataHandler(onLoadingData);
+
+                FullFrame.Navigate(allotReverseClose);
+                //进入拣货任务单详情页面
+                SetSubViewInfo(allotReverseClose, SubViewType.AllotReverseClose);
+            }));
+        }
+        #endregion
+
+        #region 库存调整
         /// <summary>
         /// 进入库存调整
         /// </summary>
@@ -2665,9 +2858,9 @@ namespace CFLMedCab
                 SetSubViewInfo(returnClose, SubViewType.ReturnClose);
             }));
         }
-#endregion
+        #endregion
 
-#region Inventory
+        #region 库存盘点
         /// <summary>
         /// 库存盘点
         /// </summary>
@@ -2830,21 +3023,7 @@ namespace CFLMedCab
         }
 
 
-#if TESTENV
-        /// <summary>
-        /// 盘点过程中关门事件
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void onInventoryDoorCloseTest(object sender, EventArgs e)
-        {
-            if (subViewHandler == null || subViewType != SubViewType.InventoryDtl) 
-                return;
 
-
-            ((InventoryDtl)subViewHandler).SetButtonVisibility(true);
-        }
-#else
         /// <summary>
         /// 盘点过程中关门事件
         /// </summary>
@@ -2881,8 +3060,9 @@ namespace CFLMedCab
             inOutBill.UpdateInOutRecord(null, "Inventory");
             ApplicationState.SetOpenDoorId(-1);
         }
-#endif
+        #endregion
 
+        #region 库存查询
         /// <summary>
         /// 库存查询
         /// </summary>
@@ -2918,8 +3098,7 @@ namespace CFLMedCab
         }
         #endregion
 
-
-        #region 个人设置
+        #region 设置
         private void onEnterPersonalSetting(object sender, RoutedEventArgs e)
         {
             HomePageView.Visibility = Visibility.Hidden;
@@ -2947,8 +3126,19 @@ namespace CFLMedCab
         {
             ClosePop();
         }
-        #endregion
 
+        private void onEnterSysSetting(object sender, RoutedEventArgs e)
+        {
+            HomePageView.Visibility = Visibility.Hidden;
+            btnBackHP.Visibility = Visibility.Visible;
+
+            SystemSetting systemSetting = new SystemSetting();
+
+            ContentFrame.Navigate(systemSetting);
+            //进入系统设置页面，将句柄设置成null，类型设置成other，避免错误调用
+            SetSubViewInfo(null, SubViewType.Others);
+        }
+        #endregion
 
         private void onEnterBindingVein(object sender, RoutedEventArgs e)
         {
@@ -2979,18 +3169,6 @@ namespace CFLMedCab
             {
                 onEnterHomePage(e);
             }));
-        }
-
-        private void onEnterSysSetting(object sender, RoutedEventArgs e)
-        {
-            HomePageView.Visibility = Visibility.Hidden;
-            btnBackHP.Visibility = Visibility.Visible;
-
-            SystemSetting systemSetting = new SystemSetting();
-
-            ContentFrame.Navigate(systemSetting);
-            //进入系统设置页面，将句柄设置成null，类型设置成other，避免错误调用
-            SetSubViewInfo(null, SubViewType.Others);
         }
 
         /// <summary>
@@ -3109,7 +3287,7 @@ namespace CFLMedCab
             e.Cancel = true;
         }
 
-#region ProcessRing
+        #region ProcessRing
         /// <summary>
         /// LoadingDataEvent的处理函数，显示或者隐藏精度环
         /// </summary>
@@ -3140,7 +3318,7 @@ namespace CFLMedCab
             onLoadingData(this, false);
             return;
         }
-#endregion
+        #endregion
 
     }
 

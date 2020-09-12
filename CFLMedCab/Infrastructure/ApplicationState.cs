@@ -28,6 +28,7 @@ namespace CFLMedCab.Infrastructure
         LoginId,
         OpenDoorId,
         DepartInfo,
+        FetchDeapartId
     };
 
     public static class ApplicationState
@@ -498,6 +499,17 @@ namespace CFLMedCab.Infrastructure
         public static BaseData<Department> GetDepartInfo()
         {
             return GetValue<BaseData<Department>>((int)ApplicationKey.DepartInfo);
+        }
+
+        public static void SetFetchDepartment(FetchDepartment department)
+        {
+            SetValue((int)ApplicationKey.FetchDeapartId, department);
+            return;
+        }
+
+        public static FetchDepartment GetFetchDepartment()
+        {
+            return GetValue<FetchDepartment>((int)ApplicationKey.FetchDeapartId);
         }
     }
 }
