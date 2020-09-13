@@ -95,9 +95,12 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				byte[] TxData = { 0xA1 };
 				clientConn.Write(TxData, 0, 1);
+                #if SERIALPORTLOG
                 LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已发送：{HexHelper.ByteToHexStr(",", TxData)}");
+                #endif
+
             }
-			catch (Exception ex)
+            catch (Exception ex)
 			{
 				LogUtils.Error(ex.ToString());
 				isGetSuccess = false;
@@ -134,7 +137,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			{
 				byte[] TxData = { 0xA1 };
 				clientConn.Write(TxData, 0, 1);
+#if SERIALPORTLOG
                 LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已发送：{HexHelper.ByteToHexStr(",", TxData)}");
+#endif
             }
 			catch (Exception ex)
 			{
@@ -363,7 +368,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				
 				byte[] receivedData = new byte[4];
 				currentClientConn.Read(receivedData, 0, 4);
+                
+                #if SERIALPORTLOG
                 LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已接收：{HexHelper.ByteToHexStr(",", receivedData)}");
+                #endif
 
                 //看上报数据格式为：08 81 xx xx(16进制)
                 //08 81 表示帧头
@@ -398,8 +406,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 				byte[] receivedData = new byte[4];
 				currentClientConn.Read(receivedData, 0, 4);
+                
+                #if SERIALPORTLOG
                 LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()}】 锁控串口数据已接收：{HexHelper.ByteToHexStr(",", receivedData)}");
-
+                #endif
+                
                 //看上报数据格式为：08 81 xx xx(16进制)
                 //08 81 表示帧头
                 //第一XX: 表示1 - 8号锁的工作状态

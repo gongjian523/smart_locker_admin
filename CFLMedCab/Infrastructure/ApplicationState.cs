@@ -511,5 +511,15 @@ namespace CFLMedCab.Infrastructure
         {
             return GetValue<FetchDepartment>((int)ApplicationKey.FetchDeapartId);
         }
+
+        public static bool IsMedicalStaff()
+        {
+            User user = GetUserInfo();
+
+            if (user == null)
+                return false;
+
+            return user.Role == "医护人员" ? true : false;
+        }
     }
 }

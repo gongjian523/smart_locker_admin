@@ -615,8 +615,10 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 						clientConn.Read(receivedData, 0, receivedData.Length);
 
+                        #if SERIALPORTLOG
 						LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{cmdUUID}】 串口数据已接收：{HexHelper.ByteToHexStr(",", receivedData)}");
-						
+                        #endif
+
 						bool isDataReceivedCheckSuccess = receivedData[0] == 0x40 && receivedData[7] == 0x0d && receivedData[6] == Check_Xor(receivedData, 6);
 						if (!isDataReceivedCheckSuccess)
 						{
@@ -653,8 +655,9 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 				LogUtils.Error($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},写入异常：{ex.ToString()}");
 			}
 
-			
-			LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{cmdUUID}】 串口数据已发送：{HexHelper.ByteToHexStr(",", sendData)}");
+#if SERIALPORTLOG
+            LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{cmdUUID}】 串口数据已发送：{HexHelper.ByteToHexStr(",", sendData)}");
+#endif
 			
 			//阻塞当前线程，最长5秒
 			var isTimeout = !m.WaitOne(new TimeSpan(0, 0, 5));
@@ -711,9 +714,11 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
                         clientConn.Read(preReceivedData, 0, preReceivedData.Length);
 
-						LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】 串口数据已接收：{HexHelper.ByteToHexStr(",", preReceivedData)}");
+                        #if SERIALPORTLOG
+                        LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】 串口数据已接收：{HexHelper.ByteToHexStr(",", preReceivedData)}");
+                        #endif
 
-						bool isDataReceivedCheckSuccess = preReceivedData[0] == 0x40 && preReceivedData[7] == 0x0d || preReceivedData[6] == Check_Xor(preReceivedData, 6);
+                        bool isDataReceivedCheckSuccess = preReceivedData[0] == 0x40 && preReceivedData[7] == 0x0d || preReceivedData[6] == Check_Xor(preReceivedData, 6);
 						if (!isDataReceivedCheckSuccess)
 						{
 							preReceivedData[5] = ERR_CMD_DATA_ERR;
@@ -742,10 +747,13 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			//发送命令
 			var sendData = cmdFunc.Invoke();
 			clientConn.Write(sendData, 0, sendData.Length);
-			LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】 串口数据已发送：{HexHelper.ByteToHexStr(",", sendData)}");
 
-			//阻塞当前线程，最长5秒
-			var isTimeout = !m.WaitOne(new TimeSpan(0, 0, 5));
+#if SERIALPORTLOG
+            LogUtils.Debug($"【线程名:{Thread.CurrentThread.ManagedThreadId.ToString()},命令uuid：{preUUID}】 串口数据已发送：{HexHelper.ByteToHexStr(",", sendData)}");
+#endif
+
+            //阻塞当前线程，最长5秒
+            var isTimeout = !m.WaitOne(new TimeSpan(0, 0, 5));
 			if (isTimeout)
 			{
 				//超时关闭当前串口

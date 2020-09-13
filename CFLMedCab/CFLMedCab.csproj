@@ -899,6 +899,7 @@
     <Resource Include="Resources\Images\ico-calendar.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Resources\Images\btn-AllotReverse.png" />
     <Resource Include="Resources\Images\btn-PersonalSetting.png" />
     <Resource Include="Resources\Images\btn-ShelfFast.png" />
     <Resource Include="Resources\Images\cfyl.ico" />

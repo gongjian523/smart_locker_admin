@@ -73,21 +73,21 @@
                                 <GridViewColumn Header="厂商" Width="{Binding ElementName=column2,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorName}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ManufactorNameStr}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="规格" Width="{Binding ElementName=column3,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Spec}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding SpecStr}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
                                 <GridViewColumn Header="型号" Width="{Binding ElementName=column4,Path=ActualWidth}" >
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
-                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Model}"/>
+                                            <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding ModelStr}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>

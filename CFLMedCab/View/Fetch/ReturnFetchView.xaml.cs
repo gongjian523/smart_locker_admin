@@ -119,8 +119,8 @@ namespace CFLMedCab.View.Fetch
                 //存在领用商品时，无法获取科室信息时，也不让用户提交
                 if (outNum > 0 && department.body.objects.Count == 0)
                 {
-                    normalBtmView.Visibility = Visibility.Visible;
-                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
                     abnormalInfoLbl.Content = "无法获取您的科室信息！";
 
                     //用于强制提交
@@ -139,15 +139,14 @@ namespace CFLMedCab.View.Fetch
                         Id = "",
                         Name = "",
                     });
-                    normalBtmView.Visibility = Visibility.Visible;
-                    abnormalBtmView.Visibility = Visibility.Collapsed;
+                    normalBtmView.Visibility = Visibility.Collapsed;
+                    abnormalBtmView.Visibility = Visibility.Visible;
                     abnormalInfoLbl.Content = "请将过期商品取出！";
                 }
                 else
                 {
-                    normalBtmView.Visibility = Visibility.Collapsed;
-                    abnormalBtmView.Visibility = Visibility.Visible;
-
+                    normalBtmView.Visibility = Visibility.Visible;
+                    abnormalBtmView.Visibility = Visibility.Collapsed;
                     //存在领用商品时
                     if (outNum > 0)
                     {

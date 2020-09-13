@@ -380,7 +380,7 @@ namespace CFLMedCab.Http.Bll
 			return DateTime.UtcNow.ToString("s") + "Z";
 		}
 
-		//
+		
 		public BaseData<Commodity> GetCommodityById(string id)
 		{
 			BaseData<Commodity> baseData = HttpHelper.GetInstance().Get<Commodity>(new QueryParam
@@ -391,8 +391,6 @@ namespace CFLMedCab.Http.Bll
 				in_list =  { HttpUtility.UrlEncode(id) }
 				}
 			});
-
-			baseData = HttpHelper.GetInstance().ResultCheck(baseData, out bool isSuccess);
 			return baseData;
 		}
 

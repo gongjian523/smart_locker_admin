@@ -24,7 +24,7 @@ namespace CFLMedCab.Http.Model
 		public string MobilePhone { get; set; }
 
         /// <summary>
-        /// 角色（医院SPD管理员，医院医护人员）
+        /// 角色（SPD，医护人员）
         /// </summary>
         public string Role { get; set; }
 
@@ -38,4 +38,7 @@ namespace CFLMedCab.Http.Model
 		/// </summary>
 		public List<string> DepartmentId { get; set; }
 	}
+
+
+    
 }

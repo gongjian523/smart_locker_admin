@@ -3,6 +3,7 @@ using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
+using CFLMedCab.Http.Model.Enum;
 using CFLMedCab.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -191,25 +192,36 @@ namespace CFLMedCab.View.AllotReverseView
         {
             if (isSuccess)
             {
-                LoadingDataEvent(this, true);
-                BasePutData<AllotReverse> putData = AllotReverseBll.GetInstance().PutAllotReverse(allotReverse);
-                LoadingDataEvent(this, false);
+                //测试专用，暂时不更新AllotReverse
+                //LoadingDataEvent(this, true);
+                //BasePutData<AllotReverse> putData = AllotReverseBll.GetInstance().PutAllotReverse(allotReverse);
+                //LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
-
-                if (!isSuccess1 && bAutoSubmit)
+                //HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
+                bool isSuccess1 = true;
+                if (!isSuccess1)
                 {
-                    MessageBox.Show("更新反向调拨单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    if(bAutoSubmit)
+                    {
+                        //MessageBox.Show("更新反向调拨单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                    }
                 }
                 else
                 {
+                    bool isSuccess3 = true;
+                    string errInfo = "";
+
                     LoadingDataEvent(this, true);
                     BasePostData<Http.Model.AllotReverseDetail> bpdAllotReverseDetail = AllotReverseBll.GetInstance().CreateAllotReverseDetail(bdCommodityCode, allotReverse);
-                    BasePostData<CommodityInventoryChange> bpdCommodityInventoryChange = AllotReverseBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, allotReverse);
-                    LoadingDataEvent(this, false);
-
                     HttpHelper.GetInstance().ResultCheck(bpdAllotReverseDetail, out bool isSuccess2);
-                    HttpHelper.GetInstance().ResultCheck(bpdCommodityInventoryChange, out bool isSuccess3);
+                    //存在入库商品时需要提交库存变更单
+                    if(bdCommodityCode.body.objects.Where(item => item.operate_type == (int)OperateType.入库).Count() > 0)
+                    {
+                        BasePostData<CommodityInventoryChange> bpdCommodityInventoryChange = AllotReverseBll.GetInstance().CreateCommodityInventoryChange(bdCommodityCode, allotReverse);
+                        HttpHelper.GetInstance().ResultCheck(bpdCommodityInventoryChange, out isSuccess3);
+                        errInfo = bpdCommodityInventoryChange.message;
+                    }
+                    LoadingDataEvent(this, false);
 
                     if (bAutoSubmit)
                     {
@@ -219,11 +231,11 @@ namespace CFLMedCab.View.AllotReverseView
                         }
                         else if(isSuccess2 && !isSuccess3)
                         {
-                            MessageBox.Show("创建库存变更明细失败！" + bpdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
+                            MessageBox.Show("创建库存变更明细失败！" + errInfo, "温馨提示", MessageBoxButton.OK);
                         }
                         else if (!isSuccess2 && !isSuccess3)
                         {
-                            MessageBox.Show("创建反向调拨单明细和库存变更明细失败！" + bpdAllotReverseDetail.message + "," + bpdCommodityInventoryChange.message, "温馨提示", MessageBoxButton.OK);
+                            MessageBox.Show("创建反向调拨单明细和库存变更明细失败！" + bpdAllotReverseDetail.message + "," + errInfo, "温馨提示", MessageBoxButton.OK);
                         }
                     }
                 }

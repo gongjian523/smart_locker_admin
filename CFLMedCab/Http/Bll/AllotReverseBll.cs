@@ -192,9 +192,20 @@ namespace CFLMedCab.Http.Bll
                 bdAllotReverseCommodity.body.objects.ForEach(it =>
                 {
                     //拼接商品名字
-                    if (!string.IsNullOrEmpty(it.CommodityId))
+                    if (!string.IsNullOrEmpty(it.Commodity))
                     {
-                        it.CommodityName = GetNameById<Commodity>(it.CommodityId);
+                        var bdCommodity = GetCommodityById(it.Commodity);
+
+                        HttpHelper.GetInstance().ResultCheck(bdCommodity, out bool isSuccess1);
+
+                        if (isSuccess1)
+                        {
+                            it.CommodityName = bdCommodity.body.objects[0].name;
+                            it.ManufactorNameStr = bdCommodity.body.objects[0].ManufactorName1;
+                            it.ModelStr = bdCommodity.body.objects[0].Model1;
+                            it.SpecStr = bdCommodity.body.objects[0].Spec1;
+                        }
+
                     }
                 });
             }
@@ -279,58 +290,17 @@ namespace CFLMedCab.Http.Bll
                 foreach (AllotReverseCommodity arc in allotReverseCommodities)
                 {
                     arc.PickNumber = commodityCodes.Where(cit => cit.CommodityId == arc.Commodity).Count();
-                }
-
-                var cccIds = commodityCodes.Select(it => it.CommodityId).Distinct().ToList();
-
-                //是否名称全部一致
-                bool isAllContains = detailCommodityIds.All(cccIds.Contains) && detailCommodityIds.Count == cccIds.Count;
-
-                if (isAllContains)
-                {
-                    //不存在领用的商品数量超过了领用单规定的数量
-                    bool isNoOver = true;
-                    //所有商品的数量都和领用单规定的一样
-                    bool isAllSame = true;
-
-                    foreach (AllotReverseCommodity arc in allotReverseCommodities)
+                    if (arc.PickNumber < arc.Number)
                     {
-                        //数量超出
-                        if (arc.Number < commodityCodes.Where(cit => cit.CommodityId == arc.Commodity).Count())
-                        {
-                            isNoOver = false;
-                            break;
-                        }
-
-                        //数量不相等
-                        if (arc.Number != commodityCodes.Where(cit => cit.CommodityId == arc.Commodity).Count())
-                        {
-                            isAllSame = false;
-                        }
-                    }
-
-                    if (isNoOver)
-                    {
-                        if (isAllSame)
-                        {
-                            status.Add(DocumentStatus.已完成.ToString());
-                        }
-                        else
-                        {
-                            status.Add(DocumentStatus.进行中.ToString());
-                        }
+                        status.Add(DocumentStatus.进行中.ToString());
                     }
                     else
                     {
-                        status.Add(DocumentStatus.异常.ToString());
+                        status.Add(DocumentStatus.已完成.ToString());
                     }
                 }
-                else
-                {
-                    status.Add(DocumentStatus.异常.ToString());
-                }
 
-                if (status.Contains(DocumentStatus.异常.ToString()))
+                if (commodityCodes.Where(cci => cci.AbnormalDisplay.Contains(AbnormalDisplay.异常.ToString())).Count() > 0)
                 {
                     order.Status = DocumentStatus.异常.ToString();
                 }
@@ -340,14 +310,7 @@ namespace CFLMedCab.Http.Bll
                 }
                 else
                 {
-                    if (allotReverseCommodities.Where(it => it.Number != 0 && it.Number > it.PickNumber).Count() == 0)
-                    {
-                        order.Status = DocumentStatus.已完成.ToString();
-                    }
-                    else
-                    {
-                        order.Status = DocumentStatus.进行中.ToString();
-                    }
+                    order.Status = DocumentStatus.已完成.ToString();
                 }
             }
         }
@@ -375,7 +338,7 @@ namespace CFLMedCab.Http.Bll
                     AllotReverseDetail ard = new AllotReverseDetail()
                     {
                         CommodityCodeId = it.id,
-                        CommodityId = it.CommodityId,
+                        //CommodityId = it.CommodityId,
                         Status = "拣货作业",
                         AllotReverseId = allotReverse.id,
                     };

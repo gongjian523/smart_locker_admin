@@ -697,9 +697,9 @@ namespace CFLMedCab
 #endregion
 
 
-        private void SetNavBtnVisiblity(string role)
+        private void SetNavBtnVisiblity()
         {
-            bool isMedicalStuff = (role == "医护人员") ? true : false;
+            bool isMedicalStuff = ApplicationState.IsMedicalStaff();
 
             NavBtnEnterGerFetch.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
             //NavBtnEnterSurgery.Visibility = isMedicalStuff ? Visibility.Visible : Visibility.Hidden;
@@ -817,7 +817,7 @@ namespace CFLMedCab
                     ((ReturnGoodsClose)subViewHandler).onExitTimerExpired();
                     break;
                 case SubViewType.AllotReverseClose:
-                    ((ReturnGoodsClose)subViewHandler).onExitTimerExpired();
+                    //((AllotReverseClose)subViewHandler).onExitTimerExpired();
                     break;
             }
             onReturnToLogin("超时退出");
@@ -900,11 +900,15 @@ namespace CFLMedCab
             LoginBkView.Visibility = Visibility.Hidden;
             PopFrame.Visibility = Visibility.Hidden;
 
-            SetNavBtnVisiblity(user.Role);
+            //测试代码
+            //user.DepartmentId = new List<string>() { "AQB2Zi3IdykBAAAA7pCgGvAyJhZyrggA", "AQB2Zi3IdykBAAAAZXBVOEJ6LhZyoAsA" };
+            //user.Role = "医护人员";
 
             //进入首页，将句柄设置成null，避免错误调用
             SetSubViewInfo(null, SubViewType.Home);
             ApplicationState.SetUserInfo(user);
+
+            SetNavBtnVisiblity();
 
             var loginBll = new LoginBll();
             var loginId = loginBll.NewLogin();
@@ -912,7 +916,7 @@ namespace CFLMedCab
 
             tbNameText.Text = user.name;
 
-            if (user.Role == "医护人员" && (user.DepartmentId != null && user.DepartmentId.Count != 0))
+            if (ApplicationState.IsMedicalStaff() && (user.DepartmentId != null && user.DepartmentId.Count != 0))
             {
                 var bdDepartment = UserLoginBll.GetInstance().GetDepartmentByIds(user.DepartmentId);
                 ApplicationState.SetDepartInfo(bdDepartment);

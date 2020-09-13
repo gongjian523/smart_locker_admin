@@ -79,8 +79,8 @@
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
-                                    <!--<ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="*"/>-->
+                                    <!--<ColumnDefinition Width="*"/>-->
+                                    <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="*"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0" x:Name="column1"/>
@@ -88,8 +88,8 @@
                                 <Grid Grid.Column="2" x:Name="column3"/>
                                 <Grid Grid.Column="3" x:Name="column4"/>
                                 <Grid Grid.Column="4" x:Name="column5"/>
-                                <!--<Grid Grid.Column="5" x:Name="column6"/>
-                                <Grid Grid.Column="6" x:Name="column7"/>-->
+                                <!--<Grid Grid.Column="5" x:Name="column6"/>-->
+                                <Grid Grid.Column="6" x:Name="column7"/>
                                 <Grid Grid.Column="7" x:Name="column8"/>
                             </Grid>
                             <ListView  VerticalAlignment="Top" Grid.Row="1"  
@@ -140,13 +140,13 @@
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
                                         </GridViewColumn>-->
-                                        <!--<GridViewColumn Header="操作类型" Width="{Binding ElementName=column7,Path=ActualWidth}">
+                                        <GridViewColumn Header="操作类型" Width="{Binding ElementName=column7,Path=ActualWidth}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
                                                     <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=operate_type, Converter={StaticResource OperateTypeConverter}}"/>
                                                 </DataTemplate>
                                             </GridViewColumn.CellTemplate>
-                                        </GridViewColumn>-->
+                                        </GridViewColumn>
                                         <GridViewColumn Header="说明" Width="{Binding ElementName=column8,Path=ActualWidth}">
                                             <GridViewColumn.CellTemplate>
                                                 <DataTemplate>
@@ -241,21 +241,21 @@
                                     <GridViewColumn Header="厂商"  Width="{Binding ElementName=column12,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=ManufactorName}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=ManufactorNameStr}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="规格" Width="{Binding ElementName=column13,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=Spec}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=SpecStr}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
                                     <GridViewColumn Header="型号" Width="{Binding ElementName=column14,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
-                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=Model}"/>
+                                                <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding Path=ModelStr}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

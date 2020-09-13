@@ -32,16 +32,28 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         public string CommodityId { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public string ManufactorName { get; set; }
+        /// <summary>
+        /// Manufactor id
+        /// </summary>
+        public string ManufactorName { get; set; }
+
+        /// <summary>
+        /// Manufactor 字符串
+        /// </summary>
+        [JsonIgnore]
+        public string ManufactorNameStr { get; set; }
 
 
         /// <summary>
-        /// 
+        /// Model id
         /// </summary>
         public string Model { get; set; }
+
+        /// <summary>
+        /// Manufactor id
+        /// </summary>
+        [JsonIgnore]
+        public string ModelStr { get; set; }
 
         /// <summary>
         /// 
@@ -62,9 +74,15 @@ namespace CFLMedCab.Http.Model
         public int PickCount { get; set; } = 0;
 
         /// <summary>
-        /// 
+        /// Spec id
         /// </summary>
         public string Spec { get; set; }
+
+        /// <summary>
+        /// Spec 字符串
+        /// </summary>
+        [JsonIgnore]
+        public string SpecStr { get; set; }
 
         /// <summary>
         /// 
