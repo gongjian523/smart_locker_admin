@@ -900,7 +900,7 @@ namespace CFLMedCab
             LoginBkView.Visibility = Visibility.Hidden;
             PopFrame.Visibility = Visibility.Hidden;
 
-            //测试代码
+            //测试专用
             //user.DepartmentId = new List<string>() { "AQB2Zi3IdykBAAAA7pCgGvAyJhZyrggA", "AQB2Zi3IdykBAAAAZXBVOEJ6LhZyoAsA" };
             //user.Role = "医护人员";
 
