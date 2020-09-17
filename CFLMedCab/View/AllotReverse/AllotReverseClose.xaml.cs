@@ -103,7 +103,7 @@ namespace CFLMedCab.View.AllotReverseView
                 }
 
                 LoadingDataEvent(this, true);
-                AllotReverseBll.GetInstance().GetAllotReverseChange(bdCommodityCode, allotReverse, bdCommodityDetail);
+                bool  bAllowSubmit = AllotReverseBll.GetInstance().GetAllotReverseChange(bdCommodityCode, allotReverse, bdCommodityDetail);
                 LoadingDataEvent(this, false);
 
                 int outCnt = bdCommodityCode.body.objects.Where(item => item.operate_type == 0).ToList().Count;
@@ -115,8 +115,8 @@ namespace CFLMedCab.View.AllotReverseView
                 abnormalOutNum.Content = abnormalOutCnt;
                 listView.DataContext = bdCommodityCode.body.objects;
 
-                //没有异常商品才能进入提交页面
-                if (abnormalInCnt == 0 && abnormalOutCnt == 0)
+                //没有异常品种的商品或者拿出商品才能进入正常的提交页面
+                if (bAllowSubmit)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;
@@ -192,18 +192,16 @@ namespace CFLMedCab.View.AllotReverseView
         {
             if (isSuccess)
             {
-                //测试专用，暂时不更新AllotReverse
-                //LoadingDataEvent(this, true);
-                //BasePutData<AllotReverse> putData = AllotReverseBll.GetInstance().PutAllotReverse(allotReverse);
-                //LoadingDataEvent(this, false);
+                LoadingDataEvent(this, true);
+                BasePutData<AllotReverse> putData = AllotReverseBll.GetInstance().PutAllotReverse(allotReverse);
+                LoadingDataEvent(this, false);
 
-                //HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
-                bool isSuccess1 = true;
+                HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
                 if (!isSuccess1)
                 {
                     if(bAutoSubmit)
                     {
-                        //MessageBox.Show("更新反向调拨单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("更新反向调拨单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
                 else

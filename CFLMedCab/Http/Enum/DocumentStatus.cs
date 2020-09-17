@@ -41,9 +41,19 @@ namespace CFLMedCab.Http.Enum
         /// 进行中
         /// </summary>
         [Description("进行中")]
-        进行中 = 5
+        进行中 = 5,
 
+        /// <summary>
+        /// 未完成
+        /// </summary>
+        [Description("未完成")]
+        未完成 = 6,
 
+        /// <summary>
+        /// 正常
+        /// </summary>
+        [Description("正常")]
+        正常 = 7
 
     }
 }

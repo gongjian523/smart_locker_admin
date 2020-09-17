@@ -229,12 +229,6 @@ namespace CFLMedCab.Http.Bll
             };
 
             BasePutData <AllotReverse> basePutData = HttpHelper.GetInstance().Put(task);
-
-            if (basePutData.code != 0)
-            {
-                LogUtils.Error("AllotReverse " + basePutData.message);
-            }
-
             return basePutData;
         }
 
@@ -244,10 +238,12 @@ namespace CFLMedCab.Http.Bll
         /// <param name="bdCommodityCode"></param>
         /// <param name="order"></param>
         /// <param name="bdAllotReverseCommodity"></param>
-        public void GetAllotReverseChange(BaseData<CommodityCode> bdCommodityCode, AllotReverse order, BaseData<AllotReverseCommodity> bdAllotReverseCommodity)
+        public bool GetAllotReverseChange(BaseData<CommodityCode> bdCommodityCode, AllotReverse order, BaseData<AllotReverseCommodity> bdAllotReverseCommodity)
         {
             HttpHelper.GetInstance().ResultCheck(bdAllotReverseCommodity, out bool isSuccess);
             HttpHelper.GetInstance().ResultCheck(bdCommodityCode, out bool isSuccess1);
+
+            bool bAllowSubmit = true;
 
             if (isSuccess && isSuccess1)
             {
@@ -263,6 +259,7 @@ namespace CFLMedCab.Http.Bll
                     if (it.operate_type == (int)OperateType.入库)
                     {
                         it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                        bAllowSubmit = false;
                     }
                     else
                     {
@@ -276,13 +273,13 @@ namespace CFLMedCab.Http.Bll
                             }
                             else
                             {
-                                //it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
-                                it.AbnormalDisplay = AbnormalDisplay.正常.ToString();
+                                it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                             }
                         }
                         else
                         {
                             it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
+                            bAllowSubmit = false;
                         }
                     }
                 });
@@ -292,27 +289,29 @@ namespace CFLMedCab.Http.Bll
                     arc.PickNumber = commodityCodes.Where(cit => cit.CommodityId == arc.Commodity).Count();
                     if (arc.PickNumber < arc.Number)
                     {
-                        status.Add(DocumentStatus.进行中.ToString());
+                        status.Add(DocumentStatus.未完成.ToString());
                     }
                     else
                     {
-                        status.Add(DocumentStatus.已完成.ToString());
+                        status.Add(DocumentStatus.正常.ToString());
                     }
                 }
 
-                if (commodityCodes.Where(cci => cci.AbnormalDisplay.Contains(AbnormalDisplay.异常.ToString())).Count() > 0)
+                if (status.Contains(DocumentStatus.异常.ToString()))
                 {
                     order.Status = DocumentStatus.异常.ToString();
                 }
-                else if (status.Contains(DocumentStatus.进行中.ToString()))
+                else if (status.Contains(DocumentStatus.未完成.ToString()))
                 {
-                    order.Status = DocumentStatus.进行中.ToString();
+                    order.Status = DocumentStatus.未完成.ToString();
                 }
                 else
                 {
-                    order.Status = DocumentStatus.已完成.ToString();
+                    order.Status = DocumentStatus.正常.ToString();
                 }
             }
+
+            return bAllowSubmit;
         }
 
 
