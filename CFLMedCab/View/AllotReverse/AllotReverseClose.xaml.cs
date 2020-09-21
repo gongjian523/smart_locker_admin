@@ -192,19 +192,22 @@ namespace CFLMedCab.View.AllotReverseView
         {
             if (isSuccess)
             {
-                LoadingDataEvent(this, true);
-                BasePutData<AllotReverse> putData = AllotReverseBll.GetInstance().PutAllotReverse(allotReverse);
-                LoadingDataEvent(this, false);
+                bool isSuccess1 = true;
 
-                HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess1);
-                if (!isSuccess1)
+                if (allotReverse.Status == AllotReverseStatus.异常.ToString())
                 {
-                    if(bAutoSubmit)
+                    LoadingDataEvent(this, true);
+                    BasePutData<AllotReverse> putData = AllotReverseBll.GetInstance().PutAllotReverse(allotReverse);
+                    LoadingDataEvent(this, false);
+                    HttpHelper.GetInstance().ResultCheck(putData, out isSuccess1);
+
+                    if (!isSuccess1 && bAutoSubmit)
                     {
                         MessageBox.Show("更新反向调拨单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
-                else
+
+                if (isSuccess1)
                 {
                     bool isSuccess3 = true;
                     string errInfo = "";
