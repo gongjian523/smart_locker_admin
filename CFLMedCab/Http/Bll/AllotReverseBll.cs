@@ -13,6 +13,7 @@ using CFLMedCab.Http.Enum;
 using CFLMedCab.Infrastructure.ToolHelper;
 using CFLMedCab.Http.Model.Common;
 using CFLMedCab.Http.Model.Enum;
+using SqlSugar;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -112,7 +113,7 @@ namespace CFLMedCab.Http.Bll
             {
                 List<AllotReverse> taskList = new List<AllotReverse>();
 
-                var allotReverses = bdAllotReverse.body.objects.Where(item=>item.Status != AllotReverseStatus.已完成.ToString()).ToList();
+                var allotReverses = bdAllotReverse.body.objects.Where(item=>item.Status == AllotReverseStatus.仓库处理中.ToString() && item.ApprovalStatus == "审批通过").OrderByDescending(it => it.created_at).ToList();
 
                 allotReverses.ForEach(it =>
                 {
