@@ -114,7 +114,7 @@ namespace CFLMedCab.View.ShelfFast
                 HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("获取拣货任务单商品明细信息错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("获取便捷上架任务单商品明细错误！" + bdCommodityDetail.message, "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Windows;
 using CFLMedCab.BLL;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
@@ -21,6 +22,7 @@ using CFLMedCab.Infrastructure.QuartzHelper.trigger;
 using CFLMedCab.Infrastructure.ToolHelper;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
+using NUnit.Framework.Internal;
 using static CFLMedCab.Http.Bll.ConsumingBll;
 
 namespace UnitTestProject
@@ -560,5 +562,17 @@ namespace UnitTestProject
 
             CommodityInventoryChangeBll.GetInstance().CreateCommodityInventoryChange(changes);
         }
+
+
+        [TestMethod]
+        public void GetShelfTaskFastDetailMethod()
+        {
+            var bdCommodityDetail = ShelfFastBll.GetInstance().GetShelfTaskFastDetail(new ShelfTaskFast() { id = "AQCqGpNPSs4BAAAAuv-jJpaROBahhAoA" });
+            HttpHelper.GetInstance().ResultCheck(bdCommodityDetail, out bool isSuccess);
+
+        }
+
+
+
     }
 }

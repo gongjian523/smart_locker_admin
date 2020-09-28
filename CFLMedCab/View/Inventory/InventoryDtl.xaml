@@ -71,15 +71,15 @@
                     <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="5">
                         <Grid x:Name="myGrid">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="3*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="2*"/>
+                                <!--<ColumnDefinition Width="*"/>-->
+                                <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
@@ -87,7 +87,7 @@
                             <Grid Grid.Column="3" x:Name="column4"/>
                             <Grid Grid.Column="4" x:Name="column5"/>
                             <Grid Grid.Column="5" x:Name="column6"/>
-                            <Grid Grid.Column="6" x:Name="column7"/>
+                            <!--<Grid Grid.Column="6" x:Name="column7"/>-->
                             <Grid Grid.Column="7" x:Name="column8"/>
                             <Grid Grid.Column="8" x:Name="column9"/>
                         </Grid>
@@ -136,13 +136,13 @@
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>
-                                    <GridViewColumn Header="货位" Width="{Binding ElementName=column7,Path=ActualWidth}">
+                                    <!--<GridViewColumn Header="货位" Width="{Binding ElementName=column7,Path=ActualWidth}">
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding GoodsLocationName}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
-                                    </GridViewColumn>
+                                    </GridViewColumn>-->
                                     <GridViewColumn Header="质量状态"  Width="{Binding ElementName=column8,Path=ActualWidth}" >
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
@@ -175,7 +175,7 @@
                             <Label  x:Name="codeTitleLb"  Height="48"   Width="220"  Content="请输入扫描商品编码" FontSize="22" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
                             <TextBox x:Name="codeInputTb"  Height="48"  Width="300" PreviewKeyDown="SearchBox_OnKeyDown"  FontSize="22"  HorizontalAlignment="Left"/>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" Grid.Column="1">
+                        <!--<StackPanel Orientation="Horizontal" Grid.Column="1">
                             <Label  x:Name="locTitleLb"  Height="48"  Content="请选择货柜" FontSize="22" VerticalContentAlignment="Center" HorizontalAlignment="Left"/>
                             <ComboBox x:Name="locCb" Height="48" Width="200" Margin="5,0,0,0">
                                 <ComboBox.ItemTemplate>
@@ -187,7 +187,7 @@
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
-                        </StackPanel>
+                        </StackPanel>-->
                         <Button Style="{StaticResource AddButton1}" x:Name="btnAddProduct" Grid.Column="2" Content="添加商品"   Click="onAddProduct" HorizontalAlignment="Right"/>
                     </Grid>
                 </Grid>

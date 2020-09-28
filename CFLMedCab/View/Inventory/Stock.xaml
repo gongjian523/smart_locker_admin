@@ -164,13 +164,13 @@
                 <Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="2*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <!--<ColumnDefinition Width="*"/>-->
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="ycolumn1"/>
                         <Grid Grid.Column="1" x:Name="ycolumn2"/>
@@ -178,7 +178,7 @@
                         <Grid Grid.Column="3" x:Name="ycolumn4"/>
                         <Grid Grid.Column="4" x:Name="ycolumn5"/>
                         <Grid Grid.Column="5" x:Name="ycolumn6"/>
-                        <Grid Grid.Column="6" x:Name="ycolumn7"/>
+                        <!--<Grid Grid.Column="6" x:Name="ycolumn7"/>-->
                     </Grid>
 
                     <ListView  VerticalAlignment="Top" Grid.Row="1"  Name="listView1" ItemsSource="{Binding}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -228,13 +228,13 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="货位"  Width="{Binding ElementName=ycolumn7,Path=ActualWidth}">
+                                <!--<GridViewColumn Header="货位"  Width="{Binding ElementName=ycolumn7,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding GoodsLocationName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                                </GridViewColumn>-->
                             </GridView>
                         </ListView.View>
                     </ListView>
@@ -246,22 +246,22 @@
                 <Grid>
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="3*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="2*"/>
+                            <!--<ColumnDefinition Width="*"/>-->
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                            <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <Grid Grid.Column="0" x:Name="zcolumn1"/>
                         <Grid Grid.Column="1" x:Name="zcolumn2"/>
                         <Grid Grid.Column="2" x:Name="zcolumn3"/>
                         <Grid Grid.Column="3" x:Name="zcolumn4"/>
                         <Grid Grid.Column="4" x:Name="zcolumn5"/>
-                        <Grid Grid.Column="5" x:Name="zcolumn6"/>
+                        <!--<Grid Grid.Column="5" x:Name="zcolumn6"/>-->
                         <Grid Grid.Column="6" x:Name="zcolumn7"/>
                         <Grid Grid.Column="7" x:Name="zcolumn8"/>
                         <Grid Grid.Column="8" x:Name="zcolumn9"/>
@@ -306,13 +306,13 @@
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
                                 </GridViewColumn>
-                                <GridViewColumn Header="货位"  Width="{Binding ElementName=zcolumn6,Path=ActualWidth}">
+                                <!--<GridViewColumn Header="货位"  Width="{Binding ElementName=zcolumn6,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>
                                             <TextBlock Style="{StaticResource TextBlockCommon}"  Text="{Binding GoodsLocationName}"/>
                                         </DataTemplate>
                                     </GridViewColumn.CellTemplate>
-                                </GridViewColumn>
+                                </GridViewColumn>-->
                                 <GridViewColumn Header="操作类型" Width="{Binding ElementName=zcolumn7,Path=ActualWidth}">
                                     <GridViewColumn.CellTemplate>
                                         <DataTemplate>

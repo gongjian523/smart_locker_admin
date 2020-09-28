@@ -133,15 +133,15 @@ namespace CFLMedCab.View.ShelfFast
                 bdAllotAcceptance = shelfFastBillInst.GetAllotAcceptanceByDistributionTaskId(bdDistributionTask.body.objects[0].id);
                 LoadingDataEvent(this, false);
 
-                HttpHelper.GetInstance().ResultCheck(bdDistributionTask, out isSuccess1);
+                HttpHelper.GetInstance().ResultCheck(bdAllotAcceptance, out isSuccess1);
                 if (!isSuccess1)
                 {
                     waring = "无法找到此配送任务单对应的调拨验收单！";
                     return false;
                 }
 
-                sourceBill.object_name = "AllotAcceptance";
-                sourceBill.object_id = bdAllotAcceptance.body.objects[0].id;
+                sourceBill.object_name = "DistributionTask";
+                sourceBill.object_id = bdDistributionTask.body.objects[0].id;
             }
             else
             {

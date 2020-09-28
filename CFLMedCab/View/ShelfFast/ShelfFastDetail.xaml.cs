@@ -75,7 +75,7 @@ namespace CFLMedCab.View.ShelfFast
                 HttpHelper.GetInstance().ResultCheck(bdShelfTaskFastDetail, out bool isSuccess);
                 if (!isSuccess)
                 {
-                    MessageBox.Show("获取便捷上架单明细错误！", "温馨提示", MessageBoxButton.OK);
+                    MessageBox.Show("获取便捷上架任务单商品明细错误！", "温馨提示", MessageBoxButton.OK);
                     return;
                 }
 
