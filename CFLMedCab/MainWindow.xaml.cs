@@ -69,12 +69,7 @@ namespace CFLMedCab
         private System.Timers.Timer processRingTimer;
         private System.Timers.Timer invingTimer;
 
-#if VEINSERIAL
-        private VeinHelper vein;
-#else
         private VeinUtils vein;
-#endif
-
 
         /// <summary>
         /// 货柜开门的个数
@@ -163,25 +158,13 @@ namespace CFLMedCab
 
             LogUtils.Debug("Task initial...");
 
-#if VEINSERIAL
-            string veinCom = ApplicationState.GetMVeinCOM();
-            //vein = new VeinHelper("COM9", 9600);
-            vein = new VeinHelper(veinCom, 9600);
-            vein.DataReceived += new SerialDataReceivedEventHandler(onReceivedDataVein);
-            LogUtils.Debug("onStart");
-            vein.ChekVein();
-#else
 #if NOTLOCALSDK
 			//执行指静脉相关的逻辑处理
 			veinHandleNew(); 
 #else
 			//执行指静脉相关的逻辑处理
 			veinHandleLocal();
-
 #endif
-
-#endif
-
 			LogUtils.Debug("Vein initial...");
         }
 
@@ -254,16 +237,8 @@ namespace CFLMedCab
 
             if (e.LoginState == 0)
             {
-                LogUtils.Debug("onLoginInfoHidenEvent");
-
-#if VEINSERIAL
-                vein.ChekVein();
-#else
-                //Task.Factory.StartNew(vein.DetectFinger);
-                //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
                 LogUtils.Debug("detectFinger in onLoginInfoHidenEvent...");
                 ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
-#endif
             }
         }
 
@@ -320,59 +295,6 @@ namespace CFLMedCab
 			LogUtils.Debug("detectFinger bUsing true turn false");
 			bUsing = false;
 		}
-
-#if VEINSERIAL
-        private void onReceivedDataVein(object sender, SerialDataReceivedEventArgs e)
-        {
-            int id = vein.GetVeinId();
-
-            LogUtils.Debug("VeinId {0}", id);
-
-            if (id >= 0)
-            {
-                vein.Close();
-
-                LoginStatus sta = new LoginStatus();
-                CurrentUser user = userBll.GetUserByVeinId(id);
-
-                if(id == 0 || user == null)
-                {
-                    App.Current.Dispatcher.Invoke((Action)(() =>
-                    {
-                        LoginInfo loginInfo = new LoginInfo(new LoginStatus {
-                            LoginState = 0,
-                            LoginString = "登录失败",
-                            LoginString2 = "请再次进行验证"
-                    });
-
-                    PopFrame.Visibility = Visibility.Visible;
-                    MaskView.Visibility = Visibility.Visible;
-
-                    loginInfo.LoginInfoHidenEvent += new LoginInfo.LoginInfoHidenHandler(onLoginInfoHidenEvent);
-
-                    PopFrame.Navigate(loginInfo);
-                    }));
-                }
-                else
-                {
-                    ApplicationState.SetValue((int)ApplicationKey.CurUser, user);
-
-                    App.Current.Dispatcher.Invoke((Action)(() =>
-                    {
-                        LoginBkView.Visibility = Visibility.Hidden;
-                        SetNavBtnVisiblity(user.role);
-                        tbNameText.Text = ApplicationState.GetValue<CurrentUser>((int)ApplicationKey.CurUser).name;
-                    }));
-                }
-            }
-            else
-            {
-                LogUtils.Debug("onReceivedDataVein");
-                vein.ChekVein();
-            }
-
-        }
-#else
 
 		/// <summary>
 		/// 指静脉检测到手指（新，本地检测功能）
@@ -632,7 +554,6 @@ namespace CFLMedCab
             bUsing = false;
             LogUtils.Debug("detectFinger bUsing turn false 1");
             mutex.ReleaseMutex();
-#endif
         }
 
 
@@ -843,11 +764,7 @@ namespace CFLMedCab
             XmlNode adminToken = root.SelectSingleNode("admin_token");//指向设备节点
             HttpHelper.GetInstance().SetHeaders(adminToken.InnerText);
 
-#if VEINSERIAL
-            vein.ChekVein();
-#else
             ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
-#endif
 
             //绑定指静脉结束、主动退出或者超时退出都会走到这个分支
             //绑定指静脉结束的logoutInfo 为 "",其他两种常见logoutInfo 会填写退出原因
@@ -3109,13 +3026,9 @@ namespace CFLMedCab
         {
             PopFrame.Visibility = Visibility.Visible;
 
-#if VEINSERIAL
-            vein.Close();
-#else
 			//关闭正在检查的手指的线程
 			//vein.SetDetectFingerState(true);
 			VeinSerialHelper.isCloseCheckFinger = true;
-#endif
 
 			BindingVein bindingVein = new BindingVein(mutex);
             bindingVein.HidePopCloseEvent += new BindingVein.HidePopCloseHandler(onHidePopClose);
