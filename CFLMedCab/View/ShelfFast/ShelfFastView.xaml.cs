@@ -240,11 +240,28 @@ namespace CFLMedCab.View.ShelfFast
             }
             else
             {
-                //如果领⽤单作废标识为【是】则弹窗提醒手术单作废，跳转回前⻚
-                if ("已完成".Equals(baseDataShelfTaskFast.body.objects[0].Status) || "已撤销".Equals(baseDataShelfTaskFast.body.objects[0].Status))
+                if ("已完成".Equals(baseDataShelfTaskFast.body.objects[0].Status))
                 {
-                    waring = "此任务单下的便捷上架已经完成或被撤销！";
+                    waring = "此任务单下的便捷上架已经完成！";
                     return false;
+                }
+                else if("异常".Equals(baseDataShelfTaskFast.body.objects[0].Status))
+                {
+                    //对于状态异常的快捷上架单，有可能以前上架了不在快捷上架单的商品
+                    //是否能够进入上架详情页面，取决了便捷上架明细中的商品是否上架完成
+                    BaseData<ShelfTaskFastDetail> bdShelfTaskFastDetail = ShelfFastBll.GetInstance().GetShelfTaskFastDetail(baseDataShelfTaskFast.body.objects[0]);
+                    HttpHelper.GetInstance().ResultCheck(bdShelfTaskFastDetail, out bool isSuccess4);
+                    if(isSuccess4)
+                    {
+                        EnterShelfFastDetailEvent(this, baseDataShelfTaskFast.body.objects[0]);
+                        waring = "";
+                        return true;
+                    }
+                    else
+                    {
+                        waring = "此任务单下的便捷上架已经完成！";
+                        return false;
+                    }
                 }
                 else
                 {

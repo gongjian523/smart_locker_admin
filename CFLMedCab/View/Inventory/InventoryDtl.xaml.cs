@@ -76,7 +76,7 @@ namespace CFLMedCab.View.Inventory
             btnGrid.Children.Add(openDoorBtnBoard);
 
             comboBoxList = ApplicationState.GetLocations();
-            locCb.ItemsSource = comboBoxList.OrderByDescending(it => it.Code);
+            //locCb.ItemsSource = comboBoxList.OrderByDescending(it => it.Code);
 
             Timer timer = new Timer(100);
             timer.AutoReset = false;
@@ -174,8 +174,8 @@ namespace CFLMedCab.View.Inventory
 
             bdCommodityCode.body.objects[0].EquipmentId = ApplicationState.GetEquipId();
             bdCommodityCode.body.objects[0].StoreHouseId = ApplicationState.GetHouseId();
-            bdCommodityCode.body.objects[0].GoodsLocationId = ((Locations)locCb.SelectedItem).Id;
-            bdCommodityCode.body.objects[0].GoodsLocationName = ((Locations)locCb.SelectedItem).Code;
+            //bdCommodityCode.body.objects[0].GoodsLocationId = ((Locations)locCb.SelectedItem).Id;
+            //bdCommodityCode.body.objects[0].GoodsLocationName = ((Locations)locCb.SelectedItem).Code;
 
             adds.Add(bdCommodityCode.body.objects[0]);
 

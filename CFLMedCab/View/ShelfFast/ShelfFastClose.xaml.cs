@@ -223,7 +223,10 @@ namespace CFLMedCab.View.ShelfFast
                 }
                 else
                 {
-                    shelfTaskFast.AbnormalCauses = abnormalOptions.GetAbnormal().ToString();
+                    if (shelfTaskFast.Status == ShelfTaskFastStatusEnum.异常.ToString() && shelfTaskFast.AbnormalCauses != AbnormalCauses.商品超出.ToString())
+                    {
+                        shelfTaskFast.AbnormalCauses = abnormalOptions.GetAbnormal().ToString();
+                    }
 
                     LoadingDataEvent(this, true);
                     BasePutData<ShelfTaskFast> putData = ShelfFastBll.GetInstance().PutShelfTaskFast(shelfTaskFast);

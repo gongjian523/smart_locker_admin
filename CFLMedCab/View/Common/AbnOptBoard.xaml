@@ -15,7 +15,7 @@
         <Label  Grid.Row="0" Content="原因" Style="{StaticResource lblTitle1}"/>
         <Border Grid.Row="1" Background="{StaticResource ContentBkBrush}" Padding="5,10,5,10" CornerRadius="5,5,5,5" MinHeight="60">
             <StackPanel Orientation="Horizontal">
-                <RadioButton Content="商品缺失"  Name="bthShortHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  IsChecked="True" FontWeight="Bold" />
+                <RadioButton Content="商品缺失"  Name="bthShortHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  FontWeight="Bold" />
                 <RadioButton Content="商品遗失" Name="bthLossHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold"/>
                 <RadioButton Content="商品损坏" Name="bthBadHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold" />
                 <RadioButton Content="其他" Name="bthOtherHide" GroupName="abnormal" FontSize="25" Style="{DynamicResource FrameNavButton}"  Margin="10,0,0,0" FontWeight="Bold" />

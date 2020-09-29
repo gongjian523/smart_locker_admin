@@ -22,8 +22,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 
 		public void ChekVein()
 		{
-#if TESTENV
-#else
 			Close();
 
 			if (!IsOpen)
@@ -61,7 +59,6 @@ namespace CFLMedCab.Infrastructure.DeviceHelper
 			//    strRcv += TxData[i].ToString("X2");  //16进制显示
 
 			Write(TxData, 0, 8);
-#endif
 		}
 
 		public int GetVeinId()

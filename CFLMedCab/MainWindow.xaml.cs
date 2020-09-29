@@ -257,8 +257,7 @@ namespace CFLMedCab
             if (e.LoginState == 0)
             {
                 LogUtils.Debug("onLoginInfoHidenEvent");
-#if TESTENV
-#else
+
 #if VEINSERIAL
                 vein.ChekVein();
 #else
@@ -266,7 +265,6 @@ namespace CFLMedCab
                 //ThreadPool.QueueUserWorkItem(new WaitCallback(vein.DetectFinger));
                 LogUtils.Debug("detectFinger in onLoginInfoHidenEvent...");
                 ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
-#endif
 #endif
             }
         }
@@ -286,10 +284,9 @@ namespace CFLMedCab
             }
 
             mutex.WaitOne();
-#if TESTENV
-#else
+
             vein.DetectFinger(obj);
-#endif
+
             mutex.ReleaseMutex();
             LogUtils.Debug("detectFinger bUsing true turn false");
             bUsing = false;
@@ -314,14 +311,13 @@ namespace CFLMedCab
 			}
 
 			mutex.WaitOne();
-#if TESTENV
-#else
+
 			//检测手指
 			if (VeinSerialHelper.CMD_CHK_FINGER_TIMEOUT_F())
 			{
 				onFingerDetectedLocal(this, 0);
 			}
-#endif
+
 			mutex.ReleaseMutex();
 			LogUtils.Debug("detectFinger bUsing true turn false");
 			bUsing = false;
@@ -3148,15 +3144,12 @@ namespace CFLMedCab
         {
             PopFrame.Visibility = Visibility.Visible;
 
-#if TESTENV
-#else
 #if VEINSERIAL
             vein.Close();
 #else
 			//关闭正在检查的手指的线程
 			//vein.SetDetectFingerState(true);
 			VeinSerialHelper.isCloseCheckFinger = true;
-#endif
 #endif
 
 			BindingVein bindingVein = new BindingVein(mutex);

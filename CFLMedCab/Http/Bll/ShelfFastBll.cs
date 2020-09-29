@@ -691,6 +691,7 @@ namespace CFLMedCab.Http.Bll
                 {
                     //入库的不在任务单上面的商品，状态单就显示异常
                     shelfTaskFast.Status = ShelfTaskFastStatusEnum.异常.ToString();
+                    shelfTaskFast.AbnormalCauses = AbnormalCauses.商品超出.ToString();
                 }
                 else 
                 {

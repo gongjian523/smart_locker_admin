@@ -36,11 +36,17 @@ namespace CFLMedCab.Http.Enum
         [Description("其他")]
         其他 = 4,
 
-        /// <summary>
-        /// 未选
-        /// </summary>
-        [Description("未选")]
-        未选 = 5
+		/// <summary>
+		/// 商品超出
+		/// </summary>
+		[Description("商品超出")]
+		商品超出 = 5,
+
+		/// <summary>
+		/// 未选
+		/// </summary>
+		[Description("未选")]
+        未选 = 6
 
     }
 }
