@@ -162,8 +162,7 @@ namespace CFLMedCab
             //Console.ReadKey();
 
             LogUtils.Debug("Task initial...");
-#if TESTENV
-#else
+
 #if VEINSERIAL
             string veinCom = ApplicationState.GetMVeinCOM();
             //vein = new VeinHelper("COM9", 9600);
@@ -181,9 +180,8 @@ namespace CFLMedCab
 
 #endif
 
+#endif
 
-#endif
-#endif
 			LogUtils.Debug("Vein initial...");
         }
 
@@ -383,9 +381,6 @@ namespace CFLMedCab
 		/// <param name="e"></param>
 		private void onFingerDetectedLocal(object sender, int e)
 		{
-#if TESTENV
-            return;
-#else
 			mutex.WaitOne();
 			bUsing = true;
 			LogUtils.Debug("detectFinger bUsing turn true 1");
@@ -520,8 +515,8 @@ namespace CFLMedCab
 			}
 			bUsing = false;
 			LogUtils.Debug("detectFinger bUsing turn false 1");
+
 			mutex.ReleaseMutex();
-#endif
 		}
 
 		/// <summary>
@@ -531,9 +526,6 @@ namespace CFLMedCab
 		/// <param name="e"></param>
 		private void onFingerDetected(object sender, int e)
         {
-#if TESTENV
-            return;
-#else
             mutex.WaitOne();
             bUsing = true;
             LogUtils.Debug("detectFinger bUsing turn true 1");
@@ -604,9 +596,6 @@ namespace CFLMedCab
 						LogUtils.Error("没有找到和当前指静脉匹配的用户：" + data.message);
 					}
 
-
-
-#endif
 					DateTime grabFeatureHttpEndTime = DateTime.Now;
 					LogUtils.Debug($"调用指纹请求http耗时{grabFeatureHttpEndTime.Subtract(grabFeatureEndTime).TotalMilliseconds}");
 
@@ -653,9 +642,6 @@ namespace CFLMedCab
         /// <returns></returns>
         private bool RegisterVein()
         {
-#if TESTENV
-            return true;
-#else
             byte[] devSign = new byte[36];
             int veinSt = vein.GetDevSign(devSign, out ushort devSignLen);
             if (veinSt != VeinUtils.FV_ERRCODE_SUCCESS)
@@ -688,7 +674,6 @@ namespace CFLMedCab
                 return false;
             }
             return true;
-#endif
         }
 #endregion
 
@@ -858,14 +843,12 @@ namespace CFLMedCab
             XmlNode adminToken = root.SelectSingleNode("admin_token");//指向设备节点
             HttpHelper.GetInstance().SetHeaders(adminToken.InnerText);
 
-#if TESTENV
-#else
 #if VEINSERIAL
             vein.ChekVein();
 #else
             ThreadPool.QueueUserWorkItem(new WaitCallback(detectFingerLocal));
 #endif
-#endif
+
             //绑定指静脉结束、主动退出或者超时退出都会走到这个分支
             //绑定指静脉结束的logoutInfo 为 "",其他两种常见logoutInfo 会填写退出原因
             if (logoutInfo != null && logoutInfo != "")
@@ -1069,12 +1052,10 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterGerFectchLockerEvent);
             delegateGetMsg.userData = e;
-#endif
+
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 if (subViewHandler != null)
@@ -2774,14 +2755,10 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onEnterStockSwitchClose);
             delegateGetMsg.userData = e;
 
-#endif
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
                 if (subViewHandler != null)
@@ -2975,13 +2952,6 @@ namespace CFLMedCab
         /// <param name="e"></param>
         private void onInventoryDoorOpenEvent(object sender, string e)
         {
-
-#if TESTENV
-            testTimer = new System.Timers.Timer(3000);
-            testTimer.AutoReset = false;
-            testTimer.Enabled = true;
-            testTimer.Elapsed += new ElapsedEventHandler(onInventoryDoorCloseTest);
-#else
             string rfidCom = ApplicationState.GetRfidComByLocCode(e);
             string lockerCom = ApplicationState.GetLockerComByLocCode(e);
 
@@ -2996,12 +2966,9 @@ namespace CFLMedCab
                 listOpenLocCom.Add(rfidCom);
             }
 
-#if TESTENV
-#else
             LockHelper.DelegateGetMsg delegateGetMsg = LockHelper.GetLockerData(lockerCom, out bool isGetSuccess);
             delegateGetMsg.DelegateGetMsgEvent += new LockHelper.DelegateGetMsg.DelegateGetMsgHandler(onInventoryDoorClose);
             delegateGetMsg.userData = e;
-#endif
 
             if (locOpenNum == 0)
             {
@@ -3019,9 +2986,7 @@ namespace CFLMedCab
 
             //盘点开门的时候，将状态设置成DoorOpen
             SetSubViewType(SubViewType.DoorOpen);
-#endif
         }
-
 
 
         /// <summary>
