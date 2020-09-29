@@ -509,7 +509,6 @@ namespace CFLMedCab
 						//ApplicationState.SetRefreshToken(data.body.refresh_token);
 
 						//HttpHelper.GetInstance().SetHeaders(data.body.accessToken);
-
 					}
 					else
 					{
@@ -744,7 +743,7 @@ namespace CFLMedCab
         //退出登录，回到登录页
         private void onReturnToLogin(string logoutInfo)
         {
-            LogUtils.Debug("onReturnToLogin");
+            LogUtils.Debug("onReturnToLogin:" + logoutInfo);
             PopFrame.Visibility = Visibility.Hidden;
             MaskView.Visibility = Visibility.Hidden;
 
