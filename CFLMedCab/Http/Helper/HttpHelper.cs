@@ -1093,6 +1093,47 @@ namespace CFLMedCab.Http.Helper
 
 		}
 
+		/// <summary>
+		/// 同步获取put请求结果
+		/// </summary>
+		/// <param name="url"></param>
+		/// <returns></returns>
+		//[Log]
+		public BasePutData<T> Put<T>(PutParam<T> putParam) where T : BaseModel
+		{
+			var handleEventWait = new HandleEventWait();
+			BasePutData<T> ret = null;
+
+			JsonSerializerSettings jsetting = new JsonSerializerSettings
+			{
+				NullValueHandling = NullValueHandling.Ignore
+			};
+
+			string url = GetCreateUrl(typeof(T).Name);
+			string urlbody = JsonConvert.SerializeObject(putParam, Formatting.Indented, jsetting);
+
+			LogUtils.Debug($"put请求参数为{urlbody}");
+
+			JumpKick.HttpLib.Http.Put(url).Headers(GetHeaders()).Body(urlbody).OnSuccess(result =>
+			{
+				ResultHand(ResultHandleType.请求正常, handleEventWait, result, out ret);
+
+			}).OnFail(webexception =>
+			{
+				ResultHand(ResultHandleType.请求异常, handleEventWait, webexception.Message, out ret);
+
+			}).Go();
+
+			ResultHand(ResultHandleType.请求超时, handleEventWait, ResultHandleType.请求超时.ToString(), out ret);
+
+			if (ret.code != 0)
+			{
+				LogUtils.Debug("Put Err Code：" + ret.code + " \nDescription: " + ret.description + " \nMessage: " + ret.message);
+			}
+
+			return ret;
+		}
+
 
 		/// <summary>
 		/// 获取token

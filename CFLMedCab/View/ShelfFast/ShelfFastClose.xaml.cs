@@ -1,32 +1,16 @@
 ﻿using CFLMedCab.BLL;
-using CFLMedCab.DAL;
-using CFLMedCab.DTO.Goodss;
-using CFLMedCab.DTO.Picking;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
-using CFLMedCab.Infrastructure.DeviceHelper;
-using CFLMedCab.Model;
-using CFLMedCab.Model.Constant;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CFLMedCab.View.ShelfFast
 {
@@ -208,35 +192,68 @@ namespace CFLMedCab.View.ShelfFast
         {
             if (isSuccess)
             {
+                List<ShelfTaskFastDetail> sfDetials = new List<ShelfTaskFastDetail>();
+
+                foreach(var ccItem in bdCommodityCode.body.objects)
+                {
+                    var sfDetial = sfDetials.Where(item => item.CommodityCodeId == ccItem.id).FirstOrDefault();
+                    if (sfDetial == null)
+                        continue;
+
+                    sfDetials.Add(new ShelfTaskFastDetail()
+                    {
+                        id = sfDetial.id,
+                        Status = "已上架",
+                        EquipmentId = ccItem.EquipmentId,
+                        GoodsLocationId = ccItem.GoodsLocationId,
+                        StoreHouseId = ccItem.StoreHouseId,
+                    });
+                }
+
                 LoadingDataEvent(this, true);
-                BasePostData<CommodityInventoryChange> basePostData = ShelfFastBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTaskFast, bAutoSubmit);
+                BasePutData<ShelfTaskFastDetail> basePutData = ShelfFastBll.GetInstance().PutShelfTaskFaskDetail(sfDetials);
                 LoadingDataEvent(this, false);
+                HttpHelper.GetInstance().ResultCheck(basePutData, out bool isSuccess3);
 
-                HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
-
-                if (!isSuccess1)
+                if (!isSuccess3)
                 {
                     if (bAutoSubmit)
                     {
-                        MessageBox.Show("创建便捷上架任务单库存明细失败！" + basePostData.message, "温馨提示", MessageBoxButton.OK);
+                        MessageBox.Show("更新便捷上架任务明细失败！" + basePutData.message, "温馨提示", MessageBoxButton.OK);
                     }
                 }
                 else
                 {
-                    if (shelfTaskFast.Status == ShelfTaskFastStatusEnum.异常.ToString() && shelfTaskFast.AbnormalCauses != AbnormalCauses.商品超出.ToString())
-                    {
-                        shelfTaskFast.AbnormalCauses = abnormalOptions.GetAbnormal().ToString();
-                    }
-
                     LoadingDataEvent(this, true);
-                    BasePutData<ShelfTaskFast> putData = ShelfFastBll.GetInstance().PutShelfTaskFast(shelfTaskFast);
+                    BasePostData<CommodityInventoryChange> basePostData = ShelfFastBll.GetInstance().CreateShelfTaskCommodityInventoryChange(bdCommodityCode, shelfTaskFast, bAutoSubmit);
                     LoadingDataEvent(this, false);
 
-                    HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess2);
+                    HttpHelper.GetInstance().ResultCheck(basePostData, out bool isSuccess1);
 
-                    if (!isSuccess2 && bAutoSubmit)
+                    if (!isSuccess1)
                     {
-                        MessageBox.Show("更新便捷上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        if (bAutoSubmit)
+                        {
+                            MessageBox.Show("创建便捷上架任务的库存变更单失败！" + basePostData.message, "温馨提示", MessageBoxButton.OK);
+                        }
+                    }
+                    else
+                    {
+                        if (shelfTaskFast.Status == ShelfTaskFastStatusEnum.异常.ToString() && shelfTaskFast.AbnormalCauses != AbnormalCauses.商品超出.ToString())
+                        {
+                            shelfTaskFast.AbnormalCauses = abnormalOptions.GetAbnormal().ToString();
+                        }
+
+                        LoadingDataEvent(this, true);
+                        BasePutData<ShelfTaskFast> putData = ShelfFastBll.GetInstance().PutShelfTaskFast(shelfTaskFast);
+                        LoadingDataEvent(this, false);
+
+                        HttpHelper.GetInstance().ResultCheck(putData, out bool isSuccess2);
+
+                        if (!isSuccess2 && bAutoSubmit)
+                        {
+                            MessageBox.Show("更新便捷上架任务单失败！" + putData.message, "温馨提示", MessageBoxButton.OK);
+                        }
                     }
                 }
 

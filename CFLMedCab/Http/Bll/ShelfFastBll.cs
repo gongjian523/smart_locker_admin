@@ -298,12 +298,30 @@ namespace CFLMedCab.Http.Bll
                     message = ResultCode.Parameter_Exception.ToString()
                 };
             }
-            return HttpHelper.GetInstance().Post<ShelfTaskFastDetail>(new PostParam<ShelfTaskFastDetail>()
+            return HttpHelper.GetInstance().Post(new PostParam<ShelfTaskFastDetail>()
             {
                 objects = detailList
             });  
         }
 
+        public BasePutData<ShelfTaskFastDetail> PutShelfTaskFaskDetail(List<ShelfTaskFastDetail> detailList)
+        {
+            if (null == detailList || detailList.Count == 0)
+            {
+                return new BasePutData<ShelfTaskFastDetail>()
+                {
+                    code = (int)ResultCode.Parameter_Exception,
+                    message = ResultCode.Parameter_Exception.ToString()
+                };
+            }
+
+            BasePutData<ShelfTaskFastDetail> basePutData = HttpHelper.GetInstance().Put(new PutParam<ShelfTaskFastDetail>
+            {
+                objects = detailList
+            });
+
+            return basePutData;
+        }
 
         /// <summary>
         /// 根据加工/调拨任务单获取快捷上架任务单

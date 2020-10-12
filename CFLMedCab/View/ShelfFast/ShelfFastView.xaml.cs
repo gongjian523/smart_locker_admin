@@ -140,12 +140,12 @@ namespace CFLMedCab.View.ShelfFast
                     return false;
                 }
 
-                sourceBill.object_name = "DistributionTask";
-                sourceBill.object_id = bdDistributionTask.body.objects[0].id;
+                sourceBill.object_name = "AllotAcceptance";
+                sourceBill.object_id = bdAllotAcceptance.body.objects[0].id;
             }
             else
             {
-                waring = "输入的不是加工任务单或者调拨配送！";
+                waring = "输入的不是加工任务单或者调拨配送单！";
                 return false;
             }
 
