@@ -71,6 +71,7 @@
                                 <!--<ColumnDefinition Width="*"/>-->
                                 <ColumnDefinition Width="1.5*"/>
                                 <ColumnDefinition Width="1.5*"/>
+                                <ColumnDefinition Width="1.5*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0" x:Name="column1"/>
                             <Grid Grid.Column="1" x:Name="column2"/>
@@ -80,6 +81,7 @@
                             <!--<Grid Grid.Column="5" x:Name="column6"/>-->
                             <Grid Grid.Column="6" x:Name="column7"/>
                             <Grid Grid.Column="7" x:Name="column8"/>
+                            <Grid Grid.Column="8" x:Name="column9"/>
                         </Grid>
                         <ListView Style="{StaticResource DefaultListView}"  ItemsSource="{Binding}" Name="listView">
                             <ListView.View>
@@ -137,6 +139,13 @@
                                         <GridViewColumn.CellTemplate>
                                             <DataTemplate>
                                                 <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=QualityStatus}"/>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn Header="科室" Width="{Binding ElementName=column9,Path=ActualWidth}">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Style="{StaticResource TextBlockRed}"  Text="{Binding Path=Department}"/>
                                             </DataTemplate>
                                         </GridViewColumn.CellTemplate>
                                     </GridViewColumn>

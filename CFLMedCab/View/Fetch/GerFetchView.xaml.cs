@@ -1,7 +1,4 @@
 ﻿using CFLMedCab.BLL;
-using CFLMedCab.DAL;
-using CFLMedCab.DTO.Goodss;
-using CFLMedCab.DTO.Stock;
 using CFLMedCab.Http.Bll;
 using CFLMedCab.Http.Enum;
 using CFLMedCab.Http.ExceptionApi;
@@ -9,28 +6,12 @@ using CFLMedCab.Http.Helper;
 using CFLMedCab.Http.Model;
 using CFLMedCab.Http.Model.Base;
 using CFLMedCab.Infrastructure;
-using CFLMedCab.Infrastructure.DeviceHelper;
-using CFLMedCab.Infrastructure.ToolHelper;
-using CFLMedCab.Model;
-using CFLMedCab.Model.Constant;
-using CFLMedCab.Model.Enum;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace CFLMedCab.View.Fetch
 {
@@ -117,19 +98,25 @@ namespace CFLMedCab.View.Fetch
                 int abnormalOut = bdCommodityCode.body.objects.Where(item => item.operate_type == 0 && item.QualityStatus == QualityStatusType.过期.ToString()).Count();
                 int abnormalIn  = bdCommodityCode.body.objects.Where(item => item.operate_type == 1).Count();
 
+                string departId = ApplicationState.GetFetchDepartment().Id;
+                //统计其他科室商品的数量
+                int departErrOut = bdCommodityCode.body.objects.Where(item => item.DepartmentId != departId).Count();
+
                 abnormalOutNum.Content = abnormalOut;
                 abnormalInNum.Content = abnormalIn;
+                departErrOutNum.Content = departErrOut;
 
                 bdCommodityCode.body.objects.ToList().ForEach(it =>
                 {
-                    if(it.operate_type == 1 || it.operate_type == 0 && it.QualityStatus == QualityStatusType.过期.ToString())
+                    if (it.operate_type == 1 || it.operate_type == 0 && it.QualityStatus == QualityStatusType.过期.ToString() || it.DepartmentId != departId)
                     {
                         it.AbnormalDisplay = AbnormalDisplay.异常.ToString();
                     }
                 });
 
-                //领用产品上包含过期商品不让用户主动提交
-                if (abnormalOut == 0)
+                //领用商品中包含过期商品不让用户主动提交
+                //领用商品中包含其他科室的商品也不让用户主动提交
+                if (abnormalOut == 0 && departErrOut == 0)
                 {
                     normalBtmView.Visibility = Visibility.Visible;
                     abnormalBtmView.Visibility = Visibility.Collapsed;

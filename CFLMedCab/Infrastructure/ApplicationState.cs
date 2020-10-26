@@ -483,7 +483,7 @@ namespace CFLMedCab.Infrastructure
 
 
         /// <summary>
-        /// 
+        /// 这个用户所属所有的科室的信息
         /// </summary>
         /// <param name="id"></param>
         public static void SetDepartInfo(BaseData<Department> bdDepartment)
@@ -501,6 +501,10 @@ namespace CFLMedCab.Infrastructure
             return GetValue<BaseData<Department>>((int)ApplicationKey.DepartInfo);
         }
 
+        /// <summary>
+        /// 这个用户所属这次取货的的科室信息
+        /// </summary>
+        /// <param name="department"></param>
         public static void SetFetchDepartment(FetchDepartment department)
         {
             SetValue((int)ApplicationKey.FetchDeapartId, department);

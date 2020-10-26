@@ -11,6 +11,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Windows.Forms;
 
 namespace CFLMedCab.Http.Bll
 {
@@ -838,9 +839,20 @@ namespace CFLMedCab.Http.Bll
             {
                 it.QualityStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().QualityStatus;
                 it.InventoryStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().Status;
-            });
+				it.DepartmentId = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().DepartmentId;
+			});
 
-            isSuccess = true;
+			List<string> departmentIds = bdCommodityCode.body.objects.Select(item => item.DepartmentId).Distinct().ToList();
+
+			BaseData<Department> bdDepartment = GetObjectByIds<Department>(departmentIds, out bool isSuccess2);
+			if (isSuccess2)
+			{
+				bdCommodityCode.body.objects.ForEach(it => {
+					it.Department = bdDepartment.body.objects.Where(di => di.id == it.DepartmentId).First().name;
+				});
+			}
+
+			isSuccess = true;
             return bdCommodityCode;
         }
 

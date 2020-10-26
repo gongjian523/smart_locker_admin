@@ -197,5 +197,17 @@ namespace CFLMedCab.Http.Model
         /// </summary>
         [JsonIgnore]
         public string InventoryStatus { get; set; }
+
+		/// <summary>
+		/// 科室id，从CommodityInventoryDetail而来
+		/// </summary>
+		[JsonIgnore]
+		public string DepartmentId { get; set; }
+
+		/// <summary>
+		/// 科室名称，从Department而来
+		/// </summary>
+		[JsonIgnore]
+		public string Department { get; set; }
 	}
 }
