@@ -315,10 +315,23 @@ namespace CFLMedCab.Http.Bll
                 };
             }
 
-            BasePutData<ShelfTaskFastDetail> basePutData = HttpHelper.GetInstance().Put(new PutParam<ShelfTaskFastDetail>
+            BasePutData<ShelfTaskFastDetail> basePutData = new BasePutData<ShelfTaskFastDetail>();
+            bool isSuccess;
+
+            for (int i = 0; i < detailList.Count; i++)
             {
-                objects = detailList
-            });
+                basePutData = HttpHelper.GetInstance().Put<ShelfTaskFastDetail>(detailList[i]);
+
+                HttpHelper.GetInstance().ResultCheck(basePutData, out isSuccess);
+
+                if (!isSuccess)
+                    return basePutData;
+            }
+
+            //BasePutData<ShelfTaskFastDetail> basePutData = HttpHelper.GetInstance().Put(new PutParam<ShelfTaskFastDetail>
+            //{
+            //    objects = detailList
+            //});
 
             return basePutData;
         }

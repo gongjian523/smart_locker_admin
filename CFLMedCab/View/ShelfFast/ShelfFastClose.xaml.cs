@@ -196,7 +196,7 @@ namespace CFLMedCab.View.ShelfFast
 
                 foreach(var ccItem in bdCommodityCode.body.objects)
                 {
-                    var sfDetial = sfDetials.Where(item => item.CommodityCodeId == ccItem.id).FirstOrDefault();
+                    var sfDetial = bdCommodityDetail.body.objects.Where(item => item.CommodityCodeId == ccItem.id && ccItem.operate_type == 1).FirstOrDefault();
                     if (sfDetial == null)
                         continue;
 

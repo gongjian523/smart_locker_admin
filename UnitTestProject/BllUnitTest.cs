@@ -572,6 +572,62 @@ namespace UnitTestProject
 
         }
 
+        [TestMethod]
+        public void UpdateShelfTaskFastDetailMethod()
+        {
+            var bdCommodityDetail = ShelfFastBll.GetInstance().GetShelfTaskFastDetail(new ShelfTaskFast() { id  = "AQB2Zi3IdykBAAAAk5X5dwSBPRYRKQ8A" });
+
+            HashSet<CommodityEps> currentEpcDataHs = new HashSet<CommodityEps>();
+            currentEpcDataHs.Add(new CommodityEps()
+            {
+                CommodityCodeName = "RF2020092916183104",
+                EquipmentId = "AQB2Zi3IdykBAAAAJrOudztwMRY9cgwA",
+                EquipmentName = "E#20200904-00009",
+                StoreHouseId = "AQCqGpNPSs4BAAAAjV2LZilzLhbwiAcA",
+                StoreHouseName = "妇产一库",
+                GoodsLocationId = "AQB2Zi3IdykBAAAAyskDvUBwMRY-cgwA",
+                GoodsLocationName = "GL#20200904-00009",
+            });
+
+            currentEpcDataHs.Add(new CommodityEps()
+            {
+                CommodityCodeName = "RF2020092916183102",
+                EquipmentId = "AQB2Zi3IdykBAAAAJrOudztwMRY9cgwA",
+                EquipmentName = "E#20200904-00009",
+                StoreHouseId = "AQCqGpNPSs4BAAAAjV2LZilzLhbwiAcA",
+                StoreHouseName = "妇产一库",
+                GoodsLocationId = "AQB2Zi3IdykBAAAAyskDvUBwMRY-cgwA",
+                GoodsLocationName = "GL#20200904-00009",
+            });
+
+            List<string> code = new List<string>();
+            code.Add("GL#20200904-00009");
+
+            var commodityCodeList = CommodityCodeBll.GetInstance().GetCompareSimpleCommodity(new HashSet<CommodityEps>(), currentEpcDataHs, code);
+            var bdCommodityCode = CommodityCodeBll.GetInstance().GetCommodityCodeStock(commodityCodeList);
+
+            List<ShelfTaskFastDetail> sfDetials = new List<ShelfTaskFastDetail>();
+
+            foreach (var ccItem in bdCommodityCode.body.objects)
+            {
+                var sfDetial = bdCommodityDetail.body.objects.Where(item => item.CommodityCodeId == ccItem.id && ccItem.operate_type == 1).FirstOrDefault();
+                if (sfDetial == null)
+                    continue;
+
+                sfDetials.Add(new ShelfTaskFastDetail()
+                {
+                    id = sfDetial.id,
+                    Status = "已上架",
+                    EquipmentId = ccItem.EquipmentId,
+                    GoodsLocationId = ccItem.GoodsLocationId,
+                    StoreHouseId = ccItem.StoreHouseId,
+                });
+            }
+
+            BasePutData<ShelfTaskFastDetail> basePutData = ShelfFastBll.GetInstance().PutShelfTaskFaskDetail(sfDetials);
+            HttpHelper.GetInstance().ResultCheck(basePutData, out bool isSuccess3);
+        }
+
 
 
     }
