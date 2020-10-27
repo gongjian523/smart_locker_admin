@@ -162,7 +162,7 @@
             </Border>
             <Border Style="{StaticResource CenterRadiusBorder}" Grid.Row="2">
                 <Grid>
-                    <Grid x:Name="normalBtmView">
+                    <Grid x:Name="normalBtmView" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="2*"/>
@@ -174,12 +174,12 @@
                             <Button Style="{StaticResource CommonNoButton}" x:Name="NoBtn" Content="否,并开门" Margin="60,0,0,0"  Width="220"  Click="onNoEndOperation"/>
                         </StackPanel>
                     </Grid>
-                    <Grid x:Name="abnormalBtmView" Visibility="Collapsed">
+                    <Grid x:Name="abnormalBtmView" Visibility="Collapsed" >
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Style="{StaticResource lblTitle1}" Content="请将过期/其他科室的商品取出！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Style="{StaticResource lblTitle1}" Content="取出商品中包含过期商品/不属于您当前选择科室的商品!" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1">
                             <Button Style="{StaticResource CommonNoButton}"  Content="开柜" Margin="60,0,0,0" Width="220"  Click="onNoEndOperation"/>
                         </StackPanel>

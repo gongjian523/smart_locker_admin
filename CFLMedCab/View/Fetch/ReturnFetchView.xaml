@@ -171,10 +171,10 @@
                     </Grid>
                     <Grid x:Name="abnormalBtmView" Visibility="Collapsed">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
-                        <Label Style="{StaticResource lblTitle1}"  x:Name="abnormalInfoLbl"  Content="请将过期商品取出！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <Label Style="{StaticResource lblTitle1}"  x:Name="abnormalInfoLbl"  Content="取出商品中包含过期商品/不属于您当前选择科室的商品！" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         <StackPanel Orientation="Horizontal" Grid.Column="1">
                             <Button Style="{StaticResource CommonNoButton}"  Content="开柜" Margin="60,0,0,0" Width="220"  Click="onNoEndOperation"/>
                         </StackPanel>

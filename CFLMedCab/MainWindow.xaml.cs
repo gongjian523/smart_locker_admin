@@ -884,13 +884,15 @@ namespace CFLMedCab
             }
             else
             {
-                PopFrame.Visibility = Visibility.Visible;
+                //PopFrame.Visibility = Visibility.Visible;
 
                 DepartChooseBoard departChooseBoard = new DepartChooseBoard(bdDepartment, sender);
                 departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
                 departChooseBoard.EnterGerFetchOpenDoorViewEvent += new DepartChooseBoard.EnterGerFetchOpenDoorViewHandler(onEnterGerFetchOpenDoorView);
 
-                PopFrame.Navigate(departChooseBoard);
+                //PopFrame.Navigate(departChooseBoard);
+
+                onShowPopFrame(departChooseBoard);
             }
         }
 
@@ -898,7 +900,8 @@ namespace CFLMedCab
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                PopFrame.Visibility = Visibility.Hidden;
+                //PopFrame.Visibility = Visibility.Hidden;
+                ClosePop();
                 ApplicationState.SetFetchDepartment(new FetchDepartment() {
                     Id = e.id,
                     Name = e.name,
@@ -911,7 +914,8 @@ namespace CFLMedCab
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                PopFrame.Visibility = Visibility.Hidden;
+                ClosePop();
+                //PopFrame.Visibility = Visibility.Hidden;
             }));
         }
 
@@ -1555,7 +1559,7 @@ namespace CFLMedCab
 
         private void onShowDepartChooseBoardFromReturnFetch(object sender, RoutedEventArgs e)
         {
-            PopFrame.Visibility = Visibility.Visible;
+            //PopFrame.Visibility = Visibility.Visible;
 
             BaseData<Department> bdDepartment = ApplicationState.GetDepartInfo();
 
@@ -1563,14 +1567,17 @@ namespace CFLMedCab
             departChooseBoard.ExitDepartChooseBoardEvent += new DepartChooseBoard.ExitDepartChooseBoardHandler(onExitDepartChooseBoard);
             departChooseBoard.EnterGerFetchOpenDoorViewEvent += new DepartChooseBoard.EnterGerFetchOpenDoorViewHandler(onExitDepartChooseBoardFromReturnFetch);
 
-            PopFrame.Navigate(departChooseBoard);
+            onShowPopFrame(departChooseBoard);
+
+            //PopFrame.Navigate(departChooseBoard);
         }
 
         private void onExitDepartChooseBoardFromReturnFetch(object sender, Department e, object buttonSender)
         {
             App.Current.Dispatcher.Invoke((Action)(() =>
             {
-                PopFrame.Visibility = Visibility.Hidden;
+                //PopFrame.Visibility = Visibility.Hidden;
+                ClosePop();
                 ApplicationState.SetFetchDepartment(new FetchDepartment()
                 {
                     Id = e.id,

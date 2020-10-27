@@ -26,9 +26,7 @@ namespace CFLMedCab.Http.Bll
 
             if (isSuccess)
             {
-                //获取有效期和生产商
-                //CommodityCodeBll.GetInstance().GetCatalogueName(baseCommodityCodes, out bool isSuccess3);
-
+                baseCommodityCodes = CommodityCodeBll.GetInstance().GetExpiration(baseCommodityCodes, out isSuccess);
                 return baseCommodityCodes.body.objects;
             }
             else

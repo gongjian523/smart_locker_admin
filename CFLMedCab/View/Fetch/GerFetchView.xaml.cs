@@ -83,6 +83,13 @@ namespace CFLMedCab.View.Fetch
                     bdCommodityCode = CommodityCodeBll.GetInstance().GetQualityStatus(bdCommodityCode, out isSuccess);
 					ExStepHandle.ExApiSendQueueFetchGoodsInitDataHandle(bdCommodityCode, commodityCodeList);
 				}
+
+                if(isSuccess)
+                {
+                    bdCommodityCode = CommodityCodeBll.GetInstance().GetDempartment(bdCommodityCode, out isSuccess);
+                    ExStepHandle.ExApiSendQueueFetchGoodsInitDataHandle(bdCommodityCode, commodityCodeList);
+                }
+
                 LoadingDataEvent(this, false);
                 
                 //校验是否含有数据

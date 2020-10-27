@@ -800,7 +800,6 @@ namespace CFLMedCab.Http.Bll
 			return bdCommodityCode;
 		}
 
-
 		public BaseData<CommodityCode> GetQualityStatus(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
         {
             isSuccess = false;
@@ -835,26 +834,41 @@ namespace CFLMedCab.Http.Bll
                 return bdCommodityCode;
             }
 
-            bdCommodityCode.body.objects.ForEach(it =>
-            {
-                it.QualityStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().QualityStatus;
-                it.InventoryStatus = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().Status;
-				it.DepartmentId = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).First().DepartmentId;
+			bdCommodityCode.body.objects.ForEach(it =>
+			{
+				var item = commodityInventoryDetails.body.objects.Where(cid => cid.CommodityCodeId == it.id).FirstOrDefault();
+
+				if(item != null)
+                {
+					it.QualityStatus = item.QualityStatus;
+					it.InventoryStatus = item.Status;
+					it.DepartmentId = item.DepartmentId;
+				}
 			});
 
+			isSuccess = true;
+            return bdCommodityCode;
+        }
+
+		public BaseData<CommodityCode> GetDempartment(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
+        {
 			List<string> departmentIds = bdCommodityCode.body.objects.Select(item => item.DepartmentId).Distinct().ToList();
 
-			BaseData<Department> bdDepartment = GetObjectByIds<Department>(departmentIds, out bool isSuccess2);
-			if (isSuccess2)
+			BaseData<Department> bdDepartment = GetObjectByIds<Department>(departmentIds, out isSuccess);
+			if (isSuccess)
 			{
 				bdCommodityCode.body.objects.ForEach(it => {
 					it.Department = bdDepartment.body.objects.Where(di => di.id == it.DepartmentId).First().name;
 				});
 			}
+			else
+			{
+				bdCommodityCode.code = (int)ResultCode.Result_Exception;
+				bdCommodityCode.message = ResultCode.Result_Exception.ToString();
+			}
 
-			isSuccess = true;
-            return bdCommodityCode;
-        }
+			return bdCommodityCode;
+		}
 
 		[Obsolete]
         public BaseData<CommodityCode> GetCatalogueName(BaseData<CommodityCode> bdCommodityCode, out bool isSuccess)
@@ -902,5 +916,38 @@ namespace CFLMedCab.Http.Bll
             isSuccess = true;
             return bdCommodityCode;
         }
+
+
+		public void GetTestCommodityOut(HashSet<CommodityEps> before, HashSet<CommodityEps> after, List<string> locCodes)
+        {
+			before = new HashSet<CommodityEps>(){
+				new CommodityEps()
+				{
+					CommodityCodeName = "RF2020092916183104",
+					EquipmentId = "AQB2Zi3IdykBAAAAJrOudztwMRY9cgwA",
+					EquipmentName = "E#20200904-00009",
+					StoreHouseId = "AQCqGpNPSs4BAAAAjV2LZilzLhbwiAcA",
+					StoreHouseName = "妇产一库",
+					GoodsLocationId = "AQB2Zi3IdykBAAAAyskDvUBwMRY-cgwA",
+					GoodsLocationName = "GL#20200904-00009",
+				},
+				new CommodityEps()
+				{
+					CommodityCodeName = "RF2020092916183102",
+					EquipmentId = "AQB2Zi3IdykBAAAAJrOudztwMRY9cgwA",
+					EquipmentName = "E#20200904-00009",
+					StoreHouseId = "AQCqGpNPSs4BAAAAjV2LZilzLhbwiAcA",
+					StoreHouseName = "妇产一库",
+					GoodsLocationId = "AQB2Zi3IdykBAAAAyskDvUBwMRY-cgwA",
+					GoodsLocationName = "GL#20200904-00009",
+				},
+			};
+
+			after = new HashSet<CommodityEps>();
+			locCodes = new List<string>()
+			{
+				"GL#20200904-00009",
+			};
+		}
     }
 }
